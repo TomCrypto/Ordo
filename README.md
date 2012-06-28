@@ -1,4 +1,4 @@
 ordo
 ====
 
-New Flexible And Secure Cryptography Library
+New Flexible, Fast, And Secure Cryptography Library
