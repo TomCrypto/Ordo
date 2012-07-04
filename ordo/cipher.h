@@ -2,11 +2,18 @@
 #define cipher_h
 
 #include <stdio.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include "secmem.h"
+#include "environment.h"
 
-/* Prototype for a key schedule function, taking as an input a key and a tweak. */
+/* Yes, well, stdbool.h doesn't exist under VS2010 for some reason. */
+typedef int bool;
+#define false 0
+#define true 1
+
+/* Prototype for a key schedule function, taking as an input a raw key and a tweak. */
 typedef void (* KEYSCHEDULE)(void*, void*, void*);
 
 /* Prototype for a permutation function, taking as an input a block and key. */
@@ -28,8 +35,8 @@ typedef struct CIPHER_PRIMITIVE
 /* This structure describes a symmetric cipher context. */
 typedef struct CIPHER_CONTEXT
 {
-	struct CIPHER_PRIMITIVE *primitive; // the primitive in use
-	struct CIPHER_MODE *mode; // the mode of operation in use
+	struct CIPHER_PRIMITIVE* primitive; // the primitive in use
+	struct CIPHER_MODE* mode; // the mode of operation in use
 	void* key; // location of the key
 	void* iv; // location of the IV (may be null)
 	void* block; // scratch space to store the current block
@@ -37,9 +44,9 @@ typedef struct CIPHER_CONTEXT
 } CIPHER_CONTEXT;
 
 /* Prototype for a mode of operation, taking as an input a buffer, buffer size, and context. */
-typedef void (* INI_OP)(struct CIPHER_CONTEXT*, void*, void*, void*);
-typedef void (* ENC_OP)(struct CIPHER_CONTEXT*, char*, size_t*, size_t);
-typedef void (* FIN_OP)(struct CIPHER_CONTEXT*);
+typedef void (* INI_OP)(CIPHER_CONTEXT*, void*, void*, void*);
+typedef void (* ENC_OP)(CIPHER_CONTEXT*, unsigned char*, size_t*, bool);
+typedef void (* FIN_OP)(CIPHER_CONTEXT*);
 
 /* This structure defines a mode of operation. */
 typedef struct CIPHER_MODE
@@ -53,25 +60,34 @@ typedef struct CIPHER_MODE
 
 /* Cipher list. */
 #include "identity.h"
-CIPHER_PRIMITIVE IDENTITY;
+CIPHER_PRIMITIVE* IDENTITY;
 #include "xortoy.h"
-CIPHER_PRIMITIVE XORTOY;
+CIPHER_PRIMITIVE* XORTOY;
 #include "threefish.h"
-CIPHER_PRIMITIVE THREEFISH;
+CIPHER_PRIMITIVE* THREEFISH;
 
 /* Mode of operation list. */
 #include "ecb.h"
-CIPHER_MODE ECB;
+CIPHER_MODE* ECB;
 #include "ctr.h"
-CIPHER_MODE CTR;
+CIPHER_MODE* CTR;
 
 void loadPrimitives();
 void loadModes();
 
-/* This function encrypts a buffer with a given key and IV. */
-size_t cipherEncrypt(char* buffer, size_t* size, CIPHER_PRIMITIVE primitive, CIPHER_MODE mode, void* key, void* tweak, void* iv);
+/* This function returns an initialized cipher context with the provided parameters. */
+CIPHER_CONTEXT* cipherInit(CIPHER_PRIMITIVE primitive, CIPHER_MODE mode, void* key, void* tweak, void* iv);
 
-/* This function decrypts a buffer with a given key and IV. */
-size_t cipherDecrypt(char* buffer, size_t* size, CIPHER_PRIMITIVE primitive, CIPHER_MODE mode, void* key, void* tweak, void* iv);
+/* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */
+bool cipherUpdate(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final, bool decrypt);
+
+/* This function finalizes a cipher context. */
+bool cipherFinal(CIPHER_CONTEXT* ctx);
+
+/* This convenience function encrypts a buffer with a given key, tweak and IV. */
+bool cipherEncrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, void* tweak, void* iv);
+
+/* This convenience function decrypts a buffer with a given key, tweak and IV. */
+bool cipherDecrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, void* tweak, void* iv);
 
 #endif

@@ -4,8 +4,9 @@
 #include "cipher.h"
 #include "threefish.h"
 
-/* 64-bit left rotation. */
+/* 64-bit left and right rotation. */
 #define ROL(n, r) ((n << r) | (n >> (64 - r)))
+#define ROR(n, r) ((n >> r) | (n << (64 - r)))
 
 /* Threefish key schedule. */
 void Threefish_KeySchedule(void* rawKey, void* tweak, void* key)
@@ -194,20 +195,162 @@ void Threefish_Permutation(void* block, void* key)
 /* Threefish inverse permutation function. */
 void Threefish_Inverse(void* block, void* key)
 {
-	// not done yet
-	return;
+	size_t t;
+	unsigned long long s;
+	unsigned long long Block[4];
+	unsigned long long Key[4 * 19];
+	memcpy(&Block, block, THREEFISH_BLOCK);
+	memcpy(&Key, key, THREEFISH_KEY);
+
+	/* 8 big rounds. */
+	for (t = 9; t > 0; t--)
+	{
+		/* Subkey subtraction. */
+		Block[0] -= Key[(t - 1) * 8 + 8 + 0];
+		Block[1] -= Key[(t - 1) * 8 + 8 + 1];
+		Block[2] -= Key[(t - 1) * 8 + 8 + 2];
+		Block[3] -= Key[(t - 1) * 8 + 8 + 3];
+		
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+		
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 32);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 32);
+		Block[2] -= Block[3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 58);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 22);
+		Block[2] -= Block[3];
+		
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 46);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 12);
+		Block[2] -= Block[3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 25);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 33);
+		Block[2] -= Block[3];
+
+		/* Subkey subtraction. */
+		Block[0] -= Key[(t - 1) * 8 + 4 + 0];
+		Block[1] -= Key[(t - 1) * 8 + 4 + 1];
+		Block[2] -= Key[(t - 1) * 8 + 4 + 2];
+		Block[3] -= Key[(t - 1) * 8 + 4 + 3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1],  5);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 37);
+		Block[2] -= Block[3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 23);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 40);
+		Block[2] -= Block[3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 52);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 57);
+		Block[2] -= Block[3];
+
+		/* Permutation */
+		s = Block[1];
+		Block[1] = Block[3];
+		Block[3] = s;
+		
+		/* Inverse MIX */
+		Block[1] ^= Block[0];
+		Block[1] = ROR(Block[1], 14);
+		Block[0] -= Block[1];
+
+		Block[3] ^= Block[2];
+		Block[3] = ROR(Block[3], 16);
+		Block[2] -= Block[3];
+	}
+
+	/* Final key whitening. */
+	Block[0] -= Key[0];
+	Block[1] -= Key[1];
+	Block[2] -= Key[2];
+	Block[3] -= Key[3];
+
+	/* Copy back the resulting block. */
+	memcpy(block, &Block, THREEFISH_BLOCK);
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void Threefish_SetPrimitive(CIPHER_PRIMITIVE* primitive)
+void Threefish_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	primitive->szRawKey = THREEFISH_RAWKEY;
-	primitive->szKey = THREEFISH_KEY;
-	primitive->szBlock = THREEFISH_BLOCK;
-	primitive->szTweak = THREEFISH_TWEAK;
-	primitive->fKeySchedule = &Threefish_KeySchedule;
-	primitive->fPermutation = &Threefish_Permutation;
-	primitive->fInverse = &Threefish_Inverse;
-	primitive->name = (char*)malloc(sizeof("Threefish"));
-	strcpy_s(primitive->name, sizeof("Threefish"), "Threefish");
+	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive)->szRawKey = THREEFISH_RAWKEY;
+	(*primitive)->szKey = THREEFISH_KEY;
+	(*primitive)->szBlock = THREEFISH_BLOCK;
+	(*primitive)->szTweak = THREEFISH_TWEAK;
+	(*primitive)->fKeySchedule = &Threefish_KeySchedule;
+	(*primitive)->fPermutation = &Threefish_Permutation;
+	(*primitive)->fInverse = &Threefish_Inverse;
+	(*primitive)->name = (char*)malloc(sizeof("Threefish"));
+	strcpy_s((*primitive)->name, sizeof("Threefish"), "Threefish");
 }

@@ -12,6 +12,6 @@ void Identity_Permutation(void* block, void* key);
 
 void Identity_Inverse(void* block, void* key);
 
-void Identity_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive);
 
 #endif

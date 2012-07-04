@@ -22,15 +22,16 @@ void Identity_Inverse(void* block, void* key)
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void Identity_SetPrimitive(CIPHER_PRIMITIVE* primitive)
+void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	primitive->szRawKey = IDENTITY_RAWKEY;
-	primitive->szKey = IDENTITY_KEY;
-	primitive->szBlock = IDENTITY_BLOCK;
-	primitive->szTweak = IDENTITY_TWEAK;
-	primitive->fKeySchedule = &Identity_KeySchedule;
-	primitive->fPermutation = &Identity_Permutation;
-	primitive->fInverse = &Identity_Inverse;
-	primitive->name = (char*)malloc(sizeof("Identity"));
-	strcpy_s(primitive->name, sizeof("Identity"), "Identity");
+	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive)->szRawKey = IDENTITY_RAWKEY;
+	(*primitive)->szKey = IDENTITY_KEY;
+	(*primitive)->szBlock = IDENTITY_BLOCK;
+	(*primitive)->szTweak = IDENTITY_TWEAK;
+	(*primitive)->fKeySchedule = &Identity_KeySchedule;
+	(*primitive)->fPermutation = &Identity_Permutation;
+	(*primitive)->fInverse = &Identity_Inverse;
+	(*primitive)->name = (char*)malloc(sizeof("Identity"));
+	strcpy_s((*primitive)->name, sizeof("Identity"), "Identity");
 }

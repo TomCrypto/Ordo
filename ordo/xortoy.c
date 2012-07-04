@@ -27,15 +27,16 @@ void XORToy_Inverse(void* block, void* key)
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void XORToy_SetPrimitive(CIPHER_PRIMITIVE* primitive)
+void XORToy_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	primitive->szRawKey = XORTOY_RAWKEY;
-	primitive->szKey = XORTOY_KEY;
-	primitive->szBlock = XORTOY_BLOCK;
-	primitive->szTweak = XORTOY_TWEAK;
-	primitive->fKeySchedule = &XORToy_KeySchedule;
-	primitive->fPermutation = &XORToy_Permutation;
-	primitive->fInverse = &XORToy_Inverse;
-	primitive->name = (char*)malloc(sizeof("XORToy"));
-	strcpy_s(primitive->name, sizeof("XORToy"), "XORToy");
+	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive)->szRawKey = XORTOY_RAWKEY;
+	(*primitive)->szKey = XORTOY_KEY;
+	(*primitive)->szBlock = XORTOY_BLOCK;
+	(*primitive)->szTweak = XORTOY_TWEAK;
+	(*primitive)->fKeySchedule = &XORToy_KeySchedule;
+	(*primitive)->fPermutation = &XORToy_Permutation;
+	(*primitive)->fInverse = &XORToy_Inverse;
+	(*primitive)->name = (char*)malloc(sizeof("XORToy"));
+	strcpy_s((*primitive)->name, sizeof("XORToy"), "XORToy");
 }

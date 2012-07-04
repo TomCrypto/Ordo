@@ -12,6 +12,6 @@ void XORToy_Permutation(void* block, void* key);
 
 void XORToy_Inverse(void* block, void* key);
 
-void XORToy_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void XORToy_SetPrimitive(CIPHER_PRIMITIVE** primitive);
 
 #endif

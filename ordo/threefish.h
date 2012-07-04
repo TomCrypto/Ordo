@@ -12,6 +12,6 @@ void Threefish_Permutation(void* block, void* key);
 
 void Threefish_Inverse(void* block, void* key);
 
-void Threefish_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void Threefish_SetPrimitive(CIPHER_PRIMITIVE** primitive);
 
 #endif
