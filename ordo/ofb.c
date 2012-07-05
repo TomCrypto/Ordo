@@ -1,26 +1,10 @@
-/* CTR mode of operation. */
+/* OFB mode of operation. */
 
 #include "cipher.h"
-#include "ctr.h"
+#include "ofb.h"
 
-/* Increments an IV of arbitrary size as if it were a len-byte integer
-   Propagation is done from left-to-right in memory storage order. */
-void incIV(unsigned char* iv, size_t len)
-{
-	/* Increment the first byte. */
-	size_t t;
-	bool carry = (++*iv == 0);
-
-	/* Go over each byte, and propagate the carry. */
-	for (t = 1; t < len; t++)
-	{
-		if (carry) carry = (++*(iv + t) == 0);
-		else break;
-	}
-}
-
-/* Initializes a CTR context (the primitive and mode must have been filled in). */
-bool CTR_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+/* Initializes an OFB context (the primitive and mode must have been filled in). */
+bool OFB_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
 	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
@@ -45,8 +29,8 @@ bool CTR_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void*
 	return true;
 }
 
-/* Encrypts a buffer of data in CTR mode. The "final" flag is irrelevant. */
-bool CTR_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+/* Encrypts a buffer of data in OFB mode. The "final" flag is irrelevant. */
+bool OFB_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* Save the buffer size as it will not be changed. */
 	size_t sz = *size;
@@ -57,9 +41,7 @@ bool CTR_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 		/* If there is no data left in the context block, update. */
 		if (ctx->blockSize == 0)
 		{
-			/* CTR update (increment IV, copy IV size_to block, encrypt block). */
-			incIV((unsigned char*)ctx->iv, ctx->primitive->szBlock);
-			memcpy(ctx->block, ctx->iv, ctx->primitive->szBlock);
+			/* OFB update (simply apply the permutation function again). */
 			ctx->primitive->fPermutation(ctx->block, ctx->key);
 			ctx->blockSize = ctx->primitive->szBlock;
 		}
@@ -76,15 +58,15 @@ bool CTR_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 	return true;
 }
 
-/* Decrypts a buffer of data in CTR mode. The "final" flag is irrelevant. */
-bool CTR_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+/* Decrypts a buffer of data in OFB mode. The "final" flag is irrelevant. */
+bool OFB_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
-	/* CTR encryption and decryption are equivalent. */
-	return CTR_Encrypt(ctx, buffer, size, final);
+	/* OFB encryption and decryption are equivalent. */
+	return OFB_Encrypt(ctx, buffer, size, final);
 }
 
-/* Finalizes a CTR context. */
-void CTR_Final(CIPHER_CONTEXT* ctx)
+/* Finalizes an OFB context. */
+void OFB_Final(CIPHER_CONTEXT* ctx)
 {
 	/* Free used resources. */
 	sfree(ctx->key, ctx->primitive->szKey);
@@ -93,12 +75,12 @@ void CTR_Final(CIPHER_CONTEXT* ctx)
 }
 
 /* Fills a CIPHER_MODE struct with the correct information. */
-void CTR_SetMode(CIPHER_MODE** mode)
+void OFB_SetMode(CIPHER_MODE** mode)
 {
 	(*mode) = salloc(sizeof(CIPHER_MODE));
-	(*mode)->fInit = &CTR_Init;
-	(*mode)->fEncrypt = &CTR_Encrypt;
-	(*mode)->fDecrypt = &CTR_Decrypt;
-	(*mode)->fFinal = &CTR_Final;
-	(*mode)->name = "CTR";
+	(*mode)->fInit = &OFB_Init;
+	(*mode)->fEncrypt = &OFB_Encrypt;
+	(*mode)->fDecrypt = &OFB_Decrypt;
+	(*mode)->fFinal = &OFB_Final;
+	(*mode)->name = "OFB";
 }

@@ -3,10 +3,16 @@
 #include "cipher.h"
 #include "identity.h"
 
-/* Identity key schedule. */
-void Identity_KeySchedule(void* rawKey, void* tweak, void* key)
+bool Identity_KeySizeCheck(size_t keySize)
 {
-	return;
+	/* All key sizes are permitted for this cipher. */
+	return true;
+}
+
+/* Identity key schedule. */
+bool Identity_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
+{
+	return true;
 }
 
 /* Identity permutation function. */
@@ -25,13 +31,12 @@ void Identity_Inverse(void* block, void* key)
 void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
 	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
-	(*primitive)->szRawKey = IDENTITY_RAWKEY;
 	(*primitive)->szKey = IDENTITY_KEY;
 	(*primitive)->szBlock = IDENTITY_BLOCK;
 	(*primitive)->szTweak = IDENTITY_TWEAK;
+	(*primitive)->fKeySizeCheck = &Identity_KeySizeCheck;
 	(*primitive)->fKeySchedule = &Identity_KeySchedule;
 	(*primitive)->fPermutation = &Identity_Permutation;
 	(*primitive)->fInverse = &Identity_Inverse;
-	(*primitive)->name = (char*)malloc(sizeof("Identity"));
-	strcpy_s((*primitive)->name, sizeof("Identity"), "Identity");
+	(*primitive)->name = "Identity";
 }

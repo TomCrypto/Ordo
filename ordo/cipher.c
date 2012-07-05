@@ -14,64 +14,55 @@ void loadModes()
 {
 	ECB_SetMode(&ECB);
 	CTR_SetMode(&CTR);
+	OFB_SetMode(&OFB);
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
-CIPHER_CONTEXT* cipherInit(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, void* tweak, void* iv)
+bool cipherInit(CIPHER_CONTEXT** ctx, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Allocate memory for the context and populate it. */
-	CIPHER_CONTEXT* ctx = salloc(sizeof(CIPHER_CONTEXT) * 50);
-	ctx->primitive = primitive;
-	ctx->mode = mode;
+	(*ctx) = salloc(sizeof(CIPHER_CONTEXT));
+	(*ctx)->primitive = primitive;
+	(*ctx)->mode = mode;
 
 	/* Initialize the cipher context. */
-	ctx->mode->fInit(ctx, key, tweak, iv);
-
-	/* Return the context. */
-	return ctx;
+	return (*ctx)->mode->fInit(*ctx, key, keySize, tweak, iv);
 }
 
 /* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */
 bool cipherUpdate(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final, bool decrypt)
 {
 	/* Encrypt or decrypt the buffer. */
-	if (decrypt) ctx->mode->fDecrypt(ctx, buffer, size, final);
-	else ctx->mode->fEncrypt(ctx, buffer, size, final);
-
-	/* Return success. */
-	return true;
+	if (decrypt) return ctx->mode->fDecrypt(ctx, buffer, size, final);
+	else return ctx->mode->fEncrypt(ctx, buffer, size, final);
 }
 
 /* This function finalizes a cipher context. */
-bool cipherFinal(CIPHER_CONTEXT* ctx)
+void cipherFinal(CIPHER_CONTEXT* ctx)
 {
 	/* Finalize the context. */
 	ctx->mode->fFinal(ctx);
 
 	/* Deallocate the context. */
 	sfree(ctx, sizeof(CIPHER_CONTEXT));
-
-	/* Return success. */
-	return true;
 }
 
-/* This convenience function encrypts a buffer with a given key and IV. */
-bool cipherEncrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, void* tweak, void* iv)
+/* This convenience function encrypts a buffer with a given key, tweak and IV. */
+bool cipherEncrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
 {
-	CIPHER_CONTEXT* ctx = cipherInit(primitive, mode, key, tweak, iv);
-	if (ctx == 0) return false;
+	CIPHER_CONTEXT* ctx;
+	if (!cipherInit(&ctx, primitive, mode, key, keySize, tweak, iv)) return false;
 	if (!cipherUpdate(ctx, buffer, size, true, false)) return false;
-	if (!cipherFinal(ctx)) return false;
+	cipherFinal(ctx);
 	return true;
 }
 
-/* This convenience function decrypts a buffer with a given key and IV. */
-bool cipherDecrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, void* tweak, void* iv)
+/* This convenience function decrypts a buffer with a given key, tweak and IV. */
+bool cipherDecrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
 {
-	CIPHER_CONTEXT* ctx = cipherInit(primitive, mode, key, tweak, iv);
-	if (ctx == 0) return false;
-
+	CIPHER_CONTEXT* ctx;
+	if (!cipherInit(&ctx, primitive, mode, key, keySize, tweak, iv)) return false;
 	if (!cipherUpdate(ctx, buffer, size, true, true)) return false;
-	if (!cipherFinal(ctx)) return false;
+	cipherFinal(ctx);
 	return true;
 }

@@ -1,20 +1,39 @@
 Ordo
 ----
 
-This is a dump of .c, .h (and possibly extra files like assembler files, if applicable) for Ordo.
+This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests.
 
-So far only ciphers have been worked on, so ordo.c and ordo.h are empty and the test unit is hotwired to ciphers.h instead. The API is far from definitive (most of the work is going towards implementing correct modes of operation).
+Current work is focused towards finishing the cipher interface. Important todo's:
+ - implement all encryption-only modes of operation
+ - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
+ - put the declarations and the cipher/mode list in a different header file, so that they can be used in other parts of the library later on (like hash functions using specific block ciphers)
+ - improve error handling
 
-The test unit now kind of figures out stuff for itself and is quite effective. It tests all ciphers in all modes of operations when applicable (for now, 3 ciphers and 2 modes of operation).
+Other todo's to keep in mind:
+ - implement secure memory erasing by adding a better erasing pattern in sfree()
 
-The Threefish-256 cipher has been fully implemented (but not checked against test vectors yet!)
+Documentation: The code in some headers is documented for Doxygen.
 
-::TODO::
--> improve secure memory by using a structure which includes the memory size (I could not do it because of unexplained errors)
--> improve cipher API to handle errors better, etc...
--> implement more modes of operation and make sure they all work
--> implement secure memory erasing (right not it's just a memset zero, don't think it's enough)
+:::Current status and what needs to be done:::
 
+CIPHERS > Modes of operation implemented: ECB, OFB, CTR
+CIPHERS > Primitives implemented: Identity, XORToy, Threefish-256
+/!\ These have not been extensively checked for correctness! /!\
+CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
+
+Essentially we want primitives (be it cipher primitives, or hash primitives, etc...) to be accessible from everywhere in the library, and we want different uses to be able to access them transparently (like encrypting, hashing, authenticating, encrypting+authenticating, etc...). This means the cipher.h unit needs to be renamed to something more appropriate such as encrypt.h, since it only handles encryption-only modes of operation. Suggested names:
+
+primitives -> contains declarations for all crypto primitives
+encrypt -> for encryption-only modes of operation (CBC, CTR, etc...)
+hash -> for hashing modes of operation (MD5/MD, Skein/UBI, etc...)
+auth -> for authentication-only modes of operation (HMAC, VMAC, etc...)
+encauth -> for encryption+authentication modes (GCM, CCM, etc...)
+
+This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
+
+It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore?
+
+--------
 
 Please note these ciphers:
 - "Identity": this is a test cipher which does absolutely nothing and is only used to test if the rest of the library works

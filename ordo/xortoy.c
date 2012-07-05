@@ -3,10 +3,16 @@
 #include "cipher.h"
 #include "xortoy.h"
 
-/* XORToy key schedule. */
-void XORToy_KeySchedule(void* rawKey, void* tweak, void* key)
+bool XORTOY_KeySizeCheck(size_t keySize)
 {
-	return;
+	/* The key size must be a multiple of 7 (this is for testing, the cipher doesn't even use the key) */
+	return (keySize % 7 == 0);
+}
+
+/* XORToy key schedule. */
+bool XORToy_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
+{
+	return true;
 }
 
 /* XORToy permutation function. */
@@ -30,13 +36,12 @@ void XORToy_Inverse(void* block, void* key)
 void XORToy_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
 	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
-	(*primitive)->szRawKey = XORTOY_RAWKEY;
 	(*primitive)->szKey = XORTOY_KEY;
 	(*primitive)->szBlock = XORTOY_BLOCK;
 	(*primitive)->szTweak = XORTOY_TWEAK;
+	(*primitive)->fKeySizeCheck = &XORTOY_KeySizeCheck;
 	(*primitive)->fKeySchedule = &XORToy_KeySchedule;
 	(*primitive)->fPermutation = &XORToy_Permutation;
 	(*primitive)->fInverse = &XORToy_Inverse;
-	(*primitive)->name = (char*)malloc(sizeof("XORToy"));
-	strcpy_s((*primitive)->name, sizeof("XORToy"), "XORToy");
+	(*primitive)->name = "XORToy";
 }

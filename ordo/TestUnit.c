@@ -1,8 +1,5 @@
-// Ordo.cpp : Defines the entry posize_t for the console application.
-//
-
 #include <stdio.h>
-#include "cipher.h"
+#include "ordo.h"
 
 /* Binary to hex. */
 void hex(void* input, size_t len)
@@ -11,7 +8,7 @@ void hex(void* input, size_t len)
 	for (t = 0; t < len; t++) printf("%.2x", (unsigned char)*((char*)input + t));
 }
 
-void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t size)
+void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t size, size_t keySize)
 {
 	/* Declare variables. */
 	void* buffer;
@@ -19,7 +16,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t si
 	void* key;
 	size_t pad;
 
-	/* Store the size and pad it up to the block size (this is only needed for ECB/CBC/etc... */
+	/* Store the size and pad it up to the block size (this is only needed for ECB/CBC/etc... but it will be ignored for streaming modes, the extra space will simply be disregarded by the API) */
 	size_t sz = size;
 	if (size % primitive->szBlock == 0) pad = size + primitive->szBlock;
 	else pad = size + primitive->szBlock - size % primitive->szBlock;
@@ -34,52 +31,59 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t si
 	memset(iv, 0xAA, primitive->szBlock);
 
 	/* Allocate a key of the right sie, and fill it with 0xEE. */
-	key = malloc(primitive->szRawKey);
-	memset(key, 0xEE, primitive->szRawKey);
+	key = malloc(keySize);
+	memset(key, 0xEE, keySize);
 
 	/* Print data BEFORE encryption. */
-	printf("Cipher: %s | Mode: %s\n", primitive->name, mode->name);
+	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitive->name, mode->name, keySize * 8);
 	printf("Plaintext  : ");
 	hex(buffer, size);
 	printf(" (%d bytes)\n", size);
 
 	/* Encrypt. */
-	cipherEncrypt((unsigned char*)buffer, &size, primitive, mode, key, 0, iv);
-
-	/* Print data AFTER encryption. */
-	printf("Ciphertext : ");
-	hex(buffer, size);
-	printf(" (%d bytes)\n", size);
+	if (cipherEncrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	{
+		/* Print data AFTER encryption. */
+		printf("Ciphertext : ");
+		hex(buffer, size);
+		printf(" (%d bytes)\n", size);
+	}
+	else printf("Ciphertext : ENCRYPTION FAILED!\n");
 
 	/* Decrypt. */
-	cipherDecrypt((unsigned char*)buffer, &size, primitive, mode, key, 0, iv);
-
-	/* Print data AFTER decryption. */
-	printf("Plaintext  : ");
-	hex(buffer, size);
-	printf(" (%d bytes)\n", size);
+	if (cipherDecrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	{
+		/* Print data AFTER decryption. */
+		printf("Plaintext  : ");
+		hex(buffer, size);
+		printf(" (%d bytes)\n", size);
+	}
+	else printf("Plaintext  : DECRYPTION FAILED!\n");
 
 	printf("\n---\n\n");
 
 	free(key);
+	free(iv);
+	free(buffer);
 }
 
 size_t main(size_t argc, char* argv[])
 {
-	printf("Loading all cipher primitives.\n");
-	loadPrimitives();
-
-	printf("Loading all cipher modes.\n");
-	loadModes();
+	printf("Initializing Ordo...\n");
+	ordoInit();
+	printf("Initialized!\n");
 
 	printf("\n---\n\n");
 
-	testPrimitiveMode(IDENTITY, ECB, 11);
-	testPrimitiveMode(IDENTITY, CTR, 9);
-	testPrimitiveMode(XORTOY, ECB, 19);
-	testPrimitiveMode(XORTOY, CTR, 33);
-	testPrimitiveMode(THREEFISH, ECB, 29);
-	testPrimitiveMode(THREEFISH, CTR, 12);
+	testPrimitiveMode(IDENTITY, ECB, 11, 19);
+	testPrimitiveMode(IDENTITY, CTR, 9, 44);
+	testPrimitiveMode(IDENTITY, OFB, 9, 23);
+	testPrimitiveMode(XORTOY, ECB, 19, 7);
+	testPrimitiveMode(XORTOY, CTR, 33, 21);
+	testPrimitiveMode(XORTOY, OFB, 33, 49);
+	testPrimitiveMode(THREEFISH, ECB, 64, 32);
+	testPrimitiveMode(THREEFISH, CTR, 112, 32);
+	testPrimitiveMode(THREEFISH, OFB, 112, 32);
 
 	system("pause");
 	return 0;

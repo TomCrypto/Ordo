@@ -6,7 +6,9 @@
 #define XORTOY_BLOCK (128 / 8) // 128-bit block
 #define XORTOY_TWEAK 0 // no tweak
 
-void XORToy_KeySchedule(void* rawKey, void* tweak, void* key);
+bool XORTOY_KeySizeCheck(size_t keySize);
+
+bool XORToy_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 
 void XORToy_Permutation(void* block, void* key);
 

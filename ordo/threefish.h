@@ -6,7 +6,9 @@
 #define THREEFISH_BLOCK (256 / 8) // 256-bit block
 #define THREEFISH_TWEAK (128 / 8) // 128-bit tweak
 
-void Threefish_KeySchedule(void* rawKey, void* tweak, void* key);
+bool Threefish_KeySizeCheck(size_t keySize);
+
+bool Threefish_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 
 void Threefish_Permutation(void* block, void* key);
 

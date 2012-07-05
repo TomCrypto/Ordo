@@ -1,8 +1,6 @@
-#include "secmem.h"
+#include "securemem.h"
 
 #if defined __linux__
-
-#include <stdlib.h>
 
 /* Secure memory allocation. */
 void* salloc(size_t size)
@@ -10,6 +8,12 @@ void* salloc(size_t size)
 	void* ptr = malloc(size);
 	mlock(ptr, size);
 	return ptr;
+}
+
+/* Sets memory as read-only. */
+void sprotect(void* ptr, size_t size)
+{
+	mprotect(ptr, size, PROT_READ);
 }
 
 /* Secure memory deallocation. */
@@ -22,12 +26,20 @@ void sfree(void* ptr, size_t size)
 #elif defined _WIN32 || defined _WIN64
 
 #include <Windows.h>
+
 /* Secure memory allocation. */
 void* salloc(size_t size)
 {
 	void* ptr = VirtualAlloc(0, size, MEM_COMMIT, PAGE_READWRITE);
 	VirtualLock(ptr, size);
 	return ptr;
+}
+
+/* Sets memory as read-only. */
+void sprotect(void* ptr, size_t size)
+{
+	DWORD old; // TIL VirtualProtect needs a dummy variable
+	VirtualProtect(ptr, size, PAGE_READONLY, &old);
 }
 
 /* Secure memory deallocation. */
