@@ -1,6 +1,8 @@
 #ifndef identity_h
 #define identity_h
 
+#include "primitives.h"
+
 #define IDENTITY_RAWKEY (256 / 8) // 256-bit key
 #define IDENTITY_KEY (256 / 8)
 #define IDENTITY_BLOCK (128 / 8) // 128-bit block

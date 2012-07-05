@@ -1,6 +1,6 @@
 /* CTR mode of operation. */
 
-#include "cipher.h"
+#include "encrypt.h"
 #include "ctr.h"
 
 /* Increments an IV of arbitrary size as if it were a len-byte integer
@@ -20,7 +20,7 @@ void incIV(unsigned char* iv, size_t len)
 }
 
 /* Initializes a CTR context (the primitive and mode must have been filled in). */
-bool CTR_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+bool CTR_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
 	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
@@ -46,7 +46,7 @@ bool CTR_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void*
 }
 
 /* Encrypts a buffer of data in CTR mode. The "final" flag is irrelevant. */
-bool CTR_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool CTR_Encrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* Save the buffer size as it will not be changed. */
 	size_t sz = *size;
@@ -77,14 +77,14 @@ bool CTR_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 }
 
 /* Decrypts a buffer of data in CTR mode. The "final" flag is irrelevant. */
-bool CTR_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool CTR_Decrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* CTR encryption and decryption are equivalent. */
 	return CTR_Encrypt(ctx, buffer, size, final);
 }
 
 /* Finalizes a CTR context. */
-void CTR_Final(CIPHER_CONTEXT* ctx)
+void CTR_Final(ENCRYPT_CONTEXT* ctx)
 {
 	/* Free used resources. */
 	sfree(ctx->key, ctx->primitive->szKey);
@@ -92,10 +92,10 @@ void CTR_Final(CIPHER_CONTEXT* ctx)
 	sfree(ctx->iv, ctx->primitive->szBlock);
 }
 
-/* Fills a CIPHER_MODE struct with the correct information. */
-void CTR_SetMode(CIPHER_MODE** mode)
+/* Fills a ENCRYPT_MODE struct with the correct information. */
+void CTR_SetMode(ENCRYPT_MODE** mode)
 {
-	(*mode) = salloc(sizeof(CIPHER_MODE));
+	(*mode) = salloc(sizeof(ENCRYPT_MODE));
 	(*mode)->fInit = &CTR_Init;
 	(*mode)->fEncrypt = &CTR_Encrypt;
 	(*mode)->fDecrypt = &CTR_Decrypt;

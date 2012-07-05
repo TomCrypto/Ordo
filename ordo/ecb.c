@@ -1,6 +1,6 @@
 /* ECB mode of operation. */
 
-#include "cipher.h"
+#include "encrypt.h"
 #include "ecb.h"
 
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
@@ -17,7 +17,7 @@ bool padcheck(unsigned char* buffer, size_t padding)
 }
 
 /* Initializes an ECB context (the primitive and mode must have been filled in). */
-bool ECB_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+bool ECB_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
 	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
@@ -45,7 +45,7 @@ bool ECB_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void*
    the buffer (the extra space allocated to the buffer for padding should
    not be included in size), and the resulting size will contain the space
    of the buffer including the padding. */
-bool ECB_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool ECB_Encrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* Save the buffer size. */
 	size_t sz = *size;
@@ -90,7 +90,7 @@ bool ECB_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 }
 
 /* Decrypts a buffer in ECB mode. It is assumed the buffer has enough space for padding. */
-bool ECB_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool ECB_Decrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* Save the buffer size. */
 	size_t sz = *size;
@@ -142,17 +142,17 @@ bool ECB_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 }
 
 /* Finalizes an ECB context. */
-void ECB_Final(CIPHER_CONTEXT* ctx)
+void ECB_Final(ENCRYPT_CONTEXT* ctx)
 {
 	/* Free used resources. */
 	sfree(ctx->key, ctx->primitive->szKey);
 	sfree(ctx->block, ctx->primitive->szBlock);
 }
 
-/* Fills a CIPHER_MODE struct with the correct information. */
-void ECB_SetMode(CIPHER_MODE** mode)
+/* Fills a ENCRYPT_MODE struct with the correct information. */
+void ECB_SetMode(ENCRYPT_MODE** mode)
 {
-	(*mode) = salloc(sizeof(CIPHER_MODE));
+	(*mode) = salloc(sizeof(ENCRYPT_MODE));
 	(*mode)->fInit = &ECB_Init;
 	(*mode)->fEncrypt = &ECB_Encrypt;
 	(*mode)->fDecrypt = &ECB_Decrypt;

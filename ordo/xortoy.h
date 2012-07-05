@@ -1,6 +1,8 @@
 #ifndef xortoy_h
 #define xortoy_h
 
+#include "primitives.h"
+
 #define XORTOY_RAWKEY (256 / 8) // 256-bit key
 #define XORTOY_KEY (256 / 8)
 #define XORTOY_BLOCK (128 / 8) // 128-bit block

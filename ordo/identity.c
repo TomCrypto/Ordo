@@ -1,6 +1,5 @@
 /* Defines the Identity cipher (this cipher is for API tests only and does nothing). */
 
-#include "cipher.h"
 #include "identity.h"
 
 bool Identity_KeySizeCheck(size_t keySize)

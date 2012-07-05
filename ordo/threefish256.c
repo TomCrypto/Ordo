@@ -1,8 +1,6 @@
-/* Defines the Threefish cipher. */
+/* Defines the Threefish-256 cipher. */
 
-#include <stdio.h>
-#include "cipher.h"
-#include "threefish.h"
+#include "threefish256.h"
 
 /* 64-bit left and right rotation. */
 #define ROL(n, r) ((n << r) | (n >> (64 - r)))
@@ -26,14 +24,14 @@ typedef struct SUBKEYS
 	UINT256 subkey[18];
 } SUBKEYS;
 
-bool Threefish_KeySizeCheck(size_t keySize)
+bool Threefish256_KeySizeCheck(size_t keySize)
 {
 	/* Only a 256-bit key is permitted. */
 	return (keySize == 32);
 }
 
-/* Threefish key schedule. */
-bool Threefish_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS* key)
+/* Threefish-256 key schedule. */
+bool Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS* key)
 {
 	size_t t;
 	unsigned long long keyWords[5];
@@ -71,8 +69,8 @@ bool Threefish_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS*
 	return true;
 }
 
-/* Threefish permutation function. */
-void Threefish_Permutation(UINT256* block, SUBKEYS* key)
+/* Threefish-256 permutation function. */
+void Threefish256_Permutation(UINT256* block, SUBKEYS* key)
 {
 	size_t t;
 	unsigned long long s;
@@ -212,8 +210,8 @@ void Threefish_Permutation(UINT256* block, SUBKEYS* key)
 	}
 }
 
-/* Threefish inverse permutation function. */
-void Threefish_Inverse(UINT256* block, SUBKEYS* key)
+/* Threefish-256 inverse permutation function. */
+void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 {
 	size_t t;
 	unsigned long long s;
@@ -354,15 +352,15 @@ void Threefish_Inverse(UINT256* block, SUBKEYS* key)
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void Threefish_SetPrimitive(CIPHER_PRIMITIVE** primitive)
+void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
 	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
-	(*primitive)->szKey = THREEFISH_KEY;
-	(*primitive)->szBlock = THREEFISH_BLOCK;
-	(*primitive)->szTweak = THREEFISH_TWEAK;
-	(*primitive)->fKeySizeCheck = &Threefish_KeySizeCheck;
-	(*primitive)->fKeySchedule = &Threefish_KeySchedule;
-	(*primitive)->fPermutation = &Threefish_Permutation;
-	(*primitive)->fInverse = &Threefish_Inverse;
-	(*primitive)->name = "Threefish";
+	(*primitive)->szKey = THREEFISH256_KEY;
+	(*primitive)->szBlock = THREEFISH256_BLOCK;
+	(*primitive)->szTweak = THREEFISH256_TWEAK;
+	(*primitive)->fKeySizeCheck = &Threefish256_KeySizeCheck;
+	(*primitive)->fKeySchedule = &Threefish256_KeySchedule;
+	(*primitive)->fPermutation = &Threefish256_Permutation;
+	(*primitive)->fInverse = &Threefish256_Inverse;
+	(*primitive)->name = "Threefish-256";
 }

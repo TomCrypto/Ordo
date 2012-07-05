@@ -6,7 +6,6 @@ This directory contains a bunch of code files and headers for Ordo, along with a
 Current work is focused towards finishing the cipher interface. Important todo's:
  - implement all encryption-only modes of operation
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
- - put the declarations and the cipher/mode list in a different header file, so that they can be used in other parts of the library later on (like hash functions using specific block ciphers)
  - improve error handling
 
 Other todo's to keep in mind:
@@ -21,9 +20,9 @@ CIPHERS > Primitives implemented: Identity, XORToy, Threefish-256
 /!\ These have not been extensively checked for correctness! /!\
 CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
 
-Essentially we want primitives (be it cipher primitives, or hash primitives, etc...) to be accessible from everywhere in the library, and we want different uses to be able to access them transparently (like encrypting, hashing, authenticating, encrypting+authenticating, etc...). This means the cipher.h unit needs to be renamed to something more appropriate such as encrypt.h, since it only handles encryption-only modes of operation. Suggested names:
+Essentially we want primitives (be it cipher primitives, or hash primitives, etc...) to be accessible from everywhere in the library, and we want different uses to be able to access them transparently (like encrypting, hashing, authenticating, encrypting+authenticating, etc...). Suggested library section names:
 
-primitives -> contains declarations for all crypto primitives
+primitives -> contains declarations for all crypto primitives (ciphers, hashes, etc...)
 encrypt -> for encryption-only modes of operation (CBC, CTR, etc...)
 hash -> for hashing modes of operation (MD5/MD, Skein/UBI, etc...)
 auth -> for authentication-only modes of operation (HMAC, VMAC, etc...)

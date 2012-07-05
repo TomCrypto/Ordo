@@ -1,10 +1,10 @@
 /* OFB mode of operation. */
 
-#include "cipher.h"
+#include "encrypt.h"
 #include "ofb.h"
 
 /* Initializes an OFB context (the primitive and mode must have been filled in). */
-bool OFB_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+bool OFB_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
 	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
@@ -30,7 +30,7 @@ bool OFB_Init(CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void*
 }
 
 /* Encrypts a buffer of data in OFB mode. The "final" flag is irrelevant. */
-bool OFB_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool OFB_Encrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* Save the buffer size as it will not be changed. */
 	size_t sz = *size;
@@ -59,14 +59,14 @@ bool OFB_Encrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool 
 }
 
 /* Decrypts a buffer of data in OFB mode. The "final" flag is irrelevant. */
-bool OFB_Decrypt(CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
+bool OFB_Decrypt(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final)
 {
 	/* OFB encryption and decryption are equivalent. */
 	return OFB_Encrypt(ctx, buffer, size, final);
 }
 
 /* Finalizes an OFB context. */
-void OFB_Final(CIPHER_CONTEXT* ctx)
+void OFB_Final(ENCRYPT_CONTEXT* ctx)
 {
 	/* Free used resources. */
 	sfree(ctx->key, ctx->primitive->szKey);
@@ -74,10 +74,10 @@ void OFB_Final(CIPHER_CONTEXT* ctx)
 	sfree(ctx->iv, ctx->primitive->szBlock);
 }
 
-/* Fills a CIPHER_MODE struct with the correct information. */
-void OFB_SetMode(CIPHER_MODE** mode)
+/* Fills a ENCRYPT_MODE struct with the correct information. */
+void OFB_SetMode(ENCRYPT_MODE** mode)
 {
-	(*mode) = salloc(sizeof(CIPHER_MODE));
+	(*mode) = salloc(sizeof(ENCRYPT_MODE));
 	(*mode)->fInit = &OFB_Init;
 	(*mode)->fEncrypt = &OFB_Encrypt;
 	(*mode)->fDecrypt = &OFB_Decrypt;

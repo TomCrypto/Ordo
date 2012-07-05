@@ -1,6 +1,5 @@
 /* Defines the XORToy cipher (this cipher is for API tests only and performs a key-independent XOR). */
 
-#include "cipher.h"
 #include "xortoy.h"
 
 bool XORTOY_KeySizeCheck(size_t keySize)

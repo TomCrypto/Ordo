@@ -8,7 +8,7 @@ void hex(void* input, size_t len)
 	for (t = 0; t < len; t++) printf("%.2x", (unsigned char)*((char*)input + t));
 }
 
-void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t size, size_t keySize)
+void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t size, size_t keySize)
 {
 	/* Declare variables. */
 	void* buffer;
@@ -41,7 +41,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t si
 	printf(" (%d bytes)\n", size);
 
 	/* Encrypt. */
-	if (cipherEncrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	if (ordoEncrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
 	{
 		/* Print data AFTER encryption. */
 		printf("Ciphertext : ");
@@ -51,7 +51,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, CIPHER_MODE* mode, size_t si
 	else printf("Ciphertext : ENCRYPTION FAILED!\n");
 
 	/* Decrypt. */
-	if (cipherDecrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	if (ordoDecrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
 	{
 		/* Print data AFTER decryption. */
 		printf("Plaintext  : ");
@@ -76,14 +76,14 @@ size_t main(size_t argc, char* argv[])
 	printf("\n---\n\n");
 
 	testPrimitiveMode(IDENTITY, ECB, 11, 19);
-	testPrimitiveMode(IDENTITY, CTR, 9, 44);
-	testPrimitiveMode(IDENTITY, OFB, 9, 23);
+	testPrimitiveMode(IDENTITY, CTR, 19, 44);
+	testPrimitiveMode(IDENTITY, OFB, 19, 23);
 	testPrimitiveMode(XORTOY, ECB, 19, 7);
 	testPrimitiveMode(XORTOY, CTR, 33, 21);
 	testPrimitiveMode(XORTOY, OFB, 33, 49);
-	testPrimitiveMode(THREEFISH, ECB, 64, 32);
-	testPrimitiveMode(THREEFISH, CTR, 112, 32);
-	testPrimitiveMode(THREEFISH, OFB, 112, 32);
+	testPrimitiveMode(THREEFISH256, ECB, 64, 32);
+	testPrimitiveMode(THREEFISH256, CTR, 112, 32);
+	testPrimitiveMode(THREEFISH256, OFB, 112, 32);
 
 	system("pause");
 	return 0;
