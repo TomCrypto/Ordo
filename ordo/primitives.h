@@ -35,8 +35,11 @@ typedef struct CIPHER_PRIMITIVE
 	char* name;
 } CIPHER_PRIMITIVE;
 
-/*! Initializes all primitives. */
+/*! Loads all primitives. */
 void loadPrimitives();
+
+/*! Unloads all primitives. */
+void unloadPrimitives();
 
 /*! The Identity primitive. */
 CIPHER_PRIMITIVE* IDENTITY;

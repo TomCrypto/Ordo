@@ -12,3 +12,11 @@ void loadPrimitives()
 	XORToy_SetPrimitive(&XORTOY);
 	Threefish256_SetPrimitive(&THREEFISH256);
 }
+
+/* Unloads all primitives. */
+void unloadPrimitives()
+{
+	free(IDENTITY);
+	free(XORTOY);
+	free(THREEFISH256);
+}

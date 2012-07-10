@@ -34,7 +34,7 @@ void XORToy_Inverse(void* block, void* key)
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
 void XORToy_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive) = malloc(sizeof(CIPHER_PRIMITIVE));
 	(*primitive)->szKey = XORTOY_KEY;
 	(*primitive)->szBlock = XORTOY_BLOCK;
 	(*primitive)->szTweak = XORTOY_TWEAK;

@@ -14,32 +14,51 @@ void loadEncryptModes()
 	OFB_SetMode(&OFB);
 }
 
-/* This function returns an initialized cipher context with the provided parameters. */
-bool encryptInit(ENCRYPT_CONTEXT** ctx, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
+/* Unloads all cipher modes. */
+void unloadEncryptModes()
 {
-	/* Allocate memory for the context and populate it. */
-	(*ctx) = salloc(sizeof(ENCRYPT_CONTEXT));
-	(*ctx)->primitive = primitive;
-	(*ctx)->mode = mode;
+	free(ECB);
+	free(CTR);
+	free(OFB);
+}
 
+/* This function returns an initialized encryption context using a specific primitive and mode of operation. */
+ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction)
+{
+	ENCRYPT_CONTEXT* ctx = salloc(sizeof(ENCRYPT_CONTEXT));
+	ctx->direction = direction;
+	ctx->primitive = primitive;
+	mode->fCreate(ctx);
+	ctx->mode = mode;
+	return ctx;
+}
+
+/* This function returns an initialized cipher context with the provided parameters. */
+bool encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+{
 	/* Initialize the cipher context. */
-	return (*ctx)->mode->fInit(*ctx, key, keySize, tweak, iv);
+	return ctx->mode->fInit(ctx, key, keySize, tweak, iv);
 }
 
 /* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */
-bool encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* buffer, size_t* size, bool final, bool decrypt)
+bool encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
 	/* Encrypt or decrypt the buffer. */
-	if (decrypt) return ctx->mode->fDecrypt(ctx, buffer, size, final);
-	else return ctx->mode->fEncrypt(ctx, buffer, size, final);
+	if (ctx->direction) return ctx->mode->fEncryptUpdate(ctx, in, inlen, out, outlen);
+	else return ctx->mode->fDecryptUpdate(ctx, in, inlen, out, outlen);
 }
 
 /* This function finalizes a cipher context. */
-void encryptFinal(ENCRYPT_CONTEXT* ctx)
+bool encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
 	/* Finalize the context. */
-	ctx->mode->fFinal(ctx);
+	if (ctx->direction) return ctx->mode->fEncryptFinal(ctx, out, outlen);
+	else return ctx->mode->fDecryptFinal(ctx, out, outlen);
+}
 
-	/* Deallocate the context. */
+/* This function frees an initialized encryption context. */
+void encryptFree(ENCRYPT_CONTEXT* ctx)
+{
+	ctx->mode->fFree(ctx);
 	sfree(ctx, sizeof(ENCRYPT_CONTEXT));
 }

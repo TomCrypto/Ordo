@@ -2,8 +2,11 @@
 
 #include "encrypt.h"
 
-/* Initialize Ordo. */
-void ordoInit();
+/* Load Ordo. */
+void loadOrdo();
+
+/* Unload Ordo. */
+void unloadOrdo();
 
 /*! This convenience function encrypts a buffer of a given length with the provided parameters.
  \param buffer This points to a buffer to be encrypted.
@@ -16,7 +19,7 @@ void ordoInit();
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
  \return Returns true on success, false on failure. 
  \remark If the selected mode is a block mode, padding is automatically applied and the buffer should have enough space to accomodate it. */
-bool ordoEncrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv);
+bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv);
 
 /*! This convenience function decrypts a buffer of a given length with the provided parameters.
  \param buffer This points to a buffer to be encrypted.
@@ -29,4 +32,4 @@ bool ordoEncrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitiv
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
  \return Returns true on success, false on failure. 
  \remark If the selected mode is a block mode, padding is automatically handled and padding data will be set to zero. */
-bool ordoDecrypt(unsigned char* buffer, size_t* size, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv);
+bool ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv);

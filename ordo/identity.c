@@ -29,7 +29,7 @@ void Identity_Inverse(void* block, void* key)
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
 void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive) = malloc(sizeof(CIPHER_PRIMITIVE));
 	(*primitive)->szKey = IDENTITY_KEY;
 	(*primitive)->szBlock = IDENTITY_BLOCK;
 	(*primitive)->szTweak = IDENTITY_TWEAK;

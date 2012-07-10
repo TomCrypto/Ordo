@@ -354,7 +354,7 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
 void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 {
-	(*primitive) = salloc(sizeof(CIPHER_PRIMITIVE));
+	(*primitive) = malloc(sizeof(CIPHER_PRIMITIVE));
 	(*primitive)->szKey = THREEFISH256_KEY;
 	(*primitive)->szBlock = THREEFISH256_BLOCK;
 	(*primitive)->szTweak = THREEFISH256_TWEAK;
