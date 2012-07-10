@@ -11,7 +11,8 @@ void hex(void* input, size_t len)
 void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t size, size_t keySize)
 {
 	/* Declare variables. */
-	void* buffer;
+	void* in;
+	void* out;
 	void* iv;
 	void* key;
 	size_t pad;
@@ -21,10 +22,12 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 	if (size % primitive->szBlock == 0) pad = size + primitive->szBlock;
 	else pad = size + primitive->szBlock - size % primitive->szBlock;
 
-	/* Allocate a buffer and fill it with 0x77 bytes.*/
-	buffer = malloc(pad);
-	memset(buffer, 0x00, pad);
-	memset(buffer, 0x77, size);
+	/* Allocate a plaintext buffer and fill it with 0x77 bytes.*/
+	in = malloc(size);
+	memset(in, 0x77, size);
+
+	/* Allocate a ciphertext buffer.*/
+	out = malloc(pad);
 
 	/* Allocate a buffer of the right size (= cipher block size) and fill it with 0xAA. */
 	iv = malloc(primitive->szBlock);
@@ -37,25 +40,25 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 	/* Print data BEFORE encryption. */
 	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitive->name, mode->name, keySize * 8);
 	printf("Plaintext  : ");
-	hex(buffer, size);
+	hex(in, size);
 	printf(" (%d bytes)\n", size);
 
 	/* Encrypt. */
-	if (ordoEncrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	if (ordoEncrypt((unsigned char*)in, size, (unsigned char*)out, &size, primitive, mode, key, keySize, 0, iv))
 	{
 		/* Print data AFTER encryption. */
 		printf("Ciphertext : ");
-		hex(buffer, size);
+		hex(out, size);
 		printf(" (%d bytes)\n", size);
 	}
 	else printf("Ciphertext : ENCRYPTION FAILED!\n");
 
 	/* Decrypt. */
-	if (ordoDecrypt((unsigned char*)buffer, &size, primitive, mode, key, keySize, 0, iv))
+	if (ordoDecrypt((unsigned char*)out, size, (unsigned char*)in, &size, primitive, mode, key, keySize, 0, iv))
 	{
 		/* Print data AFTER decryption. */
 		printf("Plaintext  : ");
-		hex(buffer, size);
+		hex(in, size);
 		printf(" (%d bytes)\n", size);
 	}
 	else printf("Plaintext  : DECRYPTION FAILED!\n");
@@ -64,14 +67,15 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 
 	free(key);
 	free(iv);
-	free(buffer);
+	free(in);
+	free(out);
 }
 
 size_t main(size_t argc, char* argv[])
 {
-	printf("Initializing Ordo...\n");
-	ordoInit();
-	printf("Initialized!\n");
+	printf("Loading Ordo... ");
+	loadOrdo();
+	printf("Loaded!\n");
 
 	printf("\n---\n\n");
 
@@ -84,6 +88,10 @@ size_t main(size_t argc, char* argv[])
 	testPrimitiveMode(THREEFISH256, ECB, 64, 32);
 	testPrimitiveMode(THREEFISH256, CTR, 112, 32);
 	testPrimitiveMode(THREEFISH256, OFB, 112, 32);
+
+	printf("Unloading Ordo... ");
+	unloadOrdo();
+	printf("Unloaded!\n\n");
 
 	system("pause");
 	return 0;
