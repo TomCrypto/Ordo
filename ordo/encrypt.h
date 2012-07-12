@@ -132,6 +132,8 @@ ENCRYPT_MODE* CTR;
 ENCRYPT_MODE* OFB;
 /*! The CFB (Cipher FeedBack) mode of operation. */
 ENCRYPT_MODE* CFB;
+/*! The STREAM (stream ciphers only) mode of operation. */
+ENCRYPT_MODE* STREAM;
 
 /*! Loads all encryption modes of operation. */
 void loadEncryptModes();

@@ -77,8 +77,8 @@ bool Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKE
 	return true;
 }
 
-/* Threefish-256 permutation function. */
-void Threefish256_Permutation(UINT256* block, SUBKEYS* key)
+/* Threefish-256 forward permutation function. */
+void Threefish256_Forward(UINT256* block, SUBKEYS* key)
 {
 	size_t t;
 	unsigned long long s;
@@ -368,7 +368,7 @@ void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szTweak = THREEFISH256_TWEAK;
 	(*primitive)->fKeyCheck = &Threefish256_KeyCheck;
 	(*primitive)->fKeySchedule = &Threefish256_KeySchedule;
-	(*primitive)->fPermutation = &Threefish256_Permutation;
+	(*primitive)->fForward = &Threefish256_Forward;
 	(*primitive)->fInverse = &Threefish256_Inverse;
 	(*primitive)->name = "Threefish-256";
 }

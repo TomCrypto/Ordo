@@ -21,7 +21,7 @@ bool Identity_KeyCheck(size_t keySize);
 
 bool Identity_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 
-void Identity_Permutation(void* block, void* key);
+void Identity_Forward(void* block, void* key);
 
 void Identity_Inverse(void* block, void* key);
 

@@ -8,6 +8,7 @@
 #include "ctr.h"
 #include "ofb.h"
 #include "cfb.h"
+#include "stream.h"
 
 /* Loads all cipher modes. */
 void loadEncryptModes()
@@ -16,6 +17,7 @@ void loadEncryptModes()
 	CTR_SetMode(&CTR);
 	OFB_SetMode(&OFB);
 	CFB_SetMode(&CFB);
+	STREAM_SetMode(&STREAM);
 }
 
 /* Unloads all cipher modes. */
@@ -25,6 +27,7 @@ void unloadEncryptModes()
 	free(CTR);
 	free(OFB);
 	free(CFB);
+	free(STREAM);
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */

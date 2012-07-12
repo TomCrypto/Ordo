@@ -101,7 +101,7 @@ bool ECB_EncryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		memcpy(ctx->reserved->block + ctx->reserved->available, in, ctx->primitive->szBlock - ctx->reserved->available);
 
 		/* Encrypt the block. */
-		ctx->primitive->fPermutation(ctx->reserved->block, ctx->key);
+		ctx->primitive->fForward(ctx->reserved->block, ctx->key);
 
 		/* Write back the block to the output. */
 		memcpy(out, ctx->reserved->block, ctx->primitive->szBlock);
@@ -224,7 +224,7 @@ bool ECB_EncryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outl
 	memset(ctx->reserved->block + ctx->reserved->available, padding, padding);
 
 	/* Encrypt the last block. */
-	ctx->primitive->fPermutation(ctx->reserved->block, ctx->key);
+	ctx->primitive->fForward(ctx->reserved->block, ctx->key);
 
 	/* Write it out to the buffer. */
 	memcpy(out, ctx->reserved->block, ctx->primitive->szBlock);

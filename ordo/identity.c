@@ -22,8 +22,8 @@ bool Identity_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
 	return true;
 }
 
-/* Identity permutation function. */
-void Identity_Permutation(void* block, void* key)
+/* Identity forward permutation function. */
+void Identity_Forward(void* block, void* key)
 {
 	return;
 }
@@ -43,7 +43,7 @@ void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szTweak = IDENTITY_TWEAK;
 	(*primitive)->fKeyCheck = &Identity_KeyCheck;
 	(*primitive)->fKeySchedule = &Identity_KeySchedule;
-	(*primitive)->fPermutation = &Identity_Permutation;
+	(*primitive)->fForward = &Identity_Forward;
 	(*primitive)->fInverse = &Identity_Inverse;
 	(*primitive)->name = "Identity";
 }

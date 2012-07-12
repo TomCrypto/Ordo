@@ -21,7 +21,7 @@ bool XORTOY_KeyCheck(size_t keySize);
 
 bool XORToy_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 
-void XORToy_Permutation(void* block, void* key);
+void XORToy_Forward(void* block, void* key);
 
 void XORToy_Inverse(void* block, void* key);
 

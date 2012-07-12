@@ -24,7 +24,7 @@ bool XORToy_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
 }
 
 /* XORToy permutation function. */
-void XORToy_Permutation(void* block, void* key)
+void XORToy_Forward(void* block, void* key)
 {
 	size_t t;
 	for (t = 0; t < XORTOY_BLOCK; t++)
@@ -37,7 +37,7 @@ void XORToy_Permutation(void* block, void* key)
 void XORToy_Inverse(void* block, void* key)
 {
 	/* The inverse permutation happens to be the same as the forward permutation. */
-	XORToy_Permutation(block, key);
+	XORToy_Forward(block, key);
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
@@ -49,7 +49,7 @@ void XORToy_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szTweak = XORTOY_TWEAK;
 	(*primitive)->fKeyCheck = &XORTOY_KeyCheck;
 	(*primitive)->fKeySchedule = &XORToy_KeySchedule;
-	(*primitive)->fPermutation = &XORToy_Permutation;
+	(*primitive)->fForward = &XORToy_Forward;
 	(*primitive)->fInverse = &XORToy_Inverse;
 	(*primitive)->name = "XORToy";
 }

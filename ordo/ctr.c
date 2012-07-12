@@ -87,7 +87,7 @@ bool CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, 
 	memcpy(ctx->reserved->counter, ctx->iv, ctx->primitive->szBlock);
 
 	/* Compute the initial keystream block. */
-	ctx->primitive->fPermutation(ctx->iv, ctx->key);
+	ctx->primitive->fForward(ctx->iv, ctx->key);
 	ctx->reserved->remaining = ctx->primitive->szBlock;
 
 	/* Return success. */
@@ -116,7 +116,7 @@ bool CTR_EncryptUpdate(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 			/* CTR update (increment counter, copy counter into IV, encrypt IV). */
 			incCounter(ctx->reserved->counter, ctx->primitive->szBlock);
 			memcpy(ctx->iv, ctx->reserved->counter, ctx->primitive->szBlock);
-			ctx->primitive->fPermutation(ctx->iv, ctx->key);
+			ctx->primitive->fForward(ctx->iv, ctx->key);
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 

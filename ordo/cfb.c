@@ -65,7 +65,7 @@ bool CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, 
 	if (!ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key)) return false;
 
 	/* Compute the initial keystream block. */
-	ctx->primitive->fPermutation(ctx->iv, ctx->key);
+	ctx->primitive->fForward(ctx->iv, ctx->key);
 	ctx->reserved->remaining = ctx->primitive->szBlock;
 
 	/* Return success. */
@@ -92,7 +92,7 @@ bool CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		if (ctx->reserved->remaining == 0)
 		{
 			/* CFB update (simply apply the permutation function again). */
-			ctx->primitive->fPermutation(ctx->iv, ctx->key);
+			ctx->primitive->fForward(ctx->iv, ctx->key);
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 
@@ -131,7 +131,7 @@ bool CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		if (ctx->reserved->remaining == 0)
 		{
 			/* CFB update (simply apply the permutation function again). */
-			ctx->primitive->fPermutation(ctx->iv, ctx->key);
+			ctx->primitive->fForward(ctx->iv, ctx->key);
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 

@@ -37,7 +37,12 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 
 	/* Allocate a key of the right sie, and fill it with 0xEE. */
 	key = malloc(keySize);
-	memset(key, 0xEE, keySize);
+	//memset(key, 0xEE, keySize);
+	*((unsigned char*)(key) + 0) = 1;
+	*((unsigned char*)(key) + 1) = 2;
+	*((unsigned char*)(key) + 2) = 3;
+	*((unsigned char*)(key) + 3) = 4;
+	*((unsigned char*)(key) + 4) = 5;
 
 	/* Print data BEFORE encryption. */
 	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
@@ -101,7 +106,7 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 	/* Allocate a key of the right sie, and fill it with 0xEE. */
 	key = malloc(keySize);
 	memset(key, 0xEE, keySize);
-
+	
 	/* Print information data. */
 	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
 	printf("Starting performance test...\n");
@@ -154,7 +159,7 @@ void csprngTest()
 		hex(buffer, 100);
 		printf("\n");
 	}
-	printf("Generation complete.\n---\n\n");
+	printf("Generation complete.\n\n---\n\n");
 }
 
 size_t main(size_t argc, char* argv[])
@@ -178,6 +183,7 @@ size_t main(size_t argc, char* argv[])
 	testPrimitiveMode(THREEFISH256, CTR, 112, 32, false);
 	testPrimitiveMode(THREEFISH256, OFB, 112, 32, false);
 	testPrimitiveMode(THREEFISH256, CFB, 112, 32, false);
+	testPrimitiveMode(RC4, STREAM, 71, 41, false);
 
 	printf("* STARTING PERFORMANCE TESTS...\n\n---\n\n");
 
@@ -193,6 +199,7 @@ size_t main(size_t argc, char* argv[])
 	ratePrimitiveMode(THREEFISH256, CTR, 32);
 	ratePrimitiveMode(THREEFISH256, OFB, 32);
 	ratePrimitiveMode(THREEFISH256, CFB, 32);
+	ratePrimitiveMode(RC4, STREAM, 64);
 
 	printf("* STARTING CSPRNG TEST...\n\n---\n\n");
 	csprngTest();

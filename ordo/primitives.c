@@ -4,6 +4,7 @@
 #include "identity.h"
 #include "xortoy.h"
 #include "threefish256.h"
+#include "rc4.h"
 
 /* Loads all primitives. */
 void loadPrimitives()
@@ -12,6 +13,7 @@ void loadPrimitives()
 	Identity_SetPrimitive(&IDENTITY);
 	XORToy_SetPrimitive(&XORTOY);
 	Threefish256_SetPrimitive(&THREEFISH256);
+	RC4_SetPrimitive(&RC4);
 
 	/* Hash primitives. */
 	// empty :[
@@ -23,4 +25,5 @@ void unloadPrimitives()
 	free(IDENTITY);
 	free(XORTOY);
 	free(THREEFISH256);
+	free(RC4);
 }

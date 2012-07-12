@@ -32,8 +32,8 @@ typedef struct CIPHER_PRIMITIVE
 	size_t szTweak;
 	/*! Points to the key size verification function. */
 	CIPHER_KEYCHECK fKeyCheck;
-	/*! Points to the primitive's permutation function. */
-	CIPHER_PERMUTATION fPermutation;
+	/*! Points to the primitive's forward permutation function. */
+	CIPHER_PERMUTATION fForward;
 	/*! Points to the primitive's inverse permutation function. */
 	CIPHER_PERMUTATION fInverse;
 	/*! Points to the primitive's key schedule. */
@@ -54,5 +54,7 @@ CIPHER_PRIMITIVE* IDENTITY;
 CIPHER_PRIMITIVE* XORTOY;
 /*! The Threefish-256 primitive. */
 CIPHER_PRIMITIVE* THREEFISH256;
+/*! The RC4 primitive. */
+CIPHER_PRIMITIVE* RC4;
 
 #endif

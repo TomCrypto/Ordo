@@ -15,8 +15,8 @@ Documentation: The code in a few headers is documented for Doxygen.
 
 :::Current status and what needs to be done:::
 
-CIPHERS > Modes of operation implemented: ECB, OFB, CFB, CTR
-CIPHERS > Primitives implemented: Identity, XORToy, Threefish-256
+CIPHERS > Modes of operation implemented: ECB, OFB, CFB, CTR, STREAM
+CIPHERS > Primitives implemented: Identity, XORToy, Threefish-256, RC4
 /!\ These have not been extensively checked for correctness! /!\
 CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
 
@@ -31,7 +31,7 @@ random -> for pseudorandom number generation (using the OS-provided CSPRNG)
 
 This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
 
-It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore?
+It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? I have implemented RC4 with a degenerate 1-byte block cipher using a dedicated "mode of operation" (STREAM), but I am not sure if this is flexible enough.
 
 --------
 
