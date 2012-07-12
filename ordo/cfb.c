@@ -1,18 +1,18 @@
 /**
- * @file OFB.c
- * Implements the OFB mode of operation. OFB is a streaming mode of operation which performs no padding and works
- * by iterating the cipher primitive's permutation function on the initialization vector to produce the keystream
- * which is subsequently exclusive-or'ed bitwise with the plaintext to produce the ciphertext. As such, OFB
- * decryption is identical to encryption, and the cipher's inverse permutation function is not used.
+ * @file CFB.c
+ * Implements the CFB mode of operation. CFB is a streaming mode of operation which performs no padding and works
+ * similarly to the OFB mode of operation, except the keystream is exclusive-or'ed with the plaintext before being
+ * fed back into the permutation function (whereas OFB is fed back immediately). Therefore the CFB keystream is
+ * dependent on the plaintext.
  *
- * @see OFB.h
+ * @see CFB.h
  */
 
 #include "primitives.h"
 #include "encrypt.h"
-#include "ofb.h"
+#include "cfb.h"
 
-/*! This is extra context space required by the OFB mode to store the amount of state not used.*/
+/*! This is extra context space required by the CFB mode to store the amount of state not used.*/
 typedef struct RESERVED
 {
 	/*! The amount of bytes of unused state remaining before the state is to be renewed. */
@@ -20,7 +20,7 @@ typedef struct RESERVED
 } RESERVED;
 
 /*! This structure describes a symmetric encryption context for the OFB mode. */
-typedef struct OFB_ENCRYPT_CONTEXT
+typedef struct CFB_ENCRYPT_CONTEXT
 {
 	/*! The primitive to use. */
 	CIPHER_PRIMITIVE* primitive;
@@ -36,9 +36,9 @@ typedef struct OFB_ENCRYPT_CONTEXT
 	bool padding;
 	/*! Reserved space for the OFB mode of operation. */
 	RESERVED* reserved;
-} OFB_ENCRYPT_CONTEXT;
+} CFB_ENCRYPT_CONTEXT;
 
-void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx)
+void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
 {
 	/* Allocate context space. */
 	ctx->key = salloc(ctx->primitive->szKey);
@@ -53,7 +53,7 @@ void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-bool OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+bool CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
 	if (!ctx->primitive->fKeyCheck(keySize)) return false;
@@ -80,7 +80,7 @@ bool OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, 
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
-bool OFB_EncryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+bool CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
 	/* Initialize the output size. */
 	*outlen = 0;
@@ -91,13 +91,14 @@ bool OFB_EncryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		/* If there is no data left in the context block, update. */
 		if (ctx->reserved->remaining == 0)
 		{
-			/* OFB update (simply apply the permutation function again). */
+			/* CFB update (simply apply the permutation function again). */
 			ctx->primitive->fPermutation(ctx->iv, ctx->key);
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 
-		/* Encrypt this plaintext byte. */
-		*out = *in ^ *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining);
+		/* XOR the plaintext byte with the keystream before feeding back! */
+		*out = *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) ^ *in;
+		*((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) = *out;
 
 		ctx->reserved->remaining--;
 		in++;
@@ -118,10 +119,35 @@ bool OFB_EncryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode.  */
-bool OFB_DecryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+bool CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-	/* OFB encryption and decryption are equivalent. */
-	return OFB_EncryptUpdate(ctx, in, inlen, out, outlen);
+	/* Initialize the output size. */
+	*outlen = 0;
+
+	/* Go over the buffer byte per byte. */
+	while (inlen != 0)
+	{
+		/* If there is no data left in the context block, update. */
+		if (ctx->reserved->remaining == 0)
+		{
+			/* CFB update (simply apply the permutation function again). */
+			ctx->primitive->fPermutation(ctx->iv, ctx->key);
+			ctx->reserved->remaining = ctx->primitive->szBlock;
+		}
+
+		/* XOR the plaintext byte with the keystream, and use the original ciphertext as the next keystream block input. */
+		*out = *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) ^ *in;
+		*((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) = *in;
+
+		ctx->reserved->remaining--;
+		in++;
+		out++;
+		inlen--;
+		(*outlen)++;
+	}
+
+	/* Return success. */
+	return true;
 }
 
 /*! Finalizes an encryption context in OFB mode. The context must have been allocated and initialized.
@@ -130,7 +156,7 @@ bool OFB_DecryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-bool OFB_Final(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+bool CFB_Final(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
 	/* Write output size if applicable. */
 	if (outlen != 0) *outlen = 0;
@@ -139,7 +165,7 @@ bool OFB_Final(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 	return true;
 }
 
-void OFB_Free(OFB_ENCRYPT_CONTEXT* ctx)
+void CFB_Free(CFB_ENCRYPT_CONTEXT* ctx)
 {
 	/* Free context space. */
 	sfree(ctx->reserved, sizeof(RESERVED));
@@ -148,15 +174,15 @@ void OFB_Free(OFB_ENCRYPT_CONTEXT* ctx)
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */
-void OFB_SetMode(ENCRYPT_MODE** mode)
+void CFB_SetMode(ENCRYPT_MODE** mode)
 {
 	(*mode) = malloc(sizeof(ENCRYPT_MODE));
-	(*mode)->fCreate = &OFB_Create;
-	(*mode)->fInit = &OFB_Init;
-	(*mode)->fEncryptUpdate = &OFB_EncryptUpdate;
-	(*mode)->fDecryptUpdate = &OFB_DecryptUpdate;
-	(*mode)->fEncryptFinal = &OFB_Final;
-	(*mode)->fDecryptFinal = &OFB_Final;
-	(*mode)->fFree = &OFB_Free;
-	(*mode)->name = "OFB";
+	(*mode)->fCreate = &CFB_Create;
+	(*mode)->fInit = &CFB_Init;
+	(*mode)->fEncryptUpdate = &CFB_EncryptUpdate;
+	(*mode)->fDecryptUpdate = &CFB_DecryptUpdate;
+	(*mode)->fEncryptFinal = &CFB_Final;
+	(*mode)->fDecryptFinal = &CFB_Final;
+	(*mode)->fFree = &CFB_Free;
+	(*mode)->name = "CFB";
 }

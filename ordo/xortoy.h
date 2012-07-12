@@ -1,3 +1,12 @@
+/**
+ * @file XORToy.h
+ * Contains the XORToy cipher primitive interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see XORToy.c
+ */
+
 #ifndef xortoy_h
 #define xortoy_h
 
@@ -8,7 +17,7 @@
 #define XORTOY_BLOCK (128 / 8) // 128-bit block
 #define XORTOY_TWEAK 0 // no tweak
 
-bool XORTOY_KeySizeCheck(size_t keySize);
+bool XORTOY_KeyCheck(size_t keySize);
 
 bool XORToy_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 

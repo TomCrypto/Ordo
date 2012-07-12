@@ -1,5 +1,16 @@
+/**
+ * @file CTR.h
+ * Contains the CTR encryption mode interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see CTR.c
+ */
+
 #ifndef ctr_h
 #define ctr_h
+
+#include "encrypt.h"
 
 void CTR_Create(ENCRYPT_CONTEXT* ctx);
 

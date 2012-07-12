@@ -1,8 +1,16 @@
-/* Defines the Identity cipher (this cipher is for API tests only and does nothing). */
+/**
+ * @file Identity.c
+ * Implements the Identity cipher primitive. This cipher is a test cipher which only exists as a debugging tool, and should not be used in any other context.
+ *
+ * The cipher itself does nothing and accepts any key size. It has a block size of 128 bits.
+ *
+ * @see Identity.h
+ */
 
+#include "primitives.h"
 #include "identity.h"
 
-bool Identity_KeySizeCheck(size_t keySize)
+bool Identity_KeyCheck(size_t keySize)
 {
 	/* All key sizes are permitted for this cipher. */
 	return true;
@@ -33,7 +41,7 @@ void Identity_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szKey = IDENTITY_KEY;
 	(*primitive)->szBlock = IDENTITY_BLOCK;
 	(*primitive)->szTweak = IDENTITY_TWEAK;
-	(*primitive)->fKeySizeCheck = &Identity_KeySizeCheck;
+	(*primitive)->fKeyCheck = &Identity_KeyCheck;
 	(*primitive)->fKeySchedule = &Identity_KeySchedule;
 	(*primitive)->fPermutation = &Identity_Permutation;
 	(*primitive)->fInverse = &Identity_Inverse;

@@ -1,5 +1,13 @@
-/* Defines the Threefish-256 cipher. */
+/**
+ * @file Threefish256.c
+ * Implements the Threefish-256 cipher primitive.
+ *
+ * Threefish-256 has a 256-bit block size, a 256-bit key size, and a 128-bit optional tweak.
+ *
+ * @see Threefish256.h
+ */
 
+#include "primitives.h"
 #include "threefish256.h"
 
 /* 64-bit left and right rotation. */
@@ -24,7 +32,7 @@ typedef struct SUBKEYS
 	UINT256 subkey[18];
 } SUBKEYS;
 
-bool Threefish256_KeySizeCheck(size_t keySize)
+bool Threefish256_KeyCheck(size_t keySize)
 {
 	/* Only a 256-bit key is permitted. */
 	return (keySize == 32);
@@ -358,7 +366,7 @@ void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szKey = THREEFISH256_KEY;
 	(*primitive)->szBlock = THREEFISH256_BLOCK;
 	(*primitive)->szTweak = THREEFISH256_TWEAK;
-	(*primitive)->fKeySizeCheck = &Threefish256_KeySizeCheck;
+	(*primitive)->fKeyCheck = &Threefish256_KeyCheck;
 	(*primitive)->fKeySchedule = &Threefish256_KeySchedule;
 	(*primitive)->fPermutation = &Threefish256_Permutation;
 	(*primitive)->fInverse = &Threefish256_Inverse;

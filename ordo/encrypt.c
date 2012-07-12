@@ -1,10 +1,13 @@
 /* Handles code related to symmetric ciphers (e.g. modes of operation). */
+#include "primitives.h"
+#include "encrypt.h"
 #include "encrypt.h"
 
 /* Mode of operation list. */
 #include "ecb.h"
 #include "ctr.h"
 #include "ofb.h"
+#include "cfb.h"
 
 /* Loads all cipher modes. */
 void loadEncryptModes()
@@ -12,6 +15,7 @@ void loadEncryptModes()
 	ECB_SetMode(&ECB);
 	CTR_SetMode(&CTR);
 	OFB_SetMode(&OFB);
+	CFB_SetMode(&CFB);
 }
 
 /* Unloads all cipher modes. */
@@ -20,14 +24,16 @@ void unloadEncryptModes()
 	free(ECB);
 	free(CTR);
 	free(OFB);
+	free(CFB);
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */
-ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction)
+ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction, bool padding)
 {
 	ENCRYPT_CONTEXT* ctx = salloc(sizeof(ENCRYPT_CONTEXT));
 	ctx->direction = direction;
 	ctx->primitive = primitive;
+	ctx->padding = padding;
 	mode->fCreate(ctx);
 	ctx->mode = mode;
 	return ctx;

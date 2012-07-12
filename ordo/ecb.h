@@ -1,5 +1,16 @@
+/**
+ * @file ECB.h
+ * Contains the ECB encryption mode interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see ECB.c
+ */
+
 #ifndef ecb_h
 #define ecb_h
+
+#include "encrypt.h"
 
 void ECB_Create(ENCRYPT_CONTEXT* ctx);
 

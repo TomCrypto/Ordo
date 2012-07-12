@@ -1,3 +1,10 @@
+/**
+ * @file SecureMem.c
+ * Implements the Secure Memory API, which is a simple and lightweight cross-platform API designed to make secure memory management easy.
+ *
+ * @see SecureMem.h
+ */
+
 #include "securemem.h"
 
 #if defined __linux__

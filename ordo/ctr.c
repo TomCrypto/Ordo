@@ -1,7 +1,14 @@
-/*! \file */
+/**
+ * @file CTR.c
+ * Implements the CTR mode of operation. CTR is a streaming mode of operation, which performs no padding and works by
+ * feeding an ever-increasing counter (initially set to the initialization vector) into the cipher's permutation to
+ * produce the keystream, which is subsequently exclusive-or'ed bitwise with the plaintext to produce the ciphertext.
+ * As such, CTR decryption is identical to CTR encryption, and the cipher's inverse permutation function is not used.
+ *
+ * @see CTR.h
+ */
 
-/* CTR mode of operation. */
-
+#include "primitives.h"
 #include "encrypt.h"
 #include "ctr.h"
 
@@ -25,6 +32,10 @@ typedef struct CTR_ENCRYPT_CONTEXT
 	void* key;
 	/*! Points to the initialization vector. */
 	void* iv;
+	/*! Whether to encrypt or decrypt (true = encryption). */
+	bool direction;
+	/*! Whether padding is enabled or not. */
+	bool padding;
 	/*! Reserved space for the CTR mode of operation. */
 	RESERVED* reserved;
 } CTR_ENCRYPT_CONTEXT;
@@ -64,7 +75,7 @@ void CTR_Create(CTR_ENCRYPT_CONTEXT* ctx)
 bool CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
-	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
+	if (!ctx->primitive->fKeyCheck(keySize)) return false;
 
 	/* Copy the IV (required) into the context IV. */
 	memcpy(ctx->iv, iv, ctx->primitive->szBlock); 

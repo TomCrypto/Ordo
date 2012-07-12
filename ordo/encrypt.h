@@ -1,4 +1,13 @@
-/*! \file */
+/**
+ * @file Encrypt.h
+ * Exposes the Ordo encryption interface.
+ *
+ * Header usage mode: External.
+ *
+ * \todo Optimize streaming modes by using bigger word sizes than bytes if the buffer is large enough.
+ *
+ * @see Encrypt.c
+ */
 
 #ifndef encrypt_h
 #define encrypt_h
@@ -7,21 +16,32 @@
 #include "primitives.h"
 #include "ordotypes.h"
 
+/*! Reads the name of a primitive. */
+#define primitiveName(p) (p->name)
+/*! Reads the block size of a primitive. */
+#define primitiveBlockSize(p) (p->szBlock)
+/*! Reads the tweak size of a primitive. */
+#define primitiveTweakSize(p) (p->szTweak)
+/*! Reads the name of a mode of operation. */
+#define modeName(m) (m->name)
+
 /*! This structure describes a symmetric encryption context. */
 typedef struct ENCRYPT_CONTEXT
 {
 	/*! The primitive to use. */
-	CIPHER_PRIMITIVE* primitive;
+	struct CIPHER_PRIMITIVE* primitive;
 	/*! The mode of operation to use. */
 	struct ENCRYPT_MODE* mode;
 	/*! Points to the key material. */
 	void* key;
 	/*! Points to the initialization vector. */
 	void* iv;
+	/*! Whether to encrypt or decrypt (true = encryption). */
+	bool direction;
+	/*! Whether padding is enabled or not. */
+	bool padding;
 	/*! Reserved space for the mode of operation. */
 	void* scratch;
-	/* Whether to encrypt or decrypt. */
-	bool direction;
 } ENCRYPT_CONTEXT;
 
 /*! This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */
@@ -42,8 +62,9 @@ typedef bool (* FINAL_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t*);
 /*! This is the prototype for a cipher mode of operation deallocation function, which simply deallocates context memory. */
 typedef void (* FREE_FUNC)(ENCRYPT_CONTEXT*);
 
-
-/*! This structure defines a mode of operation. */
+/*! This structure defines an encryption mode of operation. Encryption modes of operation are separated into two categories: block modes, which process one block of plaintext/ciphertext at a time, and streaming modes
+ * which can process data byte-by-byte (bit, actually, but the smallest addressable unit in C is a byte). Block modes require padding to encrypt data that is not a multiple of the primitive's block size, whereas
+ * streaming modes do not. Refer to the individual mode of operation's headers to find out in which category they are. */
 typedef struct ENCRYPT_MODE
 {
 	/*! Points to the mode of operation's allocation function. */
@@ -68,8 +89,9 @@ typedef struct ENCRYPT_MODE
  \param primitive This must point to the cryptographic primitive to be used
  \param mode This must point to the cryptographic mode of operation to be used
  \param direction This describes the direction of encryption, set to true for encryption and false for decryption.
+ \param padding This describes whether padding should be used.
  \return Returns the initialized encryption context. */
-ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction);
+ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction, bool padding);
 
 /*! This function prepares an encryption context to be used for encryption, provided a key, tweak and initialization vector.
  \param ctx The encryption context to use
@@ -77,24 +99,24 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
  \param keySize This represents the length, in bytes, of the key buffer
  \param tweak This points to the tweak used in the cipher (this is an optional argument)
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
- \return Returns true on success, false on failure. Possible failure causes include invalid key size for the selected primitive, a missing IV. */
+ \return Returns true on success, false on failure. */
 bool encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided context.
- \param ctx The encryption context to use
- \param in This points to a buffer containing plaintext (or ciphertext)
- \param inlen This contains the size of the in buffer, in bytes
- \param out This points to a buffer which will contain the plaintext (or ciphertext)
- \param outlen This will contain the size of the out buffer, in bytes
- \param decrypt Whether to encrypt or decrypt the buffer.
+ \param ctx The encryption context to use.
+ \param in This points to a buffer containing plaintext (or ciphertext).
+ \param inlen This contains the size of the in buffer, in bytes.
+ \param out This points to a buffer which will contain the plaintext (or ciphertext).
+ \param outlen This will contain the size of the out buffer, in bytes.
  \return Returns true on success, false on failure. */
 bool encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-/*! This function finalizes an encryption context, and returns any leftover plaintext or ciphertext.
- \param ctx The encryption context to use
- \param out This points to a buffer which will contain the plaintext (or ciphertext)
- \param outlen This will contain the size of the out buffer, in bytes
- \remark Once this function returns, the passed context can no longer be used in encryptUpdate . */
+/*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
+ \param ctx The encryption context to use.
+ \param out This points to a buffer which will contain the plaintext (or ciphertext).
+ \param outlen This will contain the size of the out buffer, in bytes.
+ \remark Once this function returns, the passed context can no longer be used in encryptUpdate.
+ \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. */
 bool encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees an initialized encryption context.
@@ -108,6 +130,8 @@ ENCRYPT_MODE* ECB;
 ENCRYPT_MODE* CTR;
 /*! The OFB (Output FeedBack) mode of operation. */
 ENCRYPT_MODE* OFB;
+/*! The CFB (Cipher FeedBack) mode of operation. */
+ENCRYPT_MODE* CFB;
 
 /*! Loads all encryption modes of operation. */
 void loadEncryptModes();

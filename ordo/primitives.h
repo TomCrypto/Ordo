@@ -1,12 +1,19 @@
-/*! \file */
+/**
+ * @file Primitives.h
+ * Exposes the Ordo primitive interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see Primitives.c
+ */
 
 #ifndef primitives_h
 #define primitives_h
 
-#include "ordotypes.h" 
+#include "ordotypes.h"
 
 /*! Prototype for key size checking, which returns true if the passed key size is acceptable, and false otherwise. */
-typedef bool (*CIPHER_KEYSIZECHECK)(size_t);
+typedef bool (*CIPHER_KEYCHECK)(size_t);
 
 /*! Prototype for a primitive key schedule function, taking as an input a key, key size, a tweak and writes the prepared key in the last argument. */
 typedef bool (* CIPHER_KEYSCHEDULE)(void*, size_t, void*, void*);
@@ -24,7 +31,7 @@ typedef struct CIPHER_PRIMITIVE
 	/*! The tweak size, in bytes. */
 	size_t szTweak;
 	/*! Points to the key size verification function. */
-	CIPHER_KEYSIZECHECK fKeySizeCheck;
+	CIPHER_KEYCHECK fKeyCheck;
 	/*! Points to the primitive's permutation function. */
 	CIPHER_PERMUTATION fPermutation;
 	/*! Points to the primitive's inverse permutation function. */

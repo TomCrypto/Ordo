@@ -1,3 +1,12 @@
+/**
+ * @file Identity.h
+ * Contains the Identity cipher primitive interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see Identity.c
+ */
+
 #ifndef identity_h
 #define identity_h
 
@@ -8,7 +17,7 @@
 #define IDENTITY_BLOCK (128 / 8) // 128-bit block
 #define IDENTITY_TWEAK 0 // no tweak
 
-bool Identity_KeySizeCheck(size_t keySize);
+bool Identity_KeyCheck(size_t keySize);
 
 bool Identity_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 

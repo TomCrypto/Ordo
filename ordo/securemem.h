@@ -1,4 +1,11 @@
-/*! \file */
+/**
+ * @file SecureMem.h
+ * Exposes the Secure Memory API.
+ * 
+ * Header usage mode: External.
+ *
+ * @see SecureMem.c
+ */
 
 #ifndef secmem_h
 #define secmem_h
@@ -25,7 +32,7 @@ void* salloc(size_t size);
  \param size The amount of memory, in bytes, to set as read-only.*/
 void sprotect(void* ptr, size_t size);
 
-/*! This function frees a pointer, and securing erases the memory it points to.
+/*! This function frees a pointer, and securely erases the memory it points to.
  \param ptr The pointer to the memory to free.
  \param size The amount of memory, in bytes, pointed to.*/
 void sfree(void* ptr, size_t size);

@@ -1,3 +1,10 @@
+/**
+ * @file OrdoTypes.h
+ * Contains various library-wide definitions and includes.
+ * 
+ * Header usage mode: External.
+ */
+
 #ifndef ordotypes_h
 #define ordotypes_h
 
@@ -12,7 +19,7 @@
 #include "environment.h"
 
 /* Yes, well, stdbool.h doesn't exist under VS2010 for some reason. */
-typedef int bool;
+typedef size_t bool;
 #define false 0
 #define true 1
 

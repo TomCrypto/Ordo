@@ -1,5 +1,16 @@
+/**
+ * @file OFB.h
+ * Contains the OFB encryption mode interface.
+ * 
+ * Header usage mode: External.
+ *
+ * @see OFB.c
+ */
+
 #ifndef ofb_h
 #define ofb_h
+
+#include "encrypt.h"
 
 void OFB_Create(ENCRYPT_CONTEXT* ctx);
 

@@ -11,11 +11,11 @@ Current work is focused towards finishing the cipher interface. Important todo's
 Other todo's to keep in mind:
  - implement secure memory erasing by adding a better erasing pattern in sfree()
 
-Documentation: The code in some headers is documented for Doxygen.
+Documentation: The code in a few headers is documented for Doxygen.
 
 :::Current status and what needs to be done:::
 
-CIPHERS > Modes of operation implemented: ECB, OFB, CTR
+CIPHERS > Modes of operation implemented: ECB, OFB, CFB, CTR
 CIPHERS > Primitives implemented: Identity, XORToy, Threefish-256
 /!\ These have not been extensively checked for correctness! /!\
 CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
@@ -27,6 +27,7 @@ encrypt -> for encryption-only modes of operation (CBC, CTR, etc...)
 hash -> for hashing modes of operation (MD5/MD, Skein/UBI, etc...)
 auth -> for authentication-only modes of operation (HMAC, VMAC, etc...)
 encauth -> for encryption+authentication modes (GCM, CCM, etc...)
+random -> for pseudorandom number generation (using the OS-provided CSPRNG)
 
 This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
 

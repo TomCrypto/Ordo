@@ -1,3 +1,5 @@
+#include "primitives.h"
+#include "encrypt.h"
 #include "ordo.h"
 
 /* Load Ordo. */
@@ -21,22 +23,22 @@ void unloadOrdo()
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
-bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
+bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, bool padding)
 {
-	/* size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode);
+	size_t total = 0;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, true, padding);
 	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
-	if (!encryptUpdate(ctx, in, inlen, out, outlen, false)) return false;
+	if (!encryptUpdate(ctx, in, inlen, out, outlen)) return false;
 	total += *outlen;
-	if (!encryptFinal(ctx, out + *outlen, outlen, false)) return false;
+	if (!encryptFinal(ctx, out + *outlen, outlen)) return false;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true; */
+	return true;
 
-	size_t t;
+	/* size_t t;
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, true);
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, true, padding);
 	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
 
 	for (t = 0; t < inlen; t++)
@@ -50,26 +52,26 @@ bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* ou
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true;
+	return true; */
 }
 
 /* This convenience function decrypts a buffer with a given key, tweak and IV. */
-bool ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv)
+bool ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, bool padding)
 {
-	/* size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode);
+	size_t total = 0;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, false, padding);
 	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
-	if (!encryptUpdate(ctx, in, inlen, out, outlen, true)) return false;
+	if (!encryptUpdate(ctx, in, inlen, out, outlen)) return false;
 	total += *outlen;
-	if (!encryptFinal(ctx, out + total, outlen, true)) return false;
+	if (!encryptFinal(ctx, out + total, outlen)) return false;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true; */
+	return true;
 
-	size_t t;
+	/* size_t t;
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, false);
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, false, padding);
 	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
 
 	for (t = 0; t < inlen; t++)
@@ -83,5 +85,5 @@ bool ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* ou
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true;
+	return true; */
 }

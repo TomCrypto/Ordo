@@ -1,7 +1,17 @@
-/*! \file */
+/**
+ * @file ECB.c
+ * Implements the ECB mode of operation. The ECB mode is a block mode of operation, meaning that it performs
+ * padding. It works by taking each block and feeding it into the permutation function, taking the output
+ * as the ciphertext. To decrypt, the ciphertext it passed through the inverse permutation function to recover
+ * the plaintext. The padding algorithm is PKCS7 (RFC 5652), which appends N bytes of value N, where N is the
+ * number of padding bytes required (between 1 and the cipher's block size in bytes).
+ *
+ * Note that the ECB mode is generally insecure and is not recommended for use.
+ *
+ * @see ECB.h
+ */
 
-/* ECB mode of operation. */
-
+#include "primitives.h"
 #include "encrypt.h"
 #include "ecb.h"
 
@@ -25,6 +35,10 @@ typedef struct ECB_ENCRYPT_CONTEXT
 	void* key;
 	/*! Unused field (ECB uses no initialization vector). */
 	void* iv;
+	/*! Whether to encrypt or decrypt (true = encryption). */
+	bool direction;
+	/*! Whether padding is enabled or not. */
+	bool padding;
 	/*! Reserved space for the ECB mode of operation. */
 	RESERVED* reserved;
 } ECB_ENCRYPT_CONTEXT;
@@ -61,7 +75,7 @@ void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx)
 bool ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
 	/* Check the key size. */
-	if (!ctx->primitive->fKeySizeCheck(keySize)) return false;
+	if (!ctx->primitive->fKeyCheck(keySize)) return false;
 
 	/* Perform the key schedule. */
 	return ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
@@ -121,8 +135,8 @@ bool ECB_DecryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 	/* Initialize output size. */
 	*outlen = 0;
 
-	/* Process all full blocks except the last potential block. */
-	while (ctx->reserved->available + inlen > ctx->primitive->szBlock)
+	/* Process all full blocks except the last potential block (if padding is disabled, also process the last block). */
+	while (ctx->reserved->available + inlen > ctx->primitive->szBlock - (1 - ctx->padding))
 	{
 		/* Copy it in, and process it. */
 		memcpy(ctx->reserved->block + ctx->reserved->available, in, ctx->primitive->szBlock - ctx->reserved->available);
@@ -190,8 +204,21 @@ bool ECB_DecryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \remark The out buffer must have enough space to accomodate up to one block size of plaintext for padding. */
 bool ECB_EncryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
+	unsigned char padding;
+
+	/* If padding is disabled, we need to handle things differently. */
+	if (!ctx->padding)
+	{
+		/* If there is data left, return an error. */
+		if (ctx->reserved->available != 0) return false;
+
+		/* Otherwise, just set the output size to zero. */
+		if (outlen != 0) *outlen = 0;
+		return true;
+	}
+
 	/* Compute the amount of padding required. */
-	unsigned char padding = ctx->primitive->szBlock - ctx->reserved->available % ctx->primitive->szBlock;
+	padding = ctx->primitive->szBlock - ctx->reserved->available % ctx->primitive->szBlock;
 
 	/* Write padding to the last block. */
 	memset(ctx->reserved->block + ctx->reserved->available, padding, padding);
@@ -210,6 +237,17 @@ bool ECB_EncryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outl
 bool ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
 	unsigned char padding;
+
+	/* If padding is disabled, we need to handle things differently. */
+	if (!ctx->padding)
+	{
+		/* If there is data left, return an error. */
+		if (ctx->reserved->available != 0) return false;
+
+		/* Otherwise, just set the output size to zero. */
+		if (outlen != 0) *outlen = 0;
+		return true;
+	}
 
 	/* Otherwise, decrypt the last block. */
 	ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
