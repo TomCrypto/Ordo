@@ -1,8 +1,7 @@
 #include "primitives.h"
 
 /* Primitive list. */
-#include "identity.h"
-#include "xortoy.h"
+#include "nullcipher.h"
 #include "threefish256.h"
 #include "rc4.h"
 
@@ -10,8 +9,7 @@
 void loadPrimitives()
 {
 	/* Cipher primitives. */
-	Identity_SetPrimitive(&IDENTITY);
-	XORToy_SetPrimitive(&XORTOY);
+	NullCipher_SetPrimitive(&NullCipher);
 	Threefish256_SetPrimitive(&THREEFISH256);
 	RC4_SetPrimitive(&RC4);
 
@@ -22,8 +20,7 @@ void loadPrimitives()
 /* Unloads all primitives. */
 void unloadPrimitives()
 {
-	free(IDENTITY);
-	free(XORTOY);
+	free(NullCipher);
 	free(THREEFISH256);
 	free(RC4);
 }

@@ -10,36 +10,22 @@
 #include "primitives.h"
 #include "threefish256.h"
 
+#define THREEFISH256_KEY (608) // 4864-bit extended key
+#define THREEFISH256_BLOCK (32) // 256-bit block
+#define THREEFISH256_TWEAK (16) // 128-bit tweak
+
 /* 64-bit left and right rotation. */
 #define ROL(n, r) ((n << r) | (n >> (64 - r)))
 #define ROR(n, r) ((n >> r) | (n << (64 - r)))
 
-/* A 218-bit structure with two 64-bit words. */
-typedef struct UINT128
-{
-	unsigned long long words[2];
-} UINT128;
-
-/* A 256-bit structure with four 64-bit words. */
-typedef struct UINT256
-{
-	unsigned long long words[4];
-} UINT256;
-
-/* A structure containing a Threefish subkey list. */
-typedef struct SUBKEYS
-{
-	UINT256 subkey[18];
-} SUBKEYS;
-
-bool Threefish256_KeyCheck(size_t keySize)
+int Threefish256_KeyCheck(size_t keySize)
 {
 	/* Only a 256-bit key is permitted. */
 	return (keySize == 32);
 }
 
 /* Threefish-256 key schedule. */
-bool Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS* key)
+void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS* key)
 {
 	size_t t;
 	unsigned long long keyWords[5];
@@ -72,9 +58,6 @@ bool Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKE
 		key->subkey[t].words[2] = keyWords[(t + 2) %  5] + tweakWords[(t + 1) % 3];
 		key->subkey[t].words[3] = keyWords[(t + 3) %  5] + t;
 	}
-
-	/* Return success. */
-	return true;
 }
 
 /* Threefish-256 forward permutation function. */
@@ -232,12 +215,12 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 		block->words[1] -= key->subkey[(t - 1) * 2 + 2].words[1];
 		block->words[2] -= key->subkey[(t - 1) * 2 + 2].words[2];
 		block->words[3] -= key->subkey[(t - 1) * 2 + 2].words[3];
-		
+
 		/* Permutation */
 		s = block->words[1];
 		block->words[1] = block->words[3];
 		block->words[3] = s;
-		
+
 		/* Inverse MIX */
 		block->words[1] ^= block->words[0];
 		block->words[1] = ROR(block->words[1], 32);
@@ -260,7 +243,7 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 		block->words[3] ^= block->words[2];
 		block->words[3] = ROR(block->words[3], 22);
 		block->words[2] -= block->words[3];
-		
+
 		/* Permutation */
 		s = block->words[1];
 		block->words[1] = block->words[3];
@@ -341,7 +324,7 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 		s = block->words[1];
 		block->words[1] = block->words[3];
 		block->words[3] = s;
-		
+
 		/* Inverse MIX */
 		block->words[1] ^= block->words[0];
 		block->words[1] = ROR(block->words[1], 14);
@@ -367,8 +350,8 @@ void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
 	(*primitive)->szBlock = THREEFISH256_BLOCK;
 	(*primitive)->szTweak = THREEFISH256_TWEAK;
 	(*primitive)->fKeyCheck = &Threefish256_KeyCheck;
-	(*primitive)->fKeySchedule = &Threefish256_KeySchedule;
-	(*primitive)->fForward = &Threefish256_Forward;
-	(*primitive)->fInverse = &Threefish256_Inverse;
+	(*primitive)->fKeySchedule = (CIPHER_KEYSCHEDULE)&Threefish256_KeySchedule;
+	(*primitive)->fForward = (CIPHER_PERMUTATION)&Threefish256_Forward;
+	(*primitive)->fInverse = (CIPHER_PERMUTATION)&Threefish256_Inverse;
 	(*primitive)->name = "Threefish-256";
 }

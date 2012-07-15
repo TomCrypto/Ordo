@@ -37,9 +37,9 @@ typedef struct ENCRYPT_CONTEXT
 	/*! Points to the initialization vector. */
 	void* iv;
 	/*! Whether to encrypt or decrypt (true = encryption). */
-	bool direction;
+	int direction;
 	/*! Whether padding is enabled or not. */
-	bool padding;
+	int padding;
 	/*! Reserved space for the mode of operation. */
 	void* scratch;
 } ENCRYPT_CONTEXT;
@@ -49,15 +49,15 @@ typedef void (* CREATE_FUNC)(ENCRYPT_CONTEXT*);
 
 /*! This is the prototype for a cipher mode of operation initialization function, taking as an
     input a cipher context, a key buffer, a key size, a tweak and an initialization vector. */
-typedef bool (* INIT_FUNC)(ENCRYPT_CONTEXT*, void*, size_t, void*, void*);
+typedef int (* INIT_FUNC)(ENCRYPT_CONTEXT*, void*, size_t, void*, void*);
 
 /*! This is the prototype for a cipher mode of operation encryption/decryption function, taking
     as an input a cipher context, a buffer, a buffer size and a flag indicating whether padding
 	should be applied (this flag is ignored on streaming modes of operation). */
-typedef bool (* UPDATE_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t, unsigned char*, size_t*);
+typedef void (* UPDATE_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t, unsigned char*, size_t*);
 
 /*! This is the prototype for a cipher mode of operation finalization function, taking as an input a cipher context. */
-typedef bool (* FINAL_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t*);
+typedef int (* FINAL_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t*);
 
 /*! This is the prototype for a cipher mode of operation deallocation function, which simply deallocates context memory. */
 typedef void (* FREE_FUNC)(ENCRYPT_CONTEXT*);
@@ -91,7 +91,7 @@ typedef struct ENCRYPT_MODE
  \param direction This describes the direction of encryption, set to true for encryption and false for decryption.
  \param padding This describes whether padding should be used.
  \return Returns the initialized encryption context. */
-ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, bool direction, bool padding);
+ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding);
 
 /*! This function prepares an encryption context to be used for encryption, provided a key, tweak and initialization vector.
  \param ctx The encryption context to use
@@ -100,16 +100,15 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
  \param tweak This points to the tweak used in the cipher (this is an optional argument)
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
  \return Returns true on success, false on failure. */
-bool encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided context.
  \param ctx The encryption context to use.
  \param in This points to a buffer containing plaintext (or ciphertext).
  \param inlen This contains the size of the in buffer, in bytes.
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
- \param outlen This will contain the size of the out buffer, in bytes.
- \return Returns true on success, false on failure. */
-bool encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+ \param outlen This will contain the size of the out buffer, in bytes. */
+void encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
 /*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
  \param ctx The encryption context to use.
@@ -117,7 +116,7 @@ bool encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsign
  \param outlen This will contain the size of the out buffer, in bytes.
  \remark Once this function returns, the passed context can no longer be used in encryptUpdate.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. */
-bool encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
+int encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees an initialized encryption context.
  \param ctx The encryption context to be freed.

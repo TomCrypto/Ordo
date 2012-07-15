@@ -2,6 +2,9 @@
  * @file SecureMem.c
  * Implements the Secure Memory API, which is a simple and lightweight cross-platform API designed to make secure memory management easy.
  *
+ * \todo Make sprotect work under Linux.
+ * \todo Implement other platforms.
+ *
  * @see SecureMem.h
  */
 
@@ -20,7 +23,8 @@ void* salloc(size_t size)
 /* Sets memory as read-only. */
 void sprotect(void* ptr, size_t size)
 {
-	mprotect(ptr, size, PROT_READ);
+    // finish this
+	// mprotect(ptr, size, PROT_READ);
 }
 
 /* Secure memory deallocation. */
@@ -45,14 +49,16 @@ void* salloc(size_t size)
 /* Sets memory as read-only. */
 void sprotect(void* ptr, size_t size)
 {
-	DWORD old; // TIL VirtualProtect needs a dummy variable
+    /* TIL VirtualProtect needs a dummy variable */
+	DWORD old;
 	VirtualProtect(ptr, size, PAGE_READONLY, &old);
 }
 
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-	memset(ptr, 0, size); // improve this later
+    /* improve this later */
+	memset(ptr, 0, size);
 	VirtualFree(ptr, 0, MEM_RELEASE);
 }
 

@@ -1,8 +1,7 @@
 /**
  * @file OrdoTypes.h
  * Contains various library-wide definitions and includes.
- * 
- * Header usage mode: External.
+ *
  */
 
 #ifndef ordotypes_h
@@ -18,9 +17,28 @@
 #include "securemem.h"
 #include "environment.h"
 
-/* Yes, well, stdbool.h doesn't exist under VS2010 for some reason. */
-typedef size_t bool;
-#define false 0
-#define true 1
+/*! The function succeeded. */
+#define ORDO_ESUCCESS 0
+
+/*! The function failed. */
+#define ORDO_EFAIL -1
+
+/*! An unknown error occurred. */
+#define ORDO_EUNKNOWN -2
+
+/*! A parameter was incorrect. */
+#define ORDO_EPARAM -3
+
+/*! The key size is invalid. */
+#define ORDO_EKEYSIZE -4
+
+/*! The context state was invalid. */
+#define ORDO_EINVALID -5
+
+/*! The padding was not recognized. */
+#define ORDO_EPADDING -6
+
+/*! A resource was unavailable. */
+#define ORDO_EUNAVAILABLE -7
 
 #endif

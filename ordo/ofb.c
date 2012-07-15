@@ -31,15 +31,17 @@ typedef struct OFB_ENCRYPT_CONTEXT
 	/*! Points to the initialization vector. */
 	void* iv;
 	/*! Whether to encrypt or decrypt (true = encryption). */
-	bool direction;
+	int direction;
 	/*! Whether padding is enabled or not. */
-	bool padding;
+	int padding;
 	/*! Reserved space for the OFB mode of operation. */
 	RESERVED* reserved;
 } OFB_ENCRYPT_CONTEXT;
 
-void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx)
+void OFB_Create(ENCRYPT_CONTEXT* context)
 {
+    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
+
 	/* Allocate context space. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->iv = salloc(ctx->primitive->szBlock);
@@ -53,26 +55,28 @@ void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-bool OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int OFB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
 {
+    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
+
 	/* Check the key size. */
-	if (!ctx->primitive->fKeyCheck(keySize)) return false;
+	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
 	/* Copy the IV (required) into the context IV. */
-	memcpy(ctx->iv, iv, ctx->primitive->szBlock); 
+	memcpy(ctx->iv, iv, ctx->primitive->szBlock);
 
 	/* Perform the key schedule. */
-	if (!ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key)) return false;
+	ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
 
 	/* Compute the initial keystream block. */
 	ctx->primitive->fForward(ctx->iv, ctx->key);
 	ctx->reserved->remaining = ctx->primitive->szBlock;
 
 	/* Return success. */
-	return true;
+	return 0;
 }
 
-/*! Encrypts a buffer in OFB mode. The context must have been allocated and initialized.
+/*! Encrypts/decrypts a buffer in OFB mode. The context must have been allocated and initialized.
   \param ctx The initialized encryption context.
   \param in A pointer to the plaintext buffer.
   \param inlen The size of the plaintext buffer, in bytes.
@@ -80,8 +84,10 @@ bool OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, 
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
-bool OFB_EncryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void OFB_Update(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -105,23 +111,6 @@ bool OFB_EncryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		inlen--;
 		(*outlen)++;
 	}
-
-	/* Return success. */
-	return true;
-}
-
-/*! Decrypts a buffer in OFB mode. The context must have been allocated and initialized.
-  \param ctx The initialized encryption context.
-  \param in A pointer to the ciphertext buffer.
-  \param inlen The size of the ciphertext buffer, in bytes.
-  \param out A pointer to the plaintext buffer.
-  \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
-  \return Returns true on success, false on failure.
-  \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode.  */
-bool OFB_DecryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
-{
-	/* OFB encryption and decryption are equivalent. */
-	return OFB_EncryptUpdate(ctx, in, inlen, out, outlen);
 }
 
 /*! Finalizes an encryption context in OFB mode. The context must have been allocated and initialized.
@@ -130,17 +119,21 @@ bool OFB_DecryptUpdate(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-bool OFB_Final(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int OFB_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
 {
+    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
+
 	/* Write output size if applicable. */
 	if (outlen != 0) *outlen = 0;
 
-	/* Return true. */
-	return true;
+	/* Return success. */
+	return 0;
 }
 
-void OFB_Free(OFB_ENCRYPT_CONTEXT* ctx)
+void OFB_Free(ENCRYPT_CONTEXT* context)
 {
+    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
+
 	/* Free context space. */
 	sfree(ctx->reserved, sizeof(RESERVED));
 	sfree(ctx->iv, ctx->primitive->szBlock);
@@ -153,8 +146,8 @@ void OFB_SetMode(ENCRYPT_MODE** mode)
 	(*mode) = malloc(sizeof(ENCRYPT_MODE));
 	(*mode)->fCreate = &OFB_Create;
 	(*mode)->fInit = &OFB_Init;
-	(*mode)->fEncryptUpdate = &OFB_EncryptUpdate;
-	(*mode)->fDecryptUpdate = &OFB_DecryptUpdate;
+	(*mode)->fEncryptUpdate = &OFB_Update;
+	(*mode)->fDecryptUpdate = &OFB_Update;
 	(*mode)->fEncryptFinal = &OFB_Final;
 	(*mode)->fDecryptFinal = &OFB_Final;
 	(*mode)->fFree = &OFB_Free;

@@ -31,15 +31,17 @@ typedef struct CFB_ENCRYPT_CONTEXT
 	/*! Points to the initialization vector. */
 	void* iv;
 	/*! Whether to encrypt or decrypt (true = encryption). */
-	bool direction;
+	int direction;
 	/*! Whether padding is enabled or not. */
-	bool padding;
+	int padding;
 	/*! Reserved space for the OFB mode of operation. */
 	RESERVED* reserved;
 } CFB_ENCRYPT_CONTEXT;
 
-void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
+void CFB_Create(ENCRYPT_CONTEXT* val)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)val;
+
 	/* Allocate context space. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->iv = salloc(ctx->primitive->szBlock);
@@ -53,23 +55,25 @@ void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-bool CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int CFB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)context;
+
 	/* Check the key size. */
-	if (!ctx->primitive->fKeyCheck(keySize)) return false;
+	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
 	/* Copy the IV (required) into the context IV. */
-	memcpy(ctx->iv, iv, ctx->primitive->szBlock); 
+	memcpy(ctx->iv, iv, ctx->primitive->szBlock);
 
 	/* Perform the key schedule. */
-	if (!ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key)) return false;
+	ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
 
 	/* Compute the initial keystream block. */
 	ctx->primitive->fForward(ctx->iv, ctx->key);
 	ctx->reserved->remaining = ctx->primitive->szBlock;
 
 	/* Return success. */
-	return true;
+	return 0;
 }
 
 /*! Encrypts a buffer in OFB mode. The context must have been allocated and initialized.
@@ -78,10 +82,11 @@ bool CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, 
   \param inlen The size of the plaintext buffer, in bytes.
   \param out A pointer to the ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
-  \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
-bool CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CFB_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)context;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -106,9 +111,6 @@ bool CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		inlen--;
 		(*outlen)++;
 	}
-
-	/* Return success. */
-	return true;
 }
 
 /*! Decrypts a buffer in OFB mode. The context must have been allocated and initialized.
@@ -117,10 +119,11 @@ bool CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param inlen The size of the ciphertext buffer, in bytes.
   \param out A pointer to the plaintext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
-  \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode.  */
-bool CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CFB_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)context;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -145,9 +148,6 @@ bool CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		inlen--;
 		(*outlen)++;
 	}
-
-	/* Return success. */
-	return true;
 }
 
 /*! Finalizes an encryption context in OFB mode. The context must have been allocated and initialized.
@@ -156,17 +156,21 @@ bool CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-bool CFB_Final(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int CFB_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)context;
+
 	/* Write output size if applicable. */
 	if (outlen != 0) *outlen = 0;
 
-	/* Return true. */
-	return true;
+	/* Return success. */
+	return 0;
 }
 
-void CFB_Free(CFB_ENCRYPT_CONTEXT* ctx)
+void CFB_Free(ENCRYPT_CONTEXT* context)
 {
+    CFB_ENCRYPT_CONTEXT* ctx = (CFB_ENCRYPT_CONTEXT*)context;
+
 	/* Free context space. */
 	sfree(ctx->reserved, sizeof(RESERVED));
 	sfree(ctx->iv, ctx->primitive->szBlock);

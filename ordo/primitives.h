@@ -1,7 +1,7 @@
 /**
  * @file Primitives.h
  * Exposes the Ordo primitive interface.
- * 
+ *
  * Header usage mode: External.
  *
  * @see Primitives.c
@@ -13,10 +13,10 @@
 #include "ordotypes.h"
 
 /*! Prototype for key size checking, which returns true if the passed key size is acceptable, and false otherwise. */
-typedef bool (*CIPHER_KEYCHECK)(size_t);
+typedef int (*CIPHER_KEYCHECK)(size_t);
 
 /*! Prototype for a primitive key schedule function, taking as an input a key, key size, a tweak and writes the prepared key in the last argument. */
-typedef bool (* CIPHER_KEYSCHEDULE)(void*, size_t, void*, void*);
+typedef void (* CIPHER_KEYSCHEDULE)(void*, size_t, void*, void*);
 
 /*! Prototype for a primitive's permutation function, taking as an input a block and key. */
 typedef void (* CIPHER_PERMUTATION)(void*, void*);
@@ -48,8 +48,8 @@ void loadPrimitives();
 /*! Unloads all primitives. */
 void unloadPrimitives();
 
-/*! The Identity primitive. */
-CIPHER_PRIMITIVE* IDENTITY;
+/*! The NullCipher primitive. */
+CIPHER_PRIMITIVE* NullCipher;
 /*! The XORToy primitive. */
 CIPHER_PRIMITIVE* XORTOY;
 /*! The Threefish-256 primitive. */

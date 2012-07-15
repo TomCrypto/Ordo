@@ -1,7 +1,7 @@
 /**
  * @file rc4.h
  * Contains the RC4 cipher primitive interface. This is a stream cipher.
- * 
+ *
  * Header usage mode: External.
  *
  * @see rc4.c
@@ -16,9 +16,17 @@
 #define RC4_BLOCK (8 / 8) // 8-bit block
 #define RC4_TWEAK 0 // no tweak
 
-bool RC4_KeyCheck(size_t keySize);
+/* A structure containing an RC4 state. */
+typedef struct RC4STATE
+{
+	unsigned char s[256];
+	unsigned char i;
+	unsigned char j;
+} RC4STATE;
 
-bool RC4_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
+int RC4_KeyCheck(size_t keySize);
+
+void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state);
 
 void RC4_Permutation(void* block, void* key);
 

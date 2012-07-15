@@ -23,18 +23,18 @@ void unloadOrdo()
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
-bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, bool padding)
+int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, int padding)
 {
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, true, padding);
-	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
-	if (!encryptUpdate(ctx, in, inlen, out, outlen)) return false;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 1, padding);
+	if (encryptInit(ctx, key, keySize, tweak, iv) != 0) return ORDO_EFAIL;
+	encryptUpdate(ctx, in, inlen, out, outlen);
 	total += *outlen;
-	if (!encryptFinal(ctx, out + *outlen, outlen)) return false;
+	if (encryptFinal(ctx, out + *outlen, outlen) != 0) return ORDO_EFAIL;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true;
+	return 0;
 
 	/* size_t t;
 	size_t total = 0;
@@ -56,18 +56,18 @@ bool ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* ou
 }
 
 /* This convenience function decrypts a buffer with a given key, tweak and IV. */
-bool ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, bool padding)
+int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, int padding)
 {
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, false, padding);
-	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
-	if (!encryptUpdate(ctx, in, inlen, out, outlen)) return false;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 0, padding);
+	if (encryptInit(ctx, key, keySize, tweak, iv) != 0) return ORDO_EFAIL;
+	encryptUpdate(ctx, in, inlen, out, outlen);
 	total += *outlen;
-	if (!encryptFinal(ctx, out + total, outlen)) return false;
+	if (encryptFinal(ctx, out + *outlen, outlen) != 0) return ORDO_EFAIL;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true;
+	return 0;
 
 	/* size_t t;
 	size_t total = 0;

@@ -1,7 +1,7 @@
 /**
  * @file Threefish256.h
  * Contains the Threefish-256 cipher primitive interface.
- * 
+ *
  * Header usage mode: External.
  *
  * @see Threefish256.c
@@ -12,17 +12,31 @@
 
 #include "primitives.h"
 
-#define THREEFISH256_KEY (4864 / 8)    // 4864-bit extended key
-#define THREEFISH256_BLOCK (256 / 8) // 256-bit block
-#define THREEFISH256_TWEAK (128 / 8) // 128-bit tweak
+/* A 218-bit structure with two 64-bit words. */
+typedef struct UINT128
+{
+	unsigned long long words[2];
+} UINT128;
 
-bool Threefish256_KeyCheck(size_t keySize);
+/* A 256-bit structure with four 64-bit words. */
+typedef struct UINT256
+{
+	unsigned long long words[4];
+} UINT256;
 
-bool Threefish256_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
+/* A structure containing a Threefish subkey list. */
+typedef struct SUBKEYS
+{
+	UINT256 subkey[18];
+} SUBKEYS;
 
-void Threefish256_Forward(void* block, void* key);
+int Threefish256_KeyCheck(size_t keySize);
 
-void Threefish256_Inverse(void* block, void* key);
+void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKEYS* key);
+
+void Threefish256_Forward(UINT256* block, SUBKEYS* key);
+
+void Threefish256_Inverse(UINT256* block, SUBKEYS* key);
 
 void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive);
 

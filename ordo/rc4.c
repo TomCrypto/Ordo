@@ -10,15 +10,7 @@
 #include "primitives.h"
 #include "rc4.h"
 
-/* A structure containing an RC4 state. */
-typedef struct RC4STATE
-{
-	unsigned char s[256];
-	unsigned char i;
-	unsigned char j;
-} RC4STATE;
-
-bool RC4_KeyCheck(size_t keySize)
+int RC4_KeyCheck(size_t keySize)
 {
 	/* Allowed keys are 40-2048 bits long. */
 	return ((keySize >= 5) && (keySize <= 256));
@@ -33,8 +25,18 @@ void swap(unsigned char* a, unsigned char* b)
 	*b = c;
 }
 
+/* RC4 forward permutation function. */
+void RC4_Forward(unsigned char* output, RC4STATE* state)
+{
+	/* Update the state. */
+	state->i++;
+    state->j += state->s[state->i];
+	swap(&state->s[state->i], &state->s[state->j]);
+	if (output != 0) *output = state->s[(state->s[state->i] + state->s[state->j]) % 256];
+}
+
 /* RC4 key schedule. */
-bool RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state)
+void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state)
 {
 	/* Loop variable. */
 	size_t t;
@@ -57,18 +59,8 @@ bool RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
 	state->i = 0;
 	state->j = 0;
 
-	/* Return success. */
-	return true;
-}
-
-/* RC4 forward permutation function. */
-void RC4_Forward(unsigned char* output, RC4STATE* state)
-{
-	/* Update the state. */
-	state->i++;
-    state->j += state->s[state->i];
-	swap(&state->s[state->i], &state->s[state->j]);
-	*output = state->s[(state->s[state->i] + state->s[state->j]) % 256];
+	/* Throw away the first 2048 bytes. */
+	for (t = 0; t < 2048; t++) RC4_Forward(0, state);
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */

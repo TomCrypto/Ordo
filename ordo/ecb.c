@@ -36,28 +36,30 @@ typedef struct ECB_ENCRYPT_CONTEXT
 	/*! Unused field (ECB uses no initialization vector). */
 	void* iv;
 	/*! Whether to encrypt or decrypt (true = encryption). */
-	bool direction;
+	int direction;
 	/*! Whether padding is enabled or not. */
-	bool padding;
+	int padding;
 	/*! Reserved space for the ECB mode of operation. */
 	RESERVED* reserved;
 } ECB_ENCRYPT_CONTEXT;
 
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
-bool padcheck(unsigned char* buffer, unsigned char padding)
+int padcheck(unsigned char* buffer, unsigned char padding)
 {
 	/* Iterate over all padding bytes at the end of the block. */
 	size_t t;
 	for (t = 0; t < padding; t++)
 		if ((unsigned char)*(buffer + t) != padding)
-			return false;
+			return 0;
 
 	/* All bytes are valid, the padding is acceptable. */
-	return true;
+	return 1;
 }
 
-void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx)
+void ECB_Create(ENCRYPT_CONTEXT* context)
 {
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
 	/* Allocate context fields. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->reserved = salloc(sizeof(RESERVED));
@@ -66,31 +68,39 @@ void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx)
 }
 
 /*! Initializes an ECB context (the primitive and mode must have been filled in).
-  \param ctx The initialized encryption context.
+  \param context The initialized encryption context.
   \param key A pointer to the key to use for encryption.
   \param keySize The size, in bytes, of the key.
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv Set this to zero, as the ECB mode uses no initialization vector.
-  \return Returns true on success, false on failure. */
-bool ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+  \return Returns 0 on success, and a negative value on failure. Possible errors are:
+  ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
+int ECB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
 {
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
 	/* Check the key size. */
-	if (!ctx->primitive->fKeyCheck(keySize)) return false;
+	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
 	/* Perform the key schedule. */
-	return ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
+	ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
+
+	/* Return success. */
+	return 0;
 }
 
 /*! Encrypts a buffer in ECB mode. The context must have been allocated and initialized.
-  \param ctx The initialized encryption context.
+  \param context The initialized encryption context.
   \param in A pointer to the plaintext buffer.
   \param inlen The size of the plaintext buffer, in bytes.
   \param out A pointer to the ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one more block size of ciphertext than plaintext, rounded down to the nearest block. */
-bool ECB_EncryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ECB_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -117,21 +127,19 @@ bool ECB_EncryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 	/* Add whatever is left in the temporary buffer. */
 	memcpy(ctx->reserved->block + ctx->reserved->available, in, inlen);
 	ctx->reserved->available += inlen;
-
-	/* We're done. */
-	return true;
 }
 
 /*! Decrypts a buffer in ECB mode. The context must have been allocated and initialized.
-  \param ctx The initialized encryption context.
+  \param context The initialized encryption context.
   \param in A pointer to the ciphertext buffer.
   \param inlen The size of the ciphertext buffer, in bytes.
   \param out A pointer to the plaintext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
-  \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one more block size of plaintext than ciphertext, rounded down to the nearest block. */
-bool ECB_DecryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ECB_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -158,120 +166,88 @@ bool ECB_DecryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 	/* Save the final block. */
 	memcpy(ctx->reserved->block + ctx->reserved->available, in, inlen);
 	ctx->reserved->available += inlen;
-
-	/* We're done. */
-	return true;
-
-	/* This is an old, more explicit but (hopefully) equivalent version. Keep for reference. */
-	#ifdef COMMENT
-	/* If the final data is less than or equal to a full block size, save it. */
-	if (ctx->reserved->available + inlen <= ctx->primitive->szBlock)
-	{
-		memcpy(ctx->reserved->block + ctx->reserved->available, in, inlen);
-		ctx->reserved->available += inlen;
-	}
-	else
-	{
-		/* Otherwise, process the available block and save the remaining part. */
-		memcpy(ctx->reserved->block + ctx->reserved->available, in, ctx->primitive->szBlock - ctx->reserved->available);
-
-		/* Decrypt the block. */
-		ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
-
-		/* Write back the block to the output. */
-		memcpy(out, ctx->reserved->block, ctx->primitive->szBlock);
-		out += ctx->primitive->szBlock;
-		(*outlen) += ctx->primitive->szBlock;
-
-		/* Go forward in the input buffer. */
-		in += ctx->primitive->szBlock - ctx->reserved->available;
-		inlen -= ctx->primitive->szBlock - ctx->reserved->available;
-		ctx->reserved->available = 0;
-
-		/* Copy the rest. */
-		memcpy(ctx->reserved->block + ctx->reserved->available, in, inlen);
-		ctx->reserved->available += inlen;
-	}
-	#endif
 }
 
 /*! Finalizes an encryption context in ECB mode. The context must have been allocated and initialized.
-  \param ctx The initialized encryption context.
+  \param context The initialized encryption context.
   \param out A pointer to the final plaintext/ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
-  \param decrypt Describes whether to perform decryption or encryption.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one block size of plaintext for padding. */
-bool ECB_EncryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int ECB_EncryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
 {
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
+	unsigned char padding;
+
+	/* If padding is disabled, we need to handle things differently. */
+	if (ctx->padding == 0)
+	{
+		/* If there is data left, return an error. */
+		if (ctx->reserved->available != 0) return ORDO_EINVALID;
+
+		/* Otherwise, just set the output size to zero. */
+		if (outlen != 0) *outlen = 0;
+	}
+	else
+    {
+        /* Compute the amount of padding required. */
+        padding = ctx->primitive->szBlock - ctx->reserved->available % ctx->primitive->szBlock;
+
+        /* Write padding to the last block. */
+        memset(ctx->reserved->block + ctx->reserved->available, padding, padding);
+
+        /* Encrypt the last block. */
+        ctx->primitive->fForward(ctx->reserved->block, ctx->key);
+
+        /* Write it out to the buffer. */
+        memcpy(out, ctx->reserved->block, ctx->primitive->szBlock);
+        *outlen = ctx->primitive->szBlock;
+    }
+
+	/* Return success. */
+	return 0;
+}
+
+int ECB_DecryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+{
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
+
 	unsigned char padding;
 
 	/* If padding is disabled, we need to handle things differently. */
 	if (!ctx->padding)
 	{
 		/* If there is data left, return an error. */
-		if (ctx->reserved->available != 0) return false;
+		if (ctx->reserved->available != 0) return ORDO_EINVALID;
 
 		/* Otherwise, just set the output size to zero. */
 		if (outlen != 0) *outlen = 0;
-		return true;
 	}
+	else
+    {
+        /* Otherwise, decrypt the last block. */
+        ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
 
-	/* Compute the amount of padding required. */
-	padding = ctx->primitive->szBlock - ctx->reserved->available % ctx->primitive->szBlock;
+        /* Read the amount of padding. */
+        padding = *(ctx->reserved->block + ctx->primitive->szBlock - 1);
 
-	/* Write padding to the last block. */
-	memset(ctx->reserved->block + ctx->reserved->available, padding, padding);
-
-	/* Encrypt the last block. */
-	ctx->primitive->fForward(ctx->reserved->block, ctx->key);
-
-	/* Write it out to the buffer. */
-	memcpy(out, ctx->reserved->block, ctx->primitive->szBlock);
-	*outlen = ctx->primitive->szBlock;
+        /* Check the padding. */
+        if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padcheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
+        {
+            *outlen = ctx->primitive->szBlock - padding;
+            memcpy(out, ctx->reserved->block, *outlen);
+        } else return ORDO_EPADDING;
+    }
 
 	/* Return success. */
-	return true;
+	return 0;
 }
 
-bool ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+void ECB_Free(ENCRYPT_CONTEXT* context)
 {
-	unsigned char padding;
+    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
 
-	/* If padding is disabled, we need to handle things differently. */
-	if (!ctx->padding)
-	{
-		/* If there is data left, return an error. */
-		if (ctx->reserved->available != 0) return false;
-
-		/* Otherwise, just set the output size to zero. */
-		if (outlen != 0) *outlen = 0;
-		return true;
-	}
-
-	/* Otherwise, decrypt the last block. */
-	ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
-
-	/* Read the amount of padding. */
-	padding = *(ctx->reserved->block + ctx->primitive->szBlock - 1);
-
-	/* Check the padding. */
-	if ((padding != 0) && (padding <= ctx->primitive->szBlock))
-	{
-		if (padcheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding))
-		{
-			*outlen = ctx->primitive->szBlock - padding;
-			memcpy(out, ctx->reserved->block, *outlen);
-		}
-		else return false;
-	} else return false;
-
-	/* Return success. */
-	return true;
-}
-
-void ECB_Free(ECB_ENCRYPT_CONTEXT* ctx)
-{
 	/* Allocate context fields. */
 	sfree(ctx->reserved->block, ctx->primitive->szBlock);
 	sfree(ctx->reserved, sizeof(RESERVED));
