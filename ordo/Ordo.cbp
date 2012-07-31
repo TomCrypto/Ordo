@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Ordo" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Ordo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Ordo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=core2" />
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-Os" />
+					<Add option="-O3" />
+					<Add option="-O2" />
+					<Add option="-O1" />
+					<Add option="-O" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="cbc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cbc.h" />
+		<Unit filename="cfb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cfb.h" />
+		<Unit filename="ctr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ctr.h" />
+		<Unit filename="ecb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ecb.h" />
+		<Unit filename="encrypt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="encrypt.h" />
+		<Unit filename="environment.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="nullcipher.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="nullcipher.h" />
+		<Unit filename="ofb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ofb.h" />
+		<Unit filename="ordo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ordo.h" />
+		<Unit filename="ordotypes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ordotypes.h" />
+		<Unit filename="primitives.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="primitives.h" />
+		<Unit filename="random.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="random.h" />
+		<Unit filename="rc4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rc4.h" />
+		<Unit filename="securemem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="securemem.h" />
+		<Unit filename="stream.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stream.h" />
+		<Unit filename="threefish256.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="threefish256.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
