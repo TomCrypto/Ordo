@@ -62,7 +62,7 @@ void CTR_Update(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsig
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
 
-	/* Initialize the output size. */
+    /* Initialize the output size. */
 	*outlen = 0;
 
 	/* Go over the input buffer byte per byte. */

@@ -58,7 +58,7 @@ void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
 
-	/* Initialize the output size. */
+    /* Initialize the output size. */
 	*outlen = 0;
 
 	/* Go over the buffer byte per byte. */
@@ -99,7 +99,7 @@ void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
 
-	/* Initialize the output size. */
+    /* Initialize the output size. */
 	*outlen = 0;
 
 	/* Go over the buffer byte per byte. */

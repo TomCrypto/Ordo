@@ -23,18 +23,19 @@
  even months after the event occurred. This function prevents this by instructing
  the operating system not to page out the allocated memory.
  \remark Note that this is a hint to the operating system, nothing more. Consult
- your operating system's implementation of virtual memory locking to know more.*/
+ your operating system's implementation of virtual memory locking to know more. */
 void* salloc(size_t size);
 
 /*! This function sets memory as read-only. If this function succeeds, any attempt to
     write to the memory will incur an access violation, until the read-only restriction is lifted.
+    Not generally useful but can always come in handy at some point.
  \param ptr The pointer to the memory to set as read-only.
- \param size The amount of memory, in bytes, to set as read-only.*/
+ \param size The amount of memory, in bytes, to set as read-only. */
 void sprotect(void* ptr, size_t size);
 
 /*! This function frees a pointer, and securely erases the memory it points to.
- \param ptr The pointer to the memory to free.
- \param size The amount of memory, in bytes, pointed to.*/
+ \param ptr An allocated pointer to free.
+ \param size The amount of memory, in bytes, pointed to. */
 void sfree(void* ptr, size_t size);
 
 #endif

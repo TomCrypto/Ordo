@@ -34,7 +34,7 @@ int ordoRandom(unsigned char* buffer, size_t size)
 	    /* If no bytes were read, an error occurred. */
         if (len == 0) return ORDO_EFAIL;
 
-	    /* Move the buffer forward. */
+	    /* Move the buffer forward to prepare to read the rest. */
 	    buffer += len;
 	    size -= len;
 	}

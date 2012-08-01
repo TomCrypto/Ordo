@@ -9,7 +9,7 @@ Current work is focused towards finishing the cipher interface. Important todo's
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
 
 Other todo's to keep in mind:
- - implement secure memory erasing by adding a better erasing pattern in sfree()
+ - distribute the #includes in a more coherent fashion (right now they are scattered wherever they are needed)
  - improve the test unit and get Ordo up and running as an actual library once the cipher API is done
 
 Documentation: The code in a few headers is documented for Doxygen. The doxyfile is not included but can easily be regenerated (it's just a configuration file).
