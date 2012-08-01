@@ -2,6 +2,8 @@
  * @file ordotypes.h
  * Contains various library-wide definitions and includes.
  *
+ * \todo Improve code related to error handling. *
+ *
  */
 
 #ifndef ordotypes_h
@@ -16,6 +18,8 @@
 /* Library dependencies. */
 #include "securemem.h"
 #include "environment.h"
+
+// these error codes are so awful, wtf..
 
 /*! The function succeeded. */
 #define ORDO_ESUCCESS 0
@@ -46,5 +50,9 @@ int padcheck(unsigned char* buffer, unsigned char padding);
 
 /* Xors two buffers together. */
 void XOR(unsigned char* val, unsigned char* mod, size_t len);
+
+/* Increments a counter of arbitrary size as if it were a len-byte integer
+   Propagation is done from left-to-right in memory storage order. */
+void incCounter(unsigned char* iv, size_t len);
 
 #endif

@@ -1,4 +1,4 @@
-Ordo [NZT 00:02 7/31/2012]
+Ordo [NZT 18:33 8/01/2012]
 ----
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. Currently it includes a .cbp (Code::Blocks Project) file for your convenience and because I see no need to use a manual makefile here, but it should be easy to write/generate a makefile later on.
@@ -39,7 +39,7 @@ Please note that "NullCipher" is a test cipher which does absolutely nothing and
 
 --------
 
-The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS. Tested platforms so far:
+The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Tested platforms so far:
 
 - Linux Mint 13 [64-bit] GCC w/ Code::Blocks
 

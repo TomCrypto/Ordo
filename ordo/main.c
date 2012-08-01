@@ -12,7 +12,6 @@ void hex(void* input, size_t len)
 void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t size, size_t keySize, int padding)
 {
 	/* Declare variables. */
-	size_t sz;
 	void* in;
 	void* out;
 	void* iv;
@@ -20,7 +19,6 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 	size_t pad;
 
 	/* Store the size and pad it up to the block size (this is only needed for ECB/CBC/etc... but it will be ignored for streaming modes, the extra space will simply be disregarded by the API) */
-	sz = size;
 	if (size % primitiveBlockSize(primitive) == 0) pad = size + primitiveBlockSize(primitive);
 	else pad = size + primitiveBlockSize(primitive) - size % primitiveBlockSize(primitive);
 
@@ -40,10 +38,10 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 	memset(key, 0xEE, keySize);
 
 	/* Print data BEFORE encryption. */
-	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
+	printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
 	printf("Plaintext  : ");
 	hex(in, size);
-	printf(" (%d bytes)\n", size);
+	printf(" (%zu bytes)\n", size);
 
 	/* Encrypt. */
 	if (ordoEncrypt((unsigned char*)in, size, (unsigned char*)out, &size, primitive, mode, key, keySize, 0, iv, padding) == 0)
@@ -51,7 +49,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 		/* Print data AFTER encryption. */
 		printf("Ciphertext : ");
 		hex(out, size);
-		printf(" (%d bytes)\n", size);
+		printf(" (%zu bytes)\n", size);
 	}
 	else printf("Ciphertext : ENCRYPTION FAILED!\n");
 
@@ -61,7 +59,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 		/* Print data AFTER decryption. */
 		printf("Plaintext  : ");
 		hex(in, size);
-		printf(" (%d bytes)\n", size);
+		printf(" (%zu bytes)\n", size);
 	}
 	else printf("Plaintext  : DECRYPTION FAILED!\n");
 
@@ -103,7 +101,7 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 	memset(key, 0xEE, keySize);
 
 	/* Print information data. */
-	printf("Cipher: %s | Mode: %s (key length = %d bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
+	printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
 	printf("Starting performance test...\n");
 
 	/* Save starting time. */
@@ -160,8 +158,15 @@ void csprngTest()
 	printf("Generation complete.\n\n---\n\n");
 }
 
-int main(size_t argc, char* argv[])
+int main(int argc, char* argv[])
 {
+    printf("################\n");
+    #ifdef ENVIRONMENT64
+    printf("# 64-bit mode! #\n################\n\n");
+    #else
+    printf("# 32-bit mode! #\n################\n\n");
+    #endif
+
 	printf("Loading Ordo... ");
 	loadOrdo();
 	printf("Loaded!\n");
@@ -174,11 +179,11 @@ int main(size_t argc, char* argv[])
 	testPrimitiveMode(NullCipher, CTR, 19, 44, 0);
 	testPrimitiveMode(NullCipher, OFB, 17, 23, 0);
 	testPrimitiveMode(NullCipher, CFB, 41, 23, 0);
-	testPrimitiveMode(THREEFISH256, ECB, 64, 32, 1);
-	testPrimitiveMode(THREEFISH256, CBC, 64, 32, 1);
-	testPrimitiveMode(THREEFISH256, CTR, 112, 32, 0);
-	testPrimitiveMode(THREEFISH256, OFB, 112, 32, 0);
-	testPrimitiveMode(THREEFISH256, CFB, 112, 32, 0);
+	testPrimitiveMode(Threefish256, ECB, 64, 32, 1);
+	testPrimitiveMode(Threefish256, CBC, 64, 32, 1);
+	testPrimitiveMode(Threefish256, CTR, 112, 32, 0);
+	testPrimitiveMode(Threefish256, OFB, 112, 32, 0);
+	testPrimitiveMode(Threefish256, CFB, 112, 32, 0);
 	testPrimitiveMode(RC4, STREAM, 71, 41, 0);
 
 	printf("* STARTING PERFORMANCE TESTS...\n\n---\n\n");
@@ -188,11 +193,11 @@ int main(size_t argc, char* argv[])
 	ratePrimitiveMode(NullCipher, CTR, 16);
 	ratePrimitiveMode(NullCipher, OFB, 16);
 	ratePrimitiveMode(NullCipher, CFB, 16);
-	ratePrimitiveMode(THREEFISH256, ECB, 32);
-	ratePrimitiveMode(THREEFISH256, CBC, 32);
-	ratePrimitiveMode(THREEFISH256, CTR, 32);
-	ratePrimitiveMode(THREEFISH256, OFB, 32);
-	ratePrimitiveMode(THREEFISH256, CFB, 32);
+	ratePrimitiveMode(Threefish256, ECB, 32);
+	ratePrimitiveMode(Threefish256, CBC, 32);
+	ratePrimitiveMode(Threefish256, CTR, 32);
+	ratePrimitiveMode(Threefish256, OFB, 32);
+	ratePrimitiveMode(Threefish256, CFB, 32);
 	ratePrimitiveMode(RC4, STREAM, 64);
 
 	printf("* STARTING CSPRNG TEST...\n\n---\n\n");

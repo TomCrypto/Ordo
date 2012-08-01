@@ -15,41 +15,11 @@
 #include "encrypt.h"
 #include "ecb.h"
 
-/*! This is extra context space required by the ECB mode to store temporary incomplete data buffers.*/
-typedef struct RESERVED
+void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx)
 {
-	/*! The temporary block, the size of the primitive's block size. */
-	unsigned char* block;
-	/*! The amount of bytes of plaintext or ciphertext currently in the temporary block. */
-	size_t available;
-} RESERVED;
-
-/*! This structure describes a symmetric encryption context for the ECB mode. */
-typedef struct ECB_ENCRYPT_CONTEXT
-{
-	/*! The primitive to use. */
-	CIPHER_PRIMITIVE* primitive;
-	/*! The mode of operation to use (this is set to the ECB mode). */
-	struct ENCRYPT_MODE* mode;
-	/*! Points to the key material. */
-	void* key;
-	/*! Unused field (ECB uses no initialization vector). */
-	void* iv;
-	/*! Whether to encrypt or decrypt (true = encryption). */
-	int direction;
-	/*! Whether padding is enabled or not. */
-	int padding;
-	/*! Reserved space for the ECB mode of operation. */
-	RESERVED* reserved;
-} ECB_ENCRYPT_CONTEXT;
-
-void ECB_Create(ENCRYPT_CONTEXT* context)
-{
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context fields. */
 	ctx->key = salloc(ctx->primitive->szKey);
-	ctx->reserved = salloc(sizeof(RESERVED));
+	ctx->reserved = salloc(sizeof(ECB_RESERVED));
 	ctx->reserved->block = salloc(ctx->primitive->szBlock);
 	ctx->reserved->available = 0;
 }
@@ -62,10 +32,8 @@ void ECB_Create(ENCRYPT_CONTEXT* context)
   \param iv Set this to zero, as the ECB mode uses no initialization vector.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int ECB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
+int ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	/* Check the key size. */
 	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
@@ -84,10 +52,8 @@ int ECB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, v
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one more block size of ciphertext than plaintext, rounded down to the nearest block. */
-void ECB_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ECB_EncryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -123,10 +89,8 @@ void ECB_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen
   \param out A pointer to the plaintext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \remark The out buffer must have enough space to accomodate up to one more block size of plaintext than ciphertext, rounded down to the nearest block. */
-void ECB_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ECB_DecryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -161,10 +125,8 @@ void ECB_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one block size of plaintext for padding. */
-int ECB_EncryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int ECB_EncryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	unsigned char padding;
 
 	/* If padding is disabled, we need to handle things differently. */
@@ -196,10 +158,8 @@ int ECB_EncryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outle
 	return 0;
 }
 
-int ECB_DecryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	unsigned char padding;
 
 	/* If padding is disabled, we need to handle things differently. */
@@ -231,26 +191,16 @@ int ECB_DecryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outle
 	return 0;
 }
 
-void ECB_Free(ENCRYPT_CONTEXT* context)
+void ECB_Free(ECB_ENCRYPT_CONTEXT* ctx)
 {
-    ECB_ENCRYPT_CONTEXT* ctx = (ECB_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context fields. */
 	sfree(ctx->reserved->block, ctx->primitive->szBlock);
-	sfree(ctx->reserved, sizeof(RESERVED));
+	sfree(ctx->reserved, sizeof(ECB_RESERVED));
 	sfree(ctx->key, ctx->primitive->szKey);
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */
-void ECB_SetMode(ENCRYPT_MODE** mode)
+void ECB_SetMode(ENCRYPT_MODE* mode)
 {
-	(*mode) = malloc(sizeof(ENCRYPT_MODE));
-	(*mode)->fCreate = &ECB_Create;
-	(*mode)->fInit = &ECB_Init;
-	(*mode)->fEncryptUpdate = &ECB_EncryptUpdate;
-	(*mode)->fDecryptUpdate = &ECB_DecryptUpdate;
-	(*mode)->fEncryptFinal = &ECB_EncryptFinal;
-	(*mode)->fDecryptFinal = &ECB_DecryptFinal;
-	(*mode)->fFree = &ECB_Free;
-	(*mode)->name = "ECB";
+	ENCRYPT_MAKEMODE(mode, ECB_Create, ECB_Init, ECB_EncryptUpdate, ECB_DecryptUpdate, ECB_EncryptFinal, ECB_DecryptFinal, ECB_Free, "ECB");
 }

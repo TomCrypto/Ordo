@@ -24,3 +24,19 @@ void XOR(unsigned char* val, unsigned char* mod, size_t len)
         len--;
     }
 }
+
+/* Increments a counter of arbitrary size as if it were a len-byte integer
+   Propagation is done from left-to-right in memory storage order. */
+void incCounter(unsigned char* iv, size_t len)
+{
+	/* Increment the first byte. */
+	size_t t;
+	int carry = (++*iv == 0);
+
+	/* Go over each byte, and propagate the carry. */
+	for (t = 1; t < len; t++)
+	{
+		if (carry == 1) carry = (++*(iv + t) == 0);
+		else break;
+	}
+}

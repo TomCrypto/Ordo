@@ -9,9 +9,9 @@
 void loadPrimitives()
 {
 	/* Cipher primitives. */
-	NullCipher_SetPrimitive(&NullCipher);
-	Threefish256_SetPrimitive(&THREEFISH256);
-	RC4_SetPrimitive(&RC4);
+	NullCipher = malloc(sizeof(CIPHER_PRIMITIVE)); NullCipher_SetPrimitive(NullCipher);
+	Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE)); Threefish256_SetPrimitive(Threefish256);
+	RC4 = malloc(sizeof(CIPHER_PRIMITIVE)); RC4_SetPrimitive(RC4);
 
 	/* Hash primitives. */
 	/* empty :[ */
@@ -21,6 +21,6 @@ void loadPrimitives()
 void unloadPrimitives()
 {
 	free(NullCipher);
-	free(THREEFISH256);
+	free(Threefish256);
 	free(RC4);
 }

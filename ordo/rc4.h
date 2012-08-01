@@ -12,10 +12,6 @@
 
 #include "primitives.h"
 
-#define RC4_KEY (2064 / 8)
-#define RC4_BLOCK (8 / 8) // 8-bit block
-#define RC4_TWEAK 0 // no tweak
-
 /* A structure containing an RC4 state. */
 typedef struct RC4STATE
 {
@@ -30,6 +26,6 @@ void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
 
 void RC4_Permutation(void* block, void* key);
 
-void RC4_SetPrimitive(CIPHER_PRIMITIVE** primitive);
+void RC4_SetPrimitive(CIPHER_PRIMITIVE* primitive);
 
 #endif

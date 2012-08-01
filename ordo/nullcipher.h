@@ -14,12 +14,12 @@
 
 int NullCipher_KeyCheck(size_t keySize);
 
-int NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
+void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
 
 void NullCipher_Forward(void* block, void* key);
 
 void NullCipher_Inverse(void* block, void* key);
 
-void NullCipher_SetPrimitive(CIPHER_PRIMITIVE** primitive);
+void NullCipher_SetPrimitive(CIPHER_PRIMITIVE* primitive);
 
 #endif

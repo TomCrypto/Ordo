@@ -12,6 +12,9 @@
 
 #if defined __linux__
 
+#include <string.h>
+#include <sys/mman.h>
+
 /* Secure memory allocation. */
 void* salloc(size_t size)
 {

@@ -12,58 +12,12 @@
 #include "encrypt.h"
 #include "ctr.h"
 
-/*! This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
-typedef struct RESERVED
+void CTR_Create(CTR_ENCRYPT_CONTEXT* ctx)
 {
-	/*! The counter value. */
-	unsigned char* counter;
-	/*! The amount of bytes of unused state remaining before the state is to be renewed. */
-	size_t remaining;
-} RESERVED;
-
-/*! This structure describes a symmetric encryption context for the CTR mode. */
-typedef struct CTR_ENCRYPT_CONTEXT
-{
-	/*! The primitive to use. */
-	CIPHER_PRIMITIVE* primitive;
-	/*! The mode of operation to use (this is set to the CTR mode). */
-	struct ENCRYPT_MODE* mode;
-	/*! Points to the key material. */
-	void* key;
-	/*! Points to the initialization vector. */
-	void* iv;
-	/*! Whether to encrypt or decrypt (true = encryption). */
-	int direction;
-	/*! Whether padding is enabled or not. */
-	int padding;
-	/*! Reserved space for the CTR mode of operation. */
-	RESERVED* reserved;
-} CTR_ENCRYPT_CONTEXT;
-
-/* Increments a counter of arbitrary size as if it were a len-byte integer
-   Propagation is done from left-to-right in memory storage order. */
-void incCounter(unsigned char* iv, size_t len)
-{
-	/* Increment the first byte. */
-	size_t t;
-	int carry = (++*iv == 0);
-
-	/* Go over each byte, and propagate the carry. */
-	for (t = 1; t < len; t++)
-	{
-		if (carry == 1) carry = (++*(iv + t) == 0);
-		else break;
-	}
-}
-
-void CTR_Create(ENCRYPT_CONTEXT* context)
-{
-    CTR_ENCRYPT_CONTEXT* ctx = (CTR_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context space. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->iv = salloc(ctx->primitive->szBlock);
-	ctx->reserved = salloc(sizeof(RESERVED));
+	ctx->reserved = salloc(sizeof(CTR_RESERVED));
 	ctx->reserved->counter = salloc(ctx->primitive->szBlock);
 }
 
@@ -74,10 +28,8 @@ void CTR_Create(ENCRYPT_CONTEXT* context)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int CTR_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
+int CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
-    CTR_ENCRYPT_CONTEXT* ctx = (CTR_ENCRYPT_CONTEXT*)context;
-
 	/* Check the key size. */
 	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
@@ -105,10 +57,8 @@ int CTR_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, v
   \param out A pointer to the ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \remark The out buffer must be the same size as the in buffer, as CTR is a streaming mode. */
-void CTR_Update(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CTR_Update(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    CTR_ENCRYPT_CONTEXT* ctx = (CTR_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -143,10 +93,8 @@ void CTR_Update(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsig
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-int CTR_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int CTR_Final(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    CTR_ENCRYPT_CONTEXT* ctx = (CTR_ENCRYPT_CONTEXT*)context;
-
 	/* Write output size if applicable. */
 	if (outlen != 0) *outlen = 0;
 
@@ -154,27 +102,17 @@ int CTR_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
 	return 0;
 }
 
-void CTR_Free(ENCRYPT_CONTEXT* context)
+void CTR_Free(CTR_ENCRYPT_CONTEXT* ctx)
 {
-    CTR_ENCRYPT_CONTEXT* ctx = (CTR_ENCRYPT_CONTEXT*)context;
-
 	/* Free context space. */
 	sfree(ctx->reserved->counter, ctx->primitive->szBlock);
-	sfree(ctx->reserved, sizeof(RESERVED));
+	sfree(ctx->reserved, sizeof(CTR_RESERVED));
 	sfree(ctx->iv, ctx->primitive->szBlock);
 	sfree(ctx->key, ctx->primitive->szKey);
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */
-void CTR_SetMode(ENCRYPT_MODE** mode)
+void CTR_SetMode(ENCRYPT_MODE* mode)
 {
-	(*mode) = malloc(sizeof(ENCRYPT_MODE));
-	(*mode)->fCreate = &CTR_Create;
-	(*mode)->fInit = &CTR_Init;
-	(*mode)->fEncryptUpdate = &CTR_Update;
-	(*mode)->fDecryptUpdate = &CTR_Update;
-	(*mode)->fEncryptFinal = &CTR_Final;
-	(*mode)->fDecryptFinal = &CTR_Final;
-	(*mode)->fFree = &CTR_Free;
-	(*mode)->name = "CTR";
+	ENCRYPT_MAKEMODE(mode, CTR_Create, CTR_Init, CTR_Update, CTR_Update, CTR_Final, CTR_Final, CTR_Free, "CTR");
 }

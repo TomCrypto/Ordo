@@ -12,40 +12,12 @@
 #include "encrypt.h"
 #include "ofb.h"
 
-/*! This is extra context space required by the OFB mode to store the amount of state not used.*/
-typedef struct RESERVED
+void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx)
 {
-	/*! The amount of bytes of unused state remaining before the state is to be renewed. */
-	size_t remaining;
-} RESERVED;
-
-/*! This structure describes a symmetric encryption context for the OFB mode. */
-typedef struct OFB_ENCRYPT_CONTEXT
-{
-	/*! The primitive to use. */
-	CIPHER_PRIMITIVE* primitive;
-	/*! The mode of operation to use (this is set to the OFB mode). */
-	struct ENCRYPT_MODE* mode;
-	/*! Points to the key material. */
-	void* key;
-	/*! Points to the initialization vector. */
-	void* iv;
-	/*! Whether to encrypt or decrypt (true = encryption). */
-	int direction;
-	/*! Whether padding is enabled or not. */
-	int padding;
-	/*! Reserved space for the OFB mode of operation. */
-	RESERVED* reserved;
-} OFB_ENCRYPT_CONTEXT;
-
-void OFB_Create(ENCRYPT_CONTEXT* context)
-{
-    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context space. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->iv = salloc(ctx->primitive->szBlock);
-	ctx->reserved = salloc(sizeof(RESERVED));
+	ctx->reserved = salloc(sizeof(OFB_RESERVED));
 }
 
 /*! Initializes an OFB context (the primitive and mode must have been filled in).
@@ -55,10 +27,8 @@ void OFB_Create(ENCRYPT_CONTEXT* context)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int OFB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
+int OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
-    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
-
 	/* Check the key size. */
 	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
@@ -84,10 +54,8 @@ int OFB_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, v
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
-void OFB_Update(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void OFB_Update(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -119,10 +87,8 @@ void OFB_Update(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsig
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-int OFB_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int OFB_Final(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
-
 	/* Write output size if applicable. */
 	if (outlen != 0) *outlen = 0;
 
@@ -130,26 +96,16 @@ int OFB_Final(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
 	return 0;
 }
 
-void OFB_Free(ENCRYPT_CONTEXT* context)
+void OFB_Free(OFB_ENCRYPT_CONTEXT* ctx)
 {
-    OFB_ENCRYPT_CONTEXT* ctx = (OFB_ENCRYPT_CONTEXT*)context;
-
 	/* Free context space. */
-	sfree(ctx->reserved, sizeof(RESERVED));
+	sfree(ctx->reserved, sizeof(OFB_RESERVED));
 	sfree(ctx->iv, ctx->primitive->szBlock);
 	sfree(ctx->key, ctx->primitive->szKey);
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */
-void OFB_SetMode(ENCRYPT_MODE** mode)
+void OFB_SetMode(ENCRYPT_MODE* mode)
 {
-	(*mode) = malloc(sizeof(ENCRYPT_MODE));
-	(*mode)->fCreate = &OFB_Create;
-	(*mode)->fInit = &OFB_Init;
-	(*mode)->fEncryptUpdate = &OFB_Update;
-	(*mode)->fDecryptUpdate = &OFB_Update;
-	(*mode)->fEncryptFinal = &OFB_Final;
-	(*mode)->fDecryptFinal = &OFB_Final;
-	(*mode)->fFree = &OFB_Free;
-	(*mode)->name = "OFB";
+    ENCRYPT_MAKEMODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
 }

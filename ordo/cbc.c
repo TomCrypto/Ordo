@@ -13,42 +13,12 @@
 #include "encrypt.h"
 #include "cbc.h"
 
-/*! This is extra context space required by the CBC mode to store temporary incomplete data buffers.*/
-typedef struct RESERVED
+void CBC_Create(CBC_ENCRYPT_CONTEXT* ctx)
 {
-	/*! The temporary block, the size of the primitive's block size. */
-	unsigned char* block;
-	/*! The amount of bytes of plaintext or ciphertext currently in the temporary block. */
-	size_t available;
-} RESERVED;
-
-/*! This structure describes a symmetric encryption context for the CBC mode. */
-typedef struct CBC_ENCRYPT_CONTEXT
-{
-	/*! The primitive to use. */
-	CIPHER_PRIMITIVE* primitive;
-	/*! The mode of operation to use (this is set to the CBC mode). */
-	struct ENCRYPT_MODE* mode;
-	/*! Points to the key material. */
-	void* key;
-	/*! Unused field (CBC uses no initialization vector). */
-	void* iv;
-	/*! Whether to encrypt or decrypt (true = encryption). */
-	int direction;
-	/*! Whether padding is enabled or not. */
-	int padding;
-	/*! Reserved space for the CBC mode of operation. */
-	RESERVED* reserved;
-} CBC_ENCRYPT_CONTEXT;
-
-void CBC_Create(ENCRYPT_CONTEXT* context)
-{
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context fields. */
 	ctx->key = salloc(ctx->primitive->szKey);
 	ctx->iv = salloc(ctx->primitive->szBlock);
-	ctx->reserved = salloc(sizeof(RESERVED));
+	ctx->reserved = salloc(sizeof(CBC_RESERVED));
 	ctx->reserved->block = salloc(ctx->primitive->szBlock);
 	ctx->reserved->available = 0;
 }
@@ -61,10 +31,8 @@ void CBC_Create(ENCRYPT_CONTEXT* context)
   \param iv A pointer to the IV to use for encryption.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int CBC_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, void* iv)
+int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	/* Check the key size. */
 	if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
@@ -86,10 +54,8 @@ int CBC_Init(ENCRYPT_CONTEXT* context, void* key, size_t keySize, void* tweak, v
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one more block size of ciphertext than plaintext, rounded down to the nearest block. */
-void CBC_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CBC_EncryptUpdate(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -131,10 +97,8 @@ void CBC_EncryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen
   \param out A pointer to the plaintext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \remark The out buffer must have enough space to accomodate up to one more block size of plaintext than ciphertext, rounded down to the nearest block. */
-void CBC_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CBC_DecryptUpdate(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	/* Initialize output size. */
 	*outlen = 0;
 
@@ -178,10 +142,8 @@ void CBC_DecryptUpdate(ENCRYPT_CONTEXT* context, unsigned char* in, size_t inlen
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must have enough space to accomodate up to one block size of plaintext for padding. */
-int CBC_EncryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int CBC_EncryptFinal(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	unsigned char padding;
 
 	/* If padding is disabled, we need to handle things differently. */
@@ -216,10 +178,8 @@ int CBC_EncryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outle
 	return 0;
 }
 
-int CBC_DecryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outlen)
+int CBC_DecryptFinal(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	unsigned char padding;
 
 	/* If padding is disabled, we need to handle things differently. */
@@ -254,27 +214,17 @@ int CBC_DecryptFinal(ENCRYPT_CONTEXT* context, unsigned char* out, size_t* outle
 	return 0;
 }
 
-void CBC_Free(ENCRYPT_CONTEXT* context)
+void CBC_Free(CBC_ENCRYPT_CONTEXT* ctx)
 {
-    CBC_ENCRYPT_CONTEXT* ctx = (CBC_ENCRYPT_CONTEXT*)context;
-
 	/* Allocate context fields. */
 	sfree(ctx->reserved->block, ctx->primitive->szBlock);
-	sfree(ctx->reserved, sizeof(RESERVED));
+	sfree(ctx->reserved, sizeof(CBC_RESERVED));
 	sfree(ctx->iv, ctx->primitive->szBlock);
 	sfree(ctx->key, ctx->primitive->szKey);
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */
-void CBC_SetMode(ENCRYPT_MODE** mode)
+void CBC_SetMode(ENCRYPT_MODE* mode)
 {
-	(*mode) = malloc(sizeof(ENCRYPT_MODE));
-	(*mode)->fCreate = &CBC_Create;
-	(*mode)->fInit = &CBC_Init;
-	(*mode)->fEncryptUpdate = &CBC_EncryptUpdate;
-	(*mode)->fDecryptUpdate = &CBC_DecryptUpdate;
-	(*mode)->fEncryptFinal = &CBC_EncryptFinal;
-	(*mode)->fDecryptFinal = &CBC_DecryptFinal;
-	(*mode)->fFree = &CBC_Free;
-	(*mode)->name = "CBC";
+    ENCRYPT_MAKEMODE(mode, CBC_Create, CBC_Init, CBC_EncryptUpdate, CBC_DecryptUpdate, CBC_EncryptFinal, CBC_DecryptFinal, CBC_Free, "CBC");
 }

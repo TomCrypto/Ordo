@@ -12,7 +12,7 @@
 
 #include "primitives.h"
 
-/* A 218-bit structure with two 64-bit words. */
+/* A 128-bit structure with two 64-bit words. */
 typedef struct UINT128
 {
 	unsigned long long words[2];
@@ -38,6 +38,6 @@ void Threefish256_Forward(UINT256* block, SUBKEYS* key);
 
 void Threefish256_Inverse(UINT256* block, SUBKEYS* key);
 
-void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive);
+void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive);
 
 #endif

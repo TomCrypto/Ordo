@@ -1,3 +1,14 @@
+/**
+ * @file encrypt.c
+ * Implements the Ordo encryption interface.
+ *
+ * TBD!
+ *
+ * \todo Optimize streaming modes by using bigger word sizes than bytes if the buffer is large enough.
+ *
+ * @see encrypt.h
+ */
+
 /* Handles code related to symmetric ciphers (e.g. modes of operation). */
 #include "primitives.h"
 #include "encrypt.h"
@@ -14,12 +25,12 @@
 /* Loads all cipher modes. */
 void loadEncryptModes()
 {
-	ECB_SetMode(&ECB);
-	CBC_SetMode(&CBC);
-	CTR_SetMode(&CTR);
-	OFB_SetMode(&OFB);
-	CFB_SetMode(&CFB);
-	STREAM_SetMode(&STREAM);
+    ECB = malloc(sizeof(ENCRYPT_MODE)); ECB_SetMode(ECB);
+	CBC = malloc(sizeof(ENCRYPT_MODE)); CBC_SetMode(CBC);
+	CTR = malloc(sizeof(ENCRYPT_MODE)); CTR_SetMode(CTR);
+	OFB = malloc(sizeof(ENCRYPT_MODE)); OFB_SetMode(OFB);
+	CFB = malloc(sizeof(ENCRYPT_MODE)); CFB_SetMode(CFB);
+	STREAM = malloc(sizeof(ENCRYPT_MODE)); STREAM_SetMode(STREAM);
 }
 
 /* Unloads all cipher modes. */

@@ -10,7 +10,7 @@
 #include "primitives.h"
 #include "threefish256.h"
 
-#define THREEFISH256_KEY (608) // 4864-bit extended key
+#define THREEFISH256_KEY (608) // 4864-bit extended key (19 subkeys x 256 bits)
 #define THREEFISH256_BLOCK (32) // 256-bit block
 #define THREEFISH256_TWEAK (16) // 128-bit tweak
 
@@ -343,15 +343,7 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void Threefish256_SetPrimitive(CIPHER_PRIMITIVE** primitive)
+void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive)
 {
-	(*primitive) = malloc(sizeof(CIPHER_PRIMITIVE));
-	(*primitive)->szKey = THREEFISH256_KEY;
-	(*primitive)->szBlock = THREEFISH256_BLOCK;
-	(*primitive)->szTweak = THREEFISH256_TWEAK;
-	(*primitive)->fKeyCheck = &Threefish256_KeyCheck;
-	(*primitive)->fKeySchedule = (CIPHER_KEYSCHEDULE)&Threefish256_KeySchedule;
-	(*primitive)->fForward = (CIPHER_PERMUTATION)&Threefish256_Forward;
-	(*primitive)->fInverse = (CIPHER_PERMUTATION)&Threefish256_Inverse;
-	(*primitive)->name = "Threefish-256";
+    PRIMITIVE_MAKECIPHER(primitive, THREEFISH256_KEY, THREEFISH256_BLOCK, THREEFISH256_TWEAK, Threefish256_KeyCheck, Threefish256_KeySchedule, Threefish256_Forward, Threefish256_Inverse, "Threefish-256");
 }

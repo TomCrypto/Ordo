@@ -4,8 +4,6 @@
  *
  * Header usage mode: External.
  *
- * \todo Optimize streaming modes by using bigger word sizes than bytes if the buffer is large enough.
- *
  * @see encrypt.c
  */
 
@@ -15,6 +13,9 @@
 /* Library dependencies. */
 #include "primitives.h"
 #include "ordotypes.h"
+
+/* Useful macro to initialize a mode of operation. */
+#define ENCRYPT_MAKEMODE(m, c, i, eu, du, ef, df, f, n) m->fCreate = (CREATE_FUNC)c; m->fInit = (INIT_FUNC)i; m->fEncryptUpdate = (UPDATE_FUNC)eu; m->fDecryptUpdate = (UPDATE_FUNC)du; m->fEncryptFinal = (FINAL_FUNC)ef; m->fDecryptFinal = (FINAL_FUNC)df; m->fFree = (FREE_FUNC)f; m->name = n;
 
 /*! Reads the name of a primitive. */
 #define primitiveName(p) (p->name)

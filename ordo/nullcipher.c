@@ -21,9 +21,9 @@ int NullCipher_KeyCheck(size_t keySize)
 }
 
 /* NullCipher key schedule. */
-int NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
+void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key)
 {
-    return 0;
+    return;
 }
 
 /* NullCipher forward permutation function. */
@@ -39,15 +39,7 @@ void NullCipher_Inverse(void* block, void* key)
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void NullCipher_SetPrimitive(CIPHER_PRIMITIVE** primitive)
+void NullCipher_SetPrimitive(CIPHER_PRIMITIVE* primitive)
 {
-	(*primitive) = malloc(sizeof(CIPHER_PRIMITIVE));
-	(*primitive)->szKey = NULLCIPHER_KEY;
-	(*primitive)->szBlock = NULLCIPHER_BLOCK;
-	(*primitive)->szTweak = NULLCIPHER_TWEAK;
-	(*primitive)->fKeyCheck = &NullCipher_KeyCheck;
-	(*primitive)->fKeySchedule = &NullCipher_KeySchedule;
-	(*primitive)->fForward = &NullCipher_Forward;
-	(*primitive)->fInverse = &NullCipher_Inverse;
-	(*primitive)->name = "NullCipher";
+    PRIMITIVE_MAKECIPHER(primitive, NULLCIPHER_KEY, NULLCIPHER_BLOCK, NULLCIPHER_TWEAK, NullCipher_KeyCheck, NullCipher_KeySchedule, NullCipher_Forward, NullCipher_Inverse, "NullCipher");
 }
