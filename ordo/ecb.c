@@ -180,7 +180,7 @@ int ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outle
         padding = *(ctx->reserved->block + ctx->primitive->szBlock - 1);
 
         /* Check the padding. */
-        if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padcheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
+        if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padCheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
         {
             *outlen = ctx->primitive->szBlock - padding;
             memcpy(out, ctx->reserved->block, *outlen);

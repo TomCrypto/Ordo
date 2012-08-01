@@ -1,15 +1,16 @@
-Ordo [NZT 18:33 8/01/2012]
+Ordo [NZT 21:47 8/01/2012]
 ----
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. Currently it includes a .cbp (Code::Blocks Project) file for your convenience and because I see no need to use a manual makefile here, but it should be easy to write/generate a makefile later on.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
  - improve error handling (this is VERY important, the current handling code is inconsistent and more or less fubar)
- - improve stream mode speed by batching up stream calls in groups instead of naively going through the buffer byte by byte
+ - improve stream mode speed by batching up stream calls in groups instead of naively going through the buffer byte by byte [MORE OR LESS DONE]
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
 
 Other todo's to keep in mind:
  - implement secure memory erasing by adding a better erasing pattern in sfree()
+ - improve the test unit and get Ordo up and running as an actual library once the cipher API is done
 
 Documentation: The code in a few headers is documented for Doxygen. The doxyfile is not included but can easily be regenerated (it's just a configuration file).
 
@@ -31,7 +32,7 @@ random -> for pseudorandom number generation (using the OS-provided CSPRNG)
 
 This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
 
-It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? I have implemented RC4 with a degenerate 1-byte block cipher using a dedicated "mode of operation" (STREAM), and all stream ciphers should be able to be formalized in a similar fashion, but I am not sure if this is flexible enough.
+It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? I have implemented RC4 with a degenerate 1-byte block cipher (8-byte, actually, for caching/performance reasons - see rc4.c) using a dedicated "mode of operation" (STREAM), and all stream ciphers should be able to be formalized in a similar fashion, but I am not sure if this is flexible enough.
 
 --------
 

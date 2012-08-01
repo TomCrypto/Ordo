@@ -71,10 +71,21 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 	free(out);
 }
 
+/* Clears a buffer with a pseudorandom integer pattern. */
+void randomize(unsigned char* buffer, size_t len)
+{
+    /* Get a pseudorandom integer. */
+    int r;
+    if (ordoRandom((unsigned char*)&r, sizeof(r)) == 1) printf("ordoRandom FAILED!\n");
+
+    /* Fill the buffer with it. */
+    memset(buffer, r, len);
+}
+
 void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize)
 {
 	/* Buffer size. */
-	#define BUFSIZE (1024 * 1024 * 64)
+	#define BUFSIZE (1024 * 1024 * 128)
 
 	/* Declare variables. */
 	void* in;
@@ -87,18 +98,18 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 
 	/* Allocate a large plaintext buffer and fill it with 0x77 bytes.*/
 	in = malloc(BUFSIZE);
-	memset(in, 0x77, BUFSIZE);
+	randomize(in, BUFSIZE);
 
 	/* Allocate a ciphertext buffer.*/
 	out = malloc(BUFSIZE);
 
 	/* Allocate a buffer of the right size (= cipher block size) and fill it with 0xAA. */
 	iv = malloc(primitiveBlockSize(primitive));
-	memset(iv, 0xAA, primitiveBlockSize(primitive));
+	randomize(iv, primitiveBlockSize(primitive));
 
 	/* Allocate a key of the right sie, and fill it with 0xEE. */
 	key = malloc(keySize);
-	memset(key, 0xEE, keySize);
+	randomize(key, keySize);
 
 	/* Print information data. */
 	printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
@@ -116,6 +127,10 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 		printf("It took %.2f seconds to encrypt %dMB - Rated speed at %.1fMB/s.\n", time, BUFSIZE >> 20, (float)(BUFSIZE >> 20) / time);
 	}
 	else printf("An error occurred during encryption.");
+
+	/* Reset the buffer to prevent caching from tainting the subsequent timings. */
+	randomize(in, BUFSIZE);
+	randomize(out, BUFSIZE);
 
 	/* Save starting time. */
 	start = clock();

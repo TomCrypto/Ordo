@@ -66,7 +66,7 @@ void CBC_EncryptUpdate(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		memcpy(ctx->reserved->block + ctx->reserved->available, in, ctx->primitive->szBlock - ctx->reserved->available);
 
 		/* Exclusive-or the plaintext block with the running IV. */
-        XOR(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
+        xorBuffer(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
 
 		/* Encrypt the block. */
 		ctx->primitive->fForward(ctx->reserved->block, ctx->key);
@@ -115,7 +115,7 @@ void CBC_DecryptUpdate(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 		ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
 
 		/* Exclusive-or the block with the running IV. */
-		XOR(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
+		xorBuffer(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
 
 		/* Get the original ciphertext back as running IV. */
 		memcpy(ctx->iv, out, ctx->primitive->szBlock);
@@ -164,7 +164,7 @@ int CBC_EncryptFinal(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outle
         memset(ctx->reserved->block + ctx->reserved->available, padding, padding);
 
         /* Exclusive-or the last block with the running IV. */
-        XOR(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
+        xorBuffer(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
 
         /* Encrypt the last block. */
         ctx->primitive->fForward(ctx->reserved->block, ctx->key);
@@ -197,13 +197,13 @@ int CBC_DecryptFinal(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outle
         ctx->primitive->fInverse(ctx->reserved->block, ctx->key);
 
         /* Exclusive-or the last block with the running IV. */
-        XOR(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
+        xorBuffer(ctx->reserved->block, ctx->iv, ctx->primitive->szBlock);
 
         /* Read the amount of padding. */
         padding = *(ctx->reserved->block + ctx->primitive->szBlock - 1);
 
         /* Check the padding. */
-        if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padcheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
+        if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padCheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
         {
             *outlen = ctx->primitive->szBlock - padding;
             memcpy(out, ctx->reserved->block, *outlen);

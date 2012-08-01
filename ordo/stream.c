@@ -51,6 +51,9 @@ int STREAM_Init(STREAM_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tw
   \remark The out buffer must be the same size as the in buffer, as STREAM is a streaming mode. */
 void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    /* Variable to store how much data can be processed per iteration. */
+    size_t process = 0;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -65,15 +68,17 @@ void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen,
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 
-		/* Encrypt this plaintext byte. */
-		*out = *in ^ *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining);
+		/* Compute the amount of data to process. */
+		process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
 
-		/* Go to the next byte. */
-		ctx->reserved->remaining--;
-		in++;
-		out++;
-		inlen--;
-		(*outlen)++;
+        /* Process this amount of data. */
+        memcpy(out, in, process);
+        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
+        ctx->reserved->remaining -= process;
+        (*outlen) += process;
+        inlen -= process;
+        out += process;
+        in += process;
 	}
 }
 

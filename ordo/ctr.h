@@ -27,7 +27,7 @@ typedef struct CTR_ENCRYPT_CONTEXT
 	/*! The primitive to use. */
 	CIPHER_PRIMITIVE* primitive;
 	/*! The mode of operation to use (this is set to the CTR mode). */
-	struct ENCRYPT_MODE* mode;
+	ENCRYPT_MODE* mode;
 	/*! Points to the key material. */
 	void* key;
 	/*! Points to the initialization vector. */

@@ -36,23 +36,28 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 	*outlen = total;
 	return 0;
 
+    /* The code below feeds the buffer byte by byte to Ordo. Obviously, it is much slower, but it is an excellent resilience and stability test.
+       A possible improvement would be to feed the buffer by random increments of 1 to say 16 bytes, to mimic real world use (such as data trickling
+       through a slow communication channel). Also possible to feed zero bytes, and see how it works. It should in theory work as all encryption
+       modes are wrapped in a while (inlen != 0) loop which means encrypting or decrypting a null buffer is idempotent, as it should be. */
+
 	/* size_t t;
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, true, padding);
-	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 1, padding);
+	if (encryptInit(ctx, key, keySize, tweak, iv)) return ORDO_EFAIL;
 
 	for (t = 0; t < inlen; t++)
 	{
-		if (!encryptUpdate(ctx, in, 1, out + total, outlen)) return false;
+		encryptUpdate(ctx, in, 1, out + total, outlen);
 		total += *outlen;
 		in++;
 	}
 
-	if (!encryptFinal(ctx, out + total, outlen)) return false;
+	if (encryptFinal(ctx, out + total, outlen)) return ORDO_EFAIL;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true; */
+	return 0; */
 }
 
 /* This convenience function decrypts a buffer with a given key, tweak and IV. */
@@ -71,19 +76,19 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 
 	/* size_t t;
 	size_t total = 0;
-	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, false, padding);
-	if (!encryptInit(ctx, key, keySize, tweak, iv)) return false;
+	ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 0, padding);
+	if (encryptInit(ctx, key, keySize, tweak, iv)) return ORDO_EFAIL;
 
 	for (t = 0; t < inlen; t++)
 	{
-		if (!encryptUpdate(ctx, in, 1, out + total, outlen)) return false;
+		encryptUpdate(ctx, in, 1, out + total, outlen);
 		total += *outlen;
 		in++;
 	}
 
-	if (!encryptFinal(ctx, out + total, outlen)) return false;
+	if (encryptFinal(ctx, out + total, outlen)) return ORDO_EFAIL;
 	total += *outlen;
 	encryptFree(ctx);
 	*outlen = total;
-	return true; */
+	return 0; */
 }

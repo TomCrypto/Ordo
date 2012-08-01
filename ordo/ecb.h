@@ -27,7 +27,7 @@ typedef struct ECB_ENCRYPT_CONTEXT
 	/*! The primitive to use. */
 	CIPHER_PRIMITIVE* primitive;
 	/*! The mode of operation to use (this is set to the ECB mode). */
-	struct ENCRYPT_MODE* mode;
+	ENCRYPT_MODE* mode;
 	/*! Points to the key material. */
 	void* key;
 	/*! Unused field (ECB uses no initialization vector). */

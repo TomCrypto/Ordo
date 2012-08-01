@@ -2,7 +2,9 @@
  * @file rc4.c
  * Implements the RC4 cipher primitive.
  *
- * RC4 is a stream cipher, which has a 1-byte "block size" and a key size between 40 and 2048 bits (multiples of 8 bits only). It uses no tweak.
+ * RC4 is a stream cipher, which has a 8-byte "block size" (for optimizations, in reality it outputs one byte at a time) and a key size between
+ * 40 and 2048 bits (multiples of 8 bits only). It uses no tweak. The reason for the 8-byte block size is that state updates can be cached and
+ * quickly combined with the plaintext, instead of taking one byte at a time, which would incur severe overhead.
  * Note this implementation of RC4 drops the first 2048 bytes of the keystream for security reasons, so technically this is RC4-drop[2048].
  *
  * @see rc4.h
@@ -12,7 +14,7 @@
 #include "rc4.h"
 
 #define RC4_KEY (2064 / 8)
-#define RC4_BLOCK (8 / 8) // 8-bit block
+#define RC4_BLOCK (64 / 8) // 64-bit block
 #define RC4_TWEAK 0 // no tweak
 
 int RC4_KeyCheck(size_t keySize)
@@ -33,11 +35,22 @@ void swapByte(unsigned char* a, unsigned char* b)
 /* RC4 forward permutation function. */
 void RC4_Forward(unsigned char* output, RC4STATE* state)
 {
-	/* Update the state. */
-	state->i++;
-    state->j += state->s[state->i];
-	swapByte(&state->s[state->i], &state->s[state->j]);
-	if (output != 0) *output = state->s[(state->s[state->i] + state->s[state->j]) % 256];
+    /* Loop variable. */
+    size_t t;
+
+	/* Update the state for each output byte. */
+	for (t = 0; t < RC4_BLOCK; t++)
+	{
+        state->i++;
+        state->j += state->s[state->i];
+        swapByte(&state->s[state->i], &state->s[state->j]);
+        if (output != 0)
+        {
+            /* This is to allow optional output (for dropping bytes for instance). */
+            *output = state->s[(state->s[state->i] + state->s[state->j]) % 256];
+            output++;
+        }
+	}
 }
 
 /* RC4 key schedule. */

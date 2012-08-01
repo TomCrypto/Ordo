@@ -55,6 +55,9 @@ int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, v
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
 void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    /* Variable to store how much data can be processed per iteration. */
+    size_t process = 0;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -69,15 +72,18 @@ void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 
-		/* XOR the plaintext byte with the keystream before feeding back! */
-		*out = *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) ^ *in;
-		*((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) = *out;
+		/* Compute the amount of data to process. */
+		process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
 
-		ctx->reserved->remaining--;
-		in++;
-		out++;
-		inlen--;
-		(*outlen)++;
+		/* Process this amount of data. */
+        memcpy(out, in, process);
+        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
+        memcpy((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, out, process);
+        ctx->reserved->remaining -= process;
+        (*outlen) += process;
+        inlen -= process;
+        out += process;
+        in += process;
 	}
 }
 
@@ -90,6 +96,9 @@ void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode.  */
 void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    /* Variable to store how much data can be processed per iteration. */
+    size_t process = 0;
+
 	/* Initialize the output size. */
 	*outlen = 0;
 
@@ -104,15 +113,18 @@ void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
 			ctx->reserved->remaining = ctx->primitive->szBlock;
 		}
 
-		/* XOR the plaintext byte with the keystream, and use the original ciphertext as the next keystream block input. */
-		*out = *((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) ^ *in;
-		*((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining) = *in;
+		/* Compute the amount of data to process. */
+		process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
 
-		ctx->reserved->remaining--;
-		in++;
-		out++;
-		inlen--;
-		(*outlen)++;
+		/* Process this amount of data. */
+        memcpy(out, in, process);
+        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
+        memcpy((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, in, process);
+        ctx->reserved->remaining -= process;
+        (*outlen) += process;
+        inlen -= process;
+        out += process;
+        in += process;
 	}
 }
 
