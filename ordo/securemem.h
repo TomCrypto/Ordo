@@ -1,3 +1,6 @@
+#ifndef securemem_h
+#define securemem_h
+
 /**
  * @file securemem.h
  * Exposes the Secure Memory API.
@@ -6,9 +9,6 @@
  *
  * @see securemem.c
  */
-
-#ifndef secmem_h
-#define secmem_h
 
 /* Standard includes. */
 #include <stdlib.h>
@@ -31,7 +31,7 @@ void* salloc(size_t size);
     Not generally useful but can always come in handy at some point.
  \param ptr The pointer to the memory to set as read-only.
  \param size The amount of memory, in bytes, to set as read-only. */
-void sprotect(void* ptr, size_t size);
+int sprotect(void* ptr, size_t size);
 
 /*! This function frees a pointer, and securely erases the memory it points to.
  \param ptr An allocated pointer to free.

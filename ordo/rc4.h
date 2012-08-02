@@ -1,3 +1,6 @@
+#ifndef rc4_h
+#define rc4_h
+
 /**
  * @file rc4.h
  * Contains the RC4 cipher primitive interface. This is a stream cipher.
@@ -7,17 +10,14 @@
  * @see rc4.c
  */
 
-#ifndef rc4_h
-#define rc4_h
-
 #include "primitives.h"
 
 /* A structure containing an RC4 state. */
 typedef struct RC4STATE
 {
-	unsigned char s[256];
-	unsigned char i;
-	unsigned char j;
+    unsigned char s[256];
+    unsigned char i;
+    unsigned char j;
 } RC4STATE;
 
 int RC4_KeyCheck(size_t keySize);

@@ -17,22 +17,22 @@
 /* Secure memory allocation. */
 void* salloc(size_t size)
 {
-	void* ptr = malloc(size);
-	mlock(ptr, size);
-	return ptr;
+    void* ptr = malloc(size);
+    if (mlock(ptr, size) != 0) return 0;
+    else return ptr;
 }
 
 /* Sets memory as read-only. */
-void sprotect(void* ptr, size_t size)
+int sprotect(void* ptr, size_t size)
 {
-	mprotect(ptr, size, PROT_READ);
+    return mprotect(ptr, size, PROT_READ);
 }
 
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-	memset(ptr, 0, size); // improve this later
-	free(ptr);
+    memset(ptr, 0, size); // improve this later
+    free(ptr);
 }
 
 #elif defined _WIN32 || defined _WIN64
@@ -42,25 +42,26 @@ void sfree(void* ptr, size_t size)
 /* Secure memory allocation. */
 void* salloc(size_t size)
 {
-	void* ptr = VirtualAlloc(0, size, MEM_COMMIT, PAGE_READWRITE);
-	VirtualLock(ptr, size);
-	return ptr;
+    void* ptr = VirtualAlloc(0, size, MEM_COMMIT, PAGE_READWRITE);
+    VirtualLock(ptr, size);
+    return ptr;
 }
 
 /* Sets memory as read-only. */
-void sprotect(void* ptr, size_t size)
+int sprotect(void* ptr, size_t size)
 {
     /* TIL VirtualProtect needs a dummy variable */
-	DWORD old;
-	VirtualProtect(ptr, size, PAGE_READONLY, &old);
+    DWORD old;
+    VirtualProtect(ptr, size, PAGE_READONLY, &old);
+    return 0; // change that later
 }
 
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
     /* improve this later */
-	memset(ptr, 0, size);
-	VirtualFree(ptr, 0, MEM_RELEASE);
+    memset(ptr, 0, size);
+    VirtualFree(ptr, 0, MEM_RELEASE);
 }
 
 #else

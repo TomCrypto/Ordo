@@ -1,12 +1,12 @@
+#ifndef random_h
+#define random_h
+
 /**
  * @file random.h
  * Exposes the Ordo CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface.
  *
  * @see random.c
  */
-
-#ifndef random_h
-#define random_h
 
 #include "ordotypes.h"
 

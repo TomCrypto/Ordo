@@ -1,3 +1,6 @@
+#ifndef ordo_h
+#define ordo_h
+
 /*! \file */
 
 #include "ordotypes.h"
@@ -39,3 +42,5 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
  \param padding Whether to use padding or not. If the mode does not use padding, this is ignored.
  \return Returns true on success, false on failure. */
 int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* tweak, void* iv, int padding);
+
+#endif

@@ -1,10 +1,10 @@
-Ordo [NZT 21:47 8/01/2012]
+Ordo [NZT 23:52 8/02/2012]
 ----
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. Currently it includes a .cbp (Code::Blocks Project) file for your convenience and because I see no need to use a manual makefile here, but it should be easy to write/generate a makefile later on.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
- - improve error handling (this is VERY important, the current handling code is inconsistent and more or less fubar)
+ - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - improve stream mode speed by batching up stream calls in groups instead of naively going through the buffer byte by byte [MORE OR LESS DONE]
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
 

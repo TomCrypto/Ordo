@@ -16,8 +16,8 @@
 
 int NullCipher_KeyCheck(size_t keySize)
 {
-	/* All key sizes are permitted for this cipher. */
-	return 1;
+    /* All key sizes are permitted for this cipher. */
+    return 1;
 }
 
 /* NullCipher key schedule. */

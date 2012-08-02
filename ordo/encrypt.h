@@ -1,3 +1,6 @@
+#ifndef encrypt_h
+#define encrypt_h
+
 /**
  * @file encrypt.h
  * Exposes the Ordo encryption interface.
@@ -6,9 +9,6 @@
  *
  * @see encrypt.c
  */
-
-#ifndef encrypt_h
-#define encrypt_h
 
 /* Library dependencies. */
 #include "primitives.h"
@@ -29,20 +29,20 @@
 /*! This structure describes a symmetric encryption context. */
 typedef struct ENCRYPT_CONTEXT
 {
-	/*! The primitive to use. */
-	struct CIPHER_PRIMITIVE* primitive;
-	/*! The mode of operation to use. */
-	struct ENCRYPT_MODE* mode;
-	/*! Points to the key material. */
-	void* key;
-	/*! Points to the initialization vector. */
-	void* iv;
-	/*! Whether to encrypt or decrypt (true = encryption). */
-	int direction;
-	/*! Whether padding is enabled or not. */
-	int padding;
-	/*! Reserved space for the mode of operation. */
-	void* scratch;
+    /*! The primitive to use. */
+    struct CIPHER_PRIMITIVE* primitive;
+    /*! The mode of operation to use. */
+    struct ENCRYPT_MODE* mode;
+    /*! Points to the key material. */
+    void* key;
+    /*! Points to the initialization vector. */
+    void* iv;
+    /*! Whether to encrypt or decrypt (true = encryption). */
+    int direction;
+    /*! Whether padding is enabled or not. */
+    int padding;
+    /*! Reserved space for the mode of operation. */
+    void* scratch;
 } ENCRYPT_CONTEXT;
 
 /*! This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */
@@ -68,22 +68,22 @@ typedef void (* FREE_FUNC)(ENCRYPT_CONTEXT*);
  * streaming modes do not. Refer to the individual mode of operation's headers to find out in which category they are. */
 typedef struct ENCRYPT_MODE
 {
-	/*! Points to the mode of operation's allocation function. */
-	CREATE_FUNC fCreate;
-	/*! Points to the mode of operation's initialization function. */
-	INIT_FUNC fInit;
-	/*! Points to the mode of operation's encryption function. */
-	UPDATE_FUNC fEncryptUpdate;
-	/*! Points to the mode of operation's decryption function. */
-	UPDATE_FUNC fDecryptUpdate;
-	/*! Points to the mode of operation's finalization function for encryption. */
-	FINAL_FUNC fEncryptFinal;
-	/*! Points to the mode of operation's finalization function for decryption. */
-	FINAL_FUNC fDecryptFinal;
-	/*! Points to the mode of operation's deallocation function. */
-	FREE_FUNC fFree;
-	/*! The mode of operation's name. */
-	char* name;
+    /*! Points to the mode of operation's allocation function. */
+    CREATE_FUNC fCreate;
+    /*! Points to the mode of operation's initialization function. */
+    INIT_FUNC fInit;
+    /*! Points to the mode of operation's encryption function. */
+    UPDATE_FUNC fEncryptUpdate;
+    /*! Points to the mode of operation's decryption function. */
+    UPDATE_FUNC fDecryptUpdate;
+    /*! Points to the mode of operation's finalization function for encryption. */
+    FINAL_FUNC fEncryptFinal;
+    /*! Points to the mode of operation's finalization function for decryption. */
+    FINAL_FUNC fDecryptFinal;
+    /*! Points to the mode of operation's deallocation function. */
+    FREE_FUNC fFree;
+    /*! The mode of operation's name. */
+    char* name;
 } ENCRYPT_MODE;
 
 /*! This function returns an initialized encryption context using a specific primitive and mode of operation.
@@ -91,7 +91,7 @@ typedef struct ENCRYPT_MODE
  \param mode This must point to the cryptographic mode of operation to be used
  \param direction This describes the direction of encryption, set to true for encryption and false for decryption.
  \param padding This describes whether padding should be used.
- \return Returns the initialized encryption context. */
+ \return Returns the initialized encryption context, or 0 if an error occurred. */
 ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding);
 
 /*! This function prepares an encryption context to be used for encryption, provided a key, tweak and initialization vector.
@@ -100,7 +100,7 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
  \param keySize This represents the length, in bytes, of the key buffer
  \param tweak This points to the tweak used in the cipher (this is an optional argument)
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
- \return Returns true on success, false on failure. */
+ \return Returns ORDO_ESUCCESS on success, and a negative value on error. */
 int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided context.
@@ -115,6 +115,7 @@ void encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsign
  \param ctx The encryption context to use.
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This will contain the size of the out buffer, in bytes.
+ \return Returns ORDO_ESUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used in encryptUpdate.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. */
 int encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);

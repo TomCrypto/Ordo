@@ -1,3 +1,6 @@
+#ifndef primitives_h
+#define primitives_h
+
 /**
  * @file primitives.h
  * Exposes the Ordo primitive interface.
@@ -6,9 +9,6 @@
  *
  * @see primitives.c
  */
-
-#ifndef primitives_h
-#define primitives_h
 
 #include "ordotypes.h"
 
@@ -36,22 +36,22 @@ typedef void (* CIPHER_PERMUTATION)(void*, void*);
 /*! This structure defines a symmetric cipher primitive. */
 typedef struct CIPHER_PRIMITIVE
 {
-	/*! The key size, in bytes, this includes all key material such as key-derived substitution boxes. */
-	size_t szKey;
-	/*! The block size, in bytes. */
-	size_t szBlock;
-	/*! The tweak size, in bytes. */
-	size_t szTweak;
-	/*! Points to the key size verification function. */
-	CIPHER_KEYCHECK fKeyCheck;
-	/*! Points to the primitive's forward permutation function. */
-	CIPHER_PERMUTATION fForward;
-	/*! Points to the primitive's inverse permutation function. */
-	CIPHER_PERMUTATION fInverse;
-	/*! Points to the primitive's key schedule. */
-	CIPHER_KEYSCHEDULE fKeySchedule;
-	/*! The primitive's name. */
-	char* name;
+    /*! The key size, in bytes, this includes all key material such as key-derived substitution boxes. */
+    size_t szKey;
+    /*! The block size, in bytes. */
+    size_t szBlock;
+    /*! The tweak size, in bytes. */
+    size_t szTweak;
+    /*! Points to the key size verification function. */
+    CIPHER_KEYCHECK fKeyCheck;
+    /*! Points to the primitive's forward permutation function. */
+    CIPHER_PERMUTATION fForward;
+    /*! Points to the primitive's inverse permutation function. */
+    CIPHER_PERMUTATION fInverse;
+    /*! Points to the primitive's key schedule. */
+    CIPHER_KEYSCHEDULE fKeySchedule;
+    /*! The primitive's name. */
+    char* name;
 } CIPHER_PRIMITIVE;
 
 /*! Loads all primitives. */

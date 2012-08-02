@@ -3,14 +3,14 @@
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
 int padCheck(unsigned char* buffer, unsigned char padding)
 {
-	/* Iterate over all padding bytes at the end of the block. */
-	size_t t;
-	for (t = 0; t < padding; t++)
-		if ((unsigned char)*(buffer + t) != padding)
-			return 0;
+    /* Iterate over all padding bytes at the end of the block. */
+    size_t t;
+    for (t = 0; t < padding; t++)
+        if ((unsigned char)*(buffer + t) != padding)
+            return 0;
 
-	/* All bytes are valid, the padding is acceptable. */
-	return 1;
+    /* All bytes are valid, the padding is acceptable. */
+    return 1;
 }
 
 /* Xors two buffers together. */
@@ -37,14 +37,14 @@ void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
    Propagation is done from left-to-right in memory storage order. */
 void incBuffer(unsigned char* n, size_t len)
 {
-	/* Increment the first byte. */
-	size_t t;
-	int carry = (++*n == 0);
+    /* Increment the first byte. */
+    size_t t;
+    int carry = (++*n == 0);
 
-	/* Go over each byte, and propagate the carry. */
-	for (t = 1; t < len; t++)
-	{
-		if (carry == 1) carry = (++*(n + t) == 0);
-		else break;
-	}
+    /* Go over each byte, and propagate the carry. */
+    for (t = 1; t < len; t++)
+    {
+        if (carry == 1) carry = (++*(n + t) == 0);
+        else break;
+    }
 }

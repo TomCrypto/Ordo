@@ -1,3 +1,6 @@
+#ifndef threefish256_h
+#define threefish256_h
+
 /**
  * @file threefish256.h
  * Contains the Threefish-256 cipher primitive interface.
@@ -7,27 +10,24 @@
  * @see threefish256.c
  */
 
-#ifndef threefish256_h
-#define threefish256_h
-
 #include "primitives.h"
 
 /* A 128-bit structure with two 64-bit words. */
 typedef struct UINT128
 {
-	unsigned long long words[2];
+    unsigned long long words[2];
 } UINT128;
 
 /* A 256-bit structure with four 64-bit words. */
 typedef struct UINT256
 {
-	unsigned long long words[4];
+    unsigned long long words[4];
 } UINT256;
 
 /* A structure containing a Threefish subkey list. */
 typedef struct SUBKEYS
 {
-	UINT256 subkey[18];
+    UINT256 subkey[18];
 } SUBKEYS;
 
 int Threefish256_KeyCheck(size_t keySize);

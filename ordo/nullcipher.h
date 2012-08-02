@@ -1,3 +1,6 @@
+#ifndef nullcipher_h
+#define nullcipher_h
+
 /**
  * @file nullcipher.h
  * Contains the NullCipher cipher primitive interface.
@@ -6,9 +9,6 @@
  *
  * @see nullcipher.c
  */
-
-#ifndef nullcipher_h
-#define nullcipher_h
 
 #include "primitives.h"
 
