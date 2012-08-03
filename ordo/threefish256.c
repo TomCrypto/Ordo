@@ -60,6 +60,7 @@ void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKE
     }
 }
 
+#ifndef ENVIRONMENT64
 /* Threefish-256 forward permutation function. */
 void Threefish256_Forward(UINT256* block, SUBKEYS* key)
 {
@@ -341,6 +342,7 @@ void Threefish256_Inverse(UINT256* block, SUBKEYS* key)
     block->words[2] -= key->subkey[0].words[2];
     block->words[3] -= key->subkey[0].words[3];
 }
+#endif
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
 void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive)

@@ -11,8 +11,10 @@ void loadPrimitives()
     /* Cipher primitives. */
     NullCipher = malloc(sizeof(CIPHER_PRIMITIVE));
     NullCipher_SetPrimitive(NullCipher);
+
     Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE));
     Threefish256_SetPrimitive(Threefish256);
+
     RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
     RC4_SetPrimitive(RC4);
 

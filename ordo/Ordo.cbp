@@ -29,6 +29,7 @@
 					<Add option="-O2" />
 					<Add option="-O1" />
 					<Add option="-O" />
+					<Add option="-masm=intel" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -102,6 +103,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="threefish256.h" />
+		<Unit filename="threefish256_asm.S" />
 		<Extensions>
 			<code_completion />
 			<debugger />

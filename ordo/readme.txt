@@ -1,4 +1,4 @@
-Ordo [NZT 23:52 8/02/2012]
+Ordo [NZT 19:53 8/03/2012]
 ----
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. Currently it includes a .cbp (Code::Blocks Project) file for your convenience and because I see no need to use a manual makefile here, but it should be easy to write/generate a makefile later on.
@@ -7,6 +7,7 @@ Current work is focused towards finishing the cipher interface. Important todo's
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - improve stream mode speed by batching up stream calls in groups instead of naively going through the buffer byte by byte [MORE OR LESS DONE]
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
+ - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way
 
 Other todo's to keep in mind:
  - distribute the #includes in a more coherent fashion (right now they are scattered wherever they are needed)
@@ -17,8 +18,8 @@ Documentation: The code in a few headers is documented for Doxygen. The doxyfile
 :::Current status and what needs to be done:::
 
 CIPHERS > Modes of operation implemented: ECB, CBC, OFB, CFB, CTR, STREAM
-CIPHERS > Primitives implemented: NullCipher, Threefish-256, RC4
-/!\ These have not been extensively checked for correctness! /!\
+CIPHERS > Primitives implemented: NullCipher, Threefish-256 [+ASM-optimized], RC4
+/!\ Threefish-256 has not been extensively checked against test vectors yet, RC4 has though! /!\
 CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
 
 Essentially we want primitives (be it cipher primitives, or hash primitives, etc...) to be accessible from everywhere in the library, and we want different uses to be able to access them transparently (like encrypting, hashing, authenticating, encrypting+authenticating, etc...). Suggested library section names:
@@ -40,7 +41,7 @@ Please note that "NullCipher" is a test cipher which does absolutely nothing and
 
 --------
 
-The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Tested platforms so far:
+The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different codepath for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
 
 - Linux Mint 13 [64-bit] GCC w/ Code::Blocks
 
