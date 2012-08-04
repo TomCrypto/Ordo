@@ -3,34 +3,128 @@
 
 /**
  * @file environment.h
- * Precompilation environment decision unit. This will decide whether to use the 32-bit or 64-bit version of Ordo
- * and set the appropriate flags for conditional compilation throughout the library. Please make sure you include
- * this file when linking assembler files as they will always be preprocessed prior to this header.
+ * Precompilation environment decision unit. This will decide which codepaths to use for Ordo to maximize performance
+ * and compatibility. Make sure you include this unit whenever you need to run different code on different platforms.
+ *
+ * Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile.
  *
  * \todo Implement more platforms (and make sure they all work)
  */
 
-/* Decides whether the build target is a 32-bit or 64-bit platform. */
+/** These are environment flags, which must be set to sensible values. */
+
+/* Decides what platform Ordo is being compiled under. */
 #if _WIN32 || _WIN64
-#if _WIN64
-#define ENVIRONMENT64
-#else
-#define ENVIRONMENT32
-#endif
+#define PLATFORM_WINDOWS 1
+#elif __linux__
+#define PLATFORM_LINUX 1
 #endif
 
-#if __GNUC__
-#if __x86_64__ || __ppc64__
-#define ENVIRONMENT64
+/* Decides whether the build target is a 32-bit or 64-bit platform. */
+#if _WIN64 || __amd64__ || __x86_64__ || __ppc64__
+#define ENVIRONMENT_64 1
 #else
-#define ENVIRONMENT32
-#endif
+#define ENVIRONMENT_32 1
 #endif
 
-#ifndef ENVIRONMENT64
-#ifndef ENVIRONMENT32
-#error "Unknown platform."
+/* Represents which ABI (for pure assembler functions) is in use. Possible values are:
+ * ABI_WINDOWS_64: 64-bit Windows calling convention.
+ * ABI_LINUX_64  : 64-bit Linux calling convention.
+ * ABI_CDECL     : Standard cdecl calling convention. */
+#if ENVIRONMENT_64 && PLATFORM_WINDOWS
+#define ABI_WINDOWS_64 1
+#elif ENVIRONMENT_64 && PLATFORM_LINUX
+#define ABI_LINUX_64 1
+#elif ENVIRONMENT_32
+#define ABI_CDECL 1
 #endif
+
+/* Force unset flags to zero (this is important) */
+#ifndef PLATFORM_LINUX
+#define PLATFORM_LINUX 0
+#endif
+#ifndef PLATFORM_WINDOWS
+#define PLATFORM_WINDOWS 0
+#endif
+#ifndef ENVIROMENT_32
+#define ENVIROMENT_32 0
+#endif
+#ifndef ENVIROMENT_64
+#define ENVIROMENT_64 0
+#endif
+#ifndef ABI_WINDOWS_64
+#define ABI_WINDOWS_64 0
+#endif
+#ifndef ABI_LINUX_64
+#define ABI_LINUX_64 0
+#endif
+#ifndef ABI_CDECL
+#define ABI_CDECL 0
+#endif
+
+/* Check whether the flags make sense. */
+#if !(PLATFORM_WINDOWS || PLATFORM_LINUX)
+#error "Cannot recognize platform."
+#endif
+#if !(ENVIRONMENT_64 || ENVIRONMENT_32)
+#error "Cannot recognize environment."
+#endif
+#if !(ABI_WINDOWS_64 || ABI_LINUX_64 || ABI_CDECL)
+#error "Cannot recognize calling convention."
+#endif
+
+/** These are feature flags used to enable various optimizations.
+  * Note these can be overriden via your compiler's options, since
+  * these feature flags are being read from compiler defines.
+  * (for instance, running in debug mode will usually disable
+     most if not all of those features). */
+
+#ifdef __MMX__                  // MMX instructions (64-bit SIMD)
+#define FEATURE_MMX 1
+#else
+#define FEATURE_MMX 0
+#endif
+
+#ifdef __SSE__                  // SSE instructions (128-bit SIMD, v1)
+#define FEATURE_SSE 1
+#else
+#define FEATURE_SSE 0
+#endif
+
+#ifdef __SSE2__                 // SSE instructions (128-bit SIMD, v2)
+#define FEATURE_SSE2 1
+#else
+#define FEATURE_SSE2 0
+#endif
+
+#ifdef __SSE3__                 // SSE instructions (128-bit SIMD, v3)
+#define FEATURE_SSE3 1
+#else
+#define FEATURE_SSE3 0
+#endif
+
+#ifdef __SSE4_1__               // SSE instructions (128-bit SIMD, v4.1)
+#define FEATURE_SSE4_1 1
+#else
+#define FEATURE_SSE4_1 0
+#endif
+
+#ifdef __SSE4_2__               // SSE instructions (128-bit SIMD, v4.2)
+#define FEATURE_SSE4_2 1
+#else
+#define FEATURE_SSE4_2 0
+#endif
+
+#ifdef __AVX__                  // AVX instructions (256-bit SIMD)
+#define FEATURE_AVX 1
+#else
+#define FEATURE_AVX 0
+#endif
+
+#ifdef __AES__                  // AES instructions (hardware-accelerated AES)
+#define FEATURE_AES 1
+#else
+#define FEATURE_AES 0
 #endif
 
 #endif

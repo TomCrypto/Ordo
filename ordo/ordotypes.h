@@ -40,7 +40,7 @@
     \param buffer The buffer to check, which should point to the first padding byte.
     \param padding The padding byte value to check the buffer against.
     \return Returns 1 if the buffer is valid, 0 otherwise. */
-int padCheck(unsigned char* buffer, unsigned char padding);
+inline int padCheck(unsigned char* buffer, unsigned char padding);
 
 /*! Performs a bitwise exclusive-or of one buffer onto another.
     \param dst The destination buffer, where the operation's result will be stored.
@@ -49,12 +49,12 @@ int padCheck(unsigned char* buffer, unsigned char padding);
     \remark This is functionally equivalent to dst ^= src. Note this method has been
            optimized to process word-sized data chunks at a time, making it multiple
            times faster than a naive byte-to-byte approach. */
-void xorBuffer(unsigned char* dst, unsigned char* src, size_t len);
+inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len);
 
 /*! Increments a buffer of arbitrary size as if it were a len-byte integer.
     \param n Points to the buffer to increment.
     \param len The size, in bytes, of the buffer.
     \remark Carry propagation is done from left-to-right in memory storage order. */
-void incBuffer(unsigned char* n, size_t len);
+inline void incBuffer(unsigned char* n, size_t len);
 
 #endif

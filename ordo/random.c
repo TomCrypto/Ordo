@@ -13,7 +13,7 @@
 
 #include "random.h"
 
-#if defined __linux__
+#if PLATFORM_LINUX
 
 #include <stdio.h>
 
@@ -44,7 +44,7 @@ int ordoRandom(unsigned char* buffer, size_t size)
     return 0;
 }
 
-#elif defined _WIN32 || defined _WIN64
+#elif PLATFORM_WINDOWS
 
 #include <windows.h>
 #include <Wincrypt.h>

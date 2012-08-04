@@ -1,7 +1,7 @@
 #include "ordotypes.h"
 
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
-int padCheck(unsigned char* buffer, unsigned char padding)
+inline int padCheck(unsigned char* buffer, unsigned char padding)
 {
     /* Iterate over all padding bytes at the end of the block. */
     size_t t;
@@ -14,7 +14,7 @@ int padCheck(unsigned char* buffer, unsigned char padding)
 }
 
 /* Xors two buffers together. */
-void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
+inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
 {
     /* Process as many word-size chunks as possible. */
     while (len >= sizeof(size_t))
@@ -35,7 +35,7 @@ void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
 
 /* Increments a counter of arbitrary size as if it were a len-byte integer
    Propagation is done from left-to-right in memory storage order. */
-void incBuffer(unsigned char* n, size_t len)
+inline void incBuffer(unsigned char* n, size_t len)
 {
     /* Increment the first byte. */
     size_t t;
@@ -45,6 +45,6 @@ void incBuffer(unsigned char* n, size_t len)
     for (t = 1; t < len; t++)
     {
         if (carry == 1) carry = (++*(n + t) == 0);
-        else break;
+        else return;
     }
 }

@@ -9,7 +9,7 @@
 
 #include "securemem.h"
 
-#if defined __linux__
+#if PLATFORM_LINUX
 
 #include <string.h>
 #include <sys/mman.h>
@@ -35,7 +35,7 @@ void sfree(void* ptr, size_t size)
     free(ptr);
 }
 
-#elif defined _WIN32 || defined _WIN64
+#elif PLATFORM_WINDOWS
 
 #include <Windows.h>
 

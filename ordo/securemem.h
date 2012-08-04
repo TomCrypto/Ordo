@@ -13,6 +13,9 @@
 /* Standard includes. */
 #include <stdlib.h>
 
+
+#include "ordotypes.h"
+
 /*! This function returns a pointer that is locked in physical memory.
  \param size The amount of memory to allocate, in bytes.
  \return Returns the allocated pointer on success, or 0 if the function fails.

@@ -1,4 +1,4 @@
-Ordo [NZT 19:53 8/03/2012]
+Ordo [NZT 19:04 8/04/2012]
 ----
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. Currently it includes a .cbp (Code::Blocks Project) file for your convenience and because I see no need to use a manual makefile here, but it should be easy to write/generate a makefile later on.
@@ -7,7 +7,7 @@ Current work is focused towards finishing the cipher interface. Important todo's
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - improve stream mode speed by batching up stream calls in groups instead of naively going through the buffer byte by byte [MORE OR LESS DONE]
  - implement a couple cipher primitives (algorithms) to work with, such as AES, Threefish and RC5
- - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way
+ - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way [WORK IN PROGRESS]
 
 Other todo's to keep in mind:
  - distribute the #includes in a more coherent fashion (right now they are scattered wherever they are needed)
@@ -33,7 +33,7 @@ random -> for pseudorandom number generation (using the OS-provided CSPRNG)
 
 This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
 
-It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? I have implemented RC4 with a degenerate 1-byte block cipher (8-byte, actually, for caching/performance reasons - see rc4.c) using a dedicated "mode of operation" (STREAM), and all stream ciphers should be able to be formalized in a similar fashion, but I am not sure if this is flexible enough.
+It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? Although I have implemented RC4 with a degenerate 1-byte block cipher (8-byte, actually, for caching/performance reasons - see rc4.c) using a dedicated "mode of operation" (STREAM), and all stream ciphers should be able to be formalized in a similar fashion, but I am not sure if this is flexible enough.
 
 --------
 
@@ -41,8 +41,10 @@ Please note that "NullCipher" is a test cipher which does absolutely nothing and
 
 --------
 
-The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different codepath for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
+The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different code path for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
 
 - Linux Mint 13 [64-bit] GCC w/ Code::Blocks
+
+GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
 
 Of course, do not use Ordo for anything other than testing or contributing for now! It can only be used once it has been completed and extensively checked (and even then, there may still be flaws and bugs, as in any other software).

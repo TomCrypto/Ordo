@@ -84,6 +84,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 
     printf("\n---\n\n");
 
+    /* Clean up. */
     free(key);
     free(iv);
     free(in);
@@ -93,20 +94,29 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
 /* Clears a buffer with a pseudorandom integer pattern. */
 void randomize(unsigned char* buffer, size_t len)
 {
-    /* Get a pseudorandom integer. */
-    int r;
+    /* Get a 256-bit pseudorandom key and IV. */
     int error;
-    error = ordoRandom((unsigned char*)&r, sizeof(r));
+    size_t outlen;
+    void* key = salloc(32);
+    void* iv = salloc(32);
+    error = ordoRandom((unsigned char*)key, 32);
+    if (error != 0) printf("ordoRandom Failed [%s] !\n", errorMsg(error));
+    error = ordoRandom((unsigned char*)iv, 32);
     if (error != 0) printf("ordoRandom Failed [%s] !\n", errorMsg(error));
 
-    /* Fill the buffer with it. */
-    memset(buffer, r, len);
+    /* Encrypt the buffer with Threefish-256/OFB using this key and IV! */
+    error = ordoEncrypt(buffer, len, buffer, &outlen, Threefish256, OFB, key, 32, 0, iv, 0);
+    if (error != 0) printf("ordoEncrypt FAILED [%s]\n", errorMsg(error));
+
+    /* Free the key and IV. */
+    sfree(key, 32);
+    sfree(iv, 32);
 }
 
 void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize)
 {
     /* Buffer size. */
-    #define BUFSIZE (1024 * 1024 * 128)
+    #define BUFSIZE (1024 * 1024 * 256)
 
     /* Declare variables. */
     int error;
@@ -118,22 +128,23 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
     clock_t start;
     float time;
 
-    /* Allocate a large plaintext buffer and fill it with 0x77 bytes.*/
+    /* Allocate a large plaintext buffer and randomize it. */
     in = malloc(BUFSIZE);
     randomize(in, BUFSIZE);
 
-    /* Allocate a ciphertext buffer.*/
+    /* Allocate a ciphertext buffer (also randomize it, because of lazy memory allocation). */
     out = malloc(BUFSIZE);
+    randomize(out, BUFSIZE);
 
-    /* Allocate a buffer of the right size (= cipher block size) and fill it with 0xAA. */
+    /* Allocate a buffer of the right size (= cipher block size) and randomize it. */
     iv = malloc(primitiveBlockSize(primitive));
     randomize(iv, primitiveBlockSize(primitive));
 
-    /* Allocate a key of the right sie, and fill it with 0xEE. */
+    /* Allocate a key of the right size, and randomize it */
     key = malloc(keySize);
     randomize(key, keySize);
 
-    /* Print information data. */
+    /* Print primitive/mode information. */
     printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
     printf("Starting performance test...\n");
 
@@ -150,7 +161,7 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
         time = (float)start / (float)CLOCKS_PER_SEC;
         printf("It took %.2f seconds to encrypt %dMB - Rated speed at %.1fMB/s.\n", time, BUFSIZE >> 20, (float)(BUFSIZE >> 20) / time);
 
-        /* Reset the buffer to prevent caching from tainting the subsequent timings. */
+        /* Reset the buffers to prevent caching from tainting the subsequent timings. */
         randomize(in, BUFSIZE);
         randomize(out, BUFSIZE);
 
@@ -171,6 +182,7 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 
     printf("\n---\n\n");
 
+    /* Clean up. */
     free(key);
     free(iv);
     free(in);
@@ -189,24 +201,67 @@ void csprngTest()
     for (t = 0; t < 31; t++)
     {
         error = ordoRandom(buffer, 100);
-        if (error == 0)
-        {
-            hex(buffer, 100);
-            printf("\n");
-        }
-        else printf("Error! [%s]\n", errorMsg(error));
+        if (error == 0) hex(buffer, 100);
+        else printf("Error! [%s]", errorMsg(error));
+
+        printf("\n");
     }
     printf("Generation complete.\n\n---\n\n");
 }
 
 int main(int argc, char* argv[])
 {
-    printf("################\n");
-    #ifdef ENVIRONMENT64
-    printf("# 64-bit mode! #\n################\n\n");
+    /* Print out environment information. */
+    #if ENVIRONMENT_32
+    printf("# 32-bit mode.\n");
     #else
-    printf("# 32-bit mode! #\n################\n\n");
+    printf("# 64-bit mode.\n");
     #endif
+
+    /* Print out platform information. */
+    #if PLATFORM_LINUX
+    printf("# Linux Platform.\n");
+    #elif PLATFORM_WINDOWS
+    printf("# Windows Platform.\n");
+    #endif
+
+    /* Print out ABI information. */
+    #if ABI_LINUX_64
+    printf("# 64-bit Linux calling convention.\n");
+    #elif ABI_WINDOWS_64
+    printf("# 64-bit Windows calling convention.\n");
+    #elif ABI_CDECL
+    printf("# Standard cdecl calling convention.\n");
+    #endif
+
+    /* Printf supported feature flags. */
+    printf("# Feature flags: ");
+    #if FEATURE_MMX
+    printf("[MMX]");
+    #endif
+    #if FEATURE_SSE
+    printf("[SSE]");
+    #endif
+    #if FEATURE_SSE2
+    printf("[SSE2]");
+    #endif
+    #if FEATURE_SSE3
+    printf("[SSE3]");
+    #endif
+    #if FEATURE_SSE4_1
+    printf("[SSE4.1]");
+    #endif
+    #if FEATURE_SSE4_2
+    printf("[SSE4.2]");
+    #endif
+    #if FEATURE_AVX
+    printf("[AVX]");
+    #endif
+    #if FEATURE_AES
+    printf("[AES]");
+    #endif
+
+    printf("\n\n");
 
     printf("Loading Ordo... ");
     loadOrdo();
@@ -221,11 +276,11 @@ int main(int argc, char* argv[])
     testPrimitiveMode(NullCipher, OFB, 17, 23, 0);
     testPrimitiveMode(NullCipher, CFB, 41, 23, 0);
     testPrimitiveMode(Threefish256, ECB, 64, 32, 1);
-    testPrimitiveMode(Threefish256, CBC, 31, 32, 1);
-    testPrimitiveMode(Threefish256, CTR, 92, 32, 0);
+    testPrimitiveMode(Threefish256, CBC, 61, 32, 1);
+    testPrimitiveMode(Threefish256, CTR, 57, 32, 0);
     testPrimitiveMode(Threefish256, OFB, 61, 32, 0);
-    testPrimitiveMode(Threefish256, CFB, 76, 32, 0);
-    testPrimitiveMode(RC4, STREAM, 71, 41, 0);
+    testPrimitiveMode(Threefish256, CFB, 59, 32, 0);
+    testPrimitiveMode(RC4, STREAM, 39, 41, 0);
 
     printf("* STARTING PERFORMANCE TESTS...\n\n---\n\n");
 
