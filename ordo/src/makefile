@@ -9,14 +9,15 @@ default: release
 
 # Simply push all the source files (+ assembler files) to gcc and build/link
 debug: $(wildcard *.c) $(wildcard *.S)
-	gcc $(CFLAGS_DEBUG) -o ordo $(wildcard *.c) $(wildcard *.S)
+	gcc $(CFLAGS_DEBUG) -o ../bin/debug/ordo $(wildcard *.c) $(wildcard *.S)
 	@echo "\n[#] Ordo built in <debug> mode."
 
 # Simply push all the source files (+ assembler files) to gcc and build/link
 release: $(wildcard *.c) $(wildcard *.S)
-	gcc $(CFLAGS_RELEASE) -o ordo $(wildcard *.c) $(wildcard *.S)
+	gcc $(CFLAGS_RELEASE) -o ../bin/release/ordo $(wildcard *.c) $(wildcard *.S)
 	@echo "\n[#] Ordo built in <release> mode."
 
 # Removes the executable
 clean:
-	rm -f ordo
+	rm -f ../bin/debug/ordo
+	rm -f ../bin/release/ordo

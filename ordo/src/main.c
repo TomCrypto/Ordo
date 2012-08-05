@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
 	#if ORDO_DEBUG
 	printf("# You are in debug mode!\n\n");
 	#else
-		printf("# You are in release (fast) mode!\n\n");
+    printf("# You are in release (fast) mode!\n\n");
 	#endif
 
     /* Print out environment information. */
