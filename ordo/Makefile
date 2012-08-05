@@ -2,7 +2,7 @@
 CFLAGS_DEBUG = -Wall -ansi=c90 -D ORDO_DEBUG
 
 # Release flags (full optimization, native feature flags, warnings, and C90 conformance)
-CFLAGS_RELEASE = -O6 -Wall -march=native -ansi=c90
+CFLAGS_RELEASE = -O6 -Wall -march=native
 
 # The default build target is release
 default: release
@@ -14,6 +14,7 @@ debug: $(shell find src/ -name '*.c')
 
 # Simply push all the source files (+ assembler files) to gcc and build/link
 release: $(shell find src/ -name '*.c')
+	mkdir bin/release
 	gcc -Iinclude/ $(CFLAGS_RELEASE) -o ./bin/release/ordo $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <release> mode."
 
