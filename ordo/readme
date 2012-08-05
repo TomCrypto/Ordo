@@ -1,10 +1,10 @@
-Ordo [NZT 14:39 8/05/2012]
-----
+Ordo v0.1.0 [NZT 16:21 8/05/2012]
+-----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
 - make debug, which includes no optimizations and no platform-specific features
 - make release, adding all optimizations and all features available to your platform (via -march=native)
-The project directory still needs to be fixed (and subfolders need to be added to logically group headers and source files). A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
+A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)

@@ -5,7 +5,6 @@
 		<Option title="ordo" />
 		<Option makefile="makefile" />
 		<Option makefile_is_custom="1" />
-		<Option execution_dir="src" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -50,71 +49,71 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="include/cbc.h" />
-		<Unit filename="include/cfb.h" />
-		<Unit filename="include/ctr.h" />
-		<Unit filename="include/ecb.h" />
-		<Unit filename="include/encrypt.h" />
-		<Unit filename="include/environment.h" />
-		<Unit filename="include/nullcipher.h" />
-		<Unit filename="include/ofb.h" />
+		<Unit filename="include/common/environment.h" />
+		<Unit filename="include/common/ordotypes.h" />
+		<Unit filename="include/common/securemem.h" />
+		<Unit filename="include/encrypt/encrypt.h" />
+		<Unit filename="include/encrypt/modes/cbc.h" />
+		<Unit filename="include/encrypt/modes/cfb.h" />
+		<Unit filename="include/encrypt/modes/ctr.h" />
+		<Unit filename="include/encrypt/modes/ecb.h" />
+		<Unit filename="include/encrypt/modes/ofb.h" />
+		<Unit filename="include/encrypt/modes/stream.h" />
 		<Unit filename="include/ordo.h" />
-		<Unit filename="include/ordotypes.h" />
-		<Unit filename="include/primitives.h" />
-		<Unit filename="include/random.h" />
-		<Unit filename="include/rc4.h" />
-		<Unit filename="include/securemem.h" />
-		<Unit filename="include/stream.h" />
-		<Unit filename="include/threefish256.h" />
-		<Unit filename="src/cbc.c">
+		<Unit filename="include/primitives/cipher/nullcipher.h" />
+		<Unit filename="include/primitives/cipher/rc4.h" />
+		<Unit filename="include/primitives/cipher/threefish256.h" />
+		<Unit filename="include/primitives/primitives.h" />
+		<Unit filename="include/random/random.h" />
+		<Unit filename="src/common/ordotypes.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/cfb.c">
+		<Unit filename="src/common/securemem.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/ctr.c">
+		<Unit filename="src/encrypt/encrypt.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/ecb.c">
+		<Unit filename="src/encrypt/modes/cbc.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt.c">
+		<Unit filename="src/encrypt/modes/cfb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/encrypt/modes/ctr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/encrypt/modes/ecb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/encrypt/modes/ofb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/encrypt/modes/stream.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/nullcipher.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/ofb.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/ordotypes.c">
+		<Unit filename="src/primitives/ciphers/asm/threefish256.S" />
+		<Unit filename="src/primitives/ciphers/nullcipher.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/primitives.c">
+		<Unit filename="src/primitives/ciphers/rc4.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/random.c">
+		<Unit filename="src/primitives/ciphers/threefish256.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/rc4.c">
+		<Unit filename="src/primitives/primitives.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/securemem.c">
+		<Unit filename="src/random/random.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/stream.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/threefish256.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/threefish256_asm.S" />
 		<Extensions>
 			<code_completion />
 			<envvars />

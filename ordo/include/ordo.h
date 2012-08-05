@@ -3,9 +3,9 @@
 
 /*! \file */
 
-#include "ordotypes.h"
-#include "encrypt.h"
-#include "random.h"
+#include <common/ordotypes.h>
+#include <encrypt/encrypt.h>
+#include <random/random.h>
 
 /* Load Ordo. */
 void loadOrdo();

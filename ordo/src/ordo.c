@@ -1,6 +1,6 @@
-#include "../include/primitives.h"
-#include "../include/encrypt.h"
-#include "../include/ordo.h"
+#include <primitives/primitives.h>
+#include <encrypt/encrypt.h>
+#include <ordo.h>
 
 /* Load Ordo. */
 void loadOrdo()
