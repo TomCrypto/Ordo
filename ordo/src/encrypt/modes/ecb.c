@@ -182,10 +182,15 @@ int ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outle
         /* Check the padding. */
         if ((padding != 0) && (padding <= ctx->primitive->szBlock) && (padCheck(ctx->reserved->block + ctx->primitive->szBlock - padding, padding)))
         {
+            /* Remove the padding data and output the plaintext. */
             *outlen = ctx->primitive->szBlock - padding;
             memcpy(out, ctx->reserved->block, *outlen);
         }
-        else return ORDO_EPADDING;
+        else
+        {
+            *outlen = 0;
+            return ORDO_EPADDING;
+        }
     }
 
     /* Return success. */
@@ -194,7 +199,7 @@ int ECB_DecryptFinal(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outle
 
 void ECB_Free(ECB_ENCRYPT_CONTEXT* ctx)
 {
-    /* Allocate context fields. */
+    /* Dellocate context fields. */
     sfree(ctx->reserved->block, ctx->primitive->szBlock);
     sfree(ctx->reserved, sizeof(ECB_RESERVED));
     sfree(ctx->key, ctx->primitive->szKey);

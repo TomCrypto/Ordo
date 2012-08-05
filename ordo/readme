@@ -1,4 +1,4 @@
-Ordo v0.1.0 [NZT 16:21 8/05/2012]
+Ordo v0.1.0 [NZT 09:39 8/06/2012]
 -----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:

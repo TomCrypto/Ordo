@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include "../include/ordo.h"
+#include <ordo.h>
 
 /* Prints a buffer byte per byte. */
 void hex(void* input, size_t len)
@@ -50,7 +50,7 @@ void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t s
     iv = malloc(primitiveBlockSize(primitive));
     memset(iv, 0xAA, primitiveBlockSize(primitive));
 
-    /* Allocate a key of the right sie, and fill it with 0xEE. */
+    /* Allocate a key of the right size, and fill it with 0xEE. */
     key = malloc(keySize);
     memset(key, 0xEE, keySize);
 
