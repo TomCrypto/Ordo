@@ -48,3 +48,19 @@ inline void incBuffer(unsigned char* n, size_t len)
         else return;
     }
 }
+
+/* Returns a readable error message. */
+char* errorMsg(int code)
+{
+    /* Get a proper error message. */
+    switch (code)
+    {
+        case ORDO_EFAIL: return "An external error occurred";
+        case ORDO_EKEYSIZE: return "The key size is invalid";
+        case ORDO_EPADDING: return "The padding block cannot be recognized";
+        case ORDO_LEFTOVER: return "There is leftover input data";
+    }
+
+    /* Invalid error code... */
+    return "Unknown error code";
+}

@@ -9,15 +9,15 @@ default: release
 
 # Simply push all the source files (+ assembler files) to gcc and build/link. Make sure /bin/debug exists...
 debug: $(shell find src/ -name '*.c')
-	mkdir bin
-	mkdir bin/debug
+	@mkdir bin -p
+	@mkdir bin/debug -p
 	gcc -Iinclude/ $(CFLAGS_DEBUG) -o ./bin/debug/ordo $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <debug> mode."
 
 # Simply push all the source files (+ assembler files) to gcc and build/link. Make sure /bin/release exists...
 release: $(shell find src/ -name '*.c')
-	mkdir bin
-	mkdir bin/release
+	@mkdir bin -p
+	@mkdir bin/release -p
 	gcc -Iinclude/ $(CFLAGS_RELEASE) -o ./bin/release/ordo $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <release> mode."
 
@@ -25,5 +25,5 @@ release: $(shell find src/ -name '*.c')
 clean:
 	rm -f ./bin/debug/ordo
 	rm -f ./bin/release/ordo
-	rmdir bin/debug
-	rmdir bin/release
+	rmdir bin/debug --ignore-fail-on-non-empty
+	rmdir bin/release --ignore-fail-on-non-empty

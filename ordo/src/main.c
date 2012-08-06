@@ -1,94 +1,13 @@
 #include <stdio.h>
 #include <time.h>
 #include <ordo.h>
+#include <testing/testing.h>
 
 /* Prints a buffer byte per byte. */
 void hex(void* input, size_t len)
 {
     size_t t;
     for (t = 0; t < len; t++) printf("%.2x", *((unsigned char*)input + t));
-}
-
-/* Returns a readable error message. */
-char* errorMsg(int code)
-{
-    /* Get a proper error message. */
-    switch (code)
-    {
-        case ORDO_EFAIL: return "An external error occurred";
-        case ORDO_EKEYSIZE: return "The key size is invalid";
-        case ORDO_EPADDING: return "The padding block cannot be recognized";
-        case ORDO_LEFTOVER: return "There is leftover input data";
-    }
-
-    /* Invalid error code... */
-    return "Unknown error code";
-}
-
-void testPrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t size, size_t keySize, int padding)
-{
-    /* Declare variables. */
-    int error;
-    void* in;
-    void* out;
-    void* iv;
-    void* key;
-    size_t pad;
-
-    /* Store the size and pad it up to the block size (this is only needed for ECB/CBC/etc... but it will be ignored for streaming modes, the extra space will simply be disregarded by the API) */
-    if (size % primitiveBlockSize(primitive) == 0) pad = size + primitiveBlockSize(primitive);
-    else pad = size + primitiveBlockSize(primitive) - size % primitiveBlockSize(primitive);
-
-    /* Allocate a plaintext buffer and fill it with 0x77 bytes.*/
-    in = malloc(size);
-    memset(in, 0x77, size);
-
-    /* Allocate a ciphertext buffer.*/
-    out = malloc(pad);
-
-    /* Allocate a buffer of the right size (= cipher block size) and fill it with 0xAA. */
-    iv = malloc(primitiveBlockSize(primitive));
-    memset(iv, 0xAA, primitiveBlockSize(primitive));
-
-    /* Allocate a key of the right size, and fill it with 0xEE. */
-    key = malloc(keySize);
-    memset(key, 0xEE, keySize);
-
-    /* Print data BEFORE encryption. */
-    printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
-    printf("Plaintext  : ");
-    hex(in, size);
-    printf(" (%zu bytes)\n", size);
-
-    /* Encrypt. */
-    error = ordoEncrypt((unsigned char*)in, size, (unsigned char*)out, &size, primitive, mode, key, keySize, 0, iv, padding);
-    if (error < 0) printf("Ciphertext : Failed [%s] \n", errorMsg(error));
-    else
-    {
-        /* Print data AFTER encryption. */
-        printf("Ciphertext : ");
-        hex(out, size);
-        printf(" (%zu bytes)\n", size);
-
-        /* Decrypt. */
-        error = ordoDecrypt((unsigned char*)out, size, (unsigned char*)in, &size, primitive, mode, key, keySize, 0, iv, padding);
-        if (error < 0) printf("Plaintext  : Failed [%s] \n", errorMsg(error));
-        else
-        {
-            /* Print data AFTER decryption. */
-            printf("Plaintext  : ");
-            hex(in, size);
-            printf(" (%zu bytes)\n", size);
-        }
-    }
-
-    printf("\n---\n\n");
-
-    /* Clean up. */
-    free(key);
-    free(iv);
-    free(in);
-    free(out);
 }
 
 /* Clears a buffer with a pseudorandom integer pattern. */
@@ -113,10 +32,11 @@ void randomize(unsigned char* buffer, size_t len)
     sfree(iv, 32);
 }
 
+/* Rates the performance of a primitive/mode combination. */
 void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize)
 {
     /* Buffer size. */
-    #define BUFSIZE (1024 * 1024 * 256)
+    #define BUFSIZE (1024 * 1024 * 64)
 
     /* Declare variables. */
     int error;
@@ -146,7 +66,6 @@ void ratePrimitiveMode(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t k
 
     /* Print primitive/mode information. */
     printf("Cipher: %s | Mode: %s (key length = %zu bits)\n", primitiveName(primitive), modeName(mode), keySize * 8);
-    printf("Starting performance test...\n");
 
     /* Save starting time. */
     start = clock();
@@ -211,34 +130,37 @@ void csprngTest()
 
 int main(int argc, char* argv[])
 {
+    /* The test vector file. */
+    FILE* vectors;
+
 	/* Print out debug/release info. */
 	#if ORDO_DEBUG
-	printf("# You are in debug mode!\n\n");
+	printf("# Debug build.\n");
 	#else
-    printf("# You are in release (fast) mode!\n\n");
+    printf("# Release build.\n");
 	#endif
 
     /* Print out environment information. */
     #if ENVIRONMENT_32
-    printf("# 32-bit mode.\n");
+    printf("# Environment: 32-bit.\n");
     #else
-    printf("# 64-bit mode.\n");
+    printf("# Environment: 64-bit.\n");
     #endif
 
     /* Print out platform information. */
     #if PLATFORM_LINUX
-    printf("# Linux Platform.\n");
+    printf("# Platform: Linux.\n");
     #elif PLATFORM_WINDOWS
-    printf("# Windows Platform.\n");
+    printf("# Platform: Windows.\n");
     #endif
 
     /* Print out ABI information. */
     #if ABI_LINUX_64
-    printf("# 64-bit Linux calling convention.\n");
+    printf("# ABI: Linux x64.\n");
     #elif ABI_WINDOWS_64
-    printf("# 64-bit Windows calling convention.\n");
+    printf("# ABI: Windows x64.\n");
     #elif ABI_CDECL
-    printf("# Standard cdecl calling convention.\n");
+    printf("# ABI: cdecl x86.\n");
     #endif
 
     /* Printf supported feature flags. */
@@ -270,32 +192,27 @@ int main(int argc, char* argv[])
 
     printf("\n\n");
 
-    printf("Loading Ordo... ");
+    /* Load ordo. */
+    printf("[.] Loading ordo...\n");
     loadOrdo();
-    printf("Loaded!\n");
+    printf("[+] Loaded!\n");
 
-    printf("\n---\n\n");
-    printf("* STARTING ENCRYPTION TESTS...\n\n---\n\n");
+    /* Open the test vector file. */
+    printf("[.] Loading test vectors...\n");
+    vectors = loadTestVectors();
+    if (vectors == 0) printf("[!] Could not load test vectors, skipping tests...\n\n");
+    else
+    {
+        /* Run the test vectors then close the test vector file. */
+        printf("[+] Test vectors loaded, proceeding...\n\n");
+        runTestVectors(vectors);
+        unloadTestVectors(vectors);
+    }
 
-    testPrimitiveMode(NullCipher, ECB, 11, 19, 1);
-    testPrimitiveMode(NullCipher, CBC, 44, 19, 1);
-    testPrimitiveMode(NullCipher, CTR, 19, 44, 0);
-    testPrimitiveMode(NullCipher, OFB, 17, 23, 0);
-    testPrimitiveMode(NullCipher, CFB, 41, 23, 0);
-    testPrimitiveMode(Threefish256, ECB, 64, 32, 1);
-    testPrimitiveMode(Threefish256, CBC, 61, 32, 1);
-    testPrimitiveMode(Threefish256, CTR, 57, 32, 0);
-    testPrimitiveMode(Threefish256, OFB, 61, 32, 0);
-    testPrimitiveMode(Threefish256, CFB, 59, 32, 0);
-    testPrimitiveMode(RC4, STREAM, 39, 41, 0);
-
+    /* Evaluate performance of relevant ciphers and modes. */
+    printf("---\n\n");
     printf("* STARTING PERFORMANCE TESTS...\n\n---\n\n");
 
-    ratePrimitiveMode(NullCipher, ECB, 16);
-    ratePrimitiveMode(NullCipher, CBC, 16);
-    ratePrimitiveMode(NullCipher, CTR, 16);
-    ratePrimitiveMode(NullCipher, OFB, 16);
-    ratePrimitiveMode(NullCipher, CFB, 16);
     ratePrimitiveMode(Threefish256, ECB, 32);
     ratePrimitiveMode(Threefish256, CBC, 32);
     ratePrimitiveMode(Threefish256, CTR, 32);

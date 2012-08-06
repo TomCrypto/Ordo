@@ -64,6 +64,7 @@
 		<Unit filename="include/primitives/cipher/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
+		<Unit filename="include/testing/testing.h" />
 		<Unit filename="src/common/ordotypes.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -111,6 +112,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/random/random.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/testing/testing.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

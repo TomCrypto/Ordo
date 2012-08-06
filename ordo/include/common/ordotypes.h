@@ -57,4 +57,10 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len);
     \remark Carry propagation is done from left-to-right in memory storage order. */
 inline void incBuffer(unsigned char* n, size_t len);
 
+/*! Returns a readable error message from an error code.
+    \param code The error code to interpret.
+    \returns A null-terminated string containing the message.
+    \remark This is a placeholder convenience function used for testing only. */
+char* errorMsg(int code);
+
 #endif
