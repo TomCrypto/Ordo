@@ -1,7 +1,7 @@
-# Debug flags (no optimization, no feature flags, warnings, C90 conformance, and ordo debug flag)
-CFLAGS_DEBUG = -Wall -ansi=c90 -D ORDO_DEBUG
+# Debug flags (no optimization, native feature flags, warnings, and ordo debug flag)
+CFLAGS_DEBUG = -O0 -Wall -march=native -D ORDO_DEBUG
 
-# Release flags (full optimization, native feature flags, warnings, and C90 conformance)
+# Release flags (full optimization, native feature flags, warnings)
 CFLAGS_RELEASE = -O6 -Wall -march=native
 
 # The default build target is release

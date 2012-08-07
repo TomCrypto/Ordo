@@ -60,7 +60,7 @@ void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, SUBKE
     }
 }
 
-#if !ABI_LINUX_64
+#if !ENVIRONMENT_64
 /* Threefish-256 forward permutation function. */
 void Threefish256_Forward(UINT256* block, SUBKEYS* key)
 {

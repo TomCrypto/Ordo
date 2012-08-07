@@ -21,7 +21,7 @@
 .globl Threefish256_Inverse
 
 /* This is x64 assembler for Linux. */
-#if ABI_LINUX_64
+#if (ENVIRONMENT_64 && ABI_LINUX_64)
 
 /* Forward Threefish-256 permutation. */
 Threefish256_Forward:
@@ -214,7 +214,7 @@ Threefish256_Inverse:
     ret
 
 /* This is x64 assembler for Windows. */
-#elif ABI_WINDOWS_64
+#elif (ENVIRONMENT_64 && ABI_WINDOWS_64)
 
 /* Forward Threefish-256 permutation. */
 Threefish256_Forward:

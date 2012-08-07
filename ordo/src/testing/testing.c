@@ -1,5 +1,102 @@
 #include <testing/testing.h>
 
+/* Prints out environment information. */
+void displayEnvironmentInfo()
+{
+    /* Print out whether we are in debug or release mode. */
+    /* Print out debug/release info. */
+	#if ORDO_DEBUG
+	printf("[+] Debug build.\n");
+	#else
+    printf("[+] Release build.\n");
+	#endif
+
+    /* First, find the platform. */
+    #if PLATFORM_WINDOWS
+    char* platform = "Windows";
+    #elif PLATFORM_LINUX
+    char* platform = "Linux";
+    #endif
+
+    /* Then, the environment. */
+    #if ENVIRONMENT_64
+    char* environment = "64-bit";
+    #else
+    char* environment = "32-bit";
+    #endif
+
+    /* Finally, the ABI. */
+    #if ABI_LINUX_64
+    char* ABI = "Linux x64";
+    #elif ABI_WINDOWS_64
+    char* ABI = "Windows x64";
+    #elif ABI_CDECL
+    char* ABI = "cdecl x32";
+    #endif
+
+    /* Print out this information. */
+    printf("[+] Environment: %s, %s, %s.\n", platform, environment, ABI);
+
+    /* Obtain the feature flags. */
+    printf("[+] CPU features detected listed");
+    #if FEATURE_MMX
+    printf(", MMX");
+    #endif
+    #if FEATURE_SSE
+    printf(", SSE");
+    #endif
+    #if FEATURE_SSE2
+    printf(", SSE2");
+    #endif
+    #if FEATURE_SSE3
+    printf(", SSE3");
+    #endif
+    #if FEATURE_SSE4_1
+    printf(", SSE4.1");
+    #endif
+    #if FEATURE_SSE4_2
+    printf(", SSE4.2");
+    #endif
+    #if FEATURE_AVX
+    printf(", AVX");
+    #endif
+    #if FEATURE_AES
+    printf(", AES");
+    #endif
+
+    /* All finished. */
+    printf(".\n\n");
+}
+
+/* Returns the hexadecimal representation of a buffer. */
+char* hex(void* input, size_t len)
+{
+    size_t t;
+    char* result = malloc(len * 2 + 1);
+    for (t = 0; t < len; t++) sprintf(result + t * 2, "%.2x", *((unsigned char*)input + t));
+    *(result + len * 2) = 0x00;
+    return result;
+}
+
+/* Clears a buffer with a pseudorandom integer pattern. */
+void randomizeBuffer(unsigned char* buffer, size_t len)
+{
+    /* Get a 256-bit pseudorandom bitstring. */
+    unsigned char* data = malloc(32);
+    ordoRandom(data, 32);
+
+    /* Fill the buffer with this pattern. */
+    while (len != 0)
+    {
+        memcpy(buffer, data, 32);
+        buffer += 32;
+        len -= 32;
+    }
+
+    /* Free the bitstring buffer. */
+    free(data);
+}
+
 /* Opens the test vector file. */
 FILE* loadTestVectors()
 {
@@ -181,7 +278,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Report success. */
-    printf("[+] Test vector #%d (%s/%s) successful!\n", n, primitiveName, modeName);
+    printf("[+] Test vector #%d (%s/%s) passed!\n", n, primitiveName, modeName);
     return 1;
 }
 
@@ -193,8 +290,8 @@ void runTestVectors(FILE* file)
 
     /* We keep track of how many lines we read. */
     char* line = readLine(file);
-    int success = 0;
     char* token;
+    int success = 0;
     int n = 1;
 
     /* Go over each line in the test vector file, the last test vector always starts with a tilde. */
@@ -217,4 +314,79 @@ void runTestVectors(FILE* file)
     /* Print statistics. */
     if (success == n - 1) printf("\n[+] "); else printf("\n[!] ");
     printf("Results: %d test vectors passed out of %d.\n\n", success, n - 1);
+}
+
+/* Performs a test of the random module. */
+void randomTest()
+{
+    /* Allocate a 64-byte buffer. */
+    void* buffer = malloc(64);
+
+    /* Fill it with pseudorandom data. */
+    int error = ordoRandom(buffer, 64);
+
+    /* Print any error */
+    if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", hex(buffer, 64));
+    else printf("[!] An error occurred during generation [%s].\n\n", errorMsg(error));
+
+    /* Free the memory used. */
+    free(buffer);
+}
+
+/* Rates the performance of a cipher primitive/encryption mode combination. Uses an existing buffer. */
+void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
+{
+    /* Declare variables. */
+    int error;
+    void* iv;
+    void* key;
+    size_t outlen;
+    clock_t start;
+    float time;
+
+    /* Randomize the plaintext buffer first, to defeat caching. */
+    randomizeBuffer(buffer, bufferSize);
+
+    /* Allocate a buffer of the right size (= cipher block size) for the IV. */
+    iv = malloc(primitiveBlockSize(primitive));
+    memset(iv, 0, primitiveBlockSize(primitive));
+
+    /* Allocate a buffer of the right size for the key. */
+    key = malloc(keySize);
+    memset(key, 0, keySize);
+
+    /* Print primitive/mode information. */
+    printf("[+] Testing %s/%s with a %zu-bit key...\n", primitiveName(primitive), modeName(mode), keySize * 8);
+
+    /* Save starting time. */
+    start = clock();
+
+    /* Encryption test. */
+    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, 0, iv, 0);
+    if (error < 0) printf("[!] An error occurred during encryption [%s].", errorMsg(error));
+    else
+    {
+        /* Get total time and display speed. */
+        time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+        printf("[+] Encryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+
+        /* Save starting time. */
+        start = clock();
+
+        /* Decryption test. */
+        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, 0, iv, 0);
+        if (error < 0) printf("[!] An error occurred during decryption [%s].", errorMsg(error));
+        else
+        {
+            /* Get total time and display speed. */
+            time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+            printf("[+] Decryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+        }
+    }
+
+    printf("\n");
+
+    /* Clean up. */
+    free(key);
+    free(iv);
 }
