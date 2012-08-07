@@ -31,7 +31,13 @@ int sprotect(void* ptr, size_t size)
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    memset(ptr, 0, size); // improve this later
+    /* Basically, use a volatile variable to ensure the overwriting actually occurs. */
+    volatile unsigned char* val = ptr;
+
+    /* Overwrite each byte with zero. */
+    while (size--) *val++ = 0;
+
+    /* Free the memory. */
     free(ptr);
 }
 
@@ -59,8 +65,13 @@ int sprotect(void* ptr, size_t size)
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* improve this later */
-    memset(ptr, 0, size);
+    /* Basically, use a volatile variable to ensure the overwriting actually occurs. */
+    volatile unsigned char* val = ptr;
+
+    /* Overwrite each byte with zero. */
+    while (size--) *val++ = 0;
+
+    /* Free the memory. */
     VirtualFree(ptr, 0, MEM_RELEASE);
 }
 
