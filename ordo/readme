@@ -1,4 +1,4 @@
-Ordo v0.1.1 [NZT 22:00 8/07/2012]
+Ordo v0.1.1 [NZT 00:16 9/8/2012]
 -----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
@@ -51,7 +51,14 @@ The code on Github should normally be functional in some way (unless we screwed 
 
 - Linux Mint 13 [64-bit] GCC v4.6.3
 - Debian (Unstable) [64-bit] GCC v4.7.1
+- Windows [32-bit] MinGW/GCC v4.6.2
 
 GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
+
+For Windows, this is a non-exhaustive list of what you will have to change:
+- find your own way to compile, the C::B project file can be used but will require a few modifications (e.g. disabling/sanitizing the makefile, adding the correct include path, etc...)
+- replace the %zu format flag by %d, if your compiler complains about it
+
+--------
 
 Of course, do not use Ordo for anything other than testing or contributing for now! It can only be used once it has been completed and extensively checked (and even then, there may still be flaws and bugs, as in any other software).

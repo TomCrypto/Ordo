@@ -4,7 +4,6 @@
 void displayEnvironmentInfo()
 {
     /* Print out whether we are in debug or release mode. */
-    /* Print out debug/release info. */
 	#if ORDO_DEBUG
 	printf("[+] Debug build.\n");
 	#else
@@ -31,7 +30,7 @@ void displayEnvironmentInfo()
     #elif ABI_WINDOWS_64
     char* ABI = "Windows x64";
     #elif ABI_CDECL
-    char* ABI = "cdecl x32";
+    char* ABI = "cdecl x86";
     #endif
 
     /* Print out this information. */
