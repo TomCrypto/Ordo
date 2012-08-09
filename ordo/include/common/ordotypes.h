@@ -20,6 +20,18 @@
 #include "securemem.h"
 #include "environment.h"
 
+/* A 128-bit structure with two 64-bit words. */
+typedef struct UINT128
+{
+    unsigned long long words[2];
+} UINT128;
+
+/* A 256-bit structure with four 64-bit words. */
+typedef struct UINT256
+{
+    unsigned long long words[4];
+} UINT256;
+
 // these error codes are so awful, wtf..
 
 /*! The function succeeded. */

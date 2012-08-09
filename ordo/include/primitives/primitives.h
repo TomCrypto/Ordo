@@ -15,14 +15,12 @@
 /* Useful macro to initialize a cipher primitive */
 #define PRIMITIVE_MAKECIPHER(p, k, b, t, c, s, f, i, n) p->szKey = k; p->szBlock = b; p->szTweak = t; p->fKeyCheck = c; p->fKeySchedule = (CIPHER_KEYSCHEDULE)s; p->fForward = (CIPHER_PERMUTATION)f; p->fInverse = (CIPHER_PERMUTATION)i; p->name = n;
 
-/*  primitive->szKey = RC4_KEY;
-	primitive->szBlock = RC4_BLOCK;
-	primitive->szTweak = RC4_TWEAK;
-	primitive->fKeyCheck = &RC4_KeyCheck;
-	primitive->fKeySchedule = (CIPHER_KEYSCHEDULE)&RC4_KeySchedule;
-	primitive->fForward = (CIPHER_PERMUTATION)&RC4_Forward;
-	primitive->fInverse = 0;
-	primitive->name = "RC4"; */
+/*! Reads the name of a primitive. */
+#define primitiveName(p) (p->name)
+/*! Reads the block size of a primitive. */
+#define primitiveBlockSize(p) (p->szBlock)
+/*! Reads the tweak size of a primitive. */
+#define primitiveTweakSize(p) (p->szTweak)
 
 /*! Prototype for key size checking, which returns true if the passed key size is acceptable, and false otherwise. */
 typedef int (*CIPHER_KEYCHECK)(size_t);

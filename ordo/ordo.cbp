@@ -59,9 +59,9 @@
 		<Unit filename="include/encrypt/modes/ofb.h" />
 		<Unit filename="include/encrypt/modes/stream.h" />
 		<Unit filename="include/ordo.h" />
-		<Unit filename="include/primitives/cipher/nullcipher.h" />
-		<Unit filename="include/primitives/cipher/rc4.h" />
-		<Unit filename="include/primitives/cipher/threefish256.h" />
+		<Unit filename="include/primitives/ciphers/nullcipher.h" />
+		<Unit filename="include/primitives/ciphers/rc4.h" />
+		<Unit filename="include/primitives/ciphers/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
 		<Unit filename="include/testing/testing.h" />

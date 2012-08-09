@@ -3,7 +3,7 @@
 
 /**
  * @file encrypt.h
- * Exposes the Ordo encryption interface.
+ * Exposes the Ordo symmetric encryption interface.
  *
  * Header usage mode: External.
  *
@@ -17,12 +17,6 @@
 /* Useful macro to initialize a mode of operation. */
 #define ENCRYPT_MAKEMODE(m, c, i, eu, du, ef, df, f, n) m->fCreate = (CREATE_FUNC)c; m->fInit = (INIT_FUNC)i; m->fEncryptUpdate = (UPDATE_FUNC)eu; m->fDecryptUpdate = (UPDATE_FUNC)du; m->fEncryptFinal = (FINAL_FUNC)ef; m->fDecryptFinal = (FINAL_FUNC)df; m->fFree = (FREE_FUNC)f; m->name = n;
 
-/*! Reads the name of a primitive. */
-#define primitiveName(p) (p->name)
-/*! Reads the block size of a primitive. */
-#define primitiveBlockSize(p) (p->szBlock)
-/*! Reads the tweak size of a primitive. */
-#define primitiveTweakSize(p) (p->szTweak)
 /*! Reads the name of a mode of operation. */
 #define modeName(m) (m->name)
 
@@ -64,7 +58,7 @@ typedef int (* FINAL_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t*);
 typedef void (* FREE_FUNC)(ENCRYPT_CONTEXT*);
 
 /*! This structure defines an encryption mode of operation. Encryption modes of operation are separated into two categories: block modes, which process one block of plaintext/ciphertext at a time, and streaming modes
- * which can process data byte-by-byte (bit, actually, but the smallest addressable unit in C is a byte). Block modes require padding to encrypt data that is not a multiple of the primitive's block size, whereas
+ * which can process data byte-by-byte (bit, actually, but the smallest addressable unit is usually a byte). Block modes require padding to encrypt data that is not a multiple of the primitive's block size, whereas
  * streaming modes do not. Refer to the individual mode of operation's headers to find out in which category they are. */
 typedef struct ENCRYPT_MODE
 {

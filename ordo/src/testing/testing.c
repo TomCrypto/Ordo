@@ -302,6 +302,9 @@ void runTestVectors(FILE* file)
     int success = 0;
     int n = 1;
 
+    /* Seek to the beginning of the file. */
+    fseek(file, 0, SEEK_SET);
+
     /* Go over each line in the test vector file, the last test vector always starts with a tilde. */
     while (line[0] != '~')
     {

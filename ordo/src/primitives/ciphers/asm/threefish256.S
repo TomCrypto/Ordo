@@ -5,8 +5,8 @@
  * implementation (threefish256.c). Note conditional compilation has been added here _and_ in threefish.c to ensure that when
  * this optimized version is enabled, the standard version in threefish.c is disabled and vice versa.
  *
- * @see threefish.c
- * @see threefish.h
+ * @see threefish256.c
+ * @see threefish256.h
  *
  */
 
