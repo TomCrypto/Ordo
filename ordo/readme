@@ -1,4 +1,4 @@
-Ordo v0.1.1 [NZT 00:16 9/8/2012]
+Ordo v0.1.2 [NZT 21:15 9/8/2012]
 -----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
@@ -7,7 +7,7 @@ This directory contains a bunch of code files and headers for Ordo, along with a
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
- - renew the documentation which is now severely outdated
+ - renew the documentation which is now severely outdated in some places (and try and make it consistent)
  - improve the test unit (better parser + more test vectors)
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way [WORK IN PROGRESS]
@@ -55,7 +55,7 @@ The code on Github should normally be functional in some way (unless we screwed 
 
 GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
 
-For Windows, this is a non-exhaustive list of what you will have to change:
+For Windows, this is a non-exhaustive list of what you will have to do:
 - find your own way to compile, the C::B project file can be used but will require a few modifications (e.g. disabling/sanitizing the makefile, adding the correct include path, etc...)
 - replace the %zu format flag by %d, if your compiler complains about it
 
