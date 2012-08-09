@@ -68,7 +68,7 @@ void displayEnvironmentInfo()
 }
 
 /* Returns the hexadecimal representation of a buffer. */
-char* hex(void* input, size_t len)
+char* bufferToHex(void* input, size_t len)
 {
     size_t t;
     char* result = malloc(len * 2 + 1);
@@ -87,8 +87,7 @@ void randomizeBuffer(unsigned char* buffer, size_t len)
     /* Fill the buffer with this pattern. */
     while (len != 0)
     {
-        memcpy(buffer, data, 32);
-        buffer += 32;
+        memcpy(buffer + len - 32, data, 32);
         len -= 32;
     }
 
@@ -97,10 +96,10 @@ void randomizeBuffer(unsigned char* buffer, size_t len)
 }
 
 /* Opens the test vector file. */
-FILE* loadTestVectors()
+FILE* loadTestVectors(char* path)
 {
     /* Just open the file in binary mode. */
-    return fopen("vectors", "rb");
+    return fopen(path, "rb");
 }
 
 /* Reads the next line of a file in a buffer. */
@@ -171,6 +170,13 @@ char* readToken(char* line, size_t n)
 /* Converts a null-terminated hexadecimal string to a memory buffer. */
 unsigned char* hexToBuffer(char* str, size_t* outlen)
 {
+    /* If we got an empty string, return null. */
+    if (strlen(str) == 0)
+    {
+        *outlen = 0;
+        return 0;
+    }
+
     /* Allocate the memory needed. */
     unsigned char* buf = malloc(strlen(str) / 2);
     *outlen = strlen(str) / 2;
@@ -210,21 +216,20 @@ ENCRYPT_MODE* getEncryptMode(char* name)
 /* Runs an encryption test vector. */
 int runEncryptTest(char* line, int n)
 {
-    /* An encrypt test vector takes this form: encrypt:primitive:mode:key:iv:plaintext:ciphertext.
-     * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext
-     * are in hexadecimal notation. If an iv is not required, it may be omitted between
-     * two colons. Note tweaks are ignored in test vectors (if tweaks don't work then it's
-     * the primitive's key schedule's fault which is easily localized and fixed). */
+    /* An encrypt test vector takes this form: encrypt:primitive:mode:key:tweak:iv:plaintext:ciphertext.
+     * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
+     * hexadecimal notation. If an iv is not required, it may be omitted between two colons. */
 
     /* Parse the test vector. */
     char* primitiveName = readToken(line, 1);
     char* modeName = readToken(line, 2);
-    size_t keylen, ivlen, plaintextlen, ciphertextlen;
+    size_t keylen, ivlen, tweaklen, plaintextlen, ciphertextlen;
     unsigned char* key = hexToBuffer(readToken(line, 3), &keylen);
-    unsigned char* iv = hexToBuffer(readToken(line, 4), &ivlen);
-    unsigned char* plaintext = hexToBuffer(readToken(line, 5), &plaintextlen);
-    unsigned char* ciphertext = hexToBuffer(readToken(line, 6), &ciphertextlen);
-    int padding = atoi(readToken(line, 7));
+    unsigned char* tweak = hexToBuffer(readToken(line, 4), &tweaklen);
+    unsigned char* iv = hexToBuffer(readToken(line, 5), &ivlen);
+    unsigned char* plaintext = hexToBuffer(readToken(line, 6), &plaintextlen);
+    unsigned char* ciphertext = hexToBuffer(readToken(line, 7), &ciphertextlen);
+    int padding = atoi(readToken(line, 8));
 
     /* Create a temporary buffer to store the computed ciphertext and plaintext. */
     unsigned char* computedPlaintext = malloc(plaintextlen);
@@ -247,7 +252,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the encryption test. */
-    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, 0, iv, padding);
+    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, tweak, iv, padding);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -262,7 +267,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the decryption test. */
-    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, 0, iv, padding);
+    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, tweak, iv, padding);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -275,6 +280,10 @@ int runEncryptTest(char* line, int n)
         printf("[!] Test vector #%d (%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
         return 0;
     }
+
+    /* Clean up. */
+    free(computedPlaintext);
+    free(computedCiphertext);
 
     /* Report success. */
     printf("[+] Test vector #%d (%s/%s) passed!\n", n, primitiveName, modeName);
@@ -325,7 +334,7 @@ void randomTest()
     int error = ordoRandom(buffer, 64);
 
     /* Print any error */
-    if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", hex(buffer, 64));
+    if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", bufferToHex(buffer, 64));
     else printf("[!] An error occurred during generation [%s].\n\n", errorMsg(error));
 
     /* Free the memory used. */

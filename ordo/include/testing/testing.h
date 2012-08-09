@@ -15,7 +15,7 @@
 void displayEnvironmentInfo();
 
 /* Opens the test vector file. */
-FILE* loadTestVectors();
+FILE* loadTestVectors(char* path);
 
 /* Runs all test vectors. */
 void runTestVectors(FILE* file);

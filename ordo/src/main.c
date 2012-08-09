@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
     /* Open the test vector file. */
     printf("-------- Test vectors --------\n\n");
-    vectors = loadTestVectors();
+    vectors = loadTestVectors("vectors");
     if (vectors == 0) printf("[!] Could not load test vectors, skipping tests...\n\n");
     else
     {
