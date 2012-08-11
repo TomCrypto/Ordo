@@ -41,7 +41,7 @@ int ordoRandom(unsigned char* buffer, size_t size)
 
     /* Close and return. */
     fclose(f);
-    return 0;
+    return ORDO_ESUCCESS;
 }
 
 #elif PLATFORM_WINDOWS
@@ -52,11 +52,15 @@ int ordoRandom(unsigned char* buffer, size_t size)
 /*! Generates cryptographic-grade pseudorandom numbers. */
 int ordoRandom(unsigned char* buffer, size_t size)
 {
+    /* Acquire a CSP token. */
     HCRYPTPROV hProv;
     CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0);
+    if (hProv == 0) return ORDO_EFAIL;
+
+    /* Generate pseudorandom bytes. */
     CryptGenRandom(hProv, size, (BYTE*)buffer);
     CryptReleaseContext(hProv, 0);
-    return 0;
+    return ORDO_ESUCCESS;
 }
 
 #else
