@@ -84,7 +84,7 @@ void randomizeBuffer(unsigned char* buffer, size_t len)
     unsigned char* data = malloc(32);
     ordoRandom(data, 32);
 
-    /* Fill the buffer with this pattern. */
+    /* Fill the buffer with this pattern. Assume the buffer length is a multiple of 32 bytes. */
     while (len != 0)
     {
         memcpy(buffer + len - 32, data, 32);
@@ -197,6 +197,7 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
     if (strcmp(name, NullCipher->name) == 0) return NullCipher;
     if (strcmp(name, Threefish256->name) == 0) return Threefish256;
     if (strcmp(name, RC4->name) == 0) return RC4;
+    if (strcmp(name, RC5_64_16->name) == 0) return RC5_64_16;
     return 0;
 }
 
@@ -263,6 +264,8 @@ int runEncryptTest(char* line, int n)
     if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) != 0))
     {
         printf("[!] Test vector #%d (%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
+        printf("Expected %s\n", bufferToHex(ciphertext, ciphertextlen));
+        printf("Computed %s\n", bufferToHex(computedCiphertext, computedCiphertextLen));
         return 0;
     }
 

@@ -12,8 +12,6 @@
 
 #include <primitives/primitives.h>
 
-
-
 /* A structure containing a Threefish subkey list. */
 typedef struct THREEFISH256_SUBKEYS
 {
