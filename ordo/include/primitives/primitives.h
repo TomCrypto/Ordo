@@ -26,7 +26,7 @@
 typedef int (*CIPHER_KEYCHECK)(size_t);
 
 /*! Prototype for a primitive key schedule function, taking as an input a key, key size, a tweak and writes the prepared key in the last argument. */
-typedef void (* CIPHER_KEYSCHEDULE)(void*, size_t, void*, void*);
+typedef void (* CIPHER_KEYSCHEDULE)(void*, size_t, void*, void*, void*);
 
 /*! Prototype for a primitive's permutation function, taking as an input a block and key. */
 typedef void (* CIPHER_PERMUTATION)(void*, void*);

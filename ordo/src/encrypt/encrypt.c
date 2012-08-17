@@ -62,10 +62,10 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
-int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Initialize the cipher context. */
-    return ctx->mode->fInit(ctx, key, keySize, tweak, iv);
+    return ctx->mode->fInit(ctx, key, keySize, tweak, iv, params);
 }
 
 /* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */

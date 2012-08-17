@@ -27,7 +27,7 @@ void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Check the key size. */
     if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
@@ -36,7 +36,7 @@ int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, v
     memcpy(ctx->iv, iv, ctx->primitive->szBlock);
 
     /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
+    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key, params);
 
     /* Compute the initial keystream block. */
     ctx->primitive->fForward(ctx->iv, ctx->key);

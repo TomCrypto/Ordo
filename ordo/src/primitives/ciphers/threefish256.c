@@ -25,7 +25,7 @@ int Threefish256_KeyCheck(size_t keySize)
 }
 
 /* Threefish-256 key schedule. */
-void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key)
+void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key, void* params)
 {
     size_t t;
     unsigned long long keyWords[5];

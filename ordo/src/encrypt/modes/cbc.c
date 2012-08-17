@@ -31,7 +31,7 @@ void CBC_Create(CBC_ENCRYPT_CONTEXT* ctx)
   \param iv A pointer to the IV to use for encryption.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Check the key size. */
     if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
@@ -40,7 +40,7 @@ int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, v
     memcpy(ctx->iv, iv, ctx->primitive->szBlock);
 
     /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
+    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key, params);
 
     /* Return success. */
     return ORDO_ESUCCESS;

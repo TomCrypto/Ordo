@@ -42,7 +42,7 @@ typedef struct ECB_ENCRYPT_CONTEXT
 
 void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx);
 
-int ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void ECB_EncryptUpdate(ECB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

@@ -40,7 +40,7 @@ typedef struct OFB_ENCRYPT_CONTEXT
 
 void OFB_Create(OFB_ENCRYPT_CONTEXT* ctx);
 
-int OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int OFB_Init(OFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void OFB_Update(OFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

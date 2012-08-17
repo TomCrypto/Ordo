@@ -20,9 +20,16 @@ typedef struct RC4STATE
     unsigned char j;
 } RC4STATE;
 
+/* A parameter structure. */
+typedef struct RC4_PARAMS
+{
+    /* The number of bytes to drop. */
+    size_t drop;
+} RC4_PARAMS;
+
 int RC4_KeyCheck(size_t keySize);
 
-void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state);
+void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state, RC4_PARAMS* params);
 
 void RC4_Permutation(void* block, void* key);
 

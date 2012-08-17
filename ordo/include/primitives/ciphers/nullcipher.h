@@ -14,7 +14,7 @@
 
 int NullCipher_KeyCheck(size_t keySize);
 
-void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key);
+void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key, void* params);
 
 void NullCipher_Forward(void* block, void* key);
 

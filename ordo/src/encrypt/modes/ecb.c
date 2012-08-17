@@ -32,13 +32,13 @@ void ECB_Create(ECB_ENCRYPT_CONTEXT* ctx)
   \param iv Set this to zero, as the ECB mode uses no initialization vector.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv)
+int ECB_Init(ECB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Check the key size. */
     if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
     /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key);
+    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key, params);
 
     /* Return success. */
     return ORDO_ESUCCESS;

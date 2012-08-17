@@ -44,7 +44,7 @@ typedef void (* CREATE_FUNC)(ENCRYPT_CONTEXT*);
 
 /*! This is the prototype for a cipher mode of operation initialization function, taking as an
     input a cipher context, a key buffer, a key size, a tweak and an initialization vector. */
-typedef int (* INIT_FUNC)(ENCRYPT_CONTEXT*, void*, size_t, void*, void*);
+typedef int (* INIT_FUNC)(ENCRYPT_CONTEXT*, void*, size_t, void*, void*, void*);
 
 /*! This is the prototype for a cipher mode of operation encryption/decryption function, taking
     as an input a cipher context, a buffer, a buffer size and a flag indicating whether padding
@@ -95,7 +95,7 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
  \param tweak This points to the tweak used in the cipher (this is an optional argument)
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
  \return Returns ORDO_ESUCCESS on success, and a negative value on error. */
-int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided context.
  \param ctx The encryption context to use.

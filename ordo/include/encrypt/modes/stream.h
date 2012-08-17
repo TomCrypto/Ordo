@@ -40,7 +40,7 @@ typedef struct STREAM_ENCRYPT_CONTEXT
 
 void STREAM_Create(STREAM_ENCRYPT_CONTEXT* ctx);
 
-int STREAM_Init(STREAM_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int STREAM_Init(STREAM_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

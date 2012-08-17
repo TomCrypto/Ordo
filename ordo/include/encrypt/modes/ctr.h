@@ -42,7 +42,7 @@ typedef struct CTR_ENCRYPT_CONTEXT
 
 void CTR_Create(CTR_ENCRYPT_CONTEXT* ctx);
 
-int CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void CTR_Update(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

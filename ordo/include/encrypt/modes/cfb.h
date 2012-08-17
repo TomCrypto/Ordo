@@ -40,7 +40,7 @@ typedef struct CFB_ENCRYPT_CONTEXT
 
 void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx);
 
-int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

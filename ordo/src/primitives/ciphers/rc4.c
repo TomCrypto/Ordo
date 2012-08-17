@@ -5,7 +5,8 @@
  * RC4 is a stream cipher, which has a 8-byte "block size" (for optimizations, in reality it outputs one byte at a time) and a key size between
  * 40 and 2048 bits (multiples of 8 bits only). It uses no tweak. The reason for the 8-byte block size is that state updates can be cached and
  * quickly combined with the plaintext, instead of taking one byte at a time, which would incur severe overhead.
- * Note this implementation of RC4 drops the first 2048 bytes of the keystream for security reasons, so technically this is RC4-drop[2048].
+ * Note this implementation of RC4 drops the first 2048 bytes of the keystream by default for security reasons, the drop amount can be changed
+ * upon key schedule via the params parameter (a pointer to an RC4_PARAMS struct which contains a drop field to select the amount to drop.
  *
  * @see rc4.h
  */
@@ -54,10 +55,10 @@ void RC4_Forward(unsigned char* output, RC4STATE* state)
 }
 
 /* RC4 key schedule. */
-void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state)
+void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* state, RC4_PARAMS* params)
 {
-    /* Loop variable. */
-    size_t t;
+    /* Loop variables. */
+    size_t t, drop;
 
     /* Initialize the permutation array. */
     for (t = 0; t < 256; t++)
@@ -77,8 +78,11 @@ void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
     state->i = 0;
     state->j = 0;
 
-    /* Throw away the first 2048 bytes. */
-    for (t = 0; t < 2048; t++) RC4_Forward(0, state);
+    /* Calculate the amount of bytes to drop (default is 2048). */
+    drop = (params == 0) ? 2048 : params->drop;
+
+    /* Throw away the first drop bytes. */
+    for (t = 0; t < drop; t++) RC4_Forward(0, state);
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */

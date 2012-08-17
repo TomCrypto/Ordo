@@ -29,10 +29,13 @@ int RC5_64_16_KeyCheck(size_t keySize)
 }
 
 /* RC5-64/16 key schedule. */
-void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_64_16_KEY* key)
+void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_64_16_KEY* key, RC5_64_16_PARAMS* params)
 {
     /* Loop and index variables. */
     size_t t, i, j, A, B, l;
+
+    /* Save the number of rounds to use (default to 16). */
+    key->rounds = (params == 0) ? 16 : params->rounds;
 
     /* Copy the raw key into a 64-bit word array of suitable size. */
     size_t c = (len + 7) / 8;
@@ -42,10 +45,10 @@ void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_6
 
     /* Initialize the subkey array. */
     key->subkey[0] = P64;
-    for (t = 1; t < 34; t++) key->subkey[t] = key->subkey[t - 1] + Q64;
+    for (t = 1; t < 2 * (key->rounds + 1); t++) key->subkey[t] = key->subkey[t - 1] + Q64;
 
     /* Calculate the maximum loop count. */
-    if (c > 34) l = c; else l = 34;
+    if (c > 2 * (key->rounds + 1)) l = c; else l = 2 * (key->rounds + 1);
 
     /* Mix the secret key into the subkey array. */
     i = 0; A = 0;
@@ -57,7 +60,7 @@ void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_6
         B = L[j] = ROL((L[j] + A + B), ((A + B) & 63));
 
         /* Increment indexes. */
-        i = (i + 1) % 34;
+        i = (i + 1) % (2 * (key->rounds + 1));
         j = (j + 1) % c;
     }
 
@@ -76,7 +79,7 @@ void RC5_64_16_Forward(UINT128* block, RC5_64_16_KEY* key)
     block->words[1] += key->subkey[1];
 
     /* 16 rounds... */
-    for (t = 1; t < 16; t++)
+    for (t = 1; t < key->rounds; t++)
     {
         /* Apply this round. */
         block->words[0] = ROL((block->words[0] ^ block->words[1]), (block->words[1] & 63)) + key->subkey[t * 2 + 0];
@@ -91,7 +94,7 @@ void RC5_64_16_Inverse(UINT128* block, RC5_64_16_KEY* key)
     size_t t;
 
     /* 16 rounds backwards... */
-    for (t = 16; t > 0; t--)
+    for (t = key->rounds; t > 0; t--)
     {
         /* Apply the inverse round operation. */
         block->words[1] = ROR((block->words[1] - key->subkey[t * 2 + 1]), (block->words[0] & 63)) ^ block->words[0];

@@ -42,7 +42,7 @@ typedef struct CBC_ENCRYPT_CONTEXT
 
 void CBC_Create(CBC_ENCRYPT_CONTEXT* ctx);
 
-int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv);
+int CBC_Init(CBC_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
 void CBC_EncryptUpdate(CBC_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 

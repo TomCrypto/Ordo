@@ -20,7 +20,7 @@ typedef struct THREEFISH256_SUBKEYS
 
 int Threefish256_KeyCheck(size_t keySize);
 
-void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key);
+void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key, void* params);
 
 void Threefish256_Forward(UINT256* block, THREEFISH256_SUBKEYS* key);
 
