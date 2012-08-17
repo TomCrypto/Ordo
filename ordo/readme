@@ -1,4 +1,4 @@
-Ordo v0.1.3
+Ordo v0.1.4
 -----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
@@ -7,6 +7,7 @@ This directory contains a bunch of code files and headers for Ordo, along with a
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
+ - make the primitive API more elegant (right now it's a mess, need to allocate primitive contexts instead of relying on an inflexible "key" struct - refer to the "encrypt" module which is "doing it right")
  - renew the documentation which is now severely outdated in some places (and try and make it consistent)
  - improve the test unit (better parser + more official test vectors)
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
