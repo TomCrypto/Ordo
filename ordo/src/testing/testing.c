@@ -72,6 +72,7 @@ char* bufferToHex(void* input, size_t len)
 {
     size_t t;
     char* result = malloc(len * 2 + 1);
+    if (input == 0) len = 0;
     for (t = 0; t < len; t++) sprintf(result + t * 2, "%.2x", *((unsigned char*)input + t));
     *(result + len * 2) = 0x00;
     return result;
@@ -107,31 +108,7 @@ char* readLine(FILE* file)
 {
     #define MAX_LINE_LENGTH 512
     char* line = malloc(MAX_LINE_LENGTH);
-    char current;
-    size_t t = 0;
-
-    /* Read the first character. */
-    if (fread(&current, 1, 1, file) == 0) return 0;
-
-    /* Read each character sequentially until encountering a newline. */
-    while (current != '\n')
-    {
-        /* Append the character to the line. */
-        *(line + t++) = current;
-
-        /* Read the next character. */
-        if (fread(&current , 1, 1, file) == 0) return 0;
-    }
-
-    /* Append a zero and resize the line buffer. */
-    *(line + t++) = 0x00;
-    line = realloc(line, t);
-
-    /* Seek forward in the file to get rid of any extra CR and LF's. */
-    while ((current == '\n') && (current == '\r')) current = fread(line, 1, 1, file);
-
-    /* Return the completed line. */
-    return line;
+    return fgets(line, MAX_LINE_LENGTH, file);
 }
 
 /* Closes the test vector file. */
@@ -170,6 +147,9 @@ char* readToken(char* line, size_t n)
 /* Converts a null-terminated hexadecimal string to a memory buffer. */
 unsigned char* hexToBuffer(char* str, size_t* outlen)
 {
+    /* Temporary variable since sscanf is incapable of reading a single hex byte. */
+    int tmp = 0;
+
     /* If we got an empty string, return null. */
     if (strlen(str) == 0)
     {
@@ -184,7 +164,11 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
     size_t t;
 
     /* Read each two characters. */
-    for (t = 0; t < len / 2; t++) sscanf(str + 2 * t, "%2hhx", buf + t);
+    for (t = 0; t < len / 2; t++)
+    {
+        sscanf(str + 2 * t, "%2x", &tmp);
+        *(buf + t) = (unsigned char)tmp;
+    }
 
     /* Return the full buffer. */
     return buf;
@@ -264,8 +248,6 @@ int runEncryptTest(char* line, int n)
     if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) != 0))
     {
         printf("[!] Test vector #%d (%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
-        printf("Expected %s\n", bufferToHex(ciphertext, ciphertextlen));
-        printf("Computed %s\n", bufferToHex(computedCiphertext, computedCiphertextLen));
         return 0;
     }
 
@@ -382,7 +364,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     {
         /* Get total time and display speed. */
         time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-        printf("[+] Encryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+        printf("[+] Encryption: %.1fMB/s.\n", (float)((ptrdiff_t)bufferSize >> 20) / time);
 
         /* Save starting time. */
         start = clock();
@@ -394,7 +376,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
         {
             /* Get total time and display speed. */
             time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-            printf("[+] Decryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+            printf("[+] Decryption: %.1fMB/s.\n", (float)((ptrdiff_t)bufferSize >> 20) / time);
         }
     }
 

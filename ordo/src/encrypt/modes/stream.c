@@ -75,7 +75,7 @@ void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen,
         memmove(out, in, process);
         xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
         ctx->reserved->remaining -= process;
-        (*outlen) += process;
+        *outlen += process;
         inlen -= process;
         out += process;
         in += process;

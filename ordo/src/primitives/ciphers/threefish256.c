@@ -10,7 +10,7 @@
 #include <primitives/primitives.h>
 #include <primitives/ciphers/threefish256.h>
 
-#define THREEFISH256_KEY (608) // 4864-bit extended key (19 subkeys x 256 bits)
+#define THREEFISH256_KEY (sizeof(THREEFISH256_SUBKEYS)) // 4864-bit extended key (19 subkeys x 256 bits)
 #define THREEFISH256_BLOCK (32) // 256-bit block
 #define THREEFISH256_TWEAK (16) // 128-bit tweak
 

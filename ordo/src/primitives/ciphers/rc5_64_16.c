@@ -10,7 +10,7 @@
 #include <primitives/primitives.h>
 #include <primitives/ciphers/rc5_64_16.h>
 
-#define RC5_64_16_KEY_SIZE (272) // 2176-bit extended key (34 subkeys x 64 bits)
+#define RC5_64_16_KEY_SIZE (sizeof(RC5_64_16_KEY)) // 2176-bit extended key (34 subkeys x 64 bits)
 #define RC5_64_16_BLOCK (16) // 128-bit block
 #define RC5_64_16_TWEAK (0) // 0-bit tweak
 

@@ -1,5 +1,6 @@
 #include <ordo.h>
 #include <testing/testing.h>
+#include <common/ordotypes.h>
 
 int main(int argc, char* argv[])
 {

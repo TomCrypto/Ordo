@@ -14,7 +14,7 @@
 #include <primitives/primitives.h>
 #include <primitives/ciphers/rc4.h>
 
-#define RC4_KEY (2064 / 8)
+#define RC4_KEY (sizeof(RC4STATE))
 #define RC4_BLOCK (64 / 8) // 64-bit block
 #define RC4_TWEAK 0 // no tweak
 
@@ -64,6 +64,7 @@ void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
     for (t = 0; t < 256; t++)
     {
         state->s[t] = t;
+        //memcpy(&state->s[t], &t, 1); // Jesus, MinGW optimization is... buggy to say the least
     }
 
     /* Prepare the swap. */

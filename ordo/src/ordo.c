@@ -52,7 +52,7 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     size_t fed = 0;
     size_t total = 0;
     ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 1, padding);
-    if (encryptInit(ctx, key, keySize, tweak, iv)) return ORDO_EFAIL;
+    if (encryptInit(ctx, key, keySize, tweak, iv, 0)) return ORDO_EFAIL;
 
     while (fed < inlen)
     {
@@ -68,7 +68,7 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     total += *outlen;
     encryptFree(ctx);
     *outlen = total;
-    return ORDO_SUCCESS;
+    return ORDO_ESUCCESS;
     */
 }
 
@@ -100,7 +100,7 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     size_t fed = 0;
     size_t total = 0;
     ENCRYPT_CONTEXT* ctx = encryptCreate(primitive, mode, 0, padding);
-    if (encryptInit(ctx, key, keySize, tweak, iv)) return ORDO_EFAIL;
+    if (encryptInit(ctx, key, keySize, tweak, iv, 0)) return ORDO_EFAIL;
 
     while (fed < inlen)
     {
@@ -116,6 +116,6 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     total += *outlen;
     encryptFree(ctx);
     *outlen = total;
-    return ORDO_SUCCESS;
+    return ORDO_ESUCCESS;
     */
 }

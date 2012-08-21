@@ -15,7 +15,7 @@
 /* A structure containing a Threefish subkey list. */
 typedef struct THREEFISH256_SUBKEYS
 {
-    UINT256 subkey[18];
+    UINT256 subkey[19];
 } THREEFISH256_SUBKEYS;
 
 int Threefish256_KeyCheck(size_t keySize);

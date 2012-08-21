@@ -1,4 +1,4 @@
-Ordo v0.1.4
+Ordo v0.1.5
 -----------
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
@@ -54,11 +54,7 @@ The code on Github should normally be functional in some way (unless we screwed 
 
 GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
 
-For Windows, this is a non-exhaustive list of what you will have to do:
-- find your own way to compile, the C::B project file can be used but will require a few modifications (e.g. disabling/sanitizing the makefile, adding the correct include path, etc...)
-- fix various stuff, some things just don't work yet under Windows (but the core of the library is functional)
-- fix possible bugs related to size_t (it seems to behave erratically on MinGW compilers for some reason)
-- replace the %zu format flag by %d, if your compiler complains about it
+If you are under Windows, I can only wish you good luck. Trust me, you'll need it if you want to get this running - several hours of frantic MinGW debugging have yielded a semifunctional debug version and a completely broken release version due to faulty optimizations or possibly unsafe code (you choose). Also, replace the %zu flag by %d if your compiler complains about it. To compile, you can use the C::B project file, by changing the makefile settings (it is best to disable it and reset the build options manually)
 
 --------
 
