@@ -51,10 +51,11 @@ The code on Github should normally be functional in some way (unless we screwed 
 
 - Linux Mint 13 [64-bit] GCC v4.6.3
 - Debian (Unstable) [64-bit] GCC v4.7.1
+- Windows 7 [32-bit] GCC v4.6.2 (+MinGW)
 
 GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
 
-If you are under Windows, I can only wish you good luck. Trust me, you'll need it if you want to get this running - several hours of frantic MinGW debugging have yielded a semifunctional debug version and a completely broken release version due to faulty optimizations or possibly unsafe code (you choose). Also, replace the %zu flag by %d if your compiler complains about it. To compile, you can use the C::B project file, by changing the makefile settings (it is best to disable it and reset the build options manually)
+If you are under Windows, you will need to modify a few things to make this work. First, replace the %zu flag by %d if your compiler complains about it. Then, fix any other warnings as needed. To compile, you can use the C::B project file, by changing the makefile settings (it is best to disable it and reset the build options manually - you can also go into Other Options and paste there the Makefile flags, this is important if you want the ORDO_DEBUG define in debug mode)
 
 --------
 

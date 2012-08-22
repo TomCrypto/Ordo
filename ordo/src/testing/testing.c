@@ -364,7 +364,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     {
         /* Get total time and display speed. */
         time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-        printf("[+] Encryption: %.1fMB/s.\n", (float)((ptrdiff_t)bufferSize >> 20) / time);
+        printf("[+] Encryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
 
         /* Save starting time. */
         start = clock();
@@ -376,7 +376,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
         {
             /* Get total time and display speed. */
             time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-            printf("[+] Decryption: %.1fMB/s.\n", (float)((ptrdiff_t)bufferSize >> 20) / time);
+            printf("[+] Decryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
         }
     }
 

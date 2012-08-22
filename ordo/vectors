@@ -21,7 +21,7 @@ encrypt:Threefish-256:OFB:EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 # RC4 in action!
 encrypt:RC4:STREAM:EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE:::777777777777777777777777777777777777777777777777777777777777777777777777777777:efa316776354499b21635d03f1944c1082ccdafa4a02b93b08f5373c2c8f1bdedcbea15bc50f73:0~
 
-# RC5-64/16
+# RC5-64/16 (temporarily disabled until the RC5 implementation is sorted out)
 #encrypt:RC5-64/16:ECB:00000000000000000000000000000000:::00000000000000000000000000000000:0B97988981D0B224A279F22CAC37413A:0~ # Unsure if this test vector is wrong (I produced it from a *modified* reference implementation originally meant for RC5-32/16/16, so it could very well be incorrect) or if the Ordo implementation is wrong...
 
 ~ # The last line of the test vector file should always start with a tilde to indicate the voluntary end of the file.
