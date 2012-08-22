@@ -321,11 +321,14 @@ void randomTest()
     /* Fill it with pseudorandom data. */
     int error = ordoRandom(buffer, 64);
 
+    char * hex = bufferToHex(buffer, 64);
+
     /* Print any error */
-    if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", bufferToHex(buffer, 64));
+    if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", hex);
     else printf("[!] An error occurred during generation [%s].\n\n", errorMsg(error));
 
     /* Free the memory used. */
+    free(hex);
     free(buffer);
 }
 
