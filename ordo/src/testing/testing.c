@@ -170,6 +170,9 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
         *(buf + t) = (unsigned char)tmp;
     }
 
+    /* Free the string buffer. */
+    free(str);
+
     /* Return the full buffer. */
     return buf;
 }
@@ -205,7 +208,8 @@ int runEncryptTest(char* line, int n)
      * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
      * hexadecimal notation. If an iv is not required, it may be omitted between two colons. */
 
-    /* Parse the test vector. */
+    /* Parse the test vector and initialize variables. */
+    char* pad = readToken(line, 8);
     char* primitiveName = readToken(line, 1);
     char* modeName = readToken(line, 2);
     size_t keylen, ivlen, tweaklen, plaintextlen, ciphertextlen;
@@ -214,7 +218,7 @@ int runEncryptTest(char* line, int n)
     unsigned char* iv = hexToBuffer(readToken(line, 5), &ivlen);
     unsigned char* plaintext = hexToBuffer(readToken(line, 6), &plaintextlen);
     unsigned char* ciphertext = hexToBuffer(readToken(line, 7), &ciphertextlen);
-    int padding = atoi(readToken(line, 8));
+    int padding = atoi(pad);
 
     /* Create a temporary buffer to store the computed ciphertext and plaintext. */
     unsigned char* computedPlaintext = malloc(plaintextlen);
@@ -269,9 +273,17 @@ int runEncryptTest(char* line, int n)
     /* Clean up. */
     free(computedPlaintext);
     free(computedCiphertext);
+    free(plaintext);
+    free(ciphertext);
+    free(tweak);
+    free(key);
+    free(iv);
+    free(pad);
 
     /* Report success. */
     printf("[+] Test vector #%d (%s/%s) passed!\n", n, primitiveName, modeName);
+    free(primitiveName);
+    free(modeName);
     return 1;
 }
 
@@ -287,9 +299,6 @@ void runTestVectors(FILE* file)
     int success = 0;
     int n = 1;
 
-    /* Seek to the beginning of the file. */
-    fseek(file, 0, SEEK_SET);
-
     /* Go over each line in the test vector file, the last test vector always starts with a tilde. */
     while (line[0] != '~')
     {
@@ -301,11 +310,20 @@ void runTestVectors(FILE* file)
 
             /* Depending on the token, perform the appropriate test. */
             if (strcmp(token, TOKEN_ENCRYPT) == 0) success += runEncryptTest(line, n++);
+
+            /* Free the token buffer. */
+            free(token);
         }
+
+        /* Free the line buffer. */
+        free(line);
 
         /* Read the next line. */
         line = readLine(file);
     }
+
+    /* Free the line buffer. */
+    free(line);
 
     /* Print statistics. */
     if (success == n - 1) printf("\n[+] "); else printf("\n[!] ");
@@ -321,7 +339,8 @@ void randomTest()
     /* Fill it with pseudorandom data. */
     int error = ordoRandom(buffer, 64);
 
-    char * hex = bufferToHex(buffer, 64);
+    /* Convert it to readable hexadecimal. */
+    char* hex = bufferToHex(buffer, 64);
 
     /* Print any error */
     if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", hex);

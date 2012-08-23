@@ -18,8 +18,10 @@
 void* salloc(size_t size)
 {
     void* ptr = malloc(size);
-    if (mlock(ptr, size) != 0) return 0;
-    else return ptr;
+    //if (mlock(ptr, size) != 0) return 0;
+    //else return ptr;
+    mlock(ptr, size);
+    return ptr;
 }
 
 /* Sets memory as read-only. */
