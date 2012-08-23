@@ -1,5 +1,9 @@
-Ordo v0.1.5
+Ordo v0.1.6
 -----------
+
+########### BREAKING NEWS ###########
+Please compile Ordo with the -mno-avx flag until further notice, GCC has a bug which causes it to produce invalid assembly on some processors (specifically, AVX2 opcodes on AVX1-capable processors), you DO NOT want to discover this the hard way like we did. This compiler flag will stop GCC using AVX instructions and will therefore negate the bug, but may have minimal performance implications. This limitation will be lifted once a patched version of GCC is released and tested.
+########### BREAKING NEWS ###########
 
 This directory contains a bunch of code files and headers for Ordo, along with a test unit. The end result will be a static/dynamic library, but for now it's just attached to a simple console program for tests. A simple makefile is provided with two build targets:
 - make debug, which includes no optimizations and no platform-specific features
@@ -12,6 +16,7 @@ Current work is focused towards finishing the cipher interface. Important todo's
  - improve the test unit (better parser + more official test vectors)
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way [WORK IN PROGRESS]
+ - fix a tiny memory leak in the runEncryptTest function (only leaks a couple bytes per test vector, low priority)
 
 Other todo's to keep in mind:
  - distribute the #includes in a more coherent fashion (right now they are scattered wherever they are needed)
@@ -47,15 +52,20 @@ Please note that "NullCipher" is a test cipher which does absolutely nothing and
 
 --------
 
+Please note that the RC5-64/16 test vector is currently disabled for technical reasons (work is in progress on the cipher, along with the whole primitive interface).
+
+--------
+
 The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different code path for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
 
 - Linux Mint 13 [64-bit] GCC v4.6.3
 - Debian (Unstable) [64-bit] GCC v4.7.1
 - Windows 7 [32-bit] GCC v4.6.2 (+MinGW)
+- Windows 7 [64-bit] GCC v4.7.1 (+MinGW)
 
 GCC is the recommended compiler, as environmental symbols are somewhat compiler-dependent (but we will keep adding symbols as needed to increase compatibility).
 
-If you are under Windows, you will need to modify a few things to make this work. First, replace the %zu flag by %d if your compiler complains about it. Then, fix any other warnings as needed. To compile, you can use the C::B project file, by changing the makefile settings (it is best to disable it and reset the build options manually - you can also go into Other Options and paste there the Makefile flags, this is important if you want the ORDO_DEBUG define in debug mode)
+If you are under Windows, you will need to modify a few things to make this work. First, replace the %zu flag by %d if your compiler complains about it, as MinGW doesn't implement that format flag for some reason. Then, fix any other warnings as needed. To compile, you can use the C::B project file, by changing the makefile settings (it is best to disable it and reset the build options manually - you can also go into Other Options and paste there the Makefile flags, this is important if you want the ORDO_DEBUG define in debug mode). Otherwise it should mostly compile out of the box on any common architecture. Let us know if it doesn't work for you and include all available information.
 
 --------
 

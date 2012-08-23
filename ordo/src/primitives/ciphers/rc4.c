@@ -61,11 +61,7 @@ void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
     size_t t, drop;
 
     /* Initialize the permutation array. */
-    for (t = 0; t < 256; t++)
-    {
-        state->s[t] = t;
-        //memcpy(&state->s[t], &t, 1); // Jesus, MinGW optimization is... buggy to say the least
-    }
+    for (t = 0; t < 256; t++) state->s[t] = t;
 
     /* Prepare the swap. */
     state->j = 0;
