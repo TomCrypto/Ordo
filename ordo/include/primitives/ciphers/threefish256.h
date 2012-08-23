@@ -15,16 +15,16 @@
 /* A structure containing a Threefish subkey list. */
 typedef struct THREEFISH256_SUBKEYS
 {
-    UINT256 subkey[19];
+    UINT256_64 subkey[19];
 } THREEFISH256_SUBKEYS;
 
 int Threefish256_KeyCheck(size_t keySize);
 
-void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key, void* params);
+void Threefish256_KeySchedule(UINT256_64* rawKey, size_t len, UINT128_64* tweak, THREEFISH256_SUBKEYS* key, void* params);
 
-void Threefish256_Forward(UINT256* block, THREEFISH256_SUBKEYS* key);
+void Threefish256_Forward(UINT256_64* block, THREEFISH256_SUBKEYS* key);
 
-void Threefish256_Inverse(UINT256* block, THREEFISH256_SUBKEYS* key);
+void Threefish256_Inverse(UINT256_64* block, THREEFISH256_SUBKEYS* key);
 
 void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive);
 

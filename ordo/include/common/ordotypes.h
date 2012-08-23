@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stddef.h>
 #include <string.h>
 #include <time.h>
@@ -21,17 +22,23 @@
 #include "securemem.h"
 #include "environment.h"
 
+/** The following are some composite data types used in primitives. For instance,
+ *  the UINT256_64 type is used in Threefish-256 as the latter uses a 256-bit
+ *  block size and works on 64-bit integers. */
+
 /* A 128-bit structure with two 64-bit words. */
-typedef struct UINT128
+typedef struct UINT128_64
 {
-    unsigned long long words[2];
-} UINT128;
+    uint64_t words[2];
+} UINT128_64;
 
 /* A 256-bit structure with four 64-bit words. */
-typedef struct UINT256
+typedef struct UINT256_64
 {
-    unsigned long long words[4];
-} UINT256;
+    uint64_t words[4];
+} UINT256_64;
+
+/** The following are error codes. */
 
 // these error codes are so awful, wtf..
 
@@ -49,6 +56,8 @@ typedef struct UINT256
 
 /*! The padding was not recognized and decryption could not be completed. */
 #define ORDO_EPADDING -4
+
+/** The following are utility functions. */
 
 /*! Checks whether a buffer conforms to PKCS padding.
     \param buffer The buffer to check, which should point to the first padding byte.

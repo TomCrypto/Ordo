@@ -15,9 +15,9 @@
 /* A structure containing an RC4 state. */
 typedef struct RC4STATE
 {
-    unsigned char s[256];
-    unsigned char i;
-    unsigned char j;
+    uint8_t s[256];
+    uint8_t i;
+    uint8_t j;
 } RC4STATE;
 
 /* A parameter structure. */

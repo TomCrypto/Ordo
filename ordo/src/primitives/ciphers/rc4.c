@@ -25,9 +25,9 @@ int RC4_KeyCheck(size_t keySize)
 }
 
 /* Swaps two bytes. */
-void swapByte(unsigned char* a, unsigned char* b)
+void swapByte(uint8_t* a, uint8_t* b)
 {
-    unsigned char c;
+    uint8_t c;
     c = *a;
     *a = *b;
     *b = c;

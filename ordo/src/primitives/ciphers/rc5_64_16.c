@@ -39,7 +39,7 @@ void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_6
 
     /* Copy the raw key into a 64-bit word array of suitable size. */
     size_t c = (len + 7) / 8;
-    unsigned long long* L = salloc(c * 8);
+    uint64_t* L = salloc(c * 8);
     memset(L, 0, c * 8);
     memcpy(L, rawKey, len);
 
@@ -69,7 +69,7 @@ void RC5_64_16_KeySchedule(unsigned char* rawKey, size_t len, void* tweak, RC5_6
 }
 
 /* RC5-64/16 forward permutation function. */
-void RC5_64_16_Forward(UINT128* block, RC5_64_16_KEY* key)
+void RC5_64_16_Forward(UINT128_64* block, RC5_64_16_KEY* key)
 {
     /* Loop variable. */
     size_t t;
@@ -88,7 +88,7 @@ void RC5_64_16_Forward(UINT128* block, RC5_64_16_KEY* key)
 }
 
 /* RC5-64/16 inverse permutation function. */
-void RC5_64_16_Inverse(UINT128* block, RC5_64_16_KEY* key)
+void RC5_64_16_Inverse(UINT128_64* block, RC5_64_16_KEY* key)
 {
     /* Loop variable. */
     size_t t;

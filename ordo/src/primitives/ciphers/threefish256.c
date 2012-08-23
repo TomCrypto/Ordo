@@ -25,11 +25,11 @@ int Threefish256_KeyCheck(size_t keySize)
 }
 
 /* Threefish-256 key schedule. */
-void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREEFISH256_SUBKEYS* key, void* params)
+void Threefish256_KeySchedule(UINT256_64* rawKey, size_t len, UINT128_64* tweak, THREEFISH256_SUBKEYS* key, void* params)
 {
     size_t t;
-    unsigned long long keyWords[5];
-    unsigned long long tweakWords[3];
+    uint64_t keyWords[5];
+    uint64_t tweakWords[3];
 
     /* Read the tweak (may be null). */
     if (tweak == 0)
@@ -62,10 +62,10 @@ void Threefish256_KeySchedule(UINT256* rawKey, size_t len, UINT128* tweak, THREE
 
 #if !ENVIRONMENT_64
 /* Threefish-256 forward permutation function. */
-void Threefish256_Forward(UINT256* block, THREEFISH256_SUBKEYS* key)
+void Threefish256_Forward(UINT256_64* block, THREEFISH256_SUBKEYS* key)
 {
     size_t t;
-    unsigned long long s;
+    uint64_t s;
 
     /* Initial key whitening. */
     block->words[0] += key->subkey[0].words[0];
@@ -203,10 +203,10 @@ void Threefish256_Forward(UINT256* block, THREEFISH256_SUBKEYS* key)
 }
 
 /* Threefish-256 inverse permutation function. */
-void Threefish256_Inverse(UINT256* block, THREEFISH256_SUBKEYS* key)
+void Threefish256_Inverse(UINT256_64* block, THREEFISH256_SUBKEYS* key)
 {
     size_t t;
-    unsigned long long s;
+    uint64_t s;
 
     /* 8 big rounds. */
     for (t = 9; t > 0; t--)
