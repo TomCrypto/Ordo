@@ -18,6 +18,10 @@
 void* salloc(size_t size)
 {
     void* ptr = malloc(size);
+
+    /* This needs to be fixed - what happens if mlock fails? Should we keep going with a non-locked pointer or return zero?
+     * And why can it fail? There is a locked memory quota that cannot be exceeded per process for performance reasons, but
+     * normal usage should be nowhere close to that limit. To investigate... */
     //if (mlock(ptr, size) != 0) return 0;
     //else return ptr;
     mlock(ptr, size);
@@ -33,7 +37,7 @@ int sprotect(void* ptr, size_t size)
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* Basically, use a volatile variable to ensure the overwriting actually occurs. */
+    /* Use a volatile variable to ensure the overwriting actually occurs. */
     volatile unsigned char* val = ptr;
 
     /* Overwrite each byte with zero. */

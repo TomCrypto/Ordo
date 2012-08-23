@@ -16,6 +16,10 @@ inline int padCheck(unsigned char* buffer, unsigned char padding)
 /* Xors two buffers together. */
 inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
 {
+    /* Optimization will do the rest. */
+    while (len--) *(dst++) ^= *(src++);
+
+    #if 0
     /* Process as many word-size chunks as possible. */
     while (len >= sizeof(size_t))
     {
@@ -26,11 +30,8 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
     }
 
     /* Process any leftover bytes. */
-    while (len != 0)
-    {
-        *(dst++) ^= *(src++);
-        len--;
-    }
+    while (len--) *(dst++) ^= *(src++);
+    #endif
 }
 
 /* Increments a counter of arbitrary size as if it were a len-byte integer
