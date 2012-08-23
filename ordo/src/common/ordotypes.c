@@ -19,7 +19,7 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
     /* Process as many word-size chunks as possible. */
     while (len >= sizeof(size_t))
     {
-        *((size_t volatile*)dst) ^= *((size_t volatile*)src);
+        *((size_t *)dst) ^= *((size_t *)src);
         dst += sizeof(size_t);
         src += sizeof(size_t);
         len -= sizeof(size_t);
@@ -28,7 +28,7 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
     /* Process any leftover bytes. */
     while (len != 0)
     {
-        *(unsigned char volatile*)(dst++) ^= *(unsigned char volatile*)(src++);
+        *(dst++) ^= *(src++);
         len--;
     }
 }
