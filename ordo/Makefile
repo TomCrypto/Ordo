@@ -1,8 +1,8 @@
 # Debug flags (no optimization, native feature flags, warnings, and ordo debug flag)
-CFLAGS_DEBUG = -O0 -Wall -march=native -D ORDO_DEBUG
+CFLAGS_DEBUG = -O0 -Wall -march=native -mno-avx -D ORDO_DEBUG
 
 # Release flags (full optimization, native feature flags, warnings)
-CFLAGS_RELEASE = -O6 -Wall -march=native
+CFLAGS_RELEASE = -O6 -Wall -march=native -mno-avx
 
 # The default build target is release
 default: release
