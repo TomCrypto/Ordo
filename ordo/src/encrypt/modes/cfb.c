@@ -12,12 +12,27 @@
 #include <encrypt/encrypt.h>
 #include <encrypt/modes/cfb.h>
 
-void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
+/*! This is extra context space required by the CFB mode to store the amount of state not used.*/
+typedef struct CFB_ENCRYPT_CONTEXT
+{
+    /*! A buffer for the key. */
+    void* key;
+    /*! A buffer for the IV. */
+    void* iv;
+    /*! The amount of bytes of unused state remaining before the state is to be renewed. */
+    size_t remaining;
+} CFB_ENCRYPT_CONTEXT;
+
+/*! Shorthand macro for context casting. */
+#define cfb(ctx) ((CFB_ENCRYPT_CONTEXT*)ctx)
+
+void CFB_Create(ENCRYPT_CONTEXT* ctx)
 {
     /* Allocate context space. */
-    ctx->key = salloc(ctx->primitive->szKey);
-    ctx->iv = salloc(ctx->primitive->szBlock);
-    ctx->reserved = salloc(sizeof(CFB_RESERVED));
+    ctx->ctx = salloc(sizeof(CFB_ENCRYPT_CONTEXT));
+    cfb(ctx->ctx)->key = salloc(ctx->primitive->szKey);
+    cfb(ctx->ctx)->iv = salloc(ctx->primitive->szBlock);
+    cfb(ctx->ctx)->remaining = 0;
 }
 
 /*! Initializes an OFB context (the primitive and mode must have been filled in).
@@ -27,20 +42,20 @@ void CFB_Create(CFB_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
+int CFB_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Check the key size. */
     if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
     /* Copy the IV (required) into the context IV. */
-    memcpy(ctx->iv, iv, ctx->primitive->szBlock);
+    memcpy(cfb(ctx->ctx)->iv, iv, ctx->primitive->szBlock);
 
     /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key, params);
+    ctx->primitive->fKeySchedule(key, keySize, tweak, cfb(ctx->ctx)->key, params);
 
     /* Compute the initial keystream block. */
-    ctx->primitive->fForward(ctx->iv, ctx->key);
-    ctx->reserved->remaining = ctx->primitive->szBlock;
+    ctx->primitive->fForward(cfb(ctx->ctx)->iv, cfb(ctx->ctx)->key);
+    cfb(ctx->ctx)->remaining = ctx->primitive->szBlock;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -53,7 +68,7 @@ int CFB_Init(CFB_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, v
   \param out A pointer to the ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode. */
-void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CFB_EncryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
@@ -65,21 +80,21 @@ void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
     while (inlen != 0)
     {
         /* If there is no data left in the context block, update. */
-        if (ctx->reserved->remaining == 0)
+        if (cfb(ctx->ctx)->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-            ctx->primitive->fForward(ctx->iv, ctx->key);
-            ctx->reserved->remaining = ctx->primitive->szBlock;
+            ctx->primitive->fForward(cfb(ctx->ctx)->iv, cfb(ctx->ctx)->key);
+            cfb(ctx->ctx)->remaining = ctx->primitive->szBlock;
         }
 
         /* Compute the amount of data to process. */
-        process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
+        process = (inlen < cfb(ctx->ctx)->remaining) ? inlen : cfb(ctx->ctx)->remaining;
 
         /* Process this amount of data. */
         memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
-        memcpy((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, out, process);
-        ctx->reserved->remaining -= process;
+        xorBuffer(out, (unsigned char*)cfb(ctx->ctx)->iv + ctx->primitive->szBlock - cfb(ctx->ctx)->remaining, process);
+        memcpy((unsigned char*)cfb(ctx->ctx)->iv + ctx->primitive->szBlock - cfb(ctx->ctx)->remaining, out, process);
+        cfb(ctx->ctx)->remaining -= process;
         (*outlen) += process;
         inlen -= process;
         out += process;
@@ -94,7 +109,7 @@ void CFB_EncryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param out A pointer to the plaintext buffer.
   \param outlen A pointer to an integer which will contain the amount of plaintext output, in bytes.
   \remark The out buffer must be the same size as the in buffer, as OFB is a streaming mode.  */
-void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CFB_DecryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
@@ -106,21 +121,21 @@ void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
     while (inlen != 0)
     {
         /* If there is no data left in the context block, update. */
-        if (ctx->reserved->remaining == 0)
+        if (cfb(ctx->ctx)->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-            ctx->primitive->fForward(ctx->iv, ctx->key);
-            ctx->reserved->remaining = ctx->primitive->szBlock;
+            ctx->primitive->fForward(cfb(ctx->ctx)->iv, cfb(ctx->ctx)->key);
+            cfb(ctx->ctx)->remaining = ctx->primitive->szBlock;
         }
 
         /* Compute the amount of data to process. */
-        process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
+        process = (inlen < cfb(ctx->ctx)->remaining) ? inlen : cfb(ctx->ctx)->remaining;
 
         /* Process this amount of data. */
         memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
-        memcpy((unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, in, process);
-        ctx->reserved->remaining -= process;
+        xorBuffer(out, (unsigned char*)cfb(ctx->ctx)->iv + ctx->primitive->szBlock - cfb(ctx->ctx)->remaining, process);
+        memcpy((unsigned char*)cfb(ctx->ctx)->iv + ctx->primitive->szBlock - cfb(ctx->ctx)->remaining, in, process);
+        cfb(ctx->ctx)->remaining -= process;
         (*outlen) += process;
         inlen -= process;
         out += process;
@@ -134,7 +149,7 @@ void CFB_DecryptUpdate(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-int CFB_Final(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int CFB_Final(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen != 0) *outlen = 0;
@@ -143,12 +158,12 @@ int CFB_Final(CFB_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
     return ORDO_ESUCCESS;
 }
 
-void CFB_Free(CFB_ENCRYPT_CONTEXT* ctx)
+void CFB_Free(ENCRYPT_CONTEXT* ctx)
 {
     /* Free context space. */
-    sfree(ctx->reserved, sizeof(CFB_RESERVED));
-    sfree(ctx->iv, ctx->primitive->szBlock);
-    sfree(ctx->key, ctx->primitive->szKey);
+    sfree(cfb(ctx->ctx)->iv, ctx->primitive->szBlock);
+    sfree(cfb(ctx->ctx)->key, ctx->primitive->szKey);
+    sfree(ctx->ctx, sizeof(CFB_ENCRYPT_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

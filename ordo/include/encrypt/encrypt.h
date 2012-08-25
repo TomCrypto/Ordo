@@ -27,16 +27,12 @@ typedef struct ENCRYPT_CONTEXT
     struct CIPHER_PRIMITIVE* primitive;
     /*! The mode of operation to use. */
     struct ENCRYPT_MODE* mode;
-    /*! Points to the key material. */
-    void* key;
-    /*! Points to the initialization vector. */
-    void* iv;
+    /*! The encryption mode context. */
+    void* ctx;
     /*! Whether to encrypt or decrypt (true = encryption). */
     int direction;
     /*! Whether padding is enabled or not. */
     int padding;
-    /*! Reserved space for the mode of operation. */
-    void* scratch;
 } ENCRYPT_CONTEXT;
 
 /*! This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */

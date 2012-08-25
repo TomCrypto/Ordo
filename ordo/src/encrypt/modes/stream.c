@@ -10,12 +10,27 @@
 #include <encrypt/encrypt.h>
 #include <encrypt/modes/stream.h>
 
-void STREAM_Create(STREAM_ENCRYPT_CONTEXT* ctx)
+/*! This is extra context space required by the STREAM mode to store the counter and the amount of state not used.*/
+typedef struct STREAM_ENCRYPT_CONTEXT
+{
+    /*! The stream cipher's state. */
+    void* state;
+    /*! The keystream buffer. */
+    void* keystream;
+    /*! The amount of bytes of unused state remaining before the state is to be renewed. */
+    size_t remaining;
+} STREAM_ENCRYPT_CONTEXT;
+
+/*! Shorthand macro for context casting. */
+#define stream(ctx) ((STREAM_ENCRYPT_CONTEXT*)ctx)
+
+void STREAM_Create(ENCRYPT_CONTEXT* ctx)
 {
     /* Allocate context space. */
-    ctx->key = salloc(ctx->primitive->szKey);
-    ctx->iv = salloc(ctx->primitive->szBlock);
-    ctx->reserved = salloc(sizeof(STREAM_RESERVED));
+    ctx->ctx = salloc(sizeof(STREAM_ENCRYPT_CONTEXT));
+    stream(ctx->ctx)->state = salloc(ctx->primitive->szKey);
+    stream(ctx->ctx)->keystream = salloc(ctx->primitive->szBlock);
+    stream(ctx->ctx)->remaining = 0;
 }
 
 /*! Initializes a STREAM context (the primitive and mode must have been filled in).
@@ -25,17 +40,17 @@ void STREAM_Create(STREAM_ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int STREAM_Init(STREAM_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
+int STREAM_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
 {
     /* Check the key size. */
     if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
 
     /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctx->key, params);
+    ctx->primitive->fKeySchedule(key, keySize, tweak, stream(ctx->ctx)->state, params);
 
     /* Compute the initial keystream block. */
-    ctx->primitive->fForward(ctx->iv, ctx->key);
-    ctx->reserved->remaining = ctx->primitive->szBlock;
+    ctx->primitive->fForward(stream(ctx->ctx)->keystream, stream(ctx->ctx)->state);
+    stream(ctx->ctx)->remaining = ctx->primitive->szBlock;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -49,7 +64,7 @@ int STREAM_Init(STREAM_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tw
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \return Returns true on success, false on failure.
   \remark The out buffer must be the same size as the in buffer, as STREAM is a streaming mode. */
-void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void STREAM_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
@@ -61,20 +76,20 @@ void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen,
     while (inlen != 0)
     {
         /* If there is no data left in the context block, update. */
-        if (ctx->reserved->remaining == 0)
+        if (stream(ctx->ctx)->remaining == 0)
         {
             /* STREAM update (simply renew the state). */
-            ctx->primitive->fForward(ctx->iv, ctx->key);
-            ctx->reserved->remaining = ctx->primitive->szBlock;
+            ctx->primitive->fForward(stream(ctx->ctx)->keystream, stream(ctx->ctx)->state);
+            stream(ctx->ctx)->remaining = ctx->primitive->szBlock;
         }
 
         /* Compute the amount of data to process. */
-        process = (inlen < ctx->reserved->remaining) ? inlen : ctx->reserved->remaining;
+        process = (inlen < stream(ctx->ctx)->remaining) ? inlen : stream(ctx->ctx)->remaining;
 
         /* Process this amount of data. */
         memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)ctx->iv + ctx->primitive->szBlock - ctx->reserved->remaining, process);
-        ctx->reserved->remaining -= process;
+        xorBuffer(out, (unsigned char*)stream(ctx->ctx)->keystream + ctx->primitive->szBlock - stream(ctx->ctx)->remaining, process);
+        stream(ctx->ctx)->remaining -= process;
         *outlen += process;
         inlen -= process;
         out += process;
@@ -88,7 +103,7 @@ void STREAM_Update(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen,
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-int STREAM_Final(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int STREAM_Final(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen != 0) *outlen = 0;
@@ -97,12 +112,12 @@ int STREAM_Final(STREAM_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen
     return ORDO_ESUCCESS;
 }
 
-void STREAM_Free(STREAM_ENCRYPT_CONTEXT* ctx)
+void STREAM_Free(ENCRYPT_CONTEXT* ctx)
 {
     /* Free context space. */
-    sfree(ctx->reserved, sizeof(STREAM_RESERVED));
-    sfree(ctx->iv, ctx->primitive->szBlock);
-    sfree(ctx->key, ctx->primitive->szKey);
+    sfree(stream(ctx->ctx)->keystream, ctx->primitive->szBlock);
+    sfree(stream(ctx->ctx)->state, ctx->primitive->szKey);
+    sfree(ctx->ctx, sizeof(STREAM_ENCRYPT_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

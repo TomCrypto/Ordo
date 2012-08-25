@@ -12,43 +12,15 @@
 
 #include <encrypt/encrypt.h>
 
-/*! This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
-typedef struct CTR_RESERVED
-{
-    /*! The counter value. */
-    unsigned char* counter;
-    /*! The amount of bytes of unused state remaining before the state is to be renewed. */
-    size_t remaining;
-} CTR_RESERVED;
+void CTR_Create(ENCRYPT_CONTEXT* ctx);
 
-/*! This structure describes a symmetric encryption context for the CTR mode. */
-typedef struct CTR_ENCRYPT_CONTEXT
-{
-    /*! The primitive to use. */
-    CIPHER_PRIMITIVE* primitive;
-    /*! The mode of operation to use (this is set to the CTR mode). */
-    ENCRYPT_MODE* mode;
-    /*! Points to the key material. */
-    void* key;
-    /*! Points to the initialization vector. */
-    void* iv;
-    /*! Whether to encrypt or decrypt (true = encryption). */
-    int direction;
-    /*! Whether padding is enabled or not. */
-    int padding;
-    /*! Reserved space for the CTR mode of operation. */
-    CTR_RESERVED* reserved;
-} CTR_ENCRYPT_CONTEXT;
+int CTR_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
 
-void CTR_Create(CTR_ENCRYPT_CONTEXT* ctx);
+void CTR_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-int CTR_Init(CTR_ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
+int CTR_Final(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
-void CTR_Update(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
-
-int CTR_Final(CTR_ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
-
-void CTR_Free(CTR_ENCRYPT_CONTEXT* ctx);
+void CTR_Free(ENCRYPT_CONTEXT* ctx);
 
 void CTR_SetMode(ENCRYPT_MODE* mode);
 

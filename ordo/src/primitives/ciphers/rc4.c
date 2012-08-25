@@ -78,8 +78,8 @@ void RC4_KeySchedule(unsigned char* rawKey, size_t len, void* unused, RC4STATE* 
     /* Calculate the amount of bytes to drop (default is 2048). */
     drop = (params == 0) ? 2048 : params->drop;
 
-    /* Throw away the first drop bytes. */
-    for (t = 0; t < drop; t++) RC4_Forward(0, state);
+    /* Throw away the first drop bytes (divide by block size since permutation function generates that much). */
+    for (t = 0; t <= drop / RC4_BLOCK; t++) RC4_Forward(0, state);
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
