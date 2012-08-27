@@ -14,7 +14,12 @@
 #include <encrypt/encrypt.h>
 
 /* Mode of operation list. */
+#include <encrypt/modes/ecb.h>
+#include <encrypt/modes/cbc.h>
 #include <encrypt/modes/ctr.h>
+#include <encrypt/modes/cfb.h>
+#include <encrypt/modes/ofb.h>
+#include <encrypt/modes/stream.h>
 
 /* Macro to the mode of operation object of an encryption context. */
 #define modeobj(ctx) (ctx->mode->mode)
@@ -25,14 +30,34 @@
 /* Loads all cipher modes. */
 void loadEncryptModes()
 {
+    ECB = malloc(sizeof(ENCRYPT_MODE));
+    ECB_SetMode(ECB);
+
+    CBC = malloc(sizeof(ENCRYPT_MODE));
+    CBC_SetMode(CBC);
+
     CTR = malloc(sizeof(ENCRYPT_MODE));
     CTR_SetMode(CTR);
+
+    CFB = malloc(sizeof(ENCRYPT_MODE));
+    CFB_SetMode(CFB);
+
+    OFB = malloc(sizeof(ENCRYPT_MODE));
+    OFB_SetMode(OFB);
+
+    STREAM = malloc(sizeof(ENCRYPT_MODE));
+    STREAM_SetMode(STREAM);
 }
 
 /* Unloads all cipher modes. */
 void unloadEncryptModes()
 {
+    free(ECB);
+    free(CBC);
     free(CTR);
+    free(CFB);
+    free(OFB);
+    free(STREAM);
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */

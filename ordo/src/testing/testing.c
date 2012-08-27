@@ -189,7 +189,12 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
 ENCRYPT_MODE* getEncryptMode(char* name)
 {
     /* Simply compare against the existing list. */
+    if (strcmp(name, ECB->name) == 0) return ECB;
+    if (strcmp(name, CBC->name) == 0) return CBC;
     if (strcmp(name, CTR->name) == 0) return CTR;
+    if (strcmp(name, CFB->name) == 0) return CFB;
+    if (strcmp(name, OFB->name) == 0) return OFB;
+    if (strcmp(name, STREAM->name) == 0) return STREAM;
     return 0;
 }
 

@@ -38,7 +38,11 @@ int main(int argc, char* argv[])
     unsigned char* buffer = malloc(BUFSIZE);
 
     /* Test some cipher primitives & encryption modes. */
+    encryptPerformance(NullCipher, ECB, 32, buffer, BUFSIZE);
+    encryptPerformance(NullCipher, CBC, 32, buffer, BUFSIZE);
     encryptPerformance(NullCipher, CTR, 32, buffer, BUFSIZE);
+    encryptPerformance(NullCipher, CFB, 32, buffer, BUFSIZE);
+    encryptPerformance(NullCipher, OFB, 32, buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */
     free(buffer);

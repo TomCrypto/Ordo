@@ -1,5 +1,5 @@
-Ordo v0.1.7
------------
+Ordo v0.1.7 Experimental Release
+--------------------------------
 
 ########### BREAKING NEWS ###########
 Please compile Ordo with the -mno-avx flag until further notice, GCC has a bug which causes it to produce invalid assembly on some processors (specifically, AVX2 opcodes on AVX1-capable processors), you DO NOT want to discover this the hard way like we did. This compiler flag will stop GCC using AVX instructions and will therefore negate the bug, but may have minimal performance implications. This limitation will be lifted once a patched version of GCC is released and tested.
