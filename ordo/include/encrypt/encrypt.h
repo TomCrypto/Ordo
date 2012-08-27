@@ -20,7 +20,7 @@
 /*! Reads the name of a mode of operation. */
 #define modeName(m) (m->name)
 
-/*! This structure describes a symmetric encryption context. */
+/*! This structure describes a mode of operation context. */
 typedef struct ENCRYPT_MODE_CONTEXT
 {
     /*! The mode of operation to use. */
@@ -74,12 +74,12 @@ typedef struct ENCRYPT_MODE
     char* name;
 } ENCRYPT_MODE;
 
-/*! This structure represents a composite encryption context. */
+/*! This structure describes a symmetric encryption context. */
 typedef struct ENCRYPTION_CONTEXT
 {
     /*! The cipher context. */
     CIPHER_PRIMITIVE_CONTEXT* cipher;
-    /*! The mode context. */
+    /*! The mode of operation context. */
     ENCRYPT_MODE_CONTEXT* mode;
 } ENCRYPTION_CONTEXT;
 
