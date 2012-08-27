@@ -12,13 +12,15 @@
 
 #include <primitives/primitives.h>
 
-int NullCipher_KeyCheck(size_t keySize);
+void NullCipher_Create(CIPHER_PRIMITIVE_CONTEXT* cipher);
 
-void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key, void* params);
+int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params);
 
-void NullCipher_Forward(void* block, void* key);
+void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block);
 
-void NullCipher_Inverse(void* block, void* key);
+void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block);
+
+void NullCipher_Free(CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 void NullCipher_SetPrimitive(CIPHER_PRIMITIVE* primitive);
 

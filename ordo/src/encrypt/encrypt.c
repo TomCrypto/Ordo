@@ -16,6 +16,12 @@
 /* Mode of operation list. */
 #include <encrypt/modes/ctr.h>
 
+/* Macro to the mode of operation object of an encryption context. */
+#define modeobj(ctx) (ctx->mode->mode)
+
+/* Macro to the cipher primitive object of an encryption context. */
+#define cipherobj(ctx) (ctx->cipher->primitive)
+
 /* Loads all cipher modes. */
 void loadEncryptModes()
 {
@@ -30,44 +36,65 @@ void unloadEncryptModes()
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */
-ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding)
+ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding)
 {
-    ENCRYPT_CONTEXT* ctx = salloc(sizeof(ENCRYPT_CONTEXT));
-    ctx->direction = direction;
-    ctx->primitive = primitive;
-    ctx->padding = padding;
-    mode->fCreate(ctx);
-    ctx->mode = mode;
+    /* Allocate the cipher and mode contexts. */
+    ENCRYPTION_CONTEXT* ctx = salloc(sizeof(ENCRYPTION_CONTEXT));
+    ctx->cipher =salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    ctx->mode = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+
+    /* Create the cipher context. */
+    primitive->fCreate(ctx->cipher);
+    cipherobj(ctx) = primitive;
+
+    /* Create the mode context. */
+    mode->fCreate(ctx->mode, ctx->cipher);
+    modeobj(ctx) = mode;
+
+    /* Set context fields and return. */
+    ctx->mode->direction = direction;
+    ctx->mode->padding = padding;
     return ctx;
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
-int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
+int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {
     /* Initialize the cipher context. */
-    return ctx->mode->fInit(ctx, key, keySize, tweak, iv, params);
+    int error = cipherobj(ctx)->fInit(ctx->cipher, key, keySize, cipherParams);
+    if (error < 0) return error;
+
+    /* Initialize the cipher context. */
+    return modeobj(ctx)->fInit(ctx->mode, ctx->cipher, iv, modeParams);
 }
 
 /* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */
-void encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Encrypt or decrypt the buffer. */
-    if (ctx->direction) ctx->mode->fEncryptUpdate(ctx, in, inlen, out, outlen);
-    else ctx->mode->fDecryptUpdate(ctx, in, inlen, out, outlen);
+    if (ctx->mode->direction) modeobj(ctx)->fEncryptUpdate(ctx->mode, ctx->cipher, in, inlen, out, outlen);
+    else modeobj(ctx)->fDecryptUpdate(ctx->mode, ctx->cipher, in, inlen, out, outlen);
 }
 
 /* This function finalizes a cipher context. */
-int encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
     /* Finalize the context. */
-    if (ctx->direction) return ctx->mode->fEncryptFinal(ctx, out, outlen);
-    else return ctx->mode->fDecryptFinal(ctx, out, outlen);
+    if (ctx->mode->direction) return modeobj(ctx)->fEncryptFinal(ctx->mode, ctx->cipher, out, outlen);
+    else return modeobj(ctx)->fDecryptFinal(ctx->mode, ctx->cipher, out, outlen);
 }
 
 /* This function frees an initialized encryption context. */
-void encryptFree(ENCRYPT_CONTEXT* ctx)
+void encryptFree(ENCRYPTION_CONTEXT* ctx)
 {
+    /* Free the mode. */
+    modeobj(ctx)->fFree(ctx->mode, ctx->cipher);
+    sfree(ctx->mode, sizeof(ENCRYPT_MODE_CONTEXT));
+
+    /* Free the cipher. */
+    cipherobj(ctx)->fFree(ctx->cipher);
+    sfree(ctx->cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+
     /* Free the context. */
-    ctx->mode->fFree(ctx);
-    sfree(ctx, sizeof(ENCRYPT_CONTEXT));
+    sfree(ctx, sizeof(ENCRYPTION_CONTEXT));
 }

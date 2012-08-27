@@ -21,10 +21,8 @@
 #define modeName(m) (m->name)
 
 /*! This structure describes a symmetric encryption context. */
-typedef struct ENCRYPT_CONTEXT
+typedef struct ENCRYPT_MODE_CONTEXT
 {
-    /*! The primitive to use. */
-    struct CIPHER_PRIMITIVE* primitive;
     /*! The mode of operation to use. */
     struct ENCRYPT_MODE* mode;
     /*! The encryption mode context. */
@@ -33,25 +31,25 @@ typedef struct ENCRYPT_CONTEXT
     int direction;
     /*! Whether padding is enabled or not. */
     int padding;
-} ENCRYPT_CONTEXT;
+} ENCRYPT_MODE_CONTEXT;
 
 /*! This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */
-typedef void (* CREATE_FUNC)(ENCRYPT_CONTEXT*);
+typedef void (* CREATE_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*);
 
 /*! This is the prototype for a cipher mode of operation initialization function, taking as an
     input a cipher context, a key buffer, a key size, a tweak and an initialization vector. */
-typedef int (* INIT_FUNC)(ENCRYPT_CONTEXT*, void*, size_t, void*, void*, void*);
+typedef int (* INIT_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*, void*, void*);
 
 /*! This is the prototype for a cipher mode of operation encryption/decryption function, taking
     as an input a cipher context, a buffer, a buffer size and a flag indicating whether padding
 	should be applied (this flag is ignored on streaming modes of operation). */
-typedef void (* UPDATE_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t, unsigned char*, size_t*);
+typedef void (* UPDATE_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*, unsigned char*, size_t, unsigned char*, size_t*);
 
 /*! This is the prototype for a cipher mode of operation finalization function, taking as an input a cipher context. */
-typedef int (* FINAL_FUNC)(ENCRYPT_CONTEXT*, unsigned char*, size_t*);
+typedef int (* FINAL_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*, unsigned char*, size_t*);
 
 /*! This is the prototype for a cipher mode of operation deallocation function, which simply deallocates context memory. */
-typedef void (* FREE_FUNC)(ENCRYPT_CONTEXT*);
+typedef void (* FREE_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*);
 
 /*! This structure defines an encryption mode of operation. Encryption modes of operation are separated into two categories: block modes, which process one block of plaintext/ciphertext at a time, and streaming modes
  * which can process data byte-by-byte (bit, actually, but the smallest addressable unit is usually a byte). Block modes require padding to encrypt data that is not a multiple of the primitive's block size, whereas
@@ -76,13 +74,22 @@ typedef struct ENCRYPT_MODE
     char* name;
 } ENCRYPT_MODE;
 
+/*! This structure represents a composite encryption context. */
+typedef struct ENCRYPTION_CONTEXT
+{
+    /*! The cipher context. */
+    CIPHER_PRIMITIVE_CONTEXT* cipher;
+    /*! The mode context. */
+    ENCRYPT_MODE_CONTEXT* mode;
+} ENCRYPTION_CONTEXT;
+
 /*! This function returns an initialized encryption context using a specific primitive and mode of operation.
  \param primitive This must point to the cryptographic primitive to be used
  \param mode This must point to the cryptographic mode of operation to be used
  \param direction This describes the direction of encryption, set to true for encryption and false for decryption.
  \param padding This describes whether padding should be used.
  \return Returns the initialized encryption context, or 0 if an error occurred. */
-ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding);
+ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding);
 
 /*! This function prepares an encryption context to be used for encryption, provided a key, tweak and initialization vector.
  \param ctx The encryption context to use
@@ -91,7 +98,7 @@ ENCRYPT_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, 
  \param tweak This points to the tweak used in the cipher (this is an optional argument)
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV)
  \return Returns ORDO_ESUCCESS on success, and a negative value on error. */
-int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params);
+int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided context.
  \param ctx The encryption context to use.
@@ -99,7 +106,7 @@ int encryptInit(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, vo
  \param inlen This contains the size of the in buffer, in bytes.
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This will contain the size of the out buffer, in bytes. */
-void encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
 /*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
  \param ctx The encryption context to use.
@@ -108,12 +115,12 @@ void encryptUpdate(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsign
  \return Returns ORDO_ESUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used in encryptUpdate.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. */
-int encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
+int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees an initialized encryption context.
  \param ctx The encryption context to be freed.
  \remark Once this function returns, the passed context may no longer be used for encryption. */
-void encryptFree(ENCRYPT_CONTEXT* ctx);
+void encryptFree(ENCRYPTION_CONTEXT* ctx);
 
 /*! The CTR (CounTeR) mode of operation. */
 ENCRYPT_MODE* CTR;

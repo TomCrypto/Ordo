@@ -15,8 +15,6 @@
 /*! This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
 typedef struct CTR_ENCRYPT_CONTEXT
 {
-    /*! A buffer for the key. */
-    void* key;
     /*! A buffer for the IV. */
     void* iv;
     /*! The counter value. */
@@ -28,13 +26,12 @@ typedef struct CTR_ENCRYPT_CONTEXT
 /*! Shorthand macro for context casting. */
 #define ctr(ctx) ((CTR_ENCRYPT_CONTEXT*)ctx)
 
-void CTR_Create(ENCRYPT_CONTEXT* ctx)
+void CTR_Create(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Allocate context space. */
     ctx->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT));
-    ctr(ctx->ctx)->key = salloc(ctx->primitive->szKey);
-    ctr(ctx->ctx)->iv = salloc(ctx->primitive->szBlock);
-    ctr(ctx->ctx)->counter = salloc(ctx->primitive->szBlock);
+    ctr(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+    ctr(ctx->ctx)->counter = salloc(cipher->primitive->szBlock);
 }
 
 /*! Initializes a CTR context (the primitive and mode must have been filled in).
@@ -44,23 +41,17 @@ void CTR_Create(ENCRYPT_CONTEXT* ctx)
   \param tweak The tweak to use (this may be zero, depending on the primitive).
   \param iv The initialization vector to use.
   \return Returns true on success, false on failure. */
-int CTR_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void* iv, void* params)
+int CTR_Init(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
 {
-    /* Check the key size. */
-    if (!ctx->primitive->fKeyCheck(keySize)) return ORDO_EKEYSIZE;
-
     /* Copy the IV (required) into the context IV. */
-    memcpy(ctr(ctx->ctx)->iv, iv, ctx->primitive->szBlock);
-
-    /* Perform the key schedule. */
-    ctx->primitive->fKeySchedule(key, keySize, tweak, ctr(ctx->ctx)->key, params);
+    memcpy(ctr(ctx->ctx)->iv, iv, cipher->primitive->szBlock);
 
     /* Copy the IV into the counter. */
-    memcpy(ctr(ctx->ctx)->counter, ctr(ctx->ctx)->iv, ctx->primitive->szBlock);
+    memcpy(ctr(ctx->ctx)->counter, ctr(ctx->ctx)->iv, cipher->primitive->szBlock);
 
     /* Compute the initial keystream block. */
-    ctx->primitive->fForward(ctr(ctx->ctx)->iv, ctr(ctx->ctx)->key);
-    ctr(ctx->ctx)->remaining = ctx->primitive->szBlock;
+    cipher->primitive->fForward(cipher, ctr(ctx->ctx)->iv);
+    ctr(ctx->ctx)->remaining = cipher->primitive->szBlock;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -73,7 +64,7 @@ int CTR_Init(ENCRYPT_CONTEXT* ctx, void* key, size_t keySize, void* tweak, void*
   \param out A pointer to the ciphertext buffer.
   \param outlen A pointer to an integer which will contain the amount of ciphertext output, in bytes.
   \remark The out buffer must be the same size as the in buffer, as CTR is a streaming mode. */
-void CTR_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void CTR_Update(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
@@ -88,10 +79,10 @@ void CTR_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned 
         if (ctr(ctx->ctx)->remaining == 0)
         {
             /* CTR update (increment counter, copy counter into IV, encrypt IV). */
-            incBuffer(ctr(ctx->ctx)->counter, ctx->primitive->szBlock);
-            memcpy(ctr(ctx->ctx)->iv, ctr(ctx->ctx)->counter, ctx->primitive->szBlock);
-            ctx->primitive->fForward(ctr(ctx->ctx)->iv, ctr(ctx->ctx)->key);
-            ctr(ctx->ctx)->remaining = ctx->primitive->szBlock;
+            incBuffer(ctr(ctx->ctx)->counter, cipher->primitive->szBlock);
+            memcpy(ctr(ctx->ctx)->iv, ctr(ctx->ctx)->counter, cipher->primitive->szBlock);
+            cipher->primitive->fForward(cipher, ctr(ctx->ctx)->iv);
+            ctr(ctx->ctx)->remaining = cipher->primitive->szBlock;
         }
 
         /* Compute the amount of data to process. */
@@ -99,7 +90,7 @@ void CTR_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned 
 
         /* Process this amount of data. */
         memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)ctr(ctx->ctx)->iv + ctx->primitive->szBlock - ctr(ctx->ctx)->remaining, process);
+        xorBuffer(out, (unsigned char*)ctr(ctx->ctx)->iv + cipher->primitive->szBlock - ctr(ctx->ctx)->remaining, process);
         ctr(ctx->ctx)->remaining -= process;
         (*outlen) += process;
         inlen -= process;
@@ -114,7 +105,7 @@ void CTR_Update(ENCRYPT_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned 
   \param outlen Set this to null.
   \param decrypt Unused parameter.
   \return Returns true on success, false on failure. */
-int CTR_Final(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int CTR_Final(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen != 0) *outlen = 0;
@@ -123,12 +114,11 @@ int CTR_Final(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen)
     return ORDO_ESUCCESS;
 }
 
-void CTR_Free(ENCRYPT_CONTEXT* ctx)
+void CTR_Free(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Free context space. */
-    sfree(ctr(ctx->ctx)->counter, ctx->primitive->szBlock);
-    sfree(ctr(ctx->ctx)->iv, ctx->primitive->szBlock);
-    sfree(ctr(ctx->ctx)->key, ctx->primitive->szKey);
+    sfree(ctr(ctx->ctx)->counter, cipher->primitive->szBlock);
+    sfree(ctr(ctx->ctx)->iv, cipher->primitive->szBlock);
     sfree(ctx->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
 }
 

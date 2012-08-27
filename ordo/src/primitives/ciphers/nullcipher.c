@@ -10,36 +10,36 @@
 #include <primitives/primitives.h>
 #include <primitives/ciphers/nullcipher.h>
 
-#define NULLCIPHER_KEY (0)
 #define NULLCIPHER_BLOCK (16)
-#define NULLCIPHER_TWEAK (0)
 
-int NullCipher_KeyCheck(size_t keySize)
+void NullCipher_Create(CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* All key sizes are permitted for this cipher. */
-    return 1;
+    /* Nothing happens here, as the NullCipher maintains no state. */
 }
 
-/* NullCipher key schedule. */
-void NullCipher_KeySchedule(void* rawKey, size_t len, void* tweak, void* key, void* params)
+int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params)
 {
-    return;
+    /* Ignore everything! */
+    return ORDO_ESUCCESS;
 }
 
-/* NullCipher forward permutation function. */
-void NullCipher_Forward(void* block, void* key)
+void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block)
 {
-    return;
+    /* Identity permutation... do nothing. */
 }
 
-/* NullCipher inverse permutation function. */
-void NullCipher_Inverse(void* block, void* key)
+void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block)
 {
-    return;
+    /* Idem! */
+}
+
+void NullCipher_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
+{
+    /* Nothing to free... */
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */
 void NullCipher_SetPrimitive(CIPHER_PRIMITIVE* primitive)
 {
-    PRIMITIVE_MAKECIPHER(primitive, NULLCIPHER_KEY, NULLCIPHER_BLOCK, NULLCIPHER_TWEAK, NullCipher_KeyCheck, NullCipher_KeySchedule, NullCipher_Forward, NullCipher_Inverse, "NullCipher");
+    PRIMITIVE_MAKECIPHER(primitive, NULLCIPHER_BLOCK, NullCipher_Create, NullCipher_Init, NullCipher_Forward, NullCipher_Inverse, NullCipher_Free, "NullCipher");
 }
