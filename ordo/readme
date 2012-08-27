@@ -1,5 +1,5 @@
-Ordo v0.1.7 Experimental Release
---------------------------------
+Ordo v0.1.9
+-----------
 
 ########### BREAKING NEWS ###########
 Please compile Ordo with the -mno-avx flag until further notice, GCC has a bug which causes it to produce invalid assembly on some processors (specifically, AVX2 opcodes on AVX1-capable processors), you DO NOT want to discover this the hard way like we did. This compiler flag will stop GCC using AVX instructions and will therefore negate the bug, but may have minimal performance implications. This limitation will be lifted once a patched version of GCC is released and tested.
@@ -11,7 +11,7 @@ This directory contains a bunch of code files and headers for Ordo, along with a
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
- - make the primitive API more elegant (right now it's a mess, need to allocate primitive contexts instead of relying on an inflexible "key" struct - refer to the "encrypt" module which is "doing it right")
+ - make the primitive API more elegant (right now it's a mess, need to allocate primitive contexts instead of relying on an inflexible "key" struct - refer to the "encrypt" module which is "doing it right") [WORK IN PROGRESS]
  - renew the documentation which is now severely outdated in some places (and try and make it consistent)
  - improve the test unit (better parser + more official test vectors)
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
@@ -44,7 +44,7 @@ random -> for pseudorandom number generation (using the OS-provided CSPRNG)
 
 This way every part of the library is cleanly separated yet can share cryptographic code. It is not clear yet how much abstraction can be obtained from each individual section of the library - for "encrypt" the abstraction level is very high as block cipher modes of operation are quite modular, but for "hash" for instance it will be much lower by the very nature of how hash functions are designed.
 
-It is not yet clear how stream ciphers fit into this scheme, they may require a different interface if they can't be woven in as a primitive. But who uses dedicated stream ciphers anymore? Although I have implemented RC4 with a degenerate 1-byte block cipher (8-byte, actually, for caching/performance reasons - see rc4.c) using a dedicated "mode of operation" (STREAM), and all stream ciphers should be able to be formalized in a similar fashion, but I am not sure if this is flexible enough.
+Stream ciphers fit into the block cipher scheme by introducing a new parameter into the forward and inverse functions (only the forward function is used in stream ciphers) and feeding it an arbitrary length plaintext buffer - the forward function is required to generate the keystream of the appropriate length of the fly and exclusive-or it with the plaintext buffer to produce the ciphertext buffer. This is how the STREAM interface expects the primitive to behave.
 
 --------
 
