@@ -69,7 +69,7 @@ void ECB_EncryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         memcpy(ecb(mode->ctx)->block + ecb(mode->ctx)->available, in, cipher->primitive->szBlock - ecb(mode->ctx)->available);
 
         /* Encrypt the block. */
-        cipher->primitive->fForward(cipher, ecb(mode->ctx)->block);
+        cipher->primitive->fForward(cipher, ecb(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Write back the block to the output. */
         memcpy(out, ecb(mode->ctx)->block, cipher->primitive->szBlock);
@@ -106,7 +106,7 @@ void ECB_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         memcpy(ecb(mode->ctx)->block + ecb(mode->ctx)->available, in, cipher->primitive->szBlock - ecb(mode->ctx)->available);
 
         /* Decrypt the block. */
-        cipher->primitive->fInverse(cipher, ecb(mode->ctx)->block);
+        cipher->primitive->fInverse(cipher, ecb(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Write back the block to the output. */
         memcpy(out, ecb(mode->ctx)->block, cipher->primitive->szBlock);
@@ -152,7 +152,7 @@ int ECB_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
         memset(ecb(mode->ctx)->block + ecb(mode->ctx)->available, padding, padding);
 
         /* Encrypt the last block. */
-        cipher->primitive->fForward(cipher, ecb(mode->ctx)->block);
+        cipher->primitive->fForward(cipher, ecb(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Write it out to the buffer. */
         memcpy(out, ecb(mode->ctx)->block, cipher->primitive->szBlock);
@@ -179,7 +179,7 @@ int ECB_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     else
     {
         /* Otherwise, decrypt the last block. */
-        cipher->primitive->fInverse(cipher, ecb(mode->ctx)->block);
+        cipher->primitive->fInverse(cipher, ecb(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Read the amount of padding. */
         padding = *(ecb(mode->ctx)->block + cipher->primitive->szBlock - 1);

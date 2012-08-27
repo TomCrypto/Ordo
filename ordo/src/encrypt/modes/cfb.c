@@ -45,7 +45,7 @@ int CFB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void*
     memcpy(cfb(mode->ctx)->iv, iv, cipher->primitive->szBlock);
 
     /* Compute the initial keystream block. */
-    cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv);
+    cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv, cipher->primitive->szBlock);
     cfb(mode->ctx)->remaining = cipher->primitive->szBlock;
 
     /* Return success. */
@@ -74,7 +74,7 @@ void CFB_EncryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         if (cfb(mode->ctx)->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-            cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv);
+            cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv, cipher->primitive->szBlock);
             cfb(mode->ctx)->remaining = cipher->primitive->szBlock;
         }
 
@@ -115,7 +115,7 @@ void CFB_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         if (cfb(mode->ctx)->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-            cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv);
+            cipher->primitive->fForward(cipher, cfb(mode->ctx)->iv, cipher->primitive->szBlock);
             cfb(mode->ctx)->remaining = cipher->primitive->szBlock;
         }
 

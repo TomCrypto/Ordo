@@ -10,24 +10,13 @@
 #include <encrypt/encrypt.h>
 #include <encrypt/modes/stream.h>
 
-/*! This is extra context space required by the STREAM mode to store the counter and the amount of state not used.*/
-typedef struct STREAM_ENCRYPT_CONTEXT
-{
-    /*! The keystream buffer. */
-    void* keystream;
-    /*! The amount of bytes of unused state remaining before the state is to be renewed. */
-    size_t remaining;
-} STREAM_ENCRYPT_CONTEXT;
-
 /*! Shorthand macro for context casting. */
 #define stream(ctx) ((STREAM_ENCRYPT_CONTEXT*)ctx)
 
 void STREAM_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context space. */
-    mode->ctx = salloc(sizeof(STREAM_ENCRYPT_CONTEXT));
-    stream(mode->ctx)->keystream = salloc(cipher->primitive->szBlock);
-    stream(mode->ctx)->remaining = 0;
+    /* This mode of operation maintains no state. */
+    return;
 }
 
 /*! Initializes a STREAM context (the primitive and mode must have been filled in).
@@ -39,10 +28,6 @@ void STREAM_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
   \return Returns true on success, false on failure. */
 int STREAM_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
 {
-    /* Compute the initial keystream block. */
-    cipher->primitive->fForward(cipher, stream(mode->ctx)->keystream);
-    stream(mode->ctx)->remaining = cipher->primitive->szBlock;
-
     /* Return success. */
     return ORDO_ESUCCESS;
 }
@@ -57,35 +42,14 @@ int STREAM_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, vo
   \remark The out buffer must be the same size as the in buffer, as STREAM is a streaming mode. */
 void STREAM_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-    /* Variable to store how much data can be processed per iteration. */
-    size_t process = 0;
+    /* Copy the plaintext to the ciphertext buffer. */
+    memcpy(out, in, inlen);
 
-    /* Initialize the output size. */
-    *outlen = 0;
+    /* Simply generate a keystream of the right length and exclusive-or it with the plaintext. */
+    cipher->primitive->fForward(cipher, out, inlen);
 
-    /* Go over the input buffer byte per byte. */
-    while (inlen != 0)
-    {
-        /* If there is no data left in the context block, update. */
-        if (stream(mode->ctx)->remaining == 0)
-        {
-            /* STREAM update (simply renew the state). */
-            cipher->primitive->fForward(cipher, stream(mode->ctx)->keystream);
-            stream(mode->ctx)->remaining = cipher->primitive->szBlock;
-        }
-
-        /* Compute the amount of data to process. */
-        process = (inlen < stream(mode->ctx)->remaining) ? inlen : stream(mode->ctx)->remaining;
-
-        /* Process this amount of data. */
-        memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)stream(mode->ctx)->keystream + cipher->primitive->szBlock - stream(mode->ctx)->remaining, process);
-        stream(mode->ctx)->remaining -= process;
-        *outlen += process;
-        inlen -= process;
-        out += process;
-        in += process;
-    }
+    /* Set the output length. */
+    *outlen = inlen;
 }
 
 /*! Finalizes an encryption context in STREAM mode. The context must have been allocated and initialized.
@@ -105,9 +69,7 @@ int STREAM_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, u
 
 void STREAM_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Free context space. */
-    sfree(stream(mode->ctx)->keystream, cipher->primitive->szBlock);
-    sfree(mode->ctx, sizeof(STREAM_ENCRYPT_CONTEXT));
+    /* Nothing to free... */
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
     encryptPerformance(NullCipher, CFB, 32, buffer, BUFSIZE);
     encryptPerformance(NullCipher, OFB, 32, buffer, BUFSIZE);
 
+    encryptPerformance(RC4, STREAM, 32, buffer, BUFSIZE);
+
     /* Free the buffer used for tests. */
     free(buffer);
 

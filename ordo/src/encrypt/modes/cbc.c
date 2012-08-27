@@ -76,7 +76,7 @@ void CBC_EncryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipher->primitive->szBlock);
 
         /* Encrypt the block. */
-        cipher->primitive->fForward(cipher, cbc(mode->ctx)->block);
+        cipher->primitive->fForward(cipher, cbc(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Set this as the new running IV. */
         memcpy(cbc(mode->ctx)->iv, cbc(mode->ctx)->block, cipher->primitive->szBlock);
@@ -119,7 +119,7 @@ void CBC_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
         memcpy(out, cbc(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Decrypt the block. */
-        cipher->primitive->fInverse(cipher, cbc(mode->ctx)->block);
+        cipher->primitive->fInverse(cipher, cbc(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Exclusive-or the block with the running IV. */
         xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipher->primitive->szBlock);
@@ -174,7 +174,7 @@ int CBC_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
         xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipher->primitive->szBlock);
 
         /* Encrypt the last block. */
-        cipher->primitive->fForward(cipher, cbc(mode->ctx)->block);
+        cipher->primitive->fForward(cipher, cbc(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Write it out to the buffer. */
         memcpy(out, cbc(mode->ctx)->block, cipher->primitive->szBlock);
@@ -201,7 +201,7 @@ int CBC_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     else
     {
         /* Otherwise, decrypt the last block. */
-        cipher->primitive->fInverse(cipher, cbc(mode->ctx)->block);
+        cipher->primitive->fInverse(cipher, cbc(mode->ctx)->block, cipher->primitive->szBlock);
 
         /* Exclusive-or the last block with the running IV. */
         xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipher->primitive->szBlock);

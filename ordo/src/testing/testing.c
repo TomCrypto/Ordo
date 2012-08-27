@@ -182,6 +182,7 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
 {
     /* Simply compare against the existing list. */
     if (strcmp(name, NullCipher->name) == 0) return NullCipher;
+    if (strcmp(name, RC4->name) == 0) return RC4;
     return 0;
 }
 

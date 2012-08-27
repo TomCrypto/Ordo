@@ -43,7 +43,7 @@ int CTR_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void*
     memcpy(ctr(mode->ctx)->counter, ctr(mode->ctx)->iv, cipher->primitive->szBlock);
 
     /* Compute the initial keystream block. */
-    cipher->primitive->fForward(cipher, ctr(mode->ctx)->iv);
+    cipher->primitive->fForward(cipher, ctr(mode->ctx)->iv, cipher->primitive->szBlock);
     ctr(mode->ctx)->remaining = cipher->primitive->szBlock;
 
     /* Return success. */
@@ -67,7 +67,7 @@ void CTR_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
             /* CTR update (increment counter, copy counter into IV, encrypt IV). */
             incBuffer(ctr(mode->ctx)->counter, cipher->primitive->szBlock);
             memcpy(ctr(mode->ctx)->iv, ctr(mode->ctx)->counter, cipher->primitive->szBlock);
-            cipher->primitive->fForward(cipher, ctr(mode->ctx)->iv);
+            cipher->primitive->fForward(cipher, ctr(mode->ctx)->iv, cipher->primitive->szBlock);
             ctr(mode->ctx)->remaining = cipher->primitive->szBlock;
         }
 

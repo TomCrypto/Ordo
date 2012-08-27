@@ -60,6 +60,7 @@
 		<Unit filename="include/encrypt/modes/stream.h" />
 		<Unit filename="include/ordo.h" />
 		<Unit filename="include/primitives/ciphers/nullcipher.h" />
+		<Unit filename="include/primitives/ciphers/rc4.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
 		<Unit filename="include/testing/testing.h" />
@@ -97,6 +98,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/ciphers/nullcipher.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/primitives/ciphers/rc4.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/primitives.c">

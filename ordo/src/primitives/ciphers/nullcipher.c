@@ -23,12 +23,12 @@ int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize,
     return ORDO_ESUCCESS;
 }
 
-void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block)
+void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len)
 {
     /* Identity permutation... do nothing. */
 }
 
-void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block)
+void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len)
 {
     /* Idem! */
 }

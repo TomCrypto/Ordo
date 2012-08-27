@@ -16,9 +16,9 @@ void NullCipher_Create(CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params);
 
-void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block);
+void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len);
 
-void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block);
+void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len);
 
 void NullCipher_Free(CIPHER_PRIMITIVE_CONTEXT* cipher);
 

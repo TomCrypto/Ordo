@@ -36,7 +36,7 @@ typedef void (*CIPHER_ALLOC)(CIPHER_PRIMITIVE_CONTEXT*);
 typedef int (*CIPHER_INIT)(CIPHER_PRIMITIVE_CONTEXT*, void*, size_t, void*);
 
 /*! Prototype for cipher primitive context forward and inverse updates. */
-typedef void (*CIPHER_UPDATE)(CIPHER_PRIMITIVE_CONTEXT*, void*);
+typedef void (*CIPHER_UPDATE)(CIPHER_PRIMITIVE_CONTEXT*, void*, size_t);
 
 /*! This structure defines a symmetric cipher primitive. */
 typedef struct CIPHER_PRIMITIVE
@@ -62,5 +62,8 @@ void unloadPrimitives();
 
 /*! The NullCipher primitive. */
 CIPHER_PRIMITIVE* NullCipher;
+
+/*! The RC4 primitive. */
+CIPHER_PRIMITIVE* RC4;
 
 #endif
