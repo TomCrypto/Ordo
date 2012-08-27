@@ -60,11 +60,5 @@ void unloadPrimitives();
 
 /*! The NullCipher primitive. */
 CIPHER_PRIMITIVE* NullCipher;
-/*! The Threefish-256 primitive. */
-CIPHER_PRIMITIVE* Threefish256;
-/*! The RC4 primitive. */
-CIPHER_PRIMITIVE* RC4;
-/*! The RC5-64/16 primitive. */
-CIPHER_PRIMITIVE* RC5_64_16;
 
 #endif

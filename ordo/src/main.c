@@ -38,17 +38,7 @@ int main(int argc, char* argv[])
     unsigned char* buffer = malloc(BUFSIZE);
 
     /* Test some cipher primitives & encryption modes. */
-    encryptPerformance(Threefish256, ECB, 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256, CBC, 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256, CTR, 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256, OFB, 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256, CFB, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, ECB, 64, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CBC, 5, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CTR, 19, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, OFB, 44, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CFB, 29, buffer, BUFSIZE);
-    encryptPerformance(RC4, STREAM, 64, buffer, BUFSIZE);
+    encryptPerformance(NullCipher, CTR, 32, buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */
     free(buffer);

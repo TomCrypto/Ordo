@@ -115,18 +115,8 @@ int encryptFinal(ENCRYPT_CONTEXT* ctx, unsigned char* out, size_t* outlen);
  \remark Once this function returns, the passed context may no longer be used for encryption. */
 void encryptFree(ENCRYPT_CONTEXT* ctx);
 
-/*! The ECB (Electronic CodeBook) mode of operation. */
-ENCRYPT_MODE* ECB;
-/*! The CBC (Ciphertext Block Chaining) mode of operation. */
-ENCRYPT_MODE* CBC;
 /*! The CTR (CounTeR) mode of operation. */
 ENCRYPT_MODE* CTR;
-/*! The OFB (Output FeedBack) mode of operation. */
-ENCRYPT_MODE* OFB;
-/*! The CFB (Cipher FeedBack) mode of operation. */
-ENCRYPT_MODE* CFB;
-/*! The STREAM (stream ciphers only) mode of operation. */
-ENCRYPT_MODE* STREAM;
 
 /*! Loads all encryption modes of operation. */
 void loadEncryptModes();

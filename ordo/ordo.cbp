@@ -52,17 +52,9 @@
 		<Unit filename="include/common/ordotypes.h" />
 		<Unit filename="include/common/securemem.h" />
 		<Unit filename="include/encrypt/encrypt.h" />
-		<Unit filename="include/encrypt/modes/cbc.h" />
-		<Unit filename="include/encrypt/modes/cfb.h" />
 		<Unit filename="include/encrypt/modes/ctr.h" />
-		<Unit filename="include/encrypt/modes/ecb.h" />
-		<Unit filename="include/encrypt/modes/ofb.h" />
-		<Unit filename="include/encrypt/modes/stream.h" />
 		<Unit filename="include/ordo.h" />
 		<Unit filename="include/primitives/ciphers/nullcipher.h" />
-		<Unit filename="include/primitives/ciphers/rc4.h" />
-		<Unit filename="include/primitives/ciphers/rc5_64_16.h" />
-		<Unit filename="include/primitives/ciphers/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
 		<Unit filename="include/testing/testing.h" />
@@ -75,22 +67,7 @@
 		<Unit filename="src/encrypt/encrypt.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/cbc.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/encrypt/modes/cfb.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/encrypt/modes/ctr.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/encrypt/modes/ecb.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/encrypt/modes/ofb.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/encrypt/modes/stream.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/main.c">
@@ -99,17 +76,7 @@
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/primitives/ciphers/asm/threefish256.S" />
 		<Unit filename="src/primitives/ciphers/nullcipher.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/primitives/ciphers/rc4.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/primitives/ciphers/rc5_64_16.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/primitives/ciphers/threefish256.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/primitives.c">
