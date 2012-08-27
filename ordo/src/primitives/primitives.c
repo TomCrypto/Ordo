@@ -3,6 +3,7 @@
 /* Primitive list. */
 #include <primitives/ciphers/nullcipher.h>
 #include <primitives/ciphers/rc4.h>
+#include <primitives/ciphers/rc5_64_16.h>
 
 /* Loads all primitives. */
 void loadPrimitives()
@@ -13,6 +14,9 @@ void loadPrimitives()
 
     RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
     RC4_SetPrimitive(RC4);
+
+    RC5_64_16 = malloc(sizeof(CIPHER_PRIMITIVE));
+    RC5_64_16_SetPrimitive(RC5_64_16);
 
     /* Hash primitives. */
     /* empty :[ */
