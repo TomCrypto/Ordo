@@ -133,6 +133,9 @@ char* readToken(char* line, size_t n)
     end = start;
     while ((*(line + end) != ':') && (*(line + end) != 0x00) && (*(line + end) != '#')  && (*(line + end) != '~')) end++;
 
+    /* If the token is empty, just return zero. */
+    if (end == start) return 0;
+
     /* Allocate a large enough output string. */
     out = malloc(end - start + 1);
 
@@ -151,7 +154,7 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
     int tmp = 0;
 
     /* If we got an empty string, return null. */
-    if (strlen(str) == 0)
+    if ((str == 0) || (strlen(str) == 0))
     {
         *outlen = 0;
         return 0;

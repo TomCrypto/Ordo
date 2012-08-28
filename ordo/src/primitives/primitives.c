@@ -26,5 +26,6 @@ void loadPrimitives()
 void unloadPrimitives()
 {
     free(NullCipher);
+    free(Threefish256);
     free(RC4);
 }

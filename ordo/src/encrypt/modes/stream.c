@@ -16,7 +16,6 @@
 void STREAM_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* This mode of operation maintains no state. */
-    return;
 }
 
 /*! Initializes a STREAM context (the primitive and mode must have been filled in).
@@ -43,7 +42,7 @@ int STREAM_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, vo
 void STREAM_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Copy the plaintext to the ciphertext buffer. */
-    memcpy(out, in, inlen);
+    memmove(out, in, inlen);
 
     /* Simply generate a keystream of the right length and exclusive-or it with the plaintext. */
     cipher->primitive->fForward(cipher, out, inlen);

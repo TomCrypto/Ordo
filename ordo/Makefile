@@ -1,5 +1,5 @@
 # Debug flags (no optimization, native feature flags, warnings, and ordo debug flag)
-CFLAGS_DEBUG = -O0 -Wall -Wno-implicit-function-declaration -march=native -mno-avx -D ORDO_DEBUG
+CFLAGS_DEBUG = -O0 -Wall -Wno-implicit-function-declaration -march=native -mno-avx -D ORDO_DEBUG -ggdb
 
 # Release flags (full optimization, native feature flags, warnings)
 CFLAGS_RELEASE = -O6 -Wall -Wno-implicit-function-declaration -march=native -mno-avx
