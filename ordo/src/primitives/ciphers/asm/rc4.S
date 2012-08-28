@@ -34,11 +34,10 @@
 /* This code is environment-sensitive. */
 #include <common/environment.h>
 
+.globl RC4_Update_ASM
+
 /* This is x64 assembler for Linux. */
 #if (ENVIRONMENT_64 && ABI_LINUX_64)
-.text
-.align 16
-.globl RC4_Update_ASM
 RC4_Update_ASM:
 	push	%rbp
 	push	%rbx
