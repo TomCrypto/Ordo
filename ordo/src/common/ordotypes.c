@@ -18,36 +18,18 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
 {
     /* Optimization will do the rest. */
     while (len--) *(dst++) ^= *(src++);
-
-    #if 0
-    /* Process as many word-size chunks as possible. */
-    while (len >= sizeof(size_t))
-    {
-        *((size_t *)dst) ^= *((size_t *)src);
-        dst += sizeof(size_t);
-        src += sizeof(size_t);
-        len -= sizeof(size_t);
-    }
-
-    /* Process any leftover bytes. */
-    while (len--) *(dst++) ^= *(src++);
-    #endif
 }
 
 /* Increments a counter of arbitrary size as if it were a len-byte integer
    Propagation is done from left-to-right in memory storage order. */
 inline void incBuffer(unsigned char* n, size_t len)
 {
-    /* Increment the first byte. */
-    size_t t;
-    int carry = (++*n == 0);
+    /* Set the initial carry to one. */
+    size_t carry = 1;
+    size_t t = 0;
 
     /* Go over each byte, and propagate the carry. */
-    for (t = 1; t < len; t++)
-    {
-        if (carry == 1) carry = (++*(n + t) == 0);
-        else return;
-    }
+    while (carry && (++t <= len)) carry = (++*(n + t - 1) == 0);
 }
 
 /* Returns a readable error message. */
