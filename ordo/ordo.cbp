@@ -61,7 +61,6 @@
 		<Unit filename="include/ordo.h" />
 		<Unit filename="include/primitives/ciphers/nullcipher.h" />
 		<Unit filename="include/primitives/ciphers/rc4.h" />
-		<Unit filename="include/primitives/ciphers/rc5_64_16.h" />
 		<Unit filename="include/primitives/ciphers/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
@@ -105,9 +104,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/ciphers/rc4.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/primitives/ciphers/rc5_64_16.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/ciphers/threefish256.c">

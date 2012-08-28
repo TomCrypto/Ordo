@@ -2,9 +2,8 @@
 
 /* Primitive list. */
 #include <primitives/ciphers/nullcipher.h>
-#include <primitives/ciphers/rc4.h>
-#include <primitives/ciphers/rc5_64_16.h>
 #include <primitives/ciphers/threefish256.h>
+#include <primitives/ciphers/rc4.h>
 
 /* Loads all primitives. */
 void loadPrimitives()
@@ -13,14 +12,11 @@ void loadPrimitives()
     NullCipher = malloc(sizeof(CIPHER_PRIMITIVE));
     NullCipher_SetPrimitive(NullCipher);
 
-    RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
-    RC4_SetPrimitive(RC4);
-
-    RC5_64_16 = malloc(sizeof(CIPHER_PRIMITIVE));
-    RC5_64_16_SetPrimitive(RC5_64_16);
-
     Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE));
     Threefish256_SetPrimitive(Threefish256);
+
+    RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
+    RC4_SetPrimitive(RC4);
 
     /* Hash primitives. */
     /* empty :[ */

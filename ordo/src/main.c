@@ -43,11 +43,6 @@ int main(int argc, char* argv[])
     encryptPerformance(Threefish256, CTR, 32, buffer, BUFSIZE);
     encryptPerformance(Threefish256, CFB, 32, buffer, BUFSIZE);
     encryptPerformance(Threefish256, OFB, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, ECB, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CBC, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CTR, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, CFB, 32, buffer, BUFSIZE);
-    encryptPerformance(RC5_64_16, OFB, 32, buffer, BUFSIZE);
     encryptPerformance(RC4, STREAM, 32, buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */

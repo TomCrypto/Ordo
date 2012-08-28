@@ -183,7 +183,6 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
     /* Simply compare against the existing list. */
     if (strcmp(name, NullCipher->name) == 0) return NullCipher;
     if (strcmp(name, Threefish256->name) == 0) return Threefish256;
-    if (strcmp(name, RC5_64_16->name) == 0) return RC5_64_16;
     if (strcmp(name, RC4->name) == 0) return RC4;
     return 0;
 }
@@ -209,7 +208,6 @@ int runEncryptTest(char* line, int n)
      * hexadecimal notation. If an iv is not required, it may be omitted between two colons. */
 
     /* Parse the test vector and initialize variables. */
-    char* pad = readToken(line, 7);
     char* primitiveName = readToken(line, 1);
     char* modeName = readToken(line, 2);
     size_t keylen, ivlen, plaintextlen, ciphertextlen;
@@ -217,7 +215,6 @@ int runEncryptTest(char* line, int n)
     unsigned char* iv = hexToBuffer(readToken(line, 4), &ivlen);
     unsigned char* plaintext = hexToBuffer(readToken(line, 5), &plaintextlen);
     unsigned char* ciphertext = hexToBuffer(readToken(line, 6), &ciphertextlen);
-    int padding = atoi(pad);
 
     /* Create a temporary buffer to store the computed ciphertext and plaintext. */
     unsigned char* computedPlaintext = malloc(plaintextlen);
@@ -240,7 +237,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the encryption test. */
-    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, padding);
+    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -255,7 +252,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the decryption test. */
-    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, padding);
+    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -276,7 +273,6 @@ int runEncryptTest(char* line, int n)
     free(ciphertext);
     free(key);
     free(iv);
-    free(pad);
 
     /* Report success. */
     printf("[+] Test vector #%d (%s/%s) passed!\n", n, primitiveName, modeName);
@@ -378,7 +374,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     start = clock();
 
     /* Encryption test. */
-    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0);
+    error = ordoEncrypt(buffer, bufferSize - primitiveBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv);
     if (error < 0) printf("[!] An error occurred during encryption [%s].", errorMsg(error));
     else
     {
@@ -390,7 +386,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0);
+        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv);
         if (error < 0) printf("[!] An error occurred during decryption [%s].", errorMsg(error));
         else
         {

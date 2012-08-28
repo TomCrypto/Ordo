@@ -22,6 +22,8 @@ typedef struct ECB_ENCRYPT_CONTEXT
     unsigned char* block;
     /*! The amount of bytes of plaintext or ciphertext currently in the temporary block. */
     size_t available;
+    /*! Whether to pad the ciphertext. */
+    size_t padding;
 } ECB_ENCRYPT_CONTEXT;
 
 /*! Shorthand macro for context casting. */
@@ -43,8 +45,11 @@ void ECB_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
   \param iv Set this to zero, as the ECB mode uses no initialization vector.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int ECB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
+int ECB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, ECB_PARAMS* params)
 {
+    /* Check and save the parameters. */
+    ecb(mode->ctx)->padding = (params == 0) ? 1 : params->padding;
+
     /* Return success. */
     return ORDO_ESUCCESS;
 }
@@ -100,7 +105,7 @@ void ECB_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
     *outlen = 0;
 
     /* Process all full blocks except the last potential block (if padding is disabled, also process the last block). */
-    while (ecb(mode->ctx)->available + inlen > cipher->primitive->szBlock - (1 - mode->padding))
+    while (ecb(mode->ctx)->available + inlen > cipher->primitive->szBlock - (1 - ecb(mode->ctx)->padding))
     {
         /* Copy it in, and process it. */
         memcpy(ecb(mode->ctx)->block + ecb(mode->ctx)->available, in, cipher->primitive->szBlock - ecb(mode->ctx)->available);
@@ -135,7 +140,7 @@ int ECB_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (mode->padding == 0)
+    if (ecb(mode->ctx)->padding == 0)
     {
         /* If there is data left, return an error. */
         if (ecb(mode->ctx)->available != 0) return ORDO_LEFTOVER;
@@ -168,7 +173,7 @@ int ECB_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (!mode->padding)
+    if (!ecb(mode->ctx)->padding)
     {
         /* If there is data left, return an error. */
         if (ecb(mode->ctx)->available != 0) return ORDO_LEFTOVER;

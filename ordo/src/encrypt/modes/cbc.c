@@ -22,6 +22,8 @@ typedef struct CBC_ENCRYPT_CONTEXT
     unsigned char* block;
     /*! The amount of bytes of plaintext or ciphertext currently in the temporary block. */
     size_t available;
+    /*! Whether to pad the ciphertext. */
+    size_t padding;
 } CBC_ENCRYPT_CONTEXT;
 
 /*! Shorthand macro for context casting. */
@@ -44,10 +46,13 @@ void CBC_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
   \param iv A pointer to the IV to use for encryption.
   \return Returns 0 on success, and a negative value on failure. Possible errors are:
   ORDO_EKEYSIZE: the key size is not valid for the context's primitive. */
-int CBC_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
+int CBC_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, CBC_PARAMS* params)
 {
     /* Copy the IV (required) into the context IV. */
     memcpy(cbc(mode->ctx)->iv, iv, cipher->primitive->szBlock);
+
+    /* Check and save the parameters. */
+    cbc(mode->ctx)->padding = (params == 0) ? 1 : params->padding;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -110,7 +115,7 @@ void CBC_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
     *outlen = 0;
 
     /* Process all full blocks except the last potential block (if padding is disabled, also process the last block). */
-    while (cbc(mode->ctx)->available + inlen > cipher->primitive->szBlock - (1 - mode->padding))
+    while (cbc(mode->ctx)->available + inlen > cipher->primitive->szBlock - (1 - cbc(mode->ctx)->padding))
     {
         /* Copy it in, and process it. */
         memcpy(cbc(mode->ctx)->block + cbc(mode->ctx)->available, in, cipher->primitive->szBlock - cbc(mode->ctx)->available);
@@ -154,7 +159,7 @@ int CBC_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (mode->padding == 0)
+    if (cbc(mode->ctx)->padding == 0)
     {
         /* If there is data left, return an error. */
         if (cbc(mode->ctx)->available != 0) return ORDO_LEFTOVER;
@@ -190,7 +195,7 @@ int CBC_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (!mode->padding)
+    if (!cbc(mode->ctx)->padding)
     {
         /* If there is data left, return an error. */
         if (cbc(mode->ctx)->available != 0) return ORDO_LEFTOVER;

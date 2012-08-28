@@ -61,7 +61,7 @@ void unloadEncryptModes()
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */
-ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding)
+ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction)
 {
     /* Allocate the cipher and mode contexts. */
     ENCRYPTION_CONTEXT* ctx = salloc(sizeof(ENCRYPTION_CONTEXT));
@@ -78,7 +78,6 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
 
     /* Set context fields and return. */
     ctx->mode->direction = direction;
-    ctx->mode->padding = padding;
     return ctx;
 }
 

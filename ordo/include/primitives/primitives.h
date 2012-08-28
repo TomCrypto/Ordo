@@ -66,9 +66,6 @@ CIPHER_PRIMITIVE* NullCipher;
 /*! The RC4 primitive. */
 CIPHER_PRIMITIVE* RC4;
 
-/*! The RC5-64/16 primitive. */
-CIPHER_PRIMITIVE* RC5_64_16;
-
 /*! The Threefish-256 primitive. */
 CIPHER_PRIMITIVE* Threefish256;
 

@@ -24,9 +24,8 @@ void unloadOrdo();
  \param keySize This represents the length, in bytes, of the key buffer.
  \param tweak This points to the tweak used in the cipher (this is an optional argument).
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV).
- \param padding Whether to use padding or not. If the mode does not use padding, this is ignored.
  \return Returns 0 on success, a negative error code on failure. */
-int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, int padding);
+int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv);
 
 /*! This convenience function decrypts a buffer of a given length with the provided parameters.
  \param in This points to a buffer of ciphertext.
@@ -39,8 +38,7 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
  \param keySize This represents the length, in bytes, of the key buffer.
  \param tweak This points to the tweak used in the cipher (this is an optional argument).
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV).
- \param padding Whether to use padding or not. If the mode does not use padding, this is ignored.
  \return Returns 0 on success, a negative error code on failure. */
-int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, int padding);
+int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv);
 
 #endif

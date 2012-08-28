@@ -23,12 +23,12 @@ void unloadOrdo()
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
-int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, int padding)
+int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv)
 {
     int error;
     size_t total = 0;
 
-    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 1, padding);
+    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 1);
 
     error = encryptInit(ctx, key, keySize, iv, 0, 0);
     if (error < 0) return error;
@@ -73,12 +73,12 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 }
 
 /* This convenience function decrypts a buffer with a given key, tweak and IV. */
-int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, int padding)
+int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv)
 {
     int error;
     size_t total = 0;
 
-    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 0, padding);
+    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 0);
 
     error = encryptInit(ctx, key, keySize, iv, 0, 0);
     if (error < 0) return error;

@@ -31,27 +31,35 @@ void Threefish256_Create(CIPHER_PRIMITIVE_CONTEXT* cipher)
     cipher->cipher = salloc(sizeof(THREEFISH256_SUBKEYS));
 }
 
-int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, void* params)
+int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params)
 {
     size_t t;
     uint64_t keyWords[5];
+    uint64_t tweakWords[3];
 
     /* Only a 256-bit key is permitted. */
     if (keySize != 32) return ORDO_EKEYSIZE;
+
+    /* Read the tweak in the parameters (if none is specified, assume zero). */
+    tweakWords[0] = (params == 0) ? 0 : params->tweak[0];
+    tweakWords[1] = (params == 0) ? 0 : params->tweak[1];
 
     /* Read the key. */
     keyWords[0] = key->words[0];
     keyWords[1] = key->words[1];
     keyWords[2] = key->words[2];
     keyWords[3] = key->words[3];
-    keyWords[4] = keyWords[0] ^ keyWords[1] ^ keyWords[2] ^ keyWords[3] ^ 0x1BD11BDAA9FC1A22LL;
 
-    /* Generate each subkey. */
+    /* Calculate the extended key and tweak words. */
+    keyWords[4] = keyWords[0] ^ keyWords[1] ^ keyWords[2] ^ keyWords[3] ^ 0x1BD11BDAA9FC1A22LL;
+    tweakWords[2] = tweakWords[0] ^ tweakWords[1];
+
+    /* Generate each subkey in a cyclic fashion. */
     for (t = 0; t < 19; t++)
     {
         ctx(cipher)->subkey[t].words[0] = keyWords[(t + 0) %  5];
-        ctx(cipher)->subkey[t].words[1] = keyWords[(t + 1) %  5];
-        ctx(cipher)->subkey[t].words[2] = keyWords[(t + 2) %  5];
+        ctx(cipher)->subkey[t].words[1] = keyWords[(t + 1) %  5] + tweakWords[(t + 0) % 3];
+        ctx(cipher)->subkey[t].words[2] = keyWords[(t + 2) %  5] + tweakWords[(t + 1) % 3];
         ctx(cipher)->subkey[t].words[3] = keyWords[(t + 3) %  5] + t;
     }
 

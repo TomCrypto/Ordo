@@ -29,8 +29,6 @@ typedef struct ENCRYPT_MODE_CONTEXT
     void* ctx;
     /*! Whether to encrypt or decrypt (true = encryption). */
     int direction;
-    /*! Whether padding is enabled or not. */
-    int padding;
 } ENCRYPT_MODE_CONTEXT;
 
 /*! This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */
@@ -89,7 +87,7 @@ typedef struct ENCRYPTION_CONTEXT
  \param direction This describes the direction of encryption, set to true for encryption and false for decryption.
  \param padding This describes whether padding should be used.
  \return Returns the initialized encryption context, or 0 if an error occurred. */
-ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction, int padding);
+ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction);
 
 /*! This function prepares an encryption context to be used for encryption, provided a key, tweak and initialization vector.
  \param ctx The encryption context to use
