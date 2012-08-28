@@ -17,15 +17,11 @@
 /* Secure memory allocation. */
 void* salloc(size_t size)
 {
+    /* If we reach the locked memory limit, we must return zero, as salloc must return locked memory. This should not happen
+     * in practice, as the limit is quite high and this should only be used for sensitive data such as cryptographic contexts
+     * (which contain key material and plaintext in temporary buffers) which, usually, should not take up much memory. */
     void* ptr = malloc(size);
-
-    /* This needs to be fixed - what happens if mlock fails? Should we keep going with a non-locked pointer or return zero?
-     * And why can it fail? There is a locked memory quota that cannot be exceeded per process for performance reasons, but
-     * normal usage should be nowhere close to that limit. To investigate... */
-    //if (mlock(ptr, size) != 0) return 0;
-    //else return ptr;
-    mlock(ptr, size);
-    return ptr;
+    return mlock(ptr, size) ? 0 : ptr;
 }
 
 /* Sets memory as read-only. */
@@ -37,11 +33,8 @@ int sprotect(void* ptr, size_t size)
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* Use a volatile variable to ensure the overwriting actually occurs. */
-    volatile unsigned char* val = ptr;
-
     /* Overwrite each byte with zero. */
-    while (size--) *val++ = 0;
+    while (size--) *((unsigned char volatile*)ptr + size) = 0;
 
     /* Free the memory. */
     free(ptr);

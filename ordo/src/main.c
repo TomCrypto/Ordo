@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     printf("-------- Performance tests for the encrypt module --------\n\n");
 
     /* Use a 128MB buffer size in performance tests to get decent resolution. */
-    #define BUFSIZE (1024 * 1024 * 16)
+    #define BUFSIZE (1024 * 1024 * 256)
 
     /* Allocate a large buffer to store plaintext/ciphertext. */
     unsigned char* buffer = malloc(BUFSIZE);
