@@ -363,7 +363,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     /* Randomize the plaintext buffer first, to defeat caching. */
     randomizeBuffer(buffer, bufferSize);
 
-    /* Allocate a buffer of the right size (= cipher block size) for the IV. */
+    /* Allocate a buffer of the right size (= cipher block size) for the IV. This can be zero for stream ciphers. */
     iv = malloc(primitiveBlockSize(primitive));
     memset(iv, 0, primitiveBlockSize(primitive));
 

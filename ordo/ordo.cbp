@@ -99,6 +99,7 @@
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/primitives/ciphers/asm/rc4.S" />
 		<Unit filename="src/primitives/ciphers/asm/threefish256.S" />
 		<Unit filename="src/primitives/ciphers/nullcipher.c">
 			<Option compilerVar="CC" />

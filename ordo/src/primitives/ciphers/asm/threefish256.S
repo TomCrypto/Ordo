@@ -1,5 +1,5 @@
 /**
- * @file threefish256_asm.S
+ * @file threefish256.S
  * This file contains an optimized, hand-written assembler version of the Threefish-256 cipher primitive, for x64 processors.
  * Only the forward and inverse permutations are included here, the key schedule and other functions remain in the standard
  * implementation (threefish256.c). Note conditional compilation has been added here _and_ in threefish.c to ensure that when
@@ -19,6 +19,8 @@
 /* Declarations (this should match the header declaration names). */
 .globl Threefish256_Forward_ASM
 .globl Threefish256_Inverse_ASM
+.type Threefish256_Forward_ASM,@function
+.type Threefish256_Inverse_ASM,@function
 
 /* This is x64 assembler for Linux. */
 #if (ENVIRONMENT_64 && ABI_LINUX_64)
