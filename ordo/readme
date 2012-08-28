@@ -16,10 +16,8 @@ Current work is focused towards finishing the cipher interface. Important todo's
  - improve the test unit (better parser + more official test vectors)
  - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
  - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way [WORK IN PROGRESS]
- - fix a tiny memory leak in the runEncryptTest function (only leaks a couple bytes per test vector, low priority)
 
 Other todo's to keep in mind:
- - distribute the #includes in a more coherent fashion (right now they are scattered wherever they are needed)
  - get Ordo up and running as an actual library (possibly including the test driver) once the cipher API is done
 
 Documentation: The code in a few headers is documented for Doxygen. The doxyfile is not included but can easily be regenerated (it's just a configuration file).
@@ -29,7 +27,7 @@ Documentation: The code in a few headers is documented for Doxygen. The doxyfile
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file and the code in /testing/ to know more about this. Note the test vectors are sort of artificial so far (the only "official" ones are the first Threefish-256/ECB vector and RC4/STREAM one), but proper ones will be added once more cipher primitives are implemented.
 
 CIPHERS > Modes of operation implemented: ECB, CBC, OFB, CFB, CTR, STREAM
-CIPHERS > Primitives implemented: NullCipher, Threefish-256 [+ASM-optimized], RC4, RC5-64/16
+CIPHERS > Primitives implemented: NullCipher, Threefish-256 [ASM-optimized for x86_64], RC4 [ASM-optimized for x86_64]
 /!\ Threefish-256 and RC5-64/16 have not been extensively checked against test vectors yet, RC4 has though! /!\
 CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
 
@@ -52,9 +50,10 @@ Please note that "NullCipher" is a test cipher which does absolutely nothing and
 
 --------
 
-Please note that the RC5-64/16 test vector is currently disabled for technical reasons (work is in progress on the cipher, along with the whole primitive interface).
+List of define flags to pass during compilation and their actions:
+ORDO_DEBUG: indicates this is a debug build, some specific features may be disabled if this flag is enabled (right now it does nothing except print that the flag is enabled at the very beginning)
 
---------
+-------
 
 The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different code path for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
 

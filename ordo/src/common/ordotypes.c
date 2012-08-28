@@ -6,7 +6,7 @@ inline int padCheck(unsigned char* buffer, unsigned char padding)
     /* Iterate over all padding bytes at the end of the block. */
     size_t t;
     for (t = 0; t < padding; t++)
-        if ((unsigned char)*(buffer + t) != padding)
+        if (*(buffer + t) != padding)
             return 0;
 
     /* All bytes are valid, the padding is acceptable. */
