@@ -48,8 +48,7 @@ void sfree(void* ptr, size_t size)
 void* salloc(size_t size)
 {
     void* ptr = VirtualAlloc(0, size, MEM_COMMIT, PAGE_READWRITE);
-    VirtualLock(ptr, size);
-    return ptr;
+    return VirtualLock(ptr, size) ? ptr : 0;
 }
 
 /* Sets memory as read-only. */
@@ -64,11 +63,8 @@ int sprotect(void* ptr, size_t size)
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* Basically, use a volatile variable to ensure the overwriting actually occurs. */
-    volatile unsigned char* val = ptr;
-
     /* Overwrite each byte with zero. */
-    while (size--) *val++ = 0;
+    while (size--) *((unsigned char volatile*)ptr + size) = 0;
 
     /* Free the memory. */
     VirtualFree(ptr, 0, MEM_RELEASE);
