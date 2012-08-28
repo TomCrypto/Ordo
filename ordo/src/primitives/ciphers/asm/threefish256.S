@@ -19,8 +19,6 @@
 /* Declarations (this should match the header declaration names). */
 .globl Threefish256_Forward_ASM
 .globl Threefish256_Inverse_ASM
-.type Threefish256_Forward_ASM,@function
-.type Threefish256_Inverse_ASM,@function
 
 /* This is x64 assembler for Linux. */
 #if (ENVIRONMENT_64 && ABI_LINUX_64)

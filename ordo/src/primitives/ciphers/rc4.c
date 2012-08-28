@@ -8,6 +8,8 @@
  * Note this implementation of RC4 drops the first 2048 bytes of the keystream by default for security reasons, the drop amount can be changed
  * upon key schedule via the params parameter (a pointer to an RC4_PARAMS struct which contains a drop field to select the amount to drop.
  *
+ * \todo Better ABI translation for Windows assembler implementation (right now it's a brute force push/pop/swap to explicitly translate parameter passing).
+ *
  * @see rc4.h
  */
 
