@@ -3,15 +3,19 @@
 
 /**
  * @file environment.h
- * Precompilation environment decision unit. This will decide which codepaths to use for Ordo to maximize performance
- * and compatibility. Make sure you include this unit whenever you need to run different code on different platforms.
+ *
+ * \brief Precompilation environment decision unit.
+ *
+ *  This header will decide which codepaths to use for Ordo to maximize performance  and compatibility. Make sure you
+ * include this header whenever you need to run different code on different platforms.
  *
  * Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile.
+ * Note the users should never need to interact with this header when using Ordo - this is for internal use only.
  *
  * \todo Implement more platforms (and make sure they all work)
  */
 
-/** These are environment flags, which must be set to sensible values. */
+/* These are environment flags, which must be set to sensible values. */
 
 /* Decides what platform Ordo is being compiled under. */
 #if _WIN32 || _WIN64
@@ -73,11 +77,10 @@
 #error "Cannot recognize calling convention."
 #endif
 
-/** These are feature flags used to enable various optimizations.
-  * Note these can be overriden via your compiler's options, since
-  * these feature flags are being read from compiler defines.
-  * (for instance, running in debug mode will usually disable
-     most if not all of those features). */
+/* These are feature flags used to enable various optimizations.
+ * Note these can be overriden via your compiler's options, since
+ * these feature flags are being read from compiler defines. */
+
 
 #ifdef __MMX__                  // MMX instructions (64-bit SIMD)
 #define FEATURE_MMX 1

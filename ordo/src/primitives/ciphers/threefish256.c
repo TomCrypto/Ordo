@@ -1,12 +1,3 @@
-/**
- * @file threefish256.c
- * Implements the Threefish-256 cipher primitive.
- *
- * Threefish-256 has a 256-bit block size, a 256-bit key size, and a 128-bit optional tweak.
- *
- * @see threefish256.h
- */
-
 #include <primitives/primitives.h>
 #include <primitives/ciphers/threefish256.h>
 

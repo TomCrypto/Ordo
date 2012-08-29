@@ -1,12 +1,3 @@
-/**
- * @file securemem.c
- * Implements the Secure Memory API, which is a simple and lightweight cross-platform API designed to make secure memory management easy.
- *
- * \todo Implement other platforms.
- *
- * @see securemem.h
- */
-
 #include <common/securemem.h>
 
 #if PLATFORM_LINUX
@@ -54,10 +45,8 @@ void* salloc(size_t size)
 /* Sets memory as read-only. */
 int sprotect(void* ptr, size_t size)
 {
-    /* TIL VirtualProtect needs a dummy variable */
     DWORD old;
-    VirtualProtect(ptr, size, PAGE_READONLY, &old);
-    return 0; // change that later
+    return VirtualProtect(ptr, size, PAGE_READONLY, &old) ? 0 : -1;
 }
 
 /* Secure memory deallocation. */

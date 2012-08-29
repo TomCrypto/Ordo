@@ -6,6 +6,7 @@
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="include/common/;" />
 		<Build>
 			<Target title="debug">
 				<Option output="bin/debug/ordo" prefix_auto="1" extension_auto="1" />
@@ -97,6 +98,7 @@
 		</Unit>
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
+			<Option virtualFolder="include/common/" />
 		</Unit>
 		<Unit filename="src/primitives/ciphers/asm/rc4.S" />
 		<Unit filename="src/primitives/ciphers/asm/threefish256.S" />

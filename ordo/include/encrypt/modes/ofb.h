@@ -3,9 +3,18 @@
 
 /**
  * @file ofb.h
+ *
+ * \brief OFB encryption mode of operation interface.
+ *
  * Contains the OFB encryption mode interface.
  *
- * Header usage mode: External.
+ * The OFB mode generates a keystream by repeatedly encrypting an initialization vector, effectively
+ * turning a block cipher into a stream cipher. As such, OFB mode requires no padding, and outlen
+ * will always be equal to inlen.
+ *
+ * Note that the OFB keystream is independent of the plaintext, so a key/iv pair must never be
+ * used for more than one message. This also means the block cipher's inverse permutation is
+ * never used.
  *
  * @see ofb.c
  */

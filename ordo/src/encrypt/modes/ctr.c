@@ -1,29 +1,19 @@
-/**
- * @file ctr.c
- * Implements the CTR mode of operation. CTR is a streaming mode of operation, which performs no padding and works by
- * feeding an ever-increasing counter (initially set to the initialization vector) into the cipher's permutation to
- * produce the keystream, which is subsequently exclusive-or'ed bitwise with the plaintext to produce the ciphertext.
- * As such, CTR decryption is identical to CTR encryption, and the cipher's inverse permutation function is not used.
- *
- * @see ctr.h
- */
-
 #include <primitives/primitives.h>
 #include <encrypt/encrypt.h>
 #include <encrypt/modes/ctr.h>
 
-/*! This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
+/* This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
 typedef struct CTR_ENCRYPT_CONTEXT
 {
-    /*! A buffer for the IV. */
+    /* A buffer for the IV. */
     void* iv;
-    /*! The counter value. */
+    /* The counter value. */
     unsigned char* counter;
-    /*! The amount of bytes of unused state remaining before the state is to be renewed. */
+    /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
 } CTR_ENCRYPT_CONTEXT;
 
-/*! Shorthand macro for context casting. */
+/* Shorthand macro for context casting. */
 #define ctr(ctx) ((CTR_ENCRYPT_CONTEXT*)ctx)
 
 void CTR_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)

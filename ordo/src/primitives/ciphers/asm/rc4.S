@@ -17,12 +17,15 @@
 
 /**
  * @file rc4.S
- * This file contains an optimized, assembler version of RC4 for 64-bit processors (see header above for credits). It is considerably
- * faster than the standard C version, and the exported RC4_Update_ASM function implemented below takes the following parameters:
- * Param #1 : pointer to an RC4_STATE structure (the correct one, with the index pointers i, j first and 64-bit aligned)
- * Param #2 : 64-bit unsigned integer to the length of the buffer to encrypt with RC4
- * Param #3 : pointer to the input buffer
- * Param #4 : pointer to the output buffer (may be identical to the input buffer)
+ *
+ * \brief RC4 assembly code [ABI: Windows x64, Linux x64].
+ *
+ * This file contains an optimized, assembler version of RC4 for 64-bit processors (see original header for credits). It is considerably
+ * faster than the standard C version, and the exported RC4_Update_ASM function implemented below takes the following parameters:\n
+ * Param #1 : pointer to an RC4_STATE structure (the correct one, with the index pointers i, j first and 64-bit aligned)\n
+ * Param #2 : 64-bit unsigned integer to the length of the buffer to encrypt with RC4\n
+ * Param #3 : pointer to the input buffer\n
+ * Param #4 : pointer to the output buffer (may be identical to the input buffer)\n
  *
  * Note this implementation only becomes active on 64-bit versions of Ordo (i.e. if ENVIRONMENT_64 is true)
  *
@@ -134,6 +137,7 @@ RC4_Update_ASM:
     mov %r9,       %rax
     mov %rcx,      %r9
     mov %rax,      %rcx
+    #end translation
 
 	mov	%rdi,		%rbp	# key = ARG(key)
 	mov	%rsi,		%rbx	# rbx = ARG(len)
@@ -219,6 +223,7 @@ RC4_Update_ASM:
 
     pop %rdi
 	pop %rsi
+	#end translation
 
 	pop	%rbx
 	pop	%rbp

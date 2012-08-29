@@ -3,9 +3,13 @@
 
 /**
  * @file securemem.h
- * Exposes the Secure Memory API.
  *
- * Header usage mode: External.
+ * \brief Secure memory interface.
+ *
+ * Exposes the Secure Memory API, which is basically a wrapper around malloc and free,
+ * taking care of locking and securely erasing memory for security-sensitive data.
+ *
+ * \todo Implement other platforms.
  *
  * @see securemem.c
  */
@@ -13,12 +17,14 @@
 /* Standard includes. */
 #include <stdlib.h>
 
-
 #include "ordotypes.h"
 
 /*! This function returns a pointer that is locked in physical memory.
  \param size The amount of memory to allocate, in bytes.
- \return Returns the allocated pointer on success, or 0 if the function fails.
+ \return Returns the allocated pointer on success, or 0 if the function fails. The
+ function can fail if malloc fails (if the system is out of memory) or if mlock fails
+ (if the process has reached its locked memory limit). None of these conditions should
+ arise under normal operation.
  \remark Sometimes, operating systems can decide to page out rarely-accessed
  memory to the hard drive. However, once the memory is needed and is paged
  back in, its footprint on the hard drive is not erased. Thus, if cryptographic
@@ -31,14 +37,14 @@ void* salloc(size_t size);
 
 /*! This function sets memory as read-only. If this function succeeds, any attempt to
     write to the memory will incur an access violation, until the read-only restriction is lifted.
-    Not generally useful but can always come in handy at some point.
  \param ptr The pointer to the memory to set as read-only.
- \param size The amount of memory, in bytes, to set as read-only. */
+ \param size The amount of memory, in bytes, to set as read-only.
+ \return Returns 0 on success, and anything else on failure. */
 int sprotect(void* ptr, size_t size);
 
 /*! This function frees a pointer, and securely erases the memory it points to.
- \param ptr An allocated pointer to free.
- \param size The amount of memory, in bytes, pointed to. */
+ \param ptr An allocated pointer to memory to erase and free.
+ \param size The amount of memory, in bytes, pointed to by ptr. */
 void sfree(void* ptr, size_t size);
 
 #endif

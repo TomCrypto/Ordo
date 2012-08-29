@@ -3,9 +3,17 @@
 
 /**
  * @file cfb.h
+ *
+ * \brief CFB encryption mode of operation interface.
+ *
  * Contains the CFB encryption mode interface.
  *
- * Header usage mode: External.
+ * The CFB mode generates a keystream by repeatedly encrypting an initialization vector and mixing in
+ * the plaintext, effectively turning a block cipher into a stream cipher. As such, CFB mode requires no
+ * padding, and outlen will always be equal to inlen.
+ *
+ * Note that the CFB keystream depends on the plaintext fed into it, as opposed to OFB mode. This also
+ * means the block cipher's inverse permutation is never used.
  *
  * @see cfb.c
  */

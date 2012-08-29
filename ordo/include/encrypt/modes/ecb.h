@@ -3,9 +3,23 @@
 
 /**
  * @file ecb.h
+ *
+ * \brief ECB encryption mode of operation interface.
+ *
  * Contains the ECB encryption mode interface.
  *
- * Header usage mode: External.
+ * The ECB mode divides the input message into blocks of the cipher's block size, and encrypts them individually.
+ * If the input message's length is not a multiple of the cipher's block size, a padding mechanism is enabled by
+ * default which will pad the message to the correct length (and remove the extra data upon decryption). If
+ * padding is explicitly disabled through the mode of operation's parameters, the input's length must be a multiple
+ * of the cipher's block size.
+ *
+ * The padding algorithm is PKCS7 (RFC 5652), which appends N bytes of value N, where N is the number of padding
+ * bytes required (between 1 and the cipher's block size in bytes).
+ *
+ * The ECB mode does not require an initialization vector.
+ *
+ * Note that the ECB mode is insecure in almost all situations and is not recommended for use.
  *
  * @see ecb.c
  */

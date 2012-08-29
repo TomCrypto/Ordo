@@ -1,14 +1,3 @@
-/**
- * @file encrypt.c
- * Implements the Ordo encryption interface.
- *
- * TBD!
- *
- * \todo Optimize streaming modes by using bigger word sizes than bytes if the buffer is large enough.
- *
- * @see encrypt.h
- */
-
 /* Handles code related to symmetric ciphers (e.g. modes of operation). */
 #include <primitives/primitives.h>
 #include <encrypt/encrypt.h>

@@ -3,9 +3,18 @@
 
 /**
  * @file stream.h
- * Contains the STREAM encryption mode interface (for stream ciphers only).
  *
- * Header usage mode: External.
+ * \brief STREAM encryption mode of operation interface.
+ *
+ * Contains the STREAM encryption mode interface.
+ *
+ * The STREAM mode is different in that it is only compatible with stream cipher primitives. It is very straightforward
+ * and simply gets the stream cipher to generate a keystream which is then combined with the plaintext to produce the
+ * ciphertext and vice versa.
+ *
+ * An important point to note is that this mode ignores the initialization vector completely, as there is no standard
+ * way of adding an initialization vector to a stream cipher. To do this, you must use custom constructs to integrate
+ * the initialization vector into the encryption key somehow, within the primitive interface.
  *
  * @see stream.c
  */

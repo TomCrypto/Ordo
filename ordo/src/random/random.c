@@ -1,23 +1,9 @@
-/**
- * @file random.c
- * Implements the Ordo CSPRNG, which is basically a cross-platform wrapper to the OS-provided entropy pool.
- *
- * Linux: Reads from /dev/urandom.
- *
- * Windows: Acquires a CSP token and calls CryptGenRandom.
- *
- * \todo Implement ordoRandom for other platforms and add error handling for Windows.
- *
- * @see random.h
- */
-
 #include <random/random.h>
 
 #if PLATFORM_LINUX
 
 #include <stdio.h>
 
-/*! Generates cryptographic-grade pseudorandom numbers. */
 int ordoRandom(unsigned char* buffer, size_t size)
 {
     size_t len;
@@ -49,12 +35,11 @@ int ordoRandom(unsigned char* buffer, size_t size)
 #include <windows.h>
 #include <Wincrypt.h>
 
-/*! Generates cryptographic-grade pseudorandom numbers. */
 int ordoRandom(unsigned char* buffer, size_t size)
 {
     /* Acquire a CSP token. */
     HCRYPTPROV hProv;
-    CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0);
+    CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0); // ?
     if (hProv == 0) return ORDO_EFAIL;
 
     /* Generate pseudorandom bytes. */

@@ -1,18 +1,3 @@
-/**
- * @file rc4.c
- * Implements the RC4 cipher primitive.
- *
- * RC4 is a stream cipher, which has a 8-byte "block size" (for optimizations, in reality it outputs one byte at a time) and a key size between
- * 40 and 2048 bits (multiples of 8 bits only). It uses no tweak. The reason for the 8-byte block size is that state updates can be cached and
- * quickly combined with the plaintext, instead of taking one byte at a time, which would incur severe overhead.
- * Note this implementation of RC4 drops the first 2048 bytes of the keystream by default for security reasons, the drop amount can be changed
- * upon key schedule via the params parameter (a pointer to an RC4_PARAMS struct which contains a drop field to select the amount to drop.
- *
- * \todo Better ABI translation for Windows assembler implementation (right now it's a brute force push/pop/swap to explicitly translate parameter passing).
- *
- * @see rc4.h
- */
-
 #include <primitives/primitives.h>
 #include <primitives/ciphers/rc4.h>
 

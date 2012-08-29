@@ -3,10 +3,14 @@
 
 /**
  * @file ordotypes.h
+ *
+ * \brief Library-wide utility header.
+ *
  * Contains various library-wide definitions, includes, and utility functions.
  *
  * \todo Improve code related to error handling.
  *
+ * @see ordotypes.c
  */
 
 /* Standard includes. */
@@ -22,42 +26,46 @@
 #include "securemem.h"
 #include "environment.h"
 
-/** The following are some composite data types used in primitives. For instance,
- *  the UINT256_64 type is used in Threefish-256 as the latter uses a 256-bit
- *  block size and works on 64-bit integers. */
+/* The following are some composite data types used in primitives. */
 
-/* A 128-bit structure with two 64-bit words. */
+/*! A 128-bit structure with two 64-bit words. */
 typedef struct UINT128_64
 {
+    /*! Two unsigned 64-bit words. */
     uint64_t words[2];
 } UINT128_64;
 
-/* A 256-bit structure with four 64-bit words. */
+/*! A 256-bit structure with four 64-bit words. */
 typedef struct UINT256_64
 {
+    /*! Four unsigned 64-bit words. */
     uint64_t words[4];
 } UINT256_64;
 
-/** The following are error codes. */
+/* The following are error codes. */
 
-// these error codes are so awful, wtf..
-
-/*! The function succeeded. */
+/*! The function succeeded. This is defined as zero and is returned if a function encountered no error, unless specified otherwise. */
 #define ORDO_ESUCCESS 0
 
-/*! The function failed due to an external error. */
+/*! The function failed due to an external error. This often indicates failure of an external component, such as the OS-provided pseudorandom number generator. */
 #define ORDO_EFAIL -1
 
-/*! Unprocessed input was left over in the state. */
+/*! Unprocessed input was left over in the context. This applies to block cipher modes for which padding has been disabled: if the input plaintext length is not
+ * a multiple of the cipher's block size, then the remaining incomplete block cannot be handled without padding, which is an error as it generally leads to
+ * inconsistent behavior on the part of the user. */
 #define ORDO_LEFTOVER -2
 
-/*! The key size provided is invalid for this primitive. */
+/*! The key size provided is invalid for this primitive. This occurs if you give a primitive an incorrect key size, such as feeding a 128-bit key into a cipher
+ * which expects a 192-bit key. Primitives either have a range of possible key lengths (often characterized by a minimum and maximum key length, but this varies
+ * among primitives) or one specific key length. If you need to accept arbitrary-length keys, you should consider hashing your key in some fashion. */
 #define ORDO_EKEYSIZE -3
 
-/*! The padding was not recognized and decryption could not be completed. */
+/*! The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block
+ * containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct
+ * decryption impossible. */
 #define ORDO_EPADDING -4
 
-/** The following are utility functions. */
+/* The following are utility functions. */
 
 /*! Checks whether a buffer conforms to PKCS padding.
     \param buffer The buffer to check, which should point to the first padding byte.
@@ -66,18 +74,17 @@ typedef struct UINT256_64
 inline int padCheck(unsigned char* buffer, unsigned char padding);
 
 /*! Performs a bitwise exclusive-or of one buffer onto another.
-    \param dst The destination buffer, where the operation's result will be stored.
+    \param dst The destination buffer, where the result will be stored.
     \param src The source buffer, containing data to exclusive-or dst with.
     \param len The number of bytes to process in each buffer.
-    \remark This is functionally equivalent to dst ^= src. Note this method has been
-           optimized to process word-sized data chunks at a time, making it multiple
-           times faster than a naive byte-to-byte approach. */
+    \remark This is conceptually equivalent to dst ^= src. Source and destination
+    buffers may be identical (in which case dst will contain len zeroes). */
 inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len);
 
 /*! Increments a buffer of arbitrary size as if it were a len-byte integer.
     \param n Points to the buffer to increment.
     \param len The size, in bytes, of the buffer.
-    \remark Carry propagation is done from left-to-right in memory storage order. */
+    \remark Carry propagation is done left-to-right in memory storage order. */
 inline void incBuffer(unsigned char* n, size_t len);
 
 /*! Returns a readable error message from an error code.

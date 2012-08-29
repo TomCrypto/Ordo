@@ -3,7 +3,16 @@
 
 /**
  * @file random.h
- * Exposes the Ordo CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface.
+ *
+ * \brief OS-provided CSPRNG interface.
+ *
+ * Exposes the Ordo CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface, which
+ * is basically a cross-platform wrapper to the OS-provided entropy pool.
+ *
+ * Linux: Reads from /dev/urandom.
+ * Windows: Acquires a CSP token and calls CryptGenRandom.
+ *
+ * \todo Implement ordoRandom for other platforms and add proper error handling for Windows.
  *
  * @see random.c
  */

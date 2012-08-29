@@ -1,4 +1,4 @@
-Ordo v0.1.9
+Ordo v0.2.0
 -----------
 
 ########### BREAKING NEWS ###########
@@ -11,16 +11,14 @@ This directory contains a bunch of code files and headers for Ordo, along with a
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience.
 
 Current work is focused towards finishing the cipher interface. Important todo's:
- - make the primitive API more elegant (right now it's a mess, need to allocate primitive contexts instead of relying on an inflexible "key" struct - refer to the "encrypt" module which is "doing it right") [WORK IN PROGRESS]
- - renew the documentation which is now severely outdated in some places (and try and make it consistent)
+ - make the primitive API more elegant [ALMOST DONE]
+ - improve error handling (more error checking, mostly)
  - improve the test unit (better parser + more official test vectors)
- - improve error handling (this is VERY important, the current handling code is inconsistent and not very elegant)
- - make the environment detection subsystem (environment.h) work a little better and also recognize OS as well as platform capabilities (e.g. 32/64, specific CPUID feature flags, etc...) in a consistent way [WORK IN PROGRESS]
 
 Other todo's to keep in mind:
  - get Ordo up and running as an actual library (possibly including the test driver) once the cipher API is done
 
-Documentation: The code in a few headers is documented for Doxygen. The doxyfile is not included but can easily be regenerated (it's just a configuration file).
+Documentation: The headers and assembly files are documented for Doxygen, the source files are not. The doxyfile is included, and the generated HTML documentation should be located in doc/html/index.html. For size reasons, the documentation itself is not included in the repository and you will need to generate it yourself via doxygen.
 
 :::Current status and what needs to be done:::
 

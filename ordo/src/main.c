@@ -50,6 +50,6 @@ int main(int argc, char* argv[])
 
     /* Finalize Ordo. */
     unloadOrdo();
-    printf("[+] All operations completed.");
+    printf("[+] All operations completed.\n");
     return 0;
 }

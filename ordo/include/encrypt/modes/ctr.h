@@ -3,9 +3,19 @@
 
 /**
  * @file ctr.h
+ *
+ * \brief CTR encryption mode of operation.
+ *
  * Contains the CTR encryption mode interface.
  *
- * Header usage mode: External.
+ * The CTR mode generates a keystream by repeatedly encrypting a counter starting from some
+ * initialization vector, effectively turning a block cipher into a stream cipher. As such,
+ * CTR mode requires no padding, and outlen will always be equal to inlen.
+ *
+ * Note that the CTR keystream is independent of the plaintext, and is also spatially coherent
+ * (using a given initialization vector on a len-byte message will "use up" len bytes of the
+ * keystream) so care must be taken to avoid reusing the initialization vector in an insecure
+ * way. This also means the block cipher's inverse permutation is never used.
  *
  * @see ctr.c
  */

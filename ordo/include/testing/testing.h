@@ -3,6 +3,9 @@
 
 /**
  * @file testing.h
+ *
+ * \brief Ordo test driver interface.
+ *
  * This is the interface to the Ordo test driver, which features a simplistic test vector script language, and functions to parse it.
  *
  * @see testing.c
@@ -29,10 +32,10 @@ void runTestVectors(FILE* file);
     \param file The test vector file. */
 void unloadTestVectors(FILE* file);
 
-/*! Tests the random module by outputting a few pseudorandom bytes. */
+/*! Tests the random module by generating a few pseudorandom bytes. Outputs results to stdout. */
 void randomTest();
 
-/*! Rates the performance of a cipher primitive/encryption mode combination.
+/*! Rates the performance of a cipher primitive/encryption mode combination. Outputs results to stdout.
     \param primitive The cipher primitive to use.
     \param mode The encryption mode to use.
     \param keySize The key size to use, in bytes.

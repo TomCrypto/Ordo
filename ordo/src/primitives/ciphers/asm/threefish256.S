@@ -1,5 +1,8 @@
 /**
  * @file threefish256.S
+ *
+ * \brief Threefish-256 assembly code [ABI: Windows x64, Linux x64].
+ *
  * This file contains an optimized, hand-written assembler version of the Threefish-256 cipher primitive, for x64 processors.
  * Only the forward and inverse permutations are included here, the key schedule and other functions remain in the standard
  * implementation (threefish256.c). Note conditional compilation has been added here _and_ in threefish.c to ensure that when

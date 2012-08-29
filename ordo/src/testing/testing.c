@@ -240,7 +240,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the encryption test. */
-    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv);
+    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -255,7 +255,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the decryption test. */
-    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv);
+    error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, 0, 0);
     if (error < 0)
     {
         printf("[!] Test vector #%d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -363,8 +363,8 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     randomizeBuffer(buffer, bufferSize);
 
     /* Allocate a buffer of the right size (= cipher block size) for the IV. This can be zero for stream ciphers. */
-    iv = malloc(primitiveBlockSize(primitive));
-    memset(iv, 0, primitiveBlockSize(primitive));
+    iv = malloc(cipherPrimitiveBlockSize(primitive));
+    memset(iv, 0, cipherPrimitiveBlockSize(primitive));
 
     /* Allocate a buffer of the right size for the key. */
     key = malloc(keySize);
@@ -377,7 +377,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     start = clock();
 
     /* Encryption test. */
-    error = ordoEncrypt(buffer, bufferSize - primitiveBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv);
+    error = ordoEncrypt(buffer, bufferSize - cipherPrimitiveBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
     if (error < 0) printf("[!] An error occurred during encryption [%s].", errorMsg(error));
     else
     {
@@ -389,7 +389,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv);
+        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
         if (error < 0) printf("[!] An error occurred during decryption [%s].", errorMsg(error));
         else
         {

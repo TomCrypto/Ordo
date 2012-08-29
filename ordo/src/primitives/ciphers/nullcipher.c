@@ -1,12 +1,3 @@
-/**
- * @file nullcipher.c
- * Implements the NullCipher cipher primitive. This cipher is a test cipher which only exists as a debugging tool, and should not be used in any other context.
- *
- * The cipher itself does nothing and accepts any key size. It has a block size of 128 bits.
- *
- * @see nullcipher.h
- */
-
 #include <primitives/primitives.h>
 #include <primitives/ciphers/nullcipher.h>
 
