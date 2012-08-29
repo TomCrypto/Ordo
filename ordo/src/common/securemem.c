@@ -27,6 +27,9 @@ void sfree(void* ptr, size_t size)
     /* Overwrite each byte with zero. */
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
 
+    /* Unlock the memory. */
+    munlock(ptr, size);
+
     /* Free the memory. */
     free(ptr);
 }
@@ -54,6 +57,9 @@ void sfree(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
+
+    /* Unlock the memory. */
+    VirtualUnlock(ptr, size);
 
     /* Free the memory. */
     VirtualFree(ptr, 0, MEM_RELEASE);
