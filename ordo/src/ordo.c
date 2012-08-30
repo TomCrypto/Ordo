@@ -26,9 +26,9 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     int error;
     size_t total = 0;
 
-    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 1);
+    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode);
 
-    error = encryptInit(ctx, key, keySize, iv, cipherParams, modeParams);
+    error = encryptInit(ctx, key, keySize, iv, cipherParams, modeParams, 1);
     if (error < 0) return error;
 
     encryptUpdate(ctx, in, inlen, out, outlen);
@@ -76,9 +76,9 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     int error;
     size_t total = 0;
 
-    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode, 0);
+    ENCRYPTION_CONTEXT* ctx = encryptCreate(primitive, mode);
 
-    error = encryptInit(ctx, key, keySize, iv, cipherParams, modeParams);
+    error = encryptInit(ctx, key, keySize, iv, cipherParams, modeParams, 0);
     if (error < 0) return error;
 
     encryptUpdate(ctx, in, inlen, out, outlen);

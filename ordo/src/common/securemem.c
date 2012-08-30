@@ -21,11 +21,18 @@ int sprotect(void* ptr, size_t size)
     return mprotect(ptr, size, PROT_READ);
 }
 
-/* Secure memory deallocation. */
-void sfree(void* ptr, size_t size)
+/* Secure memory wipe. */
+void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
+}
+
+/* Secure memory deallocation. */
+void sfree(void* ptr, size_t size)
+{
+    /* Wipe the memory. */
+    swipe(ptr, size);
 
     /* Unlock the memory. */
     munlock(ptr, size);
@@ -52,11 +59,18 @@ int sprotect(void* ptr, size_t size)
     return VirtualProtect(ptr, size, PAGE_READONLY, &old) ? 0 : -1;
 }
 
-/* Secure memory deallocation. */
-void sfree(void* ptr, size_t size)
+/* Secure memory wipe. */
+void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
+}
+
+/* Secure memory deallocation. */
+void sfree(void* ptr, size_t size)
+{
+    /* Wipe the memory. */
+    swipe(ptr, size);
 
     /* Unlock the memory. */
     VirtualUnlock(ptr, size);

@@ -87,9 +87,8 @@ typedef struct ENCRYPTION_CONTEXT
 /*! This function returns an allocated encryption context using a specific primitive and mode of operation.
  \param primitive The primitive object to be used.
  \param mode The mode of operation object to be used.
- \param direction This represents the direction of encryption, set to 1 for encryption and 0 for decryption.
  \return Returns the allocated encryption context, or 0 if an error occurred. */
-ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, int direction);
+ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode);
 
 /*! This function initializes an encryption context for encryption, provided a key, initialization vector,
  * and cipher/mode-specific parameters.
@@ -100,9 +99,10 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
  the same as the block size of the cipher primitive associated with the provided encryption context.
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
+ \param direction This represents the direction of encryption, set to 1 for encryption and 0 for decryption.
  \return Returns ORDO_ESUCCESS on success, and a negative value on error.
  \remark The initialization vector may be zero, if the mode of operation does not require one. */
-int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
+int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams, int direction);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided encryption context.
  \param ctx The encryption context to use. This context must have been allocated and initialized.
@@ -113,7 +113,7 @@ int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, vo
  \remark The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding
  is not used or disabled, out may be exactly as long as buffer, but if padding is enabled, out needs to be sized
  appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption,
- either down to the nearest cipher block size for decryption (outlen strictly less than inlen). */
+ either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption. */
 void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
 /*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
@@ -123,12 +123,12 @@ void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, uns
  \param outlen This points to a variable which will contain the number of bytes written to out.
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context.
- \remark If there is no padding in the mode of operation associated with the encryption context, this function returns no additional data. */
+ \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data. */
 int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized encryption context.
  \param ctx The encryption context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere. */
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. */
 void encryptFree(ENCRYPTION_CONTEXT* ctx);
 
 /*! The ECB (Electronic CodeBook) mode of operation. */

@@ -42,6 +42,11 @@ void* salloc(size_t size);
  \return Returns 0 on success, and anything else on failure. */
 int sprotect(void* ptr, size_t size);
 
+/*! This function wipes memory by overwriting it with zeroes.
+ \param The pointer to the memory to wipe.
+ \param size The amount of memory, in bytes, to wipe. */
+void swipe(void* ptr, size_t size);
+
 /*! This function frees a pointer, and securely erases the memory it points to.
  \param ptr An allocated pointer to memory to erase and free.
  \param size The amount of memory, in bytes, pointed to by ptr. */
