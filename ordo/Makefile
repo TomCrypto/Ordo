@@ -23,4 +23,4 @@ release: $(shell find src/ -name '*.c')
 
 # Removes the executables and folders
 clean:
-	rm -f ./bin/ --recursive
+	@rm -f ./bin/ --recursive
