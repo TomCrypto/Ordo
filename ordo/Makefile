@@ -23,7 +23,4 @@ release: $(shell find src/ -name '*.c')
 
 # Removes the executables and folders
 clean:
-	rm -f ./bin/debug/ordo
-	rm -f ./bin/release/ordo
-	rmdir bin/debug --ignore-fail-on-non-empty
-	rmdir bin/release --ignore-fail-on-non-empty
+	rm -f ./bin/ --recursive
