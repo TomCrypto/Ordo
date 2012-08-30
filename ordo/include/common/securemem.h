@@ -17,6 +17,7 @@
 /* Standard includes. */
 #include <stdlib.h>
 
+/* Library includes. */
 #include "ordotypes.h"
 
 /*! This function returns a pointer that is locked in physical memory.
@@ -43,7 +44,7 @@ void* salloc(size_t size);
 int sprotect(void* ptr, size_t size);
 
 /*! This function wipes memory by overwriting it with zeroes.
- \param The pointer to the memory to wipe.
+ \param ptr The pointer to the memory to wipe.
  \param size The amount of memory, in bytes, to wipe. */
 void swipe(void* ptr, size_t size);
 
