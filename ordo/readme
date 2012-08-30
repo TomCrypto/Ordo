@@ -24,9 +24,9 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file and the code in /testing/ to know more about this. Note the test vectors are sort of artificial so far (the only "official" ones are the first Threefish-256/ECB vector and RC4/STREAM one), but proper ones will be added once more cipher primitives are implemented.
 
-CIPHERS > Modes of operation implemented: ECB, CBC, OFB, CFB, CTR, STREAM
-CIPHERS > Primitives implemented: NullCipher, Threefish-256 [ASM-optimized for x86_64], RC4 [ASM-optimized for x86_64]
-CIPHERS > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
+ENCRYPT > Modes of operation implemented: ECB, CBC, OFB, CFB, CTR, STREAM
+PRIMITIVES > Primitives implemented: NullCipher, Threefish-256 [ASM-optimized for x86_64], RC4 [ASM-optimized for x86_64]
+ENCRYPT > The API is actually usable at this stage, but still not definitive, parameters will be shuffled around and modified to improve effectiveness and flexibility.
 
 Essentially we want primitives (be it cipher primitives, or hash primitives, etc...) to be accessible from everywhere in the library, and we want different uses to be able to access them transparently (like encrypting, hashing, authenticating, encrypting+authenticating, etc...). Suggested library section names:
 
