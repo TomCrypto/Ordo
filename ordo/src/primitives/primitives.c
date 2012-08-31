@@ -5,18 +5,23 @@
 #include <primitives/ciphers/threefish256.h>
 #include <primitives/ciphers/rc4.h>
 
+/* Cipher primitive list. */
+CIPHER_PRIMITIVE* _NullCipher;
+CIPHER_PRIMITIVE* _RC4;
+CIPHER_PRIMITIVE* _Threefish256;
+
 /* Loads all primitives. */
 void loadPrimitives()
 {
     /* Cipher primitives. */
-    NullCipher = malloc(sizeof(CIPHER_PRIMITIVE));
-    NullCipher_SetPrimitive(NullCipher);
+    _NullCipher = malloc(sizeof(CIPHER_PRIMITIVE));
+    NullCipher_SetPrimitive(_NullCipher);
 
-    Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE));
-    Threefish256_SetPrimitive(Threefish256);
+    _Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE));
+    Threefish256_SetPrimitive(_Threefish256);
 
-    RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
-    RC4_SetPrimitive(RC4);
+    _RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
+    RC4_SetPrimitive(_RC4);
 
     /* Hash primitives. */
     /* empty :[ */
@@ -25,7 +30,12 @@ void loadPrimitives()
 /* Unloads all primitives. */
 void unloadPrimitives()
 {
-    free(NullCipher);
-    free(Threefish256);
-    free(RC4);
+    free(_NullCipher);
+    free(_Threefish256);
+    free(_RC4);
 }
+
+/* Pass-through functions to acquire primitives. */
+CIPHER_PRIMITIVE* NullCipher() { return _NullCipher; }
+CIPHER_PRIMITIVE* RC4() { return _RC4; }
+CIPHER_PRIMITIVE* Threefish256() { return _Threefish256; }

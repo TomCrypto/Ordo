@@ -132,17 +132,17 @@ int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 void encryptFree(ENCRYPTION_CONTEXT* ctx);
 
 /*! The ECB (Electronic CodeBook) mode of operation. */
-ENCRYPT_MODE* ECB;
+ENCRYPT_MODE* ECB();
 /*! The CBC (Ciphertext Block Chaining) mode of operation. */
-ENCRYPT_MODE* CBC;
+ENCRYPT_MODE* CBC();
 /*! The CTR (CounTeR) mode of operation. */
-ENCRYPT_MODE* CTR;
+ENCRYPT_MODE* CTR();
 /*! The CFB (Cipher FeedBack) mode of operation. */
-ENCRYPT_MODE* CFB;
+ENCRYPT_MODE* CFB();
 /*! The OFB (Output FeedBack) mode of operation. */
-ENCRYPT_MODE* OFB;
+ENCRYPT_MODE* OFB();
 /*! The STREAM mode of operation (for stream ciphers only). */
-ENCRYPT_MODE* STREAM;
+ENCRYPT_MODE* STREAM();
 
 /*! Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
  * the ECB, CBC, etc... global variables can be used for encryption or decryption. */

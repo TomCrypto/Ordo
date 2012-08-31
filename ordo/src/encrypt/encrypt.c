@@ -16,38 +16,54 @@
 /* Macro to the cipher primitive object of an encryption context. */
 #define cipherobj(ctx) (ctx->cipher->primitive)
 
+/* Mode of operation list. */
+ENCRYPT_MODE* _ECB;
+ENCRYPT_MODE* _CBC;
+ENCRYPT_MODE* _CTR;
+ENCRYPT_MODE* _CFB;
+ENCRYPT_MODE* _OFB;
+ENCRYPT_MODE* _STREAM;
+
 /* Loads all cipher modes. */
 void loadEncryptModes()
 {
-    ECB = malloc(sizeof(ENCRYPT_MODE));
-    ECB_SetMode(ECB);
+    _ECB = malloc(sizeof(ENCRYPT_MODE));
+    ECB_SetMode(_ECB);
 
-    CBC = malloc(sizeof(ENCRYPT_MODE));
-    CBC_SetMode(CBC);
+    _CBC = malloc(sizeof(ENCRYPT_MODE));
+    CBC_SetMode(_CBC);
 
-    CTR = malloc(sizeof(ENCRYPT_MODE));
-    CTR_SetMode(CTR);
+    _CTR = malloc(sizeof(ENCRYPT_MODE));
+    CTR_SetMode(_CTR);
 
-    CFB = malloc(sizeof(ENCRYPT_MODE));
-    CFB_SetMode(CFB);
+    _CFB = malloc(sizeof(ENCRYPT_MODE));
+    CFB_SetMode(_CFB);
 
-    OFB = malloc(sizeof(ENCRYPT_MODE));
-    OFB_SetMode(OFB);
+    _OFB = malloc(sizeof(ENCRYPT_MODE));
+    OFB_SetMode(_OFB);
 
-    STREAM = malloc(sizeof(ENCRYPT_MODE));
-    STREAM_SetMode(STREAM);
+    _STREAM = malloc(sizeof(ENCRYPT_MODE));
+    STREAM_SetMode(_STREAM);
 }
 
 /* Unloads all cipher modes. */
 void unloadEncryptModes()
 {
-    free(ECB);
-    free(CBC);
-    free(CTR);
-    free(CFB);
-    free(OFB);
-    free(STREAM);
+    free(_ECB);
+    free(_CBC);
+    free(_CTR);
+    free(_CFB);
+    free(_OFB);
+    free(_STREAM);
 }
+
+/* Pass-through functions to acquire modes of operation. */
+ENCRYPT_MODE* ECB() { return _ECB; }
+ENCRYPT_MODE* CBC() { return _CBC; }
+ENCRYPT_MODE* CTR() { return _CTR; }
+ENCRYPT_MODE* CFB() { return _CFB; }
+ENCRYPT_MODE* OFB() { return _OFB; }
+ENCRYPT_MODE* STREAM() { return _STREAM; }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */
 ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode)

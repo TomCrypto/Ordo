@@ -67,12 +67,12 @@ void loadPrimitives();
 void unloadPrimitives();
 
 /*! The NullCipher cipher primitive. */
-CIPHER_PRIMITIVE* NullCipher;
+CIPHER_PRIMITIVE* NullCipher();
 
 /*! The RC4 cipher primitive. */
-CIPHER_PRIMITIVE* RC4;
+CIPHER_PRIMITIVE* RC4();
 
 /*! The Threefish-256 cipher primitive. */
-CIPHER_PRIMITIVE* Threefish256;
+CIPHER_PRIMITIVE* Threefish256();
 
 #endif
