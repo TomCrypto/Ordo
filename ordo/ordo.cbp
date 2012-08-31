@@ -92,9 +92,6 @@
 		<Unit filename="src/encrypt/modes/stream.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/main.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
 		</Unit>
