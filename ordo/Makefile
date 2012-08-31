@@ -7,20 +7,18 @@ CFLAGS_RELEASE = -O6 -Wall -Wno-implicit-function-declaration -march=native -mno
 # The default build target is release
 default: release
 
-# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure /bin/debug exists...
+# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure the lib/ folder exists...
 debug: $(shell find src/ -name '*.c')
-	@mkdir bin -p
-	@mkdir bin/debug -p
-	gcc -Iinclude/ $(CFLAGS_DEBUG) -o ./bin/debug/ordo $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
+	@mkdir lib -p
+	gcc -shared -fpic -Iinclude/ $(CFLAGS_DEBUG) -o lib/libordo.so $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <debug> mode."
 
-# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure /bin/release exists...
+# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure the lib/ folder exists...
 release: $(shell find src/ -name '*.c')
-	@mkdir bin -p
-	@mkdir bin/release -p
-	gcc -Iinclude/ $(CFLAGS_RELEASE) -o ./bin/release/ordo $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
+	@mkdir lib -p
+	gcc --shared -fpic -Iinclude/ $(CFLAGS_RELEASE) -o lib/libordo.so $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <release> mode."
 
-# Removes the executables and folders
+# Removes the shared library
 clean:
-	@rm -f ./bin/ --recursive
+	@rm -f ./lib/ --recursive

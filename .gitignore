@@ -1,3 +1,4 @@
 # Never include compiled binaries nor documentation
-ordo/bin/
+ordo/lib/
 ordo/doc/
+test/bin/
