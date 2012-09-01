@@ -206,9 +206,10 @@ ENCRYPT_MODE* getEncryptMode(char* name)
 /* Runs an encryption test vector. */
 int runEncryptTest(char* line, int n)
 {
-    /* An encrypt test vector takes this form: encrypt:primitive:mode:key:iv:plaintext:ciphertext.
+    /* An encrypt test vector takes this form: encrypt:primitive:mode:key:iv:plaintext:ciphertext~
      * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
-     * hexadecimal notation. If an iv is not required, it may be omitted between two colons. */
+     * hexadecimal notation. If a key or iv is not required, it may be omitted between two colons.
+     * The primitive field should be the name of the primitive e.g. "NullCipher" or "RC4". */
 
     /* Parse the test vector and initialize variables. */
     char* primitiveName = readToken(line, 1);
@@ -232,7 +233,7 @@ int runEncryptTest(char* line, int n)
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if ((primitive == 0) || (mode == 0))
     {
-        printf("[!] Test vector #%d skipped", n);
+        printf("[!] Test vector #%.3d skipped", n);
         if (primitive == 0) printf(", primitive (%s) not recognized", primitiveName);
         if (mode == 0) printf(", mode (%s) not recognized", modeName);
         printf(".\n");
@@ -243,14 +244,14 @@ int runEncryptTest(char* line, int n)
     int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
     if (error < 0)
     {
-        printf("[!] Test vector #%d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
+        printf("[!] Test vector #%.3d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
         return 0;
     }
 
     /* Check the computed ciphertext against the expected ciphertext. */
     if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) != 0))
     {
-        printf("[!] Test vector #%d (%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
+        printf("[!] Test vector #%.3d (%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
         return 0;
     }
 
@@ -258,14 +259,14 @@ int runEncryptTest(char* line, int n)
     error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, 0, 0);
     if (error < 0)
     {
-        printf("[!] Test vector #%d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
+        printf("[!] Test vector #%.3d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
         return 0;
     }
 
     /* Check the computed plaintext against the expected plaintext. */
     if ((computedPlaintextLen != plaintextlen) || (memcmp(computedPlaintext, plaintext, plaintextlen) != 0))
     {
-        printf("[!] Test vector #%d (%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
+        printf("[!] Test vector #%.3d (%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
         return 0;
     }
 
@@ -278,7 +279,7 @@ int runEncryptTest(char* line, int n)
     free(iv);
 
     /* Report success. */
-    printf("[+] Test vector #%d (%s/%s) passed!\n", n, primitiveName, modeName);
+    printf("[+] Test vector #%.3d (%s/%s) passed!\n", n, primitiveName, modeName);
     free(primitiveName);
     free(modeName);
     return 1;
