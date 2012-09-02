@@ -120,12 +120,18 @@
 <a name="l00080"></a>00080 
 <a name="l00082"></a>00082 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a>();
 <a name="l00083"></a>00083 
-<a name="l00084"></a>00084 <span class="preprocessor">#endif</span>
+<a name="l00087"></a>00087 <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="code" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a>(CIPHER_PRIMITIVE* primitive);
+<a name="l00088"></a>00088 
+<a name="l00095"></a>00095 <span class="keywordtype">int</span> <a class="code" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* cipherParams);
+<a name="l00096"></a>00096 
+<a name="l00100"></a>00100 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx);
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 18:17:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

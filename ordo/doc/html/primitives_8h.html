@@ -89,6 +89,9 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a> (CIPHER_PRIMITIVE *primitive)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Cryptographic primitive interface. </p>
@@ -217,11 +220,111 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afd13603a5ffa8764448c1dfcf3241e97"></a><!-- doxytag: member="primitives.h::cipherCreate" ref="afd13603a5ffa8764448c1dfcf3241e97" args="(CIPHER_PRIMITIVE *primitive)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="el" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a> </td>
+          <td>(</td>
+          <td class="paramtype">CIPHER_PRIMITIVE *&#160;</td>
+          <td class="paramname"><em>primitive</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function returns an allocated cipher primitive context using a specific cipher primitive. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">primitive</td><td>The primitive object to be used. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated cipher primitive context, or 0 if an error occurred. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1f4bb054fc3c4fbb196ce3d961be2c01"></a><!-- doxytag: member="primitives.h::cipherInit" ref="a1f4bb054fc3c4fbb196ce3d961be2c01" args="(CIPHER_PRIMITIVE_CONTEXT *ctx, void *key, size_t keySize, void *cipherParams)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keySize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>cipherParams</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function initializes an cipher primitive context for encryption, provided a key and cipher parameters. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>An allocated cipher primitive context. </td></tr>
+    <tr><td class="paramname">key</td><td>A pointer to a buffer containing the key to use for encryption. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The size, in bytes, of the encryption key. </td></tr>
+    <tr><td class="paramname">cipherParams</td><td>This points to specific cipher parameters, set to zero for default behavior. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, and a negative value on error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afdfe5f11118ced0be5058ceb1b72db50"></a><!-- doxytag: member="primitives.h::cipherFree" ref="afdfe5f11118ced0be5058ceb1b72db50" args="(CIPHER_PRIMITIVE_CONTEXT *ctx)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function frees (deallocates) an initialized cipher primitive context. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The cipher primitive context to be freed. This context needs to at least have been allocated. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 18:17:59 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
