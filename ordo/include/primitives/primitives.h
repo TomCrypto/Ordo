@@ -81,4 +81,22 @@ CIPHER_PRIMITIVE* RC4();
 /*! The Threefish-256 cipher primitive. */
 CIPHER_PRIMITIVE* Threefish256();
 
+/*! This function returns an allocated cipher primitive context using a specific cipher primitive.
+ \param primitive The primitive object to be used.
+ \return Returns the allocated cipher primitive context, or 0 if an error occurred. */
+CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive);
+
+/*! This function initializes an cipher primitive context for encryption, provided a key and cipher parameters.
+ \param ctx An allocated cipher primitive context.
+ \param key A pointer to a buffer containing the key to use for encryption.
+ \param keySize The size, in bytes, of the encryption key.
+ \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
+ \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
+int cipherInit(CIPHER_PRIMITIVE_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams);
+
+/*! This function frees (deallocates) an initialized cipher primitive context.
+ \param ctx The cipher primitive context to be freed. This context needs to at least have been allocated.
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. */
+void cipherFree(CIPHER_PRIMITIVE_CONTEXT* ctx);
+
 #endif

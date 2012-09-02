@@ -70,12 +70,8 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
 {
     /* Allocate the cipher and mode contexts. */
     ENCRYPTION_CONTEXT* ctx = salloc(sizeof(ENCRYPTION_CONTEXT));
-    ctx->cipher =salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
     ctx->mode = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
-
-    /* Create the cipher context. */
-    primitive->fCreate(ctx->cipher);
-    cipherobj(ctx) = primitive;
+    ctx->cipher = cipherCreate(primitive);
 
     /* Create the mode context. */
     mode->fCreate(ctx->mode, ctx->cipher);
@@ -85,11 +81,11 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
     return ctx;
 }
 
-/* This function returns an initialized cipher context with the provided parameters. */
+/* This function returns an initialized encryption context with the provided parameters. */
 int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams, int direction)
 {
     /* Initialize the cipher context. */
-    int error = cipherobj(ctx)->fInit(ctx->cipher, key, keySize, cipherParams);
+    int error = cipherInit(ctx->cipher, key, keySize, cipherParams);
     if (error < ORDO_ESUCCESS) return error;
 
     /* Save the required direction. */
@@ -99,7 +95,7 @@ int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, vo
     return modeobj(ctx)->fInit(ctx->mode, ctx->cipher, iv, modeParams);
 }
 
-/* This function encrypts data using the passed cipher context. If decrypt is true, the cipher will decrypt instead. */
+/* This function encrypts data using the passed encryption context. If decrypt is true, the cipher will decrypt instead. */
 void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Encrypt or decrypt the buffer. */
@@ -107,7 +103,7 @@ void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, uns
     else modeobj(ctx)->fDecryptUpdate(ctx->mode, ctx->cipher, in, inlen, out, outlen);
 }
 
-/* This function finalizes a cipher context. */
+/* This function finalizes a encryption context. */
 int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
     /* Finalize the mode of operation. */
@@ -122,8 +118,7 @@ void encryptFree(ENCRYPTION_CONTEXT* ctx)
     sfree(ctx->mode, sizeof(ENCRYPT_MODE_CONTEXT));
 
     /* Free the cipher. */
-    cipherobj(ctx)->fFree(ctx->cipher);
-    sfree(ctx->cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    cipherFree(ctx->cipher);
 
     /* Free the context. */
     sfree(ctx, sizeof(ENCRYPTION_CONTEXT));

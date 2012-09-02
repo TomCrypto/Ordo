@@ -56,6 +56,11 @@ typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
  * decryption impossible. */
 #define ORDO_EPADDING -4
 
+/*! The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block
+ * containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct
+ * decryption impossible. */
+#define ORDO_EPADDING -4
+
 /* The following are utility functions. */
 
 /*! Checks whether a buffer conforms to PKCS padding.

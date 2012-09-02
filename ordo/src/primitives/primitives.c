@@ -39,3 +39,30 @@ void unloadPrimitives()
 CIPHER_PRIMITIVE* NullCipher() { return _NullCipher; }
 CIPHER_PRIMITIVE* RC4() { return _RC4; }
 CIPHER_PRIMITIVE* Threefish256() { return _Threefish256; }
+
+/* This function returns an initialized cipher primitive context using a specific primitive. */
+CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive)
+{
+    /* Allocate and create the cipher context. */
+    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    ctx->primitive = primitive;
+    primitive->fCreate(ctx);
+
+    /* Return the allocated context. */
+    return ctx;
+}
+
+/* This function returns an initialized cipher context with the provided parameters. */
+int cipherInit(CIPHER_PRIMITIVE_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+{
+    /* Initialize the cipher context. */
+    return ctx->primitive->fInit(ctx, key, keySize, cipherParams);
+}
+
+/* This function frees an initialized cipher context. */
+void cipherFree(CIPHER_PRIMITIVE_CONTEXT* ctx)
+{
+    /* Free the cipher context. */
+    ctx->primitive->fFree(ctx);
+    sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+}
