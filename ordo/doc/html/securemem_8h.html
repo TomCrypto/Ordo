@@ -68,8 +68,7 @@
 
 <p>Secure memory interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="ordotypes_8h_source.html">ordotypes.h</a>&quot;</code><br/>
+<div class="textblock"><code>#include &quot;<a class="el" href="ordotypes_8h_source.html">ordotypes.h</a>&quot;</code><br/>
 </div>
 <p><a href="securemem_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -82,7 +81,7 @@ Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Secure memory interface. </p>
-<p>Exposes the Secure Memory API, which is basically a wrapper around malloc and free, taking care of locking and securely erasing memory for security-sensitive data.</p>
+<p>Exposes the Secure Memory API, which is essentially a wrapper around malloc and free, taking care of locking and securely erasing memory for security-sensitive data.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Implement other platforms.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>securemem.c </dd></dl>
 </div><hr/><h2>Function Documentation</h2>
@@ -107,7 +106,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated pointer on success, or 0 if the function fails. The function can fail if malloc fails (if the system is out of memory) or if mlock fails (if the process has reached its locked memory limit). None of these conditions should arise under normal operation. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated pointer on success, or 0 if the function fails. The function can fail if allocation fails (if the system is out of memory) or if locking fails (if the process has reached its locked memory limit). Neither of these conditions should arise under normal operation. </dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Sometimes, operating systems can decide to page out rarely-accessed memory to the hard drive. However, once the memory is needed and is paged back in, its footprint on the hard drive is not erased. Thus, if cryptographic material is paged out in this way, it can be compromised by hard drive analysis even months after the event occurred. This function prevents this by instructing the operating system not to page out the allocated memory. </dd>
 <dd>
 Note that this is a hint to the operating system, nothing more. Consult your operating system's implementation of virtual memory locking to know more. </dd></dl>
@@ -224,7 +223,7 @@ Note that this is a hint to the operating system, nothing more. Consult your ope
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 1 2012 14:49:41 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

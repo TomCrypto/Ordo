@@ -76,12 +76,11 @@
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_e_c_b___p_a_r_a_m_s.html">ECB_PARAMS</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">ECB mode of operation parameters.  <a href="struct_e_c_b___p_a_r_a_m_s.html#details">More...</a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>ECB encryption mode of operation interface. </p>
-<p>Contains the ECB encryption mode interface.</p>
 <p>The ECB mode divides the input message into blocks of the cipher's block size, and encrypts them individually. If the input message's length is not a multiple of the cipher's block size, a padding mechanism is enabled by default which will pad the message to the correct length (and remove the extra data upon decryption). If padding is explicitly disabled through the mode of operation's parameters, the input's length must be a multiple of the cipher's block size.</p>
-<p>The padding algorithm is PKCS7 (RFC 5652), which appends N bytes of value N, where N is the number of padding bytes required (between 1 and the cipher's block size in bytes).</p>
 <p>The ECB mode does not require an initialization vector.</p>
 <p>Note that the ECB mode is insecure in almost all situations and is not recommended for use.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>ecb.c </dd></dl>
@@ -89,7 +88,7 @@ Data Structures</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 1 2012 14:49:41 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

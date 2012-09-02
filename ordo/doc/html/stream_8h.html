@@ -72,7 +72,6 @@
 <p><a href="stream_8h_source.html">Go to the source code of this file.</a></p>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>STREAM encryption mode of operation interface. </p>
-<p>Contains the STREAM encryption mode interface.</p>
 <p>The STREAM mode is different in that it is only compatible with stream cipher primitives. It is very straightforward and simply gets the stream cipher to generate a keystream which is then combined with the plaintext to produce the ciphertext and vice versa.</p>
 <p>An important point to note is that this mode ignores the initialization vector completely, as there is no standard way of adding an initialization vector to a stream cipher. To do this, you must use custom constructs to integrate the initialization vector into the encryption key somehow, within the primitive interface.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>stream.c </dd></dl>
@@ -80,7 +79,7 @@
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 1 2012 14:49:41 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

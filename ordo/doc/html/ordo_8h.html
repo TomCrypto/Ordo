@@ -99,7 +99,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Loads Ordo - this calls all the load functions in the different interfaces (encrypt, etc...) </p>
+<p>Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...) </p>
 
 </div>
 </div>
@@ -198,7 +198,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>This convenience function encrypts a buffer of a given length with the provided parameters. </p>
+<p>This function encrypts a buffer of a given length with the provided parameters. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>This points to a plaintext buffer. </td></tr>
@@ -215,10 +215,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns 0 on success, a negative error code on failure. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must be available before encryption can begin. If your requirements make this unacceptable, you should use the encryption interface, located one level of abstraction lower - see <a class="el" href="encrypt_8h.html" title="Symmetric encryption interface.">encrypt.h</a>. </dd>
 <dd>
-The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a block mode with padding enabled is used. See remarks about this in <a class="el" href="encrypt_8h.html" title="Symmetric encryption interface.">encrypt.h</a>. </dd></dl>
+The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a block mode with padding enabled is used. See remarks about padding in <a class="el" href="encrypt_8h.html" title="Symmetric encryption interface.">encrypt.h</a>. </dd></dl>
 
 </div>
 </div>
@@ -300,7 +300,7 @@ The out buffer should have enough space to contain the entire ciphertext, which 
       </table>
 </div>
 <div class="memdoc">
-<p>This convenience function decrypts a buffer of a given length with the provided parameters. </p>
+<p>This function decrypts a buffer of a given length with the provided parameters. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">in</td><td>This points to a ciphertext buffer. </td></tr>
@@ -317,7 +317,7 @@ The out buffer should have enough space to contain the entire ciphertext, which 
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns 0 on success, a negative error code on failure. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Same remarks as for ordoEncrypt. </dd></dl>
 
 </div>
@@ -326,7 +326,7 @@ The out buffer should have enough space to contain the entire ciphertext, which 
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 1 2012 14:49:41 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 2 2012 12:58:57 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
