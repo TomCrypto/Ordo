@@ -17,13 +17,13 @@
 #include <encrypt/encrypt.h>
 #include <random/random.h>
 
-/*! Loads Ordo - this calls all the load functions in the different interfaces (encrypt, etc...) */
+/*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...) */
 void loadOrdo();
 
 /*! Unloads Ordo - this calls all the unload functions in the different interfaces. */
 void unloadOrdo();
 
-/*! This convenience function encrypts a buffer of a given length with the provided parameters.
+/*! This function encrypts a buffer of a given length with the provided parameters.
  \param in This points to a plaintext buffer.
  \param inlen This contains the number of bytes of plaintext.
  \param out This points to the buffer to which to write the ciphertext.
@@ -35,14 +35,14 @@ void unloadOrdo();
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV).
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns 0 on success, a negative error code on failure.
+ \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
  \remark One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must be available before encryption can begin.
  If your requirements make this unacceptable, you should use the encryption interface, located one level of abstraction lower - see encrypt.h.
  \remark The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a block mode with padding enabled
- is used. See remarks about this in encrypt.h. */
+ is used. See remarks about padding in encrypt.h. */
 int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
 
-/*! This convenience function decrypts a buffer of a given length with the provided parameters.
+/*! This function decrypts a buffer of a given length with the provided parameters.
  \param in This points to a ciphertext buffer.
  \param inlen This contains the number of bytes of ciphertext.
  \param out This points to the buffer to which to write the plaintext.
@@ -54,7 +54,7 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
  \param iv This points to the initialization vector (this may be zero if the mode does not use an IV).
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns 0 on success, a negative error code on failure.
+ \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
  \remark Same remarks as for ordoEncrypt. */
 int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
 

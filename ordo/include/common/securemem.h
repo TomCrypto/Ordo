@@ -3,10 +3,9 @@
 
 /**
  * @file securemem.h
- *
  * \brief Secure memory interface.
  *
- * Exposes the Secure Memory API, which is basically a wrapper around malloc and free,
+ * Exposes the Secure Memory API, which is essentially a wrapper around malloc and free,
  * taking care of locking and securely erasing memory for security-sensitive data.
  *
  * \todo Implement other platforms.
@@ -14,17 +13,14 @@
  * @see securemem.c
  */
 
-/* Standard includes. */
-#include <stdlib.h>
-
 /* Library includes. */
 #include "ordotypes.h"
 
 /*! This function returns a pointer that is locked in physical memory.
  \param size The amount of memory to allocate, in bytes.
  \return Returns the allocated pointer on success, or 0 if the function fails. The
- function can fail if malloc fails (if the system is out of memory) or if mlock fails
- (if the process has reached its locked memory limit). None of these conditions should
+ function can fail if allocation fails (if the system is out of memory) or if locking fails
+ (if the process has reached its locked memory limit). Neither of these conditions should
  arise under normal operation.
  \remark Sometimes, operating systems can decide to page out rarely-accessed
  memory to the hard drive. However, once the memory is needed and is paged

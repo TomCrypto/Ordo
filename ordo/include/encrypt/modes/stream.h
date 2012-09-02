@@ -6,8 +6,6 @@
  *
  * \brief STREAM encryption mode of operation interface.
  *
- * Contains the STREAM encryption mode interface.
- *
  * The STREAM mode is different in that it is only compatible with stream cipher primitives. It is very straightforward
  * and simply gets the stream cipher to generate a keystream which is then combined with the plaintext to produce the
  * ciphertext and vice versa.

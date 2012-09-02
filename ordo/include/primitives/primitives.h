@@ -12,6 +12,7 @@
  * @see primitives.c
  */
 
+/* Library dependencies. */
 #include <common/ordotypes.h>
 
 /* Useful macro to initialize a cipher primitive. */
@@ -22,7 +23,12 @@
 /*! Returns the block size of a cipher primitive. */
 #define cipherPrimitiveBlockSize(p) (p->szBlock)
 
-/*! Represents a cipher primitive context. */
+/*! \brief Cipher primitive context.
+ *
+ * This structure describes a cipher primitive context. It is used by
+ * cipher primitives to maintain their state across function calls (this
+ * includes key material and/or actual state for stream ciphers).
+ * It should never be modified outside of these functions. */
 typedef struct CIPHER_PRIMITIVE_CONTEXT
 {
     /*! The cipher primitive in use. */

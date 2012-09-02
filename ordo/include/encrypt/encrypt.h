@@ -10,6 +10,12 @@
  * Note it is always possible to skip this API and directly use the lower-level functions available in the individual cipher and mode of operation
  * headers, but this interface abstracts away some of the more boilerplate details and so should be preferred.
  *
+ * If you wish to use the lower level API, you will need to manage your cipher primitive contexts yourself, which can give more flexibility in
+ * some cases but is usually unnecessary.
+ *
+ * The padding algorithm is PKCS7 (RFC 5652), which appends N bytes of value N, where N is the number of padding
+ * bytes required (between 1 and the cipher's block size in bytes).
+ *
  * @see encrypt.c
  */
 
@@ -23,7 +29,11 @@
 /*! Returns the name of a mode of operation object. */
 #define modeName(m) (m->name)
 
-/*! This structure describes a mode of operation context. */
+/*! \brief Mode of operation context.
+ *
+ * This structure describes a mode of operation context. It is used by
+ * encryption modes of operation to maintain their state across function
+ * calls. It should never be modified outside of these functions. */
 typedef struct ENCRYPT_MODE_CONTEXT
 {
     /*! The mode of operation to use. */
@@ -75,7 +85,11 @@ typedef struct ENCRYPT_MODE
     char* name;
 } ENCRYPT_MODE;
 
-/*! This structure describes a high-level symmetric encryption context. */
+/*! \brief Symmetric encryption context.
+ *
+ * This structure describes a high-level symmetric encryption context.
+ * It contains the context of both the cipher primitive and the mode
+ * of operation, and should be regarded as an opaque container. */
 typedef struct ENCRYPTION_CONTEXT
 {
     /*! The cipher context. */
@@ -100,7 +114,7 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
  \param direction This represents the direction of encryption, set to 1 for encryption and 0 for decryption.
- \return Returns ORDO_ESUCCESS on success, and a negative value on error.
+ \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
  \remark The initialization vector may be zero, if the mode of operation does not require one. */
 int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams, int direction);
 
@@ -111,9 +125,11 @@ int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, vo
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This points to a variable which will contain the number of bytes written to out.
  \remark The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding
- is not used or disabled, out may be exactly as long as buffer, but if padding is enabled, out needs to be sized
+ is not used or disabled, out may be exactly as large as in, but if padding is enabled, out needs to be sized
  appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption,
- either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption. */
+ either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption.
+ \remark By design, the symmetric encryption API considers every buffer given to this function between an \c encryptInit
+ and an \c encryptFinal call to be part of one large buffer, hence care must be taken to respect this assumption. */
 void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
 /*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
@@ -121,9 +137,11 @@ void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, uns
  \param out This points to a buffer which will contain any remaining plaintext (or ciphertext).
  \param outlen This will contain the size of the out buffer, in bytes.
  \param outlen This points to a variable which will contain the number of bytes written to out.
+ \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context.
- \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data. */
+ \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data.
+ \remark If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. */
 int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized encryption context.
@@ -144,7 +162,8 @@ ENCRYPT_MODE* OFB();
 /*! The STREAM mode of operation (for stream ciphers only). */
 ENCRYPT_MODE* STREAM();
 
-/*! Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
+/*!
+ * Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
  * the ECB, CBC, etc... global variables can be used for encryption or decryption. */
 void loadEncryptModes();
 

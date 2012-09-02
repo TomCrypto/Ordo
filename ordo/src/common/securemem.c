@@ -2,7 +2,6 @@
 
 #if PLATFORM_LINUX
 
-#include <string.h>
 #include <sys/mman.h>
 
 /* Secure memory allocation. */

@@ -6,8 +6,6 @@
  *
  * \brief CFB encryption mode of operation interface.
  *
- * Contains the CFB encryption mode interface.
- *
  * The CFB mode generates a keystream by repeatedly encrypting an initialization vector and mixing in
  * the plaintext, effectively turning a block cipher into a stream cipher. As such, CFB mode requires no
  * padding, and outlen will always be equal to inlen.

@@ -3,7 +3,6 @@
 
 /**
  * @file ordotypes.h
- *
  * \brief Library-wide utility header.
  *
  * Contains various library-wide definitions, includes, and utility functions.
@@ -28,19 +27,11 @@
 
 /* The following are some composite data types used in primitives. */
 
-/*! A 128-bit structure with two 64-bit words. */
-typedef struct UINT128_64
-{
-    /*! Two unsigned 64-bit words. */
-    uint64_t words[2];
-} UINT128_64;
+/* A 128-bit structure with two 64-bit words. */
+typedef struct UINT128_64 { uint64_t words[2]; } UINT128_64;
 
-/*! A 256-bit structure with four 64-bit words. */
-typedef struct UINT256_64
-{
-    /*! Four unsigned 64-bit words. */
-    uint64_t words[4];
-} UINT256_64;
+/* A 256-bit structure with four 64-bit words. */
+typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
 
 /* The following are error codes. */
 

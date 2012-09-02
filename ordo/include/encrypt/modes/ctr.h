@@ -4,9 +4,7 @@
 /**
  * @file ctr.h
  *
- * \brief CTR encryption mode of operation.
- *
- * Contains the CTR encryption mode interface.
+ * \brief CTR encryption mode of operation interface.
  *
  * The CTR mode generates a keystream by repeatedly encrypting a counter starting from some
  * initialization vector, effectively turning a block cipher into a stream cipher. As such,

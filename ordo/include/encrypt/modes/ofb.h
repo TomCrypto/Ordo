@@ -6,8 +6,6 @@
  *
  * \brief OFB encryption mode of operation interface.
  *
- * Contains the OFB encryption mode interface.
- *
  * The OFB mode generates a keystream by repeatedly encrypting an initialization vector, effectively
  * turning a block cipher into a stream cipher. As such, OFB mode requires no padding, and outlen
  * will always be equal to inlen.
