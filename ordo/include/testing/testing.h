@@ -44,4 +44,7 @@ void randomTest();
     \remark The bigger the storage buffer, the more accurate the performance reading, but the slower the function. */
 void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
 
+/*! Creates a basic interactive encryption session where the user can specify a cipher, mode, a key, IV, and encrypt/decrypt data. */
+void encryptUserInput();
+
 #endif

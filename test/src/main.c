@@ -48,8 +48,12 @@ int main(int argc, char* argv[])
     /* Free the buffer used for tests. */
     free(buffer);
 
+    /* Do user input once. */
+    printf("-------- User input test --------\n\n");
+    encryptUserInput();
+
     /* Finalize Ordo. */
     unloadOrdo();
-    printf("[+] All operations completed.\n");
+    printf("\n[+] All operations completed.\n");
     return 0;
 }

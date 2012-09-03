@@ -108,7 +108,13 @@ char* readLine(FILE* file)
 {
     #define MAX_LINE_LENGTH 512
     char* line = malloc(MAX_LINE_LENGTH);
-    return fgets(line, MAX_LINE_LENGTH, file);
+    if (fgets(line, MAX_LINE_LENGTH, file) == 0) return 0;
+
+    /* Replace the last char in the line by a null, since fgets includes a \n. */
+    if (strlen(line) > 0) line[strlen(line) - 1] = 0x00;
+
+    /* Return the read line. */
+    return line;
 }
 
 /* Closes the test vector file. */
@@ -403,6 +409,82 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     printf("\n");
 
     /* Clean up. */
+    free(key);
+    free(iv);
+}
+
+/* Asks the user for a cipher primitive and an encryption mode of operation and encrypts user input. */
+void encryptUserInput()
+{
+    /* Ask the user for an algorithm. */
+    printf("Cipher: ");
+    char* algName = readLine(stdin);
+    CIPHER_PRIMITIVE* cipher = getCipherPrimitive(algName);
+    if (cipher == 0)
+    {
+        printf("The cipher could not be found.\n");
+        free(algName);
+        return;
+    }
+
+    /* Ask for a mode of operation. */
+    printf("Mode: ");
+    char* modeName = readLine(stdin);
+    ENCRYPT_MODE* mode = getEncryptMode(modeName);
+    if (mode == 0)
+    {
+        printf("The mode of operation could not be found.\n");
+        free(modeName);
+        free(algName);
+        return;
+    }
+
+    /* Ask for a key. */
+    printf("Key (hex): ");
+    char* keyStr = readLine(stdin);
+
+    /* If the mode of operation needs an IV, ask for one. */
+    char* ivStr = 0;
+    if ((mode != ECB()) && (mode != STREAM()))
+    {
+        printf("IV (hex): ");
+        ivStr = readLine(stdin);
+    }
+
+    /* Ask for the plaintext. */
+    printf("Plaintext (ASCII): ");
+    char* plaintext = readLine(stdin);
+
+    /* Process the key and IV. */
+    size_t keySize, ivSize;
+    void* key = hexToBuffer(keyStr, &keySize);
+    void* iv = hexToBuffer(ivStr, &ivSize);
+
+    /* Prepare space for the output. */
+    void* ciphertext = malloc(strlen(plaintext) + cipherPrimitiveBlockSize(cipher));
+    size_t outlen;
+
+    /* Encrypt with the user-specified parameters. */
+    int error = ordoEncrypt((unsigned char*)plaintext, strlen(plaintext), ciphertext, &outlen, cipher, mode, key, keySize, iv, 0, 0);
+    if (error < 0) printf("An error occurred: %s\n", errorMsg(error));
+    else
+    {
+        /* Print ouf the ciphertext. */
+        char* ciphertextStr = bufferToHex(ciphertext, outlen);
+        printf("Ciphertext (hex): %s\n", ciphertextStr);
+        free(ciphertextStr);
+
+        /* Decrypt back again, just to check. */
+        error = ordoDecrypt(ciphertext, outlen, (unsigned char*)plaintext, &outlen, cipher, mode, key, keySize, iv, 0, 0);
+        if (error < 0) printf("An error occurred: %s\n", errorMsg(error));
+        else printf("Plaintext (ASCII): %s\n", plaintext);
+    }
+
+    /* Clean up. */
+    free(ciphertext);
+    free(plaintext);
+    free(modeName);
+    free(algName);
     free(key);
     free(iv);
 }
