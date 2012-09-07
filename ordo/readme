@@ -1,4 +1,4 @@
-Ordo v1.0.0
+Ordo v1.0.1
 -----------
 
 ########### BREAKING NEWS ###########
@@ -76,7 +76,7 @@ GCC is the recommended compiler, as environmental symbols are somewhat compiler-
 Instructions for Linux: just use the makefile, and it should work out of the box. The C::B project file can be used too, if you have Code::Blocks installed.
 Instructions For Windows:
   - if you use the makefiles (discouraged under Windows) you will need to edit them so as to replace the references to libordo.so by ordo.dll, and it should compile.
-  - if you use the C::B project file, just disable the makefile and manually add the compiler flags in the build options, and add the DLL to the linker directories in the test program. Also change some output locations (use common sense) as C::B tends to make some assumptions which aren't usually the best. You should not have to change a single line of code except perhaps to fix incompatible format flags (%zu to %d)
+  - if you use the C::B project file, just disable the makefile and manually add the compiler flags in the build options, and add the DLL to the linker directories in the test program. Also change some output locations (use common sense) as C::B tends to make some assumptions which aren't usually the best. You should not have to change a single line of code except perhaps trivial compiler-specific things
 
 -------- CONCLUSION --------
 
