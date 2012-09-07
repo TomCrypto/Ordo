@@ -39,7 +39,7 @@ int ordoRandom(unsigned char* buffer, size_t size)
 {
     /* Acquire a CSP token. */
     HCRYPTPROV hProv;
-    CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0); // ?
+    CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0); /* ? */
     if (hProv == 0) return ORDO_EFAIL;
 
     /* Generate pseudorandom bytes. */

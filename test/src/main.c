@@ -4,6 +4,10 @@
 
 int main(int argc, char* argv[])
 {
+    /* Use a 128MB buffer size in performance tests to get decent resolution. */
+    #define BUFSIZE (1024 * 1024 * 128)
+    unsigned char* buffer;
+
     /* The test vector file. */
     FILE* vectors;
 
@@ -31,11 +35,8 @@ int main(int argc, char* argv[])
     /* Evaluate performance of relevant ciphers and modes. */
     printf("-------- Performance tests for the encrypt module --------\n\n");
 
-    /* Use a 128MB buffer size in performance tests to get decent resolution. */
-    #define BUFSIZE (1024 * 1024 * 128)
-
     /* Allocate a large buffer to store plaintext/ciphertext. */
-    unsigned char* buffer = malloc(BUFSIZE);
+    buffer = malloc(BUFSIZE);
 
     /* Test some cipher primitives & encryption modes. */
     encryptPerformance(Threefish256(), ECB(), 32, buffer, BUFSIZE);

@@ -3,13 +3,6 @@
 /* Prints out environment information. */
 void displayEnvironmentInfo()
 {
-    /* Print out whether we are in debug or release mode. */
-	#if ORDO_DEBUG
-	printf("[+] Debug build.\n");
-	#else
-    printf("[+] Release build.\n");
-	#endif
-
     /* First, find the platform. */
     #if PLATFORM_WINDOWS
     char* platform = "Windows";
@@ -32,6 +25,13 @@ void displayEnvironmentInfo()
     #elif ABI_CDECL
     char* ABI = "cdecl x86";
     #endif
+
+    /* Print out whether we are in debug or release mode. */
+	#if ORDO_DEBUG
+	printf("[+] Debug build.\n");
+	#else
+    printf("[+] Release build.\n");
+	#endif
 
     /* Print out this information. */
     printf("[+] Environment: %s, %s, %s.\n", platform, environment, ABI);
@@ -157,7 +157,10 @@ char* readToken(char* line, size_t n)
 unsigned char* hexToBuffer(char* str, size_t* outlen)
 {
     /* Temporary variable since sscanf is incapable of reading a single hex byte. */
-    int tmp = 0;
+    unsigned char* buf;
+    unsigned int tmp = 0;
+    size_t len;
+    size_t t;
 
     /* If we got an empty string, return null. */
     if ((str == 0) || (strlen(str) == 0))
@@ -167,10 +170,9 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
     }
 
     /* Allocate the memory needed. */
-    unsigned char* buf = malloc(strlen(str) / 2);
+    buf = malloc(strlen(str) / 2);
     *outlen = strlen(str) / 2;
-    size_t len = strlen(str);
-    size_t t;
+    len = strlen(str);
 
     /* Read each two characters. */
     for (t = 0; t < len / 2; t++)
@@ -231,6 +233,7 @@ int runEncryptTest(char* line, int n)
     unsigned char* computedCiphertext = malloc(ciphertextlen);
     size_t computedPlaintextLen;
     size_t computedCiphertextLen;
+    int error;
 
     /* Get the proper primitive and mode. */
     CIPHER_PRIMITIVE* primitive = getCipherPrimitive(primitiveName);
@@ -247,7 +250,7 @@ int runEncryptTest(char* line, int n)
     }
 
     /* Perform the encryption test. */
-    int error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
+    error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
     if (error < 0)
     {
         printf("[!] Test vector #%.3d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
@@ -378,7 +381,7 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     memset(key, 0, keySize);
 
     /* Print primitive/mode information. */
-    printf("[+] Testing %s/%s with a %zu-bit key...\n", primitiveName(primitive), modeName(mode), keySize * 8);
+    printf("[+] Testing %s/%s with a %d-bit key...\n", primitiveName(primitive), modeName(mode), (int)keySize * 8);
 
     /* Save starting time. */
     start = clock();
@@ -416,10 +419,26 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
 /* Asks the user for a cipher primitive and an encryption mode of operation and encrypts user input. */
 void encryptUserInput()
 {
+    /* Variables. */
+    CIPHER_PRIMITIVE* cipher;
+    ENCRYPT_MODE* mode;
+    char* algName;
+    char* modeName;
+    char* keyStr;
+    char* ivStr;
+    char* plaintext;
+    size_t keySize;
+    size_t ivSize;
+    void* key;
+    void* iv;
+    void* ciphertext;
+    size_t outlen;
+    int error;
+
     /* Ask the user for an algorithm. */
     printf("Cipher: ");
-    char* algName = readLine(stdin);
-    CIPHER_PRIMITIVE* cipher = getCipherPrimitive(algName);
+    algName = readLine(stdin);
+    cipher = getCipherPrimitive(algName);
     if (cipher == 0)
     {
         printf("The cipher could not be found.\n");
@@ -429,8 +448,8 @@ void encryptUserInput()
 
     /* Ask for a mode of operation. */
     printf("Mode: ");
-    char* modeName = readLine(stdin);
-    ENCRYPT_MODE* mode = getEncryptMode(modeName);
+    modeName = readLine(stdin);
+    mode = getEncryptMode(modeName);
     if (mode == 0)
     {
         printf("The mode of operation could not be found.\n");
@@ -441,10 +460,10 @@ void encryptUserInput()
 
     /* Ask for a key. */
     printf("Key (hex): ");
-    char* keyStr = readLine(stdin);
+    keyStr = readLine(stdin);
 
     /* If the mode of operation needs an IV, ask for one. */
-    char* ivStr = 0;
+    ivStr = 0;
     if ((mode != ECB()) && (mode != STREAM()))
     {
         printf("IV (hex): ");
@@ -453,19 +472,17 @@ void encryptUserInput()
 
     /* Ask for the plaintext. */
     printf("Plaintext (ASCII): ");
-    char* plaintext = readLine(stdin);
+    plaintext = readLine(stdin);
 
     /* Process the key and IV. */
-    size_t keySize, ivSize;
-    void* key = hexToBuffer(keyStr, &keySize);
-    void* iv = hexToBuffer(ivStr, &ivSize);
+    key = hexToBuffer(keyStr, &keySize);
+    iv = hexToBuffer(ivStr, &ivSize);
 
     /* Prepare space for the output. */
-    void* ciphertext = malloc(strlen(plaintext) + cipherPrimitiveBlockSize(cipher));
-    size_t outlen;
+    ciphertext = malloc(strlen(plaintext) + cipherPrimitiveBlockSize(cipher));
 
     /* Encrypt with the user-specified parameters. */
-    int error = ordoEncrypt((unsigned char*)plaintext, strlen(plaintext), ciphertext, &outlen, cipher, mode, key, keySize, iv, 0, 0);
+    error = ordoEncrypt((unsigned char*)plaintext, strlen(plaintext), ciphertext, &outlen, cipher, mode, key, keySize, iv, 0, 0);
     if (error < 0) printf("An error occurred: %s\n", errorMsg(error));
     else
     {

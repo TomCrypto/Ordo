@@ -1,7 +1,7 @@
 #include <primitives/primitives.h>
 #include <primitives/ciphers/threefish256.h>
 
-#define THREEFISH256_BLOCK (32) // 256-bit block
+#define THREEFISH256_BLOCK (32) /* 256-bit block */
 
 /* 64-bit left and right rotation. */
 #define ROL(n, r) ((n << r) | (n >> (64 - r)))
@@ -42,7 +42,7 @@ int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t 
     keyWords[3] = key->words[3];
 
     /* Calculate the extended key and tweak words. */
-    keyWords[4] = keyWords[0] ^ keyWords[1] ^ keyWords[2] ^ keyWords[3] ^ 0x1BD11BDAA9FC1A22LL;
+    keyWords[4] = keyWords[0] ^ keyWords[1] ^ keyWords[2] ^ keyWords[3] ^ 0x1BD11BDAA9FC1A22;
     tweakWords[2] = tweakWords[0] ^ tweakWords[1];
 
     /* Generate each subkey in a cyclic fashion. */

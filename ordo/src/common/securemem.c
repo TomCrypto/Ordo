@@ -11,6 +11,14 @@ void* salloc(size_t size)
      * in practice, as the limit is quite high and this should only be used for sensitive data such as cryptographic contexts
      * (which contain key material and plaintext in temporary buffers) which, usually, should not take up much memory. */
     void* ptr = malloc(size);
+
+    /* "Band-aid" error checking. */
+    if (ptr == 0)
+    {
+        perror("malloc");
+        exit(2);
+    }
+
     return mlock(ptr, size) ? 0 : ptr;
 }
 

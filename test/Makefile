@@ -1,8 +1,8 @@
 # Debug flags (no optimization and debug symbols on)
-CFLAGS_DEBUG = -O0 -ggdb
+CFLAGS_DEBUG = -O0 -pedantic -pipe -ggdb
 
 # Release flags (optimization on, no debug symbols)
-CFLAGS_RELEASE = -O2
+CFLAGS_RELEASE = -O2 -pedantic -pipe
 
 # Default build is release
 default: release

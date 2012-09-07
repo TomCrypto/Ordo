@@ -68,10 +68,14 @@ ENCRYPT_MODE* STREAM() { return _STREAM; }
 /* This function returns an initialized encryption context using a specific primitive and mode of operation. */
 ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode)
 {
-    /* Allocate the cipher and mode contexts. */
+    /* Allocate the encryption context. */
     ENCRYPTION_CONTEXT* ctx = salloc(sizeof(ENCRYPTION_CONTEXT));
-    ctx->mode = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+
+    /* Create the cipher context. */
     ctx->cipher = cipherCreate(primitive);
+
+    /* Allocate the mode context. */
+    ctx->mode = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
 
     /* Create the mode context. */
     mode->fCreate(ctx->mode, ctx->cipher);
