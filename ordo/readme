@@ -41,7 +41,7 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
         [x] NullCipher
         [x] Threefish-256
         [x] RC4
-	[ ] hashes
+    [ ] hashes
     [ ] misc
 [x] encrypt
     [x] ECB
