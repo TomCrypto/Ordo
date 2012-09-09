@@ -95,6 +95,11 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ENCRYPT_MODE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#afd8c8bb303af625f34431caac6b797bf">OFB</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ENCRYPT_MODE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a433699e2fc9d0c997fc3c3f69ae4c6eb">STREAM</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ENCRYPT_MODE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a16dda56f8f7d72075bb4a00c788e1219">getEncryptMode</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a62d15c8ed396c52f2936813dc9d115ae">encryptModeCreate</a> (ENCRYPT_MODE *mode, <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *cipher)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a07d91dc9b02722c52575a344f2cc018c">encryptModeInit</a> (<a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *ctx, <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *cipher, void *iv, void *modeParams, int direction)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a574243e97cb896e13dbd3e1cd1b264f4">encryptModeUpdate</a> (<a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *ctx, <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *cipher, unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a0ccb05403a59b12490380f57c20d72ff">encryptModeFinal</a> (<a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *ctx, <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *cipher, unsigned char *out, size_t *outlen)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#ada8e8c1933363578b573bb270a78fa22">encryptModeFree</a> (<a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *ctx, <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *cipher)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html">ENCRYPTION_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a4383b4295ff553f245623483fa17b5ba">encryptCreate</a> (CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a4fb43e9f859010383ff272dc19474c6a">encryptInit</a> (<a class="el" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html">ENCRYPTION_CONTEXT</a> *ctx, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams, int direction)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="encrypt_8h.html#a413d2b02feb780526dc5f52dba2fbefe">encryptUpdate</a> (<a class="el" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html">ENCRYPTION_CONTEXT</a> *ctx, unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen)</td></tr>
@@ -281,6 +286,259 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a62d15c8ed396c52f2936813dc9d115ae"></a><!-- doxytag: member="encrypt.h::encryptModeCreate" ref="a62d15c8ed396c52f2936813dc9d115ae" args="(ENCRYPT_MODE *mode, CIPHER_PRIMITIVE_CONTEXT *cipher)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a>* <a class="el" href="encrypt_8h.html#a62d15c8ed396c52f2936813dc9d115ae">encryptModeCreate</a> </td>
+          <td>(</td>
+          <td class="paramtype">ENCRYPT_MODE *&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function returns an allocated encryption mode context using a specific mode of operation and initialized cipher context. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>The mode of operation object to be used. </td></tr>
+    <tr><td class="paramname">cipher</td><td>The cipher primitive context to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated encryption context, or 0 if an allocation error occurred. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a07d91dc9b02722c52575a344f2cc018c"></a><!-- doxytag: member="encrypt.h::encryptModeInit" ref="a07d91dc9b02722c52575a344f2cc018c" args="(ENCRYPT_MODE_CONTEXT *ctx, CIPHER_PRIMITIVE_CONTEXT *cipher, void *iv, void *modeParams, int direction)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="encrypt_8h.html#a07d91dc9b02722c52575a344f2cc018c">encryptModeInit</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>iv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>modeParams</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>direction</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function initializes an encryption mode context for encryption, provided an initialization vector and mode-specific parameters. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>An allocated encryption mode context. </td></tr>
+    <tr><td class="paramname">cipher</td><td>The cipher primitive context to use. </td></tr>
+    <tr><td class="paramname">iv</td><td>This points to the initialization vector. Note the length of the initialization vector is known to be the same as the block size of the cipher primitive associated with the provided encryption context. </td></tr>
+    <tr><td class="paramname">modeParams</td><td>This contains mode-specific parameters, to enable or disable specific behavior. </td></tr>
+    <tr><td class="paramname">direction</td><td>This represents the direction of encryption, set to 1 for encryption and 0 for decryption. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, and a negative value on error. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>The initialization vector may be zero, if the mode of operation does not require one. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a574243e97cb896e13dbd3e1cd1b264f4"></a><!-- doxytag: member="encrypt.h::encryptModeUpdate" ref="a574243e97cb896e13dbd3e1cd1b264f4" args="(ENCRYPT_MODE_CONTEXT *ctx, CIPHER_PRIMITIVE_CONTEXT *cipher, unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="encrypt_8h.html#a574243e97cb896e13dbd3e1cd1b264f4">encryptModeUpdate</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>inlen</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function encrypts or decrypts a buffer of a given length using the provided encryption mode context. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The encryption mode context to use. This context must have been allocated and initialized. </td></tr>
+    <tr><td class="paramname">cipher</td><td>The cipher primitive context to use. </td></tr>
+    <tr><td class="paramname">in</td><td>This points to a buffer containing plaintext (or ciphertext). </td></tr>
+    <tr><td class="paramname">inlen</td><td>This contains the size of the in buffer, in bytes. </td></tr>
+    <tr><td class="paramname">out</td><td>This points to a buffer which will contain the plaintext (or ciphertext). </td></tr>
+    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to out. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding is not used or disabled, out may be exactly as large as in, but if padding is enabled, out needs to be sized appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption, either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption. </dd>
+<dd>
+By design, the symmetric encryption API considers every buffer given to this function between an <code>encryptModeInit</code> and an <code>encryptModeFinal</code> call to be part of one large buffer, hence care must be taken to respect this assumption. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0ccb05403a59b12490380f57c20d72ff"></a><!-- doxytag: member="encrypt.h::encryptModeFinal" ref="a0ccb05403a59b12490380f57c20d72ff" args="(ENCRYPT_MODE_CONTEXT *ctx, CIPHER_PRIMITIVE_CONTEXT *cipher, unsigned char *out, size_t *outlen)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="encrypt_8h.html#a0ccb05403a59b12490380f57c20d72ff">encryptModeFinal</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>outlen</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function finalizes an encryption mode context, and will process and return any leftover plaintext or ciphertext. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The encryption mode context to use. This context must have been allocated and initialized. </td></tr>
+    <tr><td class="paramname">cipher</td><td>The cipher primitive context to use. </td></tr>
+    <tr><td class="paramname">out</td><td>This points to a buffer which will contain any remaining plaintext (or ciphertext). </td></tr>
+    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to out. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, and a negative value on error. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context can no longer be used for encryption or decryption. </dd>
+<dd>
+If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. </dd>
+<dd>
+If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data. </dd>
+<dd>
+If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ada8e8c1933363578b573bb270a78fa22"></a><!-- doxytag: member="encrypt.h::encryptModeFree" ref="ada8e8c1933363578b573bb270a78fa22" args="(ENCRYPT_MODE_CONTEXT *ctx, CIPHER_PRIMITIVE_CONTEXT *cipher)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="encrypt_8h.html#ada8e8c1933363578b573bb270a78fa22">encryptModeFree</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html">ENCRYPT_MODE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function frees (deallocates) an initialized encryption mode context. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The encryption context to be freed. This context needs to at least have been allocated. </td></tr>
+    <tr><td class="paramname">cipher</td><td>The cipher primitive context to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. Do not call this function if <code>encryptModeCreate</code> failed, as the latter correctly frees dangling context buffers in case of error. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a4383b4295ff553f245623483fa17b5ba"></a><!-- doxytag: member="encrypt.h::encryptCreate" ref="a4383b4295ff553f245623483fa17b5ba" args="(CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode)" -->
 <div class="memitem">
 <div class="memproto">
@@ -313,7 +571,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated encryption context, or 0 if an error occurred. An error may occur if the specified primitive or encryption mode is invalid, or if heap memory allocation failed. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated encryption context, or 0 if an allocation error occurred. </dd></dl>
 
 </div>
 </div>
@@ -442,9 +700,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding is not used or disabled, out may be exactly as large as in, but if padding is enabled, out needs to be sized appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption, either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption. </dd>
-<dd>
-By design, the symmetric encryption API considers every buffer given to this function between an <code>encryptInit</code> and an <code>encryptFinal</code> call to be part of one large buffer, hence care must be taken to respect this assumption. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>See <code>encryptModeUpdate</code> remarks about output buffer size. </dd></dl>
 
 </div>
 </div>
@@ -483,7 +739,6 @@ By design, the symmetric encryption API considers every buffer given to this fun
   <table class="params">
     <tr><td class="paramname">ctx</td><td>The encryption context to use. This context must have been allocated and initialized. </td></tr>
     <tr><td class="paramname">out</td><td>This points to a buffer which will contain any remaining plaintext (or ciphertext). </td></tr>
-    <tr><td class="paramname">outlen</td><td>This will contain the size of the out buffer, in bytes. </td></tr>
     <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to out. </td></tr>
   </table>
   </dd>
@@ -491,11 +746,7 @@ By design, the symmetric encryption API considers every buffer given to this fun
 <dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, and a negative value on error. </dd></dl>
 <dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context can no longer be used for encryption or decryption. </dd>
 <dd>
-If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context. </dd>
-<dd>
-If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data. </dd>
-<dd>
-If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. </dd></dl>
+See <code>encryptModeFinal</code> remarks. </dd></dl>
 
 </div>
 </div>
@@ -528,7 +779,7 @@ If padding is enabled, out should have space to hold at most one additional bloc
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Sep 9 2012 21:18:05 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 10 2012 08:10:56 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
