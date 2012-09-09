@@ -121,11 +121,61 @@ ENCRYPT_MODE* STREAM();
 /*! Gets an encryption mode object from a name. */
 ENCRYPT_MODE* getEncryptMode(char* name);
 
+/*! This function returns an allocated encryption mode context using a specific mode of operation and initialized cipher context.
+ \param mode The mode of operation object to be used.
+ \param cipher The cipher primitive context to use.
+ \return Returns the allocated encryption context, or 0 if an allocation error occurred. */
+ENCRYPT_MODE_CONTEXT* encryptModeCreate(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
+
+/*! This function initializes an encryption mode context for encryption, provided an initialization vector and mode-specific parameters.
+ \param ctx An allocated encryption mode context.
+ \param cipher The cipher primitive context to use.
+ \param iv This points to the initialization vector. Note the length of the initialization vector is known to be
+ the same as the block size of the cipher primitive associated with the provided encryption context.
+ \param modeParams This contains mode-specific parameters, to enable or disable specific behavior.
+ \param direction This represents the direction of encryption, set to 1 for encryption and 0 for decryption.
+ \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
+ \remark The initialization vector may be zero, if the mode of operation does not require one. */
+int encryptModeInit(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* modeParams, int direction);
+
+/*! This function encrypts or decrypts a buffer of a given length using the provided encryption mode context.
+ \param ctx The encryption mode context to use. This context must have been allocated and initialized.
+ \param cipher The cipher primitive context to use.
+ \param in This points to a buffer containing plaintext (or ciphertext).
+ \param inlen This contains the size of the in buffer, in bytes.
+ \param out This points to a buffer which will contain the plaintext (or ciphertext).
+ \param outlen This points to a variable which will contain the number of bytes written to out.
+ \remark The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding
+ is not used or disabled, out may be exactly as large as in, but if padding is enabled, out needs to be sized
+ appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption,
+ either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption.
+ \remark By design, the symmetric encryption API considers every buffer given to this function between an \c encryptModeInit
+ and an \c encryptModeFinal call to be part of one large buffer, hence care must be taken to respect this assumption. */
+void encryptModeUpdate(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+
+/*! This function finalizes an encryption mode context, and will process and return any leftover plaintext or ciphertext.
+ \param ctx The encryption mode context to use. This context must have been allocated and initialized.
+ \param cipher The cipher primitive context to use.
+ \param out This points to a buffer which will contain any remaining plaintext (or ciphertext).
+ \param outlen This points to a variable which will contain the number of bytes written to out.
+ \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
+ \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
+ \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context.
+ \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data.
+ \remark If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. */
+int encryptModeFinal(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen);
+
+/*! This function frees (deallocates) an initialized encryption mode context.
+ \param ctx The encryption context to be freed. This context needs to at least have been allocated.
+ \param cipher The cipher primitive context to use.
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
+ Do not call this function if \c encryptModeCreate failed, as the latter correctly frees dangling context buffers in case of error. */
+void encryptModeFree(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher);
+
 /*! This function returns an allocated encryption context using a specific primitive and mode of operation.
  \param primitive The primitive object to be used.
  \param mode The mode of operation object to be used.
- \return Returns the allocated encryption context, or 0 if an error occurred. An error may occur if the specified
- primitive or encryption mode is invalid, or if heap memory allocation failed. */
+ \return Returns the allocated encryption context, or 0 if an allocation error occurred. */
 ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode);
 
 /*! This function initializes an encryption context for encryption, provided a key, initialization vector,
@@ -148,24 +198,16 @@ int encryptInit(ENCRYPTION_CONTEXT* ctx, void* key, size_t keySize, void* iv, vo
  \param inlen This contains the size of the in buffer, in bytes.
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This points to a variable which will contain the number of bytes written to out.
- \remark The out buffer should have enough space to store the entire resulting ciphertext or plaintext If padding
- is not used or disabled, out may be exactly as large as in, but if padding is enabled, out needs to be sized
- appropriately either up to the nearest cipher block size (outlen strictly greater than inlen) for encryption,
- either down to the nearest cipher block size for decryption (outlen strictly less than inlen) for decryption.
- \remark By design, the symmetric encryption API considers every buffer given to this function between an \c encryptInit
- and an \c encryptFinal call to be part of one large buffer, hence care must be taken to respect this assumption. */
+ \remark See \c encryptModeUpdate remarks about output buffer size. */
 void encryptUpdate(ENCRYPTION_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
 /*! This function finalizes an encryption context, and will process and return any leftover plaintext or ciphertext.
  \param ctx The encryption context to use. This context must have been allocated and initialized.
  \param out This points to a buffer which will contain any remaining plaintext (or ciphertext).
- \param outlen This will contain the size of the out buffer, in bytes.
  \param outlen This points to a variable which will contain the number of bytes written to out.
  \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
- \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context.
- \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data.
- \remark If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. */
+ \remark See \c encryptModeFinal remarks. */
 int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized encryption context.

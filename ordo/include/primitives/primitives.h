@@ -86,8 +86,7 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name);
 
 /*! This function returns an allocated cipher primitive context using a specific cipher primitive.
  \param primitive The primitive object to be used.
- \return Returns the allocated cipher primitive context, or 0 if an error occurred. An error can occur
- either if the specified primitive is invalid, or if heap memory allocation failed. */
+ \return Returns the allocated cipher primitive context, or 0 if an allocation error occurred. */
 CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive);
 
 /*! This function initializes an cipher primitive context for encryption, provided a key and cipher parameters.
