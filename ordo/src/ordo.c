@@ -1,7 +1,7 @@
 #include <ordo.h>
 
 /* Load Ordo. */
-void loadOrdo()
+void ordoLoad()
 {
     /* Load all cryptographic primitives. */
     primitivesLoad();
@@ -11,7 +11,7 @@ void loadOrdo()
 }
 
 /* Unload Ordo. */
-void unloadOrdo()
+void ordoUnload()
 {
     /* Unload all encryption modes of operation. */
     encryptUnload();
@@ -21,7 +21,7 @@ void unloadOrdo()
 }
 
 /* Print information about the environment under which the library was built, to the specified file descriptor. */
-void envOrdo(FILE* out)
+void ordoEnv(FILE* out)
 {
     /* First, find the platform. */
     #if PLATFORM_WINDOWS

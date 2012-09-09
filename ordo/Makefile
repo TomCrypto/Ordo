@@ -1,8 +1,8 @@
 # Debug flags (no optimization, native feature flags, warnings, and ordo debug flag)
-CFLAGS_DEBUG = -O0 -Wall -Wno-implicit-function-declaration -pedantic -pipe -march=native -mno-avx -D ORDO_DEBUG -ggdb
+CFLAGS_DEBUG = -O0 -Wall -Wno-implicit-function-declaration -Wno-long-long -pedantic -pipe -march=native -mno-avx -D ORDO_DEBUG -ggdb
 
 # Release flags (full optimization, native feature flags, warnings)
-CFLAGS_RELEASE = -O6 -Wall -Wno-implicit-function-declaration -pedantic -pipe -march=native -mno-avx
+CFLAGS_RELEASE = -O6 -Wall -Wno-implicit-function-declaration -Wno-long-long -pedantic -pipe -march=native -mno-avx
 
 # The default build target is release
 default: release

@@ -12,10 +12,10 @@ int main(int argc, char* argv[])
     FILE* vectors;
 
     /* Display environment info. */
-    envOrdo(stdout);
+    ordoEnv(stdout);
 
     /* Initialize Ordo. */
-    loadOrdo();
+    ordoLoad();
 
     /* First of all, get the CSPRNG test out of the way. */
     printf("-------- Tests for the random module --------\n\n");
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     encryptUserInput();
 
     /* Finalize Ordo. */
-    unloadOrdo();
+    ordoUnload();
     printf("\n[+] All operations completed.\n");
     return 0;
 }
