@@ -101,7 +101,8 @@ typedef struct ENCRYPTION_CONTEXT
 /*! This function returns an allocated encryption context using a specific primitive and mode of operation.
  \param primitive The primitive object to be used.
  \param mode The mode of operation object to be used.
- \return Returns the allocated encryption context, or 0 if an error occurred. */
+ \return Returns the allocated encryption context, or 0 if an error occurred. An error may occur if the specified
+ primitive or encryption mode is invalid, or if heap memory allocation failed. */
 ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode);
 
 /*! This function initializes an encryption context for encryption, provided a key, initialization vector,
@@ -146,7 +147,8 @@ int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized encryption context.
  \param ctx The encryption context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. */
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
+ Do not call this function if \c encryptCreate failed, as the latter correctly frees dangling context buffers in case of error. */
 void encryptFree(ENCRYPTION_CONTEXT* ctx);
 
 /*! The ECB (Electronic CodeBook) mode of operation. */

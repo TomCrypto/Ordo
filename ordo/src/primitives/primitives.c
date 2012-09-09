@@ -43,12 +43,16 @@ CIPHER_PRIMITIVE* Threefish256() { return _Threefish256; }
 /* This function returns an initialized cipher primitive context using a specific primitive. */
 CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive)
 {
-    /* Allocate and create the cipher context. */
+    /* Allocate the cipher context. */
     CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
-    ctx->primitive = primitive;
-    primitive->fCreate(ctx);
+    if (ctx)
+    {
+        /* If the allocation succeeded, create the context. */
+        ctx->primitive = primitive;
+        primitive->fCreate(ctx);
+    }
 
-    /* Return the allocated context. */
+    /* Return the context (allocated or not). */
     return ctx;
 }
 
