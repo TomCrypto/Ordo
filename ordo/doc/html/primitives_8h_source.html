@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.0.1</span>
+   &#160;<span id="projectnumber">1.0.2</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -110,9 +110,9 @@
 <a name="l00065"></a>00065     <span class="keywordtype">char</span>* name;
 <a name="l00066"></a>00066 } CIPHER_PRIMITIVE;
 <a name="l00067"></a>00067 
-<a name="l00070"></a>00070 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#a27b0b82d7fcc7c6ffdcaf944e60a28cc">loadPrimitives</a>();
+<a name="l00070"></a>00070 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a>();
 <a name="l00071"></a>00071 
-<a name="l00073"></a>00073 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#ab1f167611b96a3650ad1d46f82445902">unloadPrimitives</a>();
+<a name="l00073"></a>00073 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#a8818252cdaa3df9a4446fb77c06e670d">primitivesUnload</a>();
 <a name="l00074"></a>00074 
 <a name="l00076"></a>00076 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a>();
 <a name="l00077"></a>00077 
@@ -120,18 +120,20 @@
 <a name="l00080"></a>00080 
 <a name="l00082"></a>00082 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a>();
 <a name="l00083"></a>00083 
-<a name="l00087"></a>00087 <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="code" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a>(CIPHER_PRIMITIVE* primitive);
-<a name="l00088"></a>00088 
-<a name="l00095"></a>00095 <span class="keywordtype">int</span> <a class="code" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* cipherParams);
-<a name="l00096"></a>00096 
-<a name="l00100"></a>00100 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx);
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102 <span class="preprocessor">#endif</span>
+<a name="l00085"></a>00085 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a318683daf1e5ec091811c2c8ab4763cd">getCipherPrimitive</a>(<span class="keywordtype">char</span>* name);
+<a name="l00086"></a>00086 
+<a name="l00091"></a>00091 <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="code" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a>(CIPHER_PRIMITIVE* primitive);
+<a name="l00092"></a>00092 
+<a name="l00099"></a>00099 <span class="keywordtype">int</span> <a class="code" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* cipherParams);
+<a name="l00100"></a>00100 
+<a name="l00105"></a>00105 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a>(<a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* ctx);
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 8 2012 01:06:19 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 9 2012 21:18:05 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

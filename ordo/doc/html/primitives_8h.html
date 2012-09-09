@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.0.1</span>
+   &#160;<span id="projectnumber">1.0.2</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -84,11 +84,12 @@ Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a3f1e79017e1ef0a015460c4447b7eb83">cipherPrimitiveBlockSize</a>(p)</td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a27b0b82d7fcc7c6ffdcaf944e60a28cc">loadPrimitives</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#ab1f167611b96a3650ad1d46f82445902">unloadPrimitives</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a8818252cdaa3df9a4446fb77c06e670d">primitivesUnload</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a318683daf1e5ec091811c2c8ab4763cd">getCipherPrimitive</a> (char *name)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a> (CIPHER_PRIMITIVE *primitive)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx)</td></tr>
@@ -135,12 +136,12 @@ Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a27b0b82d7fcc7c6ffdcaf944e60a28cc"></a><!-- doxytag: member="primitives.h::loadPrimitives" ref="a27b0b82d7fcc7c6ffdcaf944e60a28cc" args="()" -->
+<a class="anchor" id="a1bb3f1cc1b36e7d5b72faf7bba8c0c2c"></a><!-- doxytag: member="primitives.h::primitivesLoad" ref="a1bb3f1cc1b36e7d5b72faf7bba8c0c2c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="primitives_8h.html#a27b0b82d7fcc7c6ffdcaf944e60a28cc">loadPrimitives</a> </td>
+          <td class="memname">void <a class="el" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -152,12 +153,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab1f167611b96a3650ad1d46f82445902"></a><!-- doxytag: member="primitives.h::unloadPrimitives" ref="ab1f167611b96a3650ad1d46f82445902" args="()" -->
+<a class="anchor" id="a8818252cdaa3df9a4446fb77c06e670d"></a><!-- doxytag: member="primitives.h::primitivesUnload" ref="a8818252cdaa3df9a4446fb77c06e670d" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="primitives_8h.html#ab1f167611b96a3650ad1d46f82445902">unloadPrimitives</a> </td>
+          <td class="memname">void <a class="el" href="primitives_8h.html#a8818252cdaa3df9a4446fb77c06e670d">primitivesUnload</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -220,6 +221,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a318683daf1e5ec091811c2c8ab4763cd"></a><!-- doxytag: member="primitives.h::getCipherPrimitive" ref="a318683daf1e5ec091811c2c8ab4763cd" args="(char *name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#a318683daf1e5ec091811c2c8ab4763cd">getCipherPrimitive</a> </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns a cipher primitive object from a name. </p>
+
+</div>
+</div>
 <a class="anchor" id="afd13603a5ffa8764448c1dfcf3241e97"></a><!-- doxytag: member="primitives.h::cipherCreate" ref="afd13603a5ffa8764448c1dfcf3241e97" args="(CIPHER_PRIMITIVE *primitive)" -->
 <div class="memitem">
 <div class="memproto">
@@ -241,7 +260,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated cipher primitive context, or 0 if an error occurred. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated cipher primitive context, or 0 if an error occurred. An error can occur either if the specified primitive is invalid, or if heap memory allocation failed. </dd></dl>
 
 </div>
 </div>
@@ -316,7 +335,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if <code>cipherCreate</code> failed. </dd></dl>
 
 </div>
 </div>
@@ -324,7 +343,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 8 2012 01:06:19 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 9 2012 21:18:05 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

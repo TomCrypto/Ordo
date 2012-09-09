@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.0.1</span>
+   &#160;<span id="projectnumber">1.0.2</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -70,12 +70,12 @@
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="ordo_8h_source.html">ordo.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="ordotypes_8h_source.html">common/ordotypes.h</a>&gt;</code><br/>
+<code>#include &lt;stdio.h&gt;</code><br/>
 </div>
 <p><a href="testing_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="testing_8h.html#aa19ec3244da1926f149d70b87520f6aa">displayEnvironmentInfo</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="testing_8h.html#a30763b774a8757f45ffd427fc4114a59">loadTestVectors</a> (char *path)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="testing_8h.html#a8e6326f547940c1556f19e53e6e71d6b">runTestVectors</a> (FILE *file)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="testing_8h.html#a8c0f95585d35913bf14b355b88576639">unloadTestVectors</a> (FILE *file)</td></tr>
@@ -88,23 +88,6 @@ Functions</h2></td></tr>
 <p>This is the interface to the Ordo test driver, which features a simplistic test vector script language, and functions to parse it.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>testing.c </dd></dl>
 </div><hr/><h2>Function Documentation</h2>
-<a class="anchor" id="aa19ec3244da1926f149d70b87520f6aa"></a><!-- doxytag: member="testing.h::displayEnvironmentInfo" ref="aa19ec3244da1926f149d70b87520f6aa" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="testing_8h.html#aa19ec3244da1926f149d70b87520f6aa">displayEnvironmentInfo</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>This function prints out environment information to the standard output. This includes the platform on which the code is currently running, the word size (32/64 bit), the ABI in use (this is inferred) and CPU feature flags such as support for SSE instructions, AES-NI, etc... </p>
-
-</div>
-</div>
 <a class="anchor" id="a30763b774a8757f45ffd427fc4114a59"></a><!-- doxytag: member="testing.h::loadTestVectors" ref="a30763b774a8757f45ffd427fc4114a59" args="(char *path)" -->
 <div class="memitem">
 <div class="memproto">
@@ -273,7 +256,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 8 2012 01:06:19 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Sep 9 2012 21:18:05 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
