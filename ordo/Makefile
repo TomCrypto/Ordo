@@ -19,6 +19,11 @@ release: $(shell find src/ -name '*.c')
 	gcc --shared -fpic -Iinclude/ $(CFLAGS_RELEASE) -o lib/libordo.so $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
 	@echo "\n[#] Ordo built in <release> mode."
 
+# Generate the doxygen documentation
+documentation:
+	@doxygen Doxyfile
+	@echo "\n[#] Ordo documentation generated."
+
 # Removes the shared library
 clean:
 	@rm -f ./lib/ --recursive
