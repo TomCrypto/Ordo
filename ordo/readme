@@ -10,7 +10,7 @@ This directory contains code and headers for the shared library Ordo. A simple m
 - make release, adding all optimizations for maximum performance
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience. Note the Ordo library contains a test driver, which has been interfaced through a small test program which should have been shipped along with this library (see the test folder).
 
-Documentation: The headers and assembly files are documented for Doxygen, the source files are not. The doxyfile is included, and the generated HTML documentation should be located in doc/html/index.html. For practical reasons, the documentation itself is not included in the repository and you will need to generate it yourself via doxygen.
+Documentation: The headers and assembly files are documented for Doxygen, the source files are not. The doxyfile is included, and the generated HTML documentation should be located in doc/html/index.html. For practical reasons, the documentation itself is not included in the repository and you will need to generate it yourself via doxygen. There is also "make documentation" which will attempt to call doxygen to automatically produce the documentation.
 
 -------- STATUS --------
 
