@@ -11,8 +11,8 @@ int main(int argc, char* argv[])
     /* The test vector file. */
     FILE* vectors;
 
-    /* Display detected environment info. */
-    displayEnvironmentInfo();
+    /* Display environment info. */
+    envOrdo(stdout);
 
     /* Initialize Ordo. */
     loadOrdo();

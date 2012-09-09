@@ -98,6 +98,29 @@ typedef struct ENCRYPTION_CONTEXT
     ENCRYPT_MODE_CONTEXT* mode;
 } ENCRYPTION_CONTEXT;
 
+/*! Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
+ * the ECB, CBC, etc... global variables can be used for encryption or decryption. */
+void encryptLoad();
+
+/*! Unloads all encryption modes of operation. After calling this, the ECB, CBC... mode of operation objects may no longer be used. */
+void encryptUnload();
+
+/*! The ECB (Electronic CodeBook) mode of operation. */
+ENCRYPT_MODE* ECB();
+/*! The CBC (Ciphertext Block Chaining) mode of operation. */
+ENCRYPT_MODE* CBC();
+/*! The CTR (CounTeR) mode of operation. */
+ENCRYPT_MODE* CTR();
+/*! The CFB (Cipher FeedBack) mode of operation. */
+ENCRYPT_MODE* CFB();
+/*! The OFB (Output FeedBack) mode of operation. */
+ENCRYPT_MODE* OFB();
+/*! The STREAM mode of operation (for stream ciphers only). */
+ENCRYPT_MODE* STREAM();
+
+/*! Gets an encryption mode object from a name. */
+ENCRYPT_MODE* getEncryptMode(char* name);
+
 /*! This function returns an allocated encryption context using a specific primitive and mode of operation.
  \param primitive The primitive object to be used.
  \param mode The mode of operation object to be used.
@@ -150,26 +173,5 @@ int encryptFinal(ENCRYPTION_CONTEXT* ctx, unsigned char* out, size_t* outlen);
  \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
  Do not call this function if \c encryptCreate failed, as the latter correctly frees dangling context buffers in case of error. */
 void encryptFree(ENCRYPTION_CONTEXT* ctx);
-
-/*! The ECB (Electronic CodeBook) mode of operation. */
-ENCRYPT_MODE* ECB();
-/*! The CBC (Ciphertext Block Chaining) mode of operation. */
-ENCRYPT_MODE* CBC();
-/*! The CTR (CounTeR) mode of operation. */
-ENCRYPT_MODE* CTR();
-/*! The CFB (Cipher FeedBack) mode of operation. */
-ENCRYPT_MODE* CFB();
-/*! The OFB (Output FeedBack) mode of operation. */
-ENCRYPT_MODE* OFB();
-/*! The STREAM mode of operation (for stream ciphers only). */
-ENCRYPT_MODE* STREAM();
-
-/*!
- * Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
- * the ECB, CBC, etc... global variables can be used for encryption or decryption. */
-void loadEncryptModes();
-
-/*! Unloads all encryption modes of operation. After calling this, the ECB, CBC... mode of operation objects may no longer be used. */
-void unloadEncryptModes();
 
 #endif

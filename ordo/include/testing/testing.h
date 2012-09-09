@@ -13,11 +13,7 @@
 
 #include <ordo.h>
 #include <common/ordotypes.h>
-
-/*! This function prints out environment information to the standard output. This includes the platform on which the code is
-    currently running, the word size (32/64 bit), the ABI in use (this is inferred) and CPU feature flags such as support for
-    SSE instructions, AES-NI, etc... */
-void displayEnvironmentInfo();
+#include <stdio.h>
 
 /*! Opens a test vector file.
     \param path The path of the test vector file to open.

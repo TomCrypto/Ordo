@@ -18,10 +18,13 @@
 #include <random/random.h>
 
 /*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...) */
-void loadOrdo();
+void ordoLoad();
 
 /*! Unloads Ordo - this calls all the unload functions in the different interfaces. */
-void unloadOrdo();
+void ordoUnload();
+
+/*! Prints information about the environment under which the library was built, to the specified file descriptor. */
+void envOrdo(FILE* out);
 
 /*! This function encrypts a buffer of a given length with the provided parameters.
  \param in This points to a plaintext buffer.

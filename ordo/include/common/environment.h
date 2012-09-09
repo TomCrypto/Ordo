@@ -123,7 +123,7 @@
 #define FEATURE_AVX 0
 #endif
 
-#ifdef __AES__                  /* AES instructions (hardware-accelerated AES) */
+#ifdef __AES__                  /* AES-NI instructions (hardware-accelerated AES) */
 #define FEATURE_AES 1
 #else
 #define FEATURE_AES 0

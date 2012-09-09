@@ -4,20 +4,88 @@
 void loadOrdo()
 {
     /* Load all cryptographic primitives. */
-    loadPrimitives();
+    primitivesLoad();
 
     /* Load all encryption modes of operation. */
-    loadEncryptModes();
+    encryptLoad();
 }
 
 /* Unload Ordo. */
 void unloadOrdo()
 {
     /* Unload all encryption modes of operation. */
-    unloadEncryptModes();
+    encryptUnload();
 
     /* Unload all cryptographic primitives. */
-    unloadPrimitives();
+    primitivesUnload();
+}
+
+/* Print information about the environment under which the library was built, to the specified file descriptor. */
+void envOrdo(FILE* out)
+{
+    /* First, find the platform. */
+    #if PLATFORM_WINDOWS
+    char* platform = "Windows";
+    #elif PLATFORM_LINUX
+    char* platform = "Linux";
+    #endif
+
+    /* Then, the environment. */
+    #if ENVIRONMENT_64
+    char* environment = "64-bit";
+    #else
+    char* environment = "32-bit";
+    #endif
+
+    /* Finally, the ABI. */
+    #if ABI_LINUX_64
+    char* ABI = "Linux x64";
+    #elif ABI_WINDOWS_64
+    char* ABI = "Windows x64";
+    #elif ABI_CDECL
+    char* ABI = "cdecl x86";
+    #endif
+
+    /* Print out the version, and whether we are in debug or release mode. */
+    fprintf(out, "Ordo v1.0.2/");
+	#if ORDO_DEBUG
+	fprintf(out, "Debug.\n");
+	#else
+    fprintf(out, "Release.\n");
+	#endif
+
+    /* Print out this information. */
+    fprintf(out, "Environment: %s, %s, %s.\n", platform, environment, ABI);
+
+    /* Obtain the feature flags. */
+    fprintf(out, "CPU features detected listed");
+    #if FEATURE_MMX
+    fprintf(out, ", MMX");
+    #endif
+    #if FEATURE_SSE
+    fprintf(out, ", SSE");
+    #endif
+    #if FEATURE_SSE2
+    fprintf(out, ", SSE2");
+    #endif
+    #if FEATURE_SSE3
+    fprintf(out, ", SSE3");
+    #endif
+    #if FEATURE_SSE4_1
+    fprintf(out, ", SSE4.1");
+    #endif
+    #if FEATURE_SSE4_2
+    fprintf(out, ", SSE4.2");
+    #endif
+    #if FEATURE_AVX
+    fprintf(out, ", AVX");
+    #endif
+    #if FEATURE_AES
+    fprintf(out, ", AES");
+    #endif
+
+    /* All finished. */
+    fprintf(out, ".\n\n");
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */

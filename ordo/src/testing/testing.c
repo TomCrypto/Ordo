@@ -1,72 +1,5 @@
 #include <testing/testing.h>
 
-/* Prints out environment information. */
-void displayEnvironmentInfo()
-{
-    /* First, find the platform. */
-    #if PLATFORM_WINDOWS
-    char* platform = "Windows";
-    #elif PLATFORM_LINUX
-    char* platform = "Linux";
-    #endif
-
-    /* Then, the environment. */
-    #if ENVIRONMENT_64
-    char* environment = "64-bit";
-    #else
-    char* environment = "32-bit";
-    #endif
-
-    /* Finally, the ABI. */
-    #if ABI_LINUX_64
-    char* ABI = "Linux x64";
-    #elif ABI_WINDOWS_64
-    char* ABI = "Windows x64";
-    #elif ABI_CDECL
-    char* ABI = "cdecl x86";
-    #endif
-
-    /* Print out whether we are in debug or release mode. */
-	#if ORDO_DEBUG
-	printf("[+] Debug build.\n");
-	#else
-    printf("[+] Release build.\n");
-	#endif
-
-    /* Print out this information. */
-    printf("[+] Environment: %s, %s, %s.\n", platform, environment, ABI);
-
-    /* Obtain the feature flags. */
-    printf("[+] CPU features detected listed");
-    #if FEATURE_MMX
-    printf(", MMX");
-    #endif
-    #if FEATURE_SSE
-    printf(", SSE");
-    #endif
-    #if FEATURE_SSE2
-    printf(", SSE2");
-    #endif
-    #if FEATURE_SSE3
-    printf(", SSE3");
-    #endif
-    #if FEATURE_SSE4_1
-    printf(", SSE4.1");
-    #endif
-    #if FEATURE_SSE4_2
-    printf(", SSE4.2");
-    #endif
-    #if FEATURE_AVX
-    printf(", AVX");
-    #endif
-    #if FEATURE_AES
-    printf(", AES");
-    #endif
-
-    /* All finished. */
-    printf(".\n\n");
-}
-
 /* Returns the hexadecimal representation of a buffer. */
 char* bufferToHex(void* input, size_t len)
 {
@@ -186,29 +119,6 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
 
     /* Return the full buffer. */
     return buf;
-}
-
-/* Gets a cipher primitive object from a name. */
-CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
-{
-    /* Simply compare against the existing list. */
-    if (strcmp(name, NullCipher()->name) == 0) return NullCipher();
-    if (strcmp(name, Threefish256()->name) == 0) return Threefish256();
-    if (strcmp(name, RC4()->name) == 0) return RC4();
-    return 0;
-}
-
-/* Gets an encryption mode object from a name. */
-ENCRYPT_MODE* getEncryptMode(char* name)
-{
-    /* Simply compare against the existing list. */
-    if (strcmp(name, ECB()->name) == 0) return ECB();
-    if (strcmp(name, CBC()->name) == 0) return CBC();
-    if (strcmp(name, CTR()->name) == 0) return CTR();
-    if (strcmp(name, CFB()->name) == 0) return CFB();
-    if (strcmp(name, OFB()->name) == 0) return OFB();
-    if (strcmp(name, STREAM()->name) == 0) return STREAM();
-    return 0;
 }
 
 /* Runs an encryption test vector. */

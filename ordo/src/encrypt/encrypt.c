@@ -25,7 +25,7 @@ ENCRYPT_MODE* _OFB;
 ENCRYPT_MODE* _STREAM;
 
 /* Loads all cipher modes. */
-void loadEncryptModes()
+void encryptLoad()
 {
     _ECB = malloc(sizeof(ENCRYPT_MODE));
     ECB_SetMode(_ECB);
@@ -47,7 +47,7 @@ void loadEncryptModes()
 }
 
 /* Unloads all cipher modes. */
-void unloadEncryptModes()
+void encryptUnload()
 {
     free(_ECB);
     free(_CBC);
@@ -64,6 +64,19 @@ ENCRYPT_MODE* CTR() { return _CTR; }
 ENCRYPT_MODE* CFB() { return _CFB; }
 ENCRYPT_MODE* OFB() { return _OFB; }
 ENCRYPT_MODE* STREAM() { return _STREAM; }
+
+/* Gets an encryption mode object from a name. */
+ENCRYPT_MODE* getEncryptMode(char* name)
+{
+    /* Simply compare against the existing list. */
+    if (strcmp(name, ECB()->name) == 0) return ECB();
+    if (strcmp(name, CBC()->name) == 0) return CBC();
+    if (strcmp(name, CTR()->name) == 0) return CTR();
+    if (strcmp(name, CFB()->name) == 0) return CFB();
+    if (strcmp(name, OFB()->name) == 0) return OFB();
+    if (strcmp(name, STREAM()->name) == 0) return STREAM();
+    return 0;
+}
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation.
  * Note this function uses a fall-through construction to ensure no memory is leaked in case of failure. */
