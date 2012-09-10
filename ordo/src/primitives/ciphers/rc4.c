@@ -30,10 +30,20 @@ void swapByte(uint8_t* a, uint8_t* b)
     *b = c;
 }
 
-void RC4_Create(CIPHER_PRIMITIVE_CONTEXT* cipher)
+CIPHER_PRIMITIVE_CONTEXT* RC4_Create(CIPHER_PRIMITIVE* primitive)
 {
     /* Allocate memory for the RC4 state. */
-    cipher->cipher = salloc(sizeof(RC4_STATE));
+    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    if (ctx)
+    {
+        ctx->primitive = primitive;
+        ctx->cipher = salloc(sizeof(RC4_STATE));
+        if (ctx->cipher) return ctx;
+        sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    }
+
+    /* Allocation failed. */
+    return 0;
 }
 
 int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySize, RC4_PARAMS* params)
@@ -77,7 +87,7 @@ int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySiz
 
 void RC4_Update(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* block, size_t len)
 {
-    #ifdef ENVIRONMENT_64
+    #if ENVIRONMENT_64
     /* Fast 64-bit implementation (note in 64-bit mode, len is a 64-bit unsigned integer). */
     RC4_Update_ASM(state(cipher), len, block, block);
     #else
@@ -102,6 +112,7 @@ void RC4_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Free memory for the RC4 state. */
     sfree(cipher->cipher, sizeof(RC4_STATE));
+    sfree(cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */

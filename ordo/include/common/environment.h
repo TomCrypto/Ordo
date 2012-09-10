@@ -42,29 +42,6 @@
 #define ABI_CDECL 1
 #endif
 
-/* Force unset flags to zero (this is important) */
-#ifndef PLATFORM_LINUX
-#define PLATFORM_LINUX 0
-#endif
-#ifndef PLATFORM_WINDOWS
-#define PLATFORM_WINDOWS 0
-#endif
-#ifndef ENVIROMENT_32
-#define ENVIROMENT_32 0
-#endif
-#ifndef ENVIROMENT_64
-#define ENVIROMENT_64 0
-#endif
-#ifndef ABI_WINDOWS_64
-#define ABI_WINDOWS_64 0
-#endif
-#ifndef ABI_LINUX_64
-#define ABI_LINUX_64 0
-#endif
-#ifndef ABI_CDECL
-#define ABI_CDECL 0
-#endif
-
 /* Check whether the flags make sense. */
 #if !(PLATFORM_WINDOWS || PLATFORM_LINUX)
 #error "Cannot recognize platform."

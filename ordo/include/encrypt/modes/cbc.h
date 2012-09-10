@@ -27,7 +27,7 @@ typedef struct CBC_PARAMS
     size_t padding;
 } CBC_PARAMS;
 
-void CBC_Create(ENCRYPT_MODE_CONTEXT*  mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
+ENCRYPT_MODE_CONTEXT* CBC_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 int CBC_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, CBC_PARAMS* params);
 

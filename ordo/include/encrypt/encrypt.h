@@ -45,7 +45,7 @@ typedef struct ENCRYPT_MODE_CONTEXT
 } ENCRYPT_MODE_CONTEXT;
 
 /* This is the prototype for a cipher mode of operation allocation function, which simply allocates context memory. */
-typedef void (* CREATE_FUNC)(ENCRYPT_MODE_CONTEXT*, CIPHER_PRIMITIVE_CONTEXT*);
+typedef ENCRYPT_MODE_CONTEXT* (* CREATE_FUNC)(struct ENCRYPT_MODE*, CIPHER_PRIMITIVE_CONTEXT*);
 
 /* This is the prototype for a cipher mode of operation initialization function, taking as an
     input a cipher context, a key buffer, a key size, a tweak and an initialization vector. */

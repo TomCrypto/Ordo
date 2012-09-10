@@ -51,6 +51,7 @@
 		<Unit filename="include/common/environment.h" />
 		<Unit filename="include/common/ordotypes.h" />
 		<Unit filename="include/common/securemem.h" />
+		<Unit filename="include/common/version.h" />
 		<Unit filename="include/encrypt/encrypt.h" />
 		<Unit filename="include/encrypt/modes/cbc.h" />
 		<Unit filename="include/encrypt/modes/cfb.h" />
@@ -64,11 +65,13 @@
 		<Unit filename="include/primitives/ciphers/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
 		<Unit filename="include/random/random.h" />
-		<Unit filename="include/testing/testing.h" />
 		<Unit filename="src/common/ordotypes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/common/securemem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/common/version.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/encrypt/encrypt.c">
@@ -110,9 +113,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/random/random.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/testing/testing.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

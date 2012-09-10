@@ -38,13 +38,15 @@ typedef struct CIPHER_PRIMITIVE_CONTEXT
 } CIPHER_PRIMITIVE_CONTEXT;
 
 /* Prototype for allocating and freeing cipher primitive contexts. */
-typedef void (*CIPHER_ALLOC)(CIPHER_PRIMITIVE_CONTEXT*);
+typedef CIPHER_PRIMITIVE_CONTEXT* (*CIPHER_ALLOC)(struct CIPHER_PRIMITIVE*);
 
 /* Prototype for initializing a cipher primitive context. */
 typedef int (*CIPHER_INIT)(CIPHER_PRIMITIVE_CONTEXT*, void*, size_t, void*);
 
 /* Prototype for cipher primitive context forward and inverse updates. */
 typedef void (*CIPHER_UPDATE)(CIPHER_PRIMITIVE_CONTEXT*, void*, size_t);
+
+typedef void(*CIPHER_FREE)(CIPHER_PRIMITIVE_CONTEXT*);
 
 /* This structure defines a symmetric cipher primitive. */
 typedef struct CIPHER_PRIMITIVE
@@ -60,7 +62,7 @@ typedef struct CIPHER_PRIMITIVE
     /* Points to the cipher primitive context inverse update function. */
     CIPHER_UPDATE fInverse;
     /* Points to the cipher primitive context free function. */
-    CIPHER_ALLOC fFree;
+    CIPHER_FREE fFree;
     /* The cipher primitive's name. */
     char* name;
 } CIPHER_PRIMITIVE;

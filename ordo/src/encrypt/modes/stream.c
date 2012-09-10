@@ -5,9 +5,18 @@
 /* Shorthand macro for context casting. */
 #define stream(ctx) ((STREAM_ENCRYPT_CONTEXT*)ctx)
 
-void STREAM_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* STREAM_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* This mode of operation maintains no state. */
+    /* Allocate just the context (no need for state since STREAM doesn't use any). */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        return ctx;
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int STREAM_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
@@ -40,6 +49,7 @@ int STREAM_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, u
 void STREAM_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Nothing to free... */
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

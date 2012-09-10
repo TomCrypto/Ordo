@@ -14,12 +14,29 @@ typedef struct OFB_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define ofb(ctx) ((OFB_ENCRYPT_CONTEXT*)ctx)
 
-void OFB_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* OFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context space. */
-    mode->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT));
-    ofb(mode->ctx)->iv = salloc(cipher->primitive->szBlock);
-    ofb(mode->ctx)->remaining = 0;
+    /* Allocate the context and extra buffers in it. */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT));
+        if (ctx->ctx)
+        {
+            ofb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+            if (ofb(ctx->ctx)->iv)
+            {
+                ofb(ctx->ctx)->remaining = 0;
+                return ctx;
+            }
+            sfree(ctx->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
+        }
+        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int OFB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
@@ -82,6 +99,7 @@ void OFB_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
     /* Free context space. */
     sfree(ofb(mode->ctx)->iv, cipher->primitive->szBlock);
     sfree(mode->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

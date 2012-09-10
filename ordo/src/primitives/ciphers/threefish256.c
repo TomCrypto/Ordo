@@ -16,10 +16,20 @@ typedef struct THREEFISH256_SUBKEYS
 /* Shorthand macro for context casting. */
 #define ctx(x) ((THREEFISH256_SUBKEYS*)(x->cipher))
 
-void Threefish256_Create(CIPHER_PRIMITIVE_CONTEXT* cipher)
+CIPHER_PRIMITIVE_CONTEXT* Threefish256_Create(CIPHER_PRIMITIVE* primitive)
 {
     /* Allocate space for the Threefish-256 key material. */
-    cipher->cipher = salloc(sizeof(THREEFISH256_SUBKEYS));
+    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    if (ctx)
+    {
+        ctx->primitive = primitive;
+        ctx->cipher = salloc(sizeof(THREEFISH256_SUBKEYS));
+        if (ctx->cipher) return ctx;
+        sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    }
+
+    /* Allocation failed. */
+    return 0;
 }
 
 int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params)
@@ -352,6 +362,7 @@ void Threefish256_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Deallocate space for the Threefish-256 key material. */
     sfree(cipher->cipher, sizeof(THREEFISH256_SUBKEYS));
+    sfree(cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */

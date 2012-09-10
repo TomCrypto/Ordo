@@ -18,13 +18,34 @@ typedef struct CBC_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define cbc(ctx) ((CBC_ENCRYPT_CONTEXT*)ctx)
 
-void CBC_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* CBC_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context fields. */
-    mode->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT));
-    cbc(mode->ctx)->iv = salloc(cipher->primitive->szBlock);
-    cbc(mode->ctx)->block = salloc(cipher->primitive->szBlock);
-    cbc(mode->ctx)->available = 0;
+    /* Allocate the context and extra buffers in it. */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        ctx->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT));
+        if (ctx->ctx)
+        {
+            cbc(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+            if (cbc(ctx->ctx)->iv)
+            {
+                cbc(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
+                if (cbc(ctx->ctx)->block)
+                {
+                    cbc(ctx->ctx)->available = 0;
+                    return ctx;
+                }
+                sfree(cbc(ctx->ctx)->iv, cipher->primitive->szBlock);
+            }
+            sfree(ctx->ctx, sizeof(CBC_ENCRYPT_CONTEXT));
+        }
+        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int CBC_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, CBC_PARAMS* params)
@@ -122,7 +143,7 @@ int CBC_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     if (cbc(mode->ctx)->padding == 0)
     {
         /* If there is data left, return an error. */
-        if (cbc(mode->ctx)->available != 0) return ORDO_LEFTOVER;
+        if (cbc(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
 
         /* Otherwise, just set the output size to zero. */
         if (outlen != 0) *outlen = 0;
@@ -158,7 +179,7 @@ int CBC_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     if (!cbc(mode->ctx)->padding)
     {
         /* If there is data left, return an error. */
-        if (cbc(mode->ctx)->available != 0) return ORDO_LEFTOVER;
+        if (cbc(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
 
         /* Otherwise, just set the output size to zero. */
         if (outlen != 0) *outlen = 0;
@@ -198,6 +219,7 @@ void CBC_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
     sfree(cbc(mode->ctx)->block, cipher->primitive->szBlock);
     sfree(cbc(mode->ctx)->iv, cipher->primitive->szBlock);
     sfree(mode->ctx, sizeof(CBC_ENCRYPT_CONTEXT));
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

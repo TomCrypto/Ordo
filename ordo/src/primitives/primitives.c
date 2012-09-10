@@ -54,16 +54,7 @@ CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
 CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive)
 {
     /* Allocate the cipher context. */
-    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
-    if (ctx)
-    {
-        /* If the allocation succeeded, create the context. */
-        ctx->primitive = primitive;
-        primitive->fCreate(ctx);
-    }
-
-    /* Return the context (allocated or not). */
-    return ctx;
+    return primitive->fCreate(primitive);
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
@@ -78,5 +69,4 @@ void cipherFree(CIPHER_PRIMITIVE_CONTEXT* ctx)
 {
     /* Free the cipher context. */
     ctx->primitive->fFree(ctx);
-    sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
 }

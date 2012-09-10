@@ -16,12 +16,29 @@ typedef struct ECB_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define ecb(ctx) ((ECB_ENCRYPT_CONTEXT*)ctx)
 
-void ECB_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* ECB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context fields. */
-    mode->ctx = salloc(sizeof(ECB_ENCRYPT_CONTEXT));
-    ecb(mode->ctx)->block = salloc(cipher->primitive->szBlock);
-    ecb(mode->ctx)->available = 0;
+    /* Allocate the context and extra buffers in it. */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        ctx->ctx = salloc(sizeof(ECB_ENCRYPT_CONTEXT));
+        if (ctx->ctx)
+        {
+            ecb(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
+            if (ecb(ctx->ctx)->block)
+            {
+                ecb(ctx->ctx)->available = 0;
+                return ctx;
+            }
+            sfree(ctx->ctx, sizeof(ECB_ENCRYPT_CONTEXT));
+        }
+        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int ECB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, ECB_PARAMS* params)
@@ -101,7 +118,7 @@ int ECB_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     if (ecb(mode->ctx)->padding == 0)
     {
         /* If there is data left, return an error. */
-        if (ecb(mode->ctx)->available != 0) return ORDO_LEFTOVER;
+        if (ecb(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
 
         /* Otherwise, just set the output size to zero. */
         if (outlen != 0) *outlen = 0;
@@ -134,7 +151,7 @@ int ECB_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     if (!ecb(mode->ctx)->padding)
     {
         /* If there is data left, return an error. */
-        if (ecb(mode->ctx)->available != 0) return ORDO_LEFTOVER;
+        if (ecb(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
 
         /* Otherwise, just set the output size to zero. */
         if (outlen != 0) *outlen = 0;
@@ -170,6 +187,7 @@ void ECB_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
     /* Dellocate context fields. */
     sfree(ecb(mode->ctx)->block, cipher->primitive->szBlock);
     sfree(mode->ctx, sizeof(ECB_ENCRYPT_CONTEXT));
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

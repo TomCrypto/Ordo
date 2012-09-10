@@ -13,17 +13,14 @@
  */
 
 /* Standard includes. */
-#include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stddef.h>
 #include <string.h>
-#include <time.h>
 
 /* Library dependencies. */
-#include "securemem.h"
-#include "environment.h"
+#include <common/version.h>
+#include <common/securemem.h>
+#include <common/environment.h>
 
 /* The following are some composite data types used in primitives. */
 
@@ -44,7 +41,7 @@ typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
 /*! Unprocessed input was left over in the context. This applies to block cipher modes for which padding has been disabled: if the input plaintext length is not
  * a multiple of the cipher's block size, then the remaining incomplete block cannot be handled without padding, which is an error as it generally leads to
  * inconsistent behavior on the part of the user. */
-#define ORDO_LEFTOVER -2
+#define ORDO_ELEFTOVER -2
 
 /*! The key size provided is invalid for this primitive. This occurs if you give a primitive an incorrect key size, such as feeding a 128-bit key into a cipher
  * which expects a 192-bit key. Primitives either have a range of possible key lengths (often characterized by a minimum and maximum key length, but this varies
@@ -60,6 +57,11 @@ typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
  * containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct
  * decryption impossible. */
 #define ORDO_EPADDING -4
+
+/*! An attempt to allocate heap memory failed - this can be due to the system being low on memory or - more likely - the process to which the library is attached
+ * has reached its memory locking quota. If the former, there is not much to be done except get more memory. If the latter, either use less locked memory (which
+ * means avoiding using salloc for large memory buffers) or increase your process memory locking quota by acquiring higher privileges or changing the quota. */
+#define ORDO_EHEAPALLOC -5
 
 /* The following are utility functions. */
 

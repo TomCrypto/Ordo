@@ -16,12 +16,34 @@ typedef struct CTR_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define ctr(ctx) ((CTR_ENCRYPT_CONTEXT*)ctx)
 
-void CTR_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* CTR_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context space. */
-    mode->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT));
-    ctr(mode->ctx)->iv = salloc(cipher->primitive->szBlock);
-    ctr(mode->ctx)->counter = salloc(cipher->primitive->szBlock);
+    /* Allocate the context and extra buffers in it. */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        ctx->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT));
+        if (ctx->ctx)
+        {
+            ctr(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+            if (ctr(ctx->ctx)->iv)
+            {
+                ctr(ctx->ctx)->counter = salloc(cipher->primitive->szBlock);
+                if (ctr(ctx->ctx)->counter)
+                {
+                    ctr(ctx->ctx)->remaining = 0;
+                    return ctx;
+                }
+                sfree(ctr(ctx->ctx)->iv, cipher->primitive->szBlock);
+            }
+            sfree(ctx->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
+        }
+        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int CTR_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
@@ -90,6 +112,7 @@ void CTR_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
     sfree(ctr(mode->ctx)->counter, cipher->primitive->szBlock);
     sfree(ctr(mode->ctx)->iv, cipher->primitive->szBlock);
     sfree(mode->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

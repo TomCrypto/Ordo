@@ -41,7 +41,8 @@ char* errorMsg(int code)
         case ORDO_EFAIL: return "An external error occurred";
         case ORDO_EKEYSIZE: return "The key size is invalid";
         case ORDO_EPADDING: return "The padding block cannot be recognized";
-        case ORDO_LEFTOVER: return "There is leftover input data";
+        case ORDO_ELEFTOVER: return "There is leftover input data";
+        case ORDO_EHEAPALLOC: return "Heap allocation failed";
     }
 
     /* Invalid error code... */

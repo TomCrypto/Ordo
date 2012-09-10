@@ -82,16 +82,7 @@ ENCRYPT_MODE* getEncryptMode(char* name)
 ENCRYPT_MODE_CONTEXT* encryptModeCreate(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
     /* Allocate the encryption mode context. */
-    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
-    if (ctx)
-    {
-        /* If the allocation succeeded, create the context. */
-        ctx->mode = mode;
-        mode->fCreate(ctx, cipher);
-    }
-
-    /* Return the context (allocated or not). */
-    return ctx;
+    return mode->fCreate(mode, cipher);
 }
 
 /* This function returns an initialized encryption mode context with the provided parameters. */
@@ -124,7 +115,6 @@ void encryptModeFree(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher
 {
     /* Free the cipher context. */
     ctx->mode->fFree(ctx, cipher);
-    sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* This function returns an initialized encryption context using a specific primitive and mode of operation.

@@ -30,7 +30,7 @@ typedef struct ECB_PARAMS
     size_t padding;
 } ECB_PARAMS;
 
-void ECB_Create(ENCRYPT_MODE_CONTEXT*  mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
+ENCRYPT_MODE_CONTEXT* ECB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 int ECB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, ECB_PARAMS* params);
 

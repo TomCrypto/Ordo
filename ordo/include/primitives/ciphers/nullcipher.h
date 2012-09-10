@@ -18,7 +18,7 @@
 
 #include <primitives/primitives.h>
 
-void NullCipher_Create(CIPHER_PRIMITIVE_CONTEXT* cipher);
+CIPHER_PRIMITIVE_CONTEXT* NullCipher_Create(CIPHER_PRIMITIVE* primitive);
 
 int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params);
 

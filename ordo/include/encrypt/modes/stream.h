@@ -19,7 +19,7 @@
 
 #include <encrypt/encrypt.h>
 
-void STREAM_Create(ENCRYPT_MODE_CONTEXT*  mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
+ENCRYPT_MODE_CONTEXT* STREAM_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 int STREAM_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params);
 

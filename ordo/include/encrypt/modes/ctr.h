@@ -20,7 +20,7 @@
 
 #include <encrypt/encrypt.h>
 
-void CTR_Create(ENCRYPT_MODE_CONTEXT*  mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
+ENCRYPT_MODE_CONTEXT* CTR_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher);
 
 int CTR_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params);
 

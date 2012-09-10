@@ -3,9 +3,17 @@
 
 #define NULLCIPHER_BLOCK (16)
 
-void NullCipher_Create(CIPHER_PRIMITIVE_CONTEXT* cipher)
+CIPHER_PRIMITIVE_CONTEXT* NullCipher_Create(CIPHER_PRIMITIVE* primitive)
 {
-    /* Nothing happens here, as the NullCipher maintains no state. */
+    /* Allocate no state by convention. */
+    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    if (ctx)
+    {
+        ctx->primitive = primitive;
+        return ctx;
+    }
+
+    return 0;
 }
 
 int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params)
@@ -26,7 +34,8 @@ void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t le
 
 void NullCipher_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Nothing to free... */
+    /* Free the 1-byte "state". */
+    sfree(cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
 }
 
 /* Fills a CIPHER_PRIMITIVE struct with the correct information. */

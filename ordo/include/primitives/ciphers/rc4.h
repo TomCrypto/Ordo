@@ -28,7 +28,7 @@ typedef struct RC4_PARAMS
     size_t drop;
 } RC4_PARAMS;
 
-void RC4_Create(CIPHER_PRIMITIVE_CONTEXT* cipher);
+CIPHER_PRIMITIVE_CONTEXT* RC4_Create(CIPHER_PRIMITIVE* primitive);
 
 int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySize, RC4_PARAMS* params);
 

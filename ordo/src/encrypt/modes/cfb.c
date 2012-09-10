@@ -14,12 +14,29 @@ typedef struct CFB_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define cfb(ctx) ((CFB_ENCRYPT_CONTEXT*)ctx)
 
-void CFB_Create(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+ENCRYPT_MODE_CONTEXT* CFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
 {
-    /* Allocate context space. */
-    mode->ctx = salloc(sizeof(CFB_ENCRYPT_CONTEXT));
-    cfb(mode->ctx)->iv = salloc(cipher->primitive->szBlock);
-    cfb(mode->ctx)->remaining = 0;
+    /* Allocate the context and extra buffers in it. */
+    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    if (ctx)
+    {
+        ctx->mode = mode;
+        ctx->ctx = salloc(sizeof(CFB_ENCRYPT_CONTEXT));
+        if (ctx->ctx)
+        {
+            cfb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+            if (cfb(ctx->ctx)->iv)
+            {
+                cfb(ctx->ctx)->remaining = 0;
+                return ctx;
+            }
+            sfree(ctx->ctx, sizeof(CFB_ENCRYPT_CONTEXT));
+        }
+        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+    }
+
+    /* Allocation failed, return zero. */
+    return 0;
 }
 
 int CFB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
@@ -117,6 +134,7 @@ void CFB_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
     /* Free context space. */
     sfree(cfb(mode->ctx)->iv, cipher->primitive->szBlock);
     sfree(mode->ctx, sizeof(CFB_ENCRYPT_CONTEXT));
+    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
 }
 
 /* Fills a ENCRYPT_MODE struct with the correct information. */

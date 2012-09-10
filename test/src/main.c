@@ -11,8 +11,10 @@ int main(int argc, char* argv[])
     /* The test vector file. */
     FILE* vectors;
 
-    /* Display environment info. */
-    ordoEnv(stdout);
+    /* Display a little header with version information. */
+    printf("[+] Ordo v%s (%s).\n", ordoBuildInfo()->version, ordoBuildInfo()->devtag);
+    printf("[+] Built for %d-bit %s (%s).\n", ordoBuildInfo()->wordSize, ordoBuildInfo()->platform, ordoBuildInfo()->ABI);
+    printf("\n");
 
     /* Initialize Ordo. */
     ordoLoad();
@@ -49,12 +51,8 @@ int main(int argc, char* argv[])
     /* Free the buffer used for tests. */
     free(buffer);
 
-    /* Do user input once. */
-    printf("-------- User input test --------\n\n");
-    encryptUserInput();
-
     /* Finalize Ordo. */
     ordoUnload();
-    printf("\n[+] All operations completed.\n");
+    printf("[+] All operations completed.\n");
     return 0;
 }

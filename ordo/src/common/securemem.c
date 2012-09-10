@@ -24,20 +24,25 @@ int sprotect(void* ptr, size_t size)
 void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
+    if (!ptr) return;
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* Wipe the memory. */
-    swipe(ptr, size);
+    /* Ignore nil pointers. */
+    if (ptr)
+    {
+        /* Wipe the memory. */
+        swipe(ptr, size);
 
-    /* Unlock the memory. */
-    munlock(ptr, size);
+        /* Unlock the memory. */
+        munlock(ptr, size);
 
-    /* Free the memory. */
-    free(ptr);
+        /* Free the memory. */
+        free(ptr);
+    }
 }
 
 #elif PLATFORM_WINDOWS
@@ -62,20 +67,25 @@ int sprotect(void* ptr, size_t size)
 void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
+    if (!ptr) return;
     while (size--) *((unsigned char volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
 void sfree(void* ptr, size_t size)
 {
-    /* Wipe the memory. */
-    swipe(ptr, size);
+    /* Ignore nil pointers. */
+    if (ptr)
+    {
+        /* Wipe the memory. */
+        swipe(ptr, size);
 
-    /* Unlock the memory. */
-    VirtualUnlock(ptr, size);
+        /* Unlock the memory. */
+        VirtualUnlock(ptr, size);
 
-    /* Free the memory. */
-    VirtualFree(ptr, 0, MEM_RELEASE);
+        /* Free the memory. */
+        VirtualFree(ptr, 0, MEM_RELEASE);
+    }
 }
 
 #else

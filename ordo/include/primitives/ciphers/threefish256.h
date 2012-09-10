@@ -23,7 +23,7 @@ typedef struct THREEFISH256_PARAMS
     uint64_t tweak[2];
 } THREEFISH256_PARAMS;
 
-void Threefish256_Create(CIPHER_PRIMITIVE_CONTEXT* cipher);
+CIPHER_PRIMITIVE_CONTEXT* Threefish256_Create(CIPHER_PRIMITIVE* primitive);
 
 int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params);
 
