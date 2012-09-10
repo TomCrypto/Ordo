@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: include/primitives/ciphers/threefish256.h File Reference</title>
+<title>Ordo: include/common/version.h File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -54,35 +54,56 @@
   <div id="nav-path" class="navpath">
     <ul>
       <li class="navelem"><a class="el" href="dir_cfc40bcf945a94a5aced014fdc532bf3.html">include</a>      </li>
-      <li class="navelem"><a class="el" href="dir_fea4578e5fe7580cadc5b6ddf44e6cef.html">primitives</a>      </li>
-      <li class="navelem"><a class="el" href="dir_554ecf4a3fce06877cb1b04462a0e5ee.html">ciphers</a>      </li>
+      <li class="navelem"><a class="el" href="dir_8f9a411e77482bba10282a572dbcb6a1.html">common</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">threefish256.h File Reference</div>  </div>
+<div class="title">version.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Threefish-256 block cipher interface.  
+<p>Library version header.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives/primitives.h</a>&gt;</code><br/>
+<div class="textblock"><code>#include &lt;<a class="el" href="ordotypes_8h_source.html">common/ordotypes.h</a>&gt;</code><br/>
 </div>
-<p><a href="threefish256_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="version_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Threefish-256 cipher parameters.  <a href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_o_r_d_o___b_u_i_l_d___i_n_f_o.html">ORDO_BUILD_INFO</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Library build information.  <a href="struct_o_r_d_o___b_u_i_l_d___i_n_f_o.html#details">More...</a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_o_r_d_o___b_u_i_l_d___i_n_f_o.html">ORDO_BUILD_INFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="version_8h.html#a5b1a9cc8bb3688b0f1c0a6952f484b26">ordoBuildInfo</a> ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Threefish-256 block cipher interface. </p>
-<p>Threefish-256 is a block cipher, which has a 256-bit block size and a 256-bit key size. It also has an optional 128-bit tweak. The tweak can be set through the cipher parameters.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd>threefish256.c </dd></dl>
-</div></div><!-- contents -->
+<div class="textblock"><p>Library version header. </p>
+<p>This header allows code to access the library version, build details and other information.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd>version.c </dd></dl>
+</div><hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a5b1a9cc8bb3688b0f1c0a6952f484b26"></a><!-- doxytag: member="version.h::ordoBuildInfo" ref="a5b1a9cc8bb3688b0f1c0a6952f484b26" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_o_r_d_o___b_u_i_l_d___i_n_f_o.html">ORDO_BUILD_INFO</a>* <a class="el" href="version_8h.html#a5b1a9cc8bb3688b0f1c0a6952f484b26">ordoBuildInfo</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns library build information in a structure. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>

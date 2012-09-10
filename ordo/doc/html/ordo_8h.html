@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.0.2</span>
+   &#160;<span id="projectnumber">1.1.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -78,7 +78,6 @@
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#aedeefa4e4de4b29fe854645698993013">ordoLoad</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#aa5d6ad6ce6f18ce65ecd6878a1df9b83">ordoUnload</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a8a589496e621c6c9001b4b6e18b046cf">envOrdo</a> (FILE *out)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a6d1a8502854fc62ad137ea4dc8224169">ordoEncrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#abeb05ec51d33dc7d3465f83508241645">ordoDecrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
 </table>
@@ -118,24 +117,6 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Unloads Ordo - this calls all the unload functions in the different interfaces. </p>
-
-</div>
-</div>
-<a class="anchor" id="a8a589496e621c6c9001b4b6e18b046cf"></a><!-- doxytag: member="ordo.h::envOrdo" ref="a8a589496e621c6c9001b4b6e18b046cf" args="(FILE *out)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="ordo_8h.html#a8a589496e621c6c9001b4b6e18b046cf">envOrdo</a> </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>out</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Prints information about the environment under which the library was built, to the specified file descriptor. </p>
 
 </div>
 </div>
@@ -345,7 +326,7 @@ The out buffer should have enough space to contain the entire ciphertext, which 
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 10 2012 08:10:56 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 10 2012 22:28:08 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

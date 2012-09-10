@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.0.2</span>
+   &#160;<span id="projectnumber">1.1.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -69,15 +69,12 @@
 
 <p>Library-wide utility header.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
-<code>#include &lt;assert.h&gt;</code><br/>
-<code>#include &lt;stdlib.h&gt;</code><br/>
+<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br/>
 <code>#include &lt;stdint.h&gt;</code><br/>
-<code>#include &lt;stddef.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
-<code>#include &lt;time.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="securemem_8h_source.html">securemem.h</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="environment_8h_source.html">environment.h</a>&quot;</code><br/>
+<code>#include &lt;<a class="el" href="version_8h_source.html">common/version.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="securemem_8h_source.html">common/securemem.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="environment_8h_source.html">common/environment.h</a>&gt;</code><br/>
 </div>
 <p><a href="ordotypes_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -85,10 +82,11 @@
 Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#adaaeb963b182375b2831fed5bdd6de52">ORDO_ESUCCESS</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a67d4bfa3d16f9b63b77ba83e8c76fc30">ORDO_EFAIL</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#adb1871cee8fa0da7f7c0857c2990d113">ORDO_LEFTOVER</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#ae0f944227bbf3dfcbd05b2aa1a395517">ORDO_ELEFTOVER</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a98b7e4789d6bcb5800667ac2b080ac13">ORDO_EKEYSIZE</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a16c79abf7ed3ec2dd50cc4dccc28e735">ORDO_EPADDING</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a16c79abf7ed3ec2dd50cc4dccc28e735">ORDO_EPADDING</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a788be2263bb4cdc192771ac59f53e1dd">ORDO_EHEAPALLOC</a></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a06315fdc1142d5e779cafdd62f5a79a3">padCheck</a> (unsigned char *buffer, unsigned char padding)</td></tr>
@@ -130,12 +128,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="adb1871cee8fa0da7f7c0857c2990d113"></a><!-- doxytag: member="ordotypes.h::ORDO_LEFTOVER" ref="adb1871cee8fa0da7f7c0857c2990d113" args="" -->
+<a class="anchor" id="ae0f944227bbf3dfcbd05b2aa1a395517"></a><!-- doxytag: member="ordotypes.h::ORDO_ELEFTOVER" ref="ae0f944227bbf3dfcbd05b2aa1a395517" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define <a class="el" href="ordotypes_8h.html#adb1871cee8fa0da7f7c0857c2990d113">ORDO_LEFTOVER</a></td>
+          <td class="memname">#define <a class="el" href="ordotypes_8h.html#ae0f944227bbf3dfcbd05b2aa1a395517">ORDO_ELEFTOVER</a></td>
         </tr>
       </table>
 </div>
@@ -183,6 +181,20 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct decryption impossible. </p>
+
+</div>
+</div>
+<a class="anchor" id="a788be2263bb4cdc192771ac59f53e1dd"></a><!-- doxytag: member="ordotypes.h::ORDO_EHEAPALLOC" ref="a788be2263bb4cdc192771ac59f53e1dd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define <a class="el" href="ordotypes_8h.html#a788be2263bb4cdc192771ac59f53e1dd">ORDO_EHEAPALLOC</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>An attempt to allocate heap memory failed - this can be due to the system being low on memory or - more likely - the process to which the library is attached has reached its memory locking quota. If the former, there is not much to be done except get more memory. If the latter, either use less locked memory (which means avoiding using salloc for large memory buffers) or increase your process memory locking quota by acquiring higher privileges or changing the quota. </p>
 
 </div>
 </div>
@@ -332,7 +344,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 10 2012 08:10:56 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 10 2012 22:28:08 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
