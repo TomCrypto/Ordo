@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.1.0</span>
+   &#160;<span id="projectnumber">1.2.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -72,12 +72,13 @@
 <div class="textblock"><p>Precompilation environment decision unit. </p>
 <p>This header will decide which codepaths to use for Ordo to maximize performance and compatibility. Make sure you include this header whenever you need to run different code on different platforms.</p>
 <p>Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile. Note the users should never need to interact with this header when using Ordo - this is for internal use only.</p>
+<p>This header may only contain preprocessor macros as it will be included in assembly files - it cannot contain declarations.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Implement more platforms (and make sure they all work) </dd></dl>
 </div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 10 2012 22:28:08 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Sep 13 2012 22:45:21 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
