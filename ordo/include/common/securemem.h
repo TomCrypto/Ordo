@@ -46,7 +46,8 @@ void swipe(void* ptr, size_t size);
 
 /*! This function frees a pointer, and securely erases the memory it points to.
  \param ptr An allocated pointer to memory to erase and free.
- \param size The amount of memory, in bytes, pointed to by ptr. */
+ \param size The amount of memory, in bytes, pointed to by ptr.
+ \remark Passing zero to this function is valid and will do nothing. */
 void sfree(void* ptr, size_t size);
 
 #endif

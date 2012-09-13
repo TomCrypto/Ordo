@@ -25,11 +25,15 @@ ENCRYPT_MODE_CONTEXT* OFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
         if (ctx->ctx)
         {
             ofb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+
+            /* Return if everything succeeded. */
             if (ofb(ctx->ctx)->iv)
             {
                 ofb(ctx->ctx)->remaining = 0;
                 return ctx;
             }
+
+            /* Clean up if an error occurred. */
             sfree(ctx->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
         }
         sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));

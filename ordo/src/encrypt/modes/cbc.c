@@ -29,16 +29,18 @@ ENCRYPT_MODE_CONTEXT* CBC_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
         if (ctx->ctx)
         {
             cbc(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
-            if (cbc(ctx->ctx)->iv)
+            cbc(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
+
+            /* Return if everything succeeded. */
+            if ((cbc(ctx->ctx)->block) && (cbc(ctx->ctx)->iv))
             {
-                cbc(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
-                if (cbc(ctx->ctx)->block)
-                {
-                    cbc(ctx->ctx)->available = 0;
-                    return ctx;
-                }
-                sfree(cbc(ctx->ctx)->iv, cipher->primitive->szBlock);
+                cbc(ctx->ctx)->available = 0;
+                return ctx;
             }
+
+            /* Clean up if an error occurred. */
+            sfree(cbc(ctx->ctx)->block, cipher->primitive->szBlock);
+            sfree(cbc(ctx->ctx)->iv, cipher->primitive->szBlock);
             sfree(ctx->ctx, sizeof(CBC_ENCRYPT_CONTEXT));
         }
         sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));

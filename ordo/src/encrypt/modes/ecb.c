@@ -27,11 +27,15 @@ ENCRYPT_MODE_CONTEXT* ECB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
         if (ctx->ctx)
         {
             ecb(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
+
+            /* Return if everything succeeded. */
             if (ecb(ctx->ctx)->block)
             {
                 ecb(ctx->ctx)->available = 0;
                 return ctx;
             }
+
+            /* Clean up if an error occurred. */
             sfree(ctx->ctx, sizeof(ECB_ENCRYPT_CONTEXT));
         }
         sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));

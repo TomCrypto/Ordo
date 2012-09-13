@@ -25,7 +25,7 @@ void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
     if (!ptr) return;
-    while (size--) *((unsigned char volatile*)ptr + size) = 0;
+    while (size--) *((uint8_t volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
@@ -68,7 +68,7 @@ void swipe(void* ptr, size_t size)
 {
     /* Overwrite each byte with zero. */
     if (!ptr) return;
-    while (size--) *((unsigned char volatile*)ptr + size) = 0;
+    while (size--) *((uint8_t volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
@@ -88,6 +88,4 @@ void sfree(void* ptr, size_t size)
     }
 }
 
-#else
-#error "Unknown platform."
 #endif

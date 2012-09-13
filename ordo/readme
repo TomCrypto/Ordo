@@ -1,23 +1,23 @@
-Ordo v1.1.0
+Ordo v1.2.0
 -----------
-
-########### BREAKING NEWS ###########
-Please compile Ordo with the -mno-avx flag until further notice, GCC has a bug which causes it to produce invalid assembly on some processors (specifically, AVX2 opcodes on AVX1-capable processors) when using -march=native, you DO NOT want to discover this the hard way like we did. This compiler flag will stop GCC using AVX instructions and will therefore negate the bug, but may have minimal performance implications. This limitation will be lifted once a patched version of GCC is released and tested.
-########### BREAKING NEWS ###########
 
 This directory contains code and headers for the shared library Ordo. A simple makefile is provided with two build targets:
 - make debug, which includes no optimizations and adds debug symbols
 - make release, adding all optimizations for maximum performance
-A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience. Note the test program shipped along with the library is a test driver to check if Ordo is working properly and for some code examples.
+A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience. Note the test program shipped along with the library is a little driver to check if Ordo is working properly and for some code examples.
 
 Documentation: The headers and assembly files are documented for Doxygen, the source files are not. The doxyfile is included, and the generated HTML documentation should be located in doc/html/index.html. For practical reasons, the documentation itself is not included in the repository and you will need to generate it yourself via doxygen. There is also "make documentation" which will attempt to call doxygen to automatically produce the documentation.
 
 -------- STATUS --------
 
+Current version highlight:
+ - all memory leaks have been eradicated & memory allocation is safe
+ - encryption API is essentially finished
+
 Current work is focused towards finishing the cipher interface. Important todo's:
  - fix some syntax quirks in the library code
  - sort out the test driver properly (perhaps divide into multiple programs)
- - wrap up the cipher API and move on to hashes/misc.
+ - wrap up the encryption API and move on to hashes/misc.
 
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file (in the test program) and the test driver's code to know more about this.
 

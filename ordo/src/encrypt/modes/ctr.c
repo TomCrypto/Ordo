@@ -27,16 +27,18 @@ ENCRYPT_MODE_CONTEXT* CTR_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
         if (ctx->ctx)
         {
             ctr(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
-            if (ctr(ctx->ctx)->iv)
+            ctr(ctx->ctx)->counter = salloc(cipher->primitive->szBlock);
+
+            /* Return if everything succeeded. */
+            if ((ctr(ctx->ctx)->counter) && (ctr(ctx->ctx)->iv))
             {
-                ctr(ctx->ctx)->counter = salloc(cipher->primitive->szBlock);
-                if (ctr(ctx->ctx)->counter)
-                {
-                    ctr(ctx->ctx)->remaining = 0;
-                    return ctx;
-                }
-                sfree(ctr(ctx->ctx)->iv, cipher->primitive->szBlock);
+                ctr(ctx->ctx)->remaining = 0;
+                return ctx;
             }
+
+            /* Clean up if an error occurred. */
+            sfree(ctr(ctx->ctx)->counter, cipher->primitive->szBlock);
+            sfree(ctr(ctx->ctx)->iv, cipher->primitive->szBlock);
             sfree(ctx->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
         }
         sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));

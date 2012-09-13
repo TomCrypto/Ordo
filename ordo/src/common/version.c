@@ -2,9 +2,9 @@
 
 ORDO_BUILD_INFO ordoInfo = {
 /* Library version. */
-"1.1.0",
+"1.2.0",
 /* Devtag. */
-"Stable",
+"Stable/noleak",
 /* Platform. */
 #if PLATFORM_WINDOWS
 "Windows",

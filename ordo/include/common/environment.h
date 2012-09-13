@@ -11,6 +11,8 @@
  * Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile.
  * Note the users should never need to interact with this header when using Ordo - this is for internal use only.
  *
+ * This header may only contain preprocessor macros as it will be included in assembly files - it cannot contain declarations.
+ *
  * \todo Implement more platforms (and make sure they all work)
  */
 

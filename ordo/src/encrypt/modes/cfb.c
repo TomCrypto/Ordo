@@ -25,11 +25,15 @@ ENCRYPT_MODE_CONTEXT* CFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
         if (ctx->ctx)
         {
             cfb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
+
+            /* Return if everything succeeded. */
             if (cfb(ctx->ctx)->iv)
             {
                 cfb(ctx->ctx)->remaining = 0;
                 return ctx;
             }
+
+            /* Clean up if an error occurred. */
             sfree(ctx->ctx, sizeof(CFB_ENCRYPT_CONTEXT));
         }
         sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
