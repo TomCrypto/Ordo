@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.2.0</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -114,15 +114,15 @@
 <a name="l00069"></a>00069 
 <a name="l00072"></a>00072 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a>();
 <a name="l00073"></a>00073 
-<a name="l00075"></a>00075 <span class="keywordtype">void</span> <a class="code" href="primitives_8h.html#a8818252cdaa3df9a4446fb77c06e670d">primitivesUnload</a>();
+<a name="l00075"></a>00075 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a>();
 <a name="l00076"></a>00076 
-<a name="l00078"></a>00078 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a>();
+<a name="l00078"></a>00078 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a>();
 <a name="l00079"></a>00079 
 <a name="l00081"></a>00081 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4</a>();
 <a name="l00082"></a>00082 
-<a name="l00084"></a>00084 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a>();
+<a name="l00084"></a>00084 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a83f8b6aef410edcd3f8d9e76e3f2125f">getCipherPrimitiveByName</a>(<span class="keywordtype">char</span>* name);
 <a name="l00085"></a>00085 
-<a name="l00087"></a>00087 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a318683daf1e5ec091811c2c8ab4763cd">getCipherPrimitive</a>(<span class="keywordtype">char</span>* name);
+<a name="l00087"></a>00087 CIPHER_PRIMITIVE* <a class="code" href="primitives_8h.html#a413193542bed03d9c6ff0fb5d44a8a38">getCipherPrimitiveByID</a>(<span class="keywordtype">size_t</span> ID);
 <a name="l00088"></a>00088 
 <a name="l00092"></a>00092 <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="code" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a>(CIPHER_PRIMITIVE* primitive);
 <a name="l00093"></a>00093 
@@ -135,7 +135,7 @@
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 13 2012 22:45:21 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

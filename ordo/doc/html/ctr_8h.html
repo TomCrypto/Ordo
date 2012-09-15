@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.2.0</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -74,12 +74,13 @@
 <div class="textblock"><p>CTR encryption mode of operation interface. </p>
 <p>The CTR mode generates a keystream by repeatedly encrypting a counter starting from some initialization vector, effectively turning a block cipher into a stream cipher. As such, CTR mode requires no padding, and outlen will always be equal to inlen.</p>
 <p>Note that the CTR keystream is independent of the plaintext, and is also spatially coherent (using a given initialization vector on a len-byte message will "use up" len bytes of the keystream) so care must be taken to avoid reusing the initialization vector in an insecure way. This also means the block cipher's inverse permutation is never used.</p>
+<p><code>CTR_Final</code> accepts 0 as an argument for <code>outlen</code>, since by design the CTR mode of operation does not produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>ctr.c </dd></dl>
 </div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 13 2012 22:45:21 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

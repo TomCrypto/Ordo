@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.2.0</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -74,12 +74,13 @@
 <div class="textblock"><p>OFB encryption mode of operation interface. </p>
 <p>The OFB mode generates a keystream by repeatedly encrypting an initialization vector, effectively turning a block cipher into a stream cipher. As such, OFB mode requires no padding, and outlen will always be equal to inlen.</p>
 <p>Note that the OFB keystream is independent of the plaintext, so a key/iv pair must never be used for more than one message. This also means the block cipher's inverse permutation is never used.</p>
+<p><code>OFB_Final</code> accepts 0 as an argument for <code>outlen</code>, since by design the OFB mode of operation does not produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>ofb.c </dd></dl>
 </div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 13 2012 22:45:21 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.2.0</span>
+   &#160;<span id="projectnumber">1.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -131,16 +131,16 @@
 <a name="l00100"></a>00100 
 <a name="l00103"></a>00103 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a6e6e4647ccd20fe02479d188672b76d9">encryptLoad</a>();
 <a name="l00104"></a>00104 
-<a name="l00106"></a>00106 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a5d27b7985a4ca3cb038ccb2ae6db78e2">encryptUnload</a>();
-<a name="l00107"></a>00107 
-<a name="l00109"></a>00109 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#ac59e354889d8718bd9172cbd3e3fc751">ECB</a>();
-<a name="l00111"></a>00111 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a752f4415d0b3024c1dec8eea52c2900e">CBC</a>();
-<a name="l00113"></a>00113 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#adfede45252bf5e2cf63b28211464934e">CTR</a>();
-<a name="l00115"></a>00115 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a6fd8764a62c406dc0e035c3913fffe51">CFB</a>();
-<a name="l00117"></a>00117 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#afd8c8bb303af625f34431caac6b797bf">OFB</a>();
-<a name="l00119"></a>00119 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a433699e2fc9d0c997fc3c3f69ae4c6eb">STREAM</a>();
+<a name="l00106"></a>00106 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#ac59e354889d8718bd9172cbd3e3fc751">ECB</a>();
+<a name="l00108"></a>00108 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a752f4415d0b3024c1dec8eea52c2900e">CBC</a>();
+<a name="l00110"></a>00110 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#adfede45252bf5e2cf63b28211464934e">CTR</a>();
+<a name="l00112"></a>00112 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a6fd8764a62c406dc0e035c3913fffe51">CFB</a>();
+<a name="l00114"></a>00114 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#afd8c8bb303af625f34431caac6b797bf">OFB</a>();
+<a name="l00116"></a>00116 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a433699e2fc9d0c997fc3c3f69ae4c6eb">STREAM</a>();
+<a name="l00117"></a>00117 
+<a name="l00119"></a>00119 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#ab368ae29d7a4f76613f687755014d99a">getEncryptModeByName</a>(<span class="keywordtype">char</span>* name);
 <a name="l00120"></a>00120 
-<a name="l00122"></a>00122 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a16dda56f8f7d72075bb4a00c788e1219">getEncryptMode</a>(<span class="keywordtype">char</span>* name);
+<a name="l00122"></a>00122 ENCRYPT_MODE* <a class="code" href="encrypt_8h.html#a00d561a93e59ceee0e4ade9146057ad3">getEncryptModeByID</a>(<span class="keywordtype">size_t</span> ID);
 <a name="l00123"></a>00123 
 <a name="l00128"></a>00128 <a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* <a class="code" href="encrypt_8h.html#a62d15c8ed396c52f2936813dc9d115ae">encryptModeCreate</a>(ENCRYPT_MODE* mode, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher);
 <a name="l00129"></a>00129 
@@ -148,26 +148,26 @@
 <a name="l00140"></a>00140 
 <a name="l00154"></a>00154 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a574243e97cb896e13dbd3e1cd1b264f4">encryptModeUpdate</a>(<a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* ctx, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
 <a name="l00155"></a>00155 
-<a name="l00166"></a>00166 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a0ccb05403a59b12490380f57c20d72ff">encryptModeFinal</a>(<a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* ctx, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
-<a name="l00167"></a>00167 
-<a name="l00173"></a>00173 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#ada8e8c1933363578b573bb270a78fa22">encryptModeFree</a>(<a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* ctx, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher);
-<a name="l00174"></a>00174 
-<a name="l00179"></a>00179 <a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* <a class="code" href="encrypt_8h.html#a4383b4295ff553f245623483fa17b5ba">encryptCreate</a>(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode);
-<a name="l00180"></a>00180 
-<a name="l00193"></a>00193 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a4fb43e9f859010383ff272dc19474c6a">encryptInit</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* iv, <span class="keywordtype">void</span>* cipherParams, <span class="keywordtype">void</span>* modeParams, <span class="keywordtype">int</span> direction);
-<a name="l00194"></a>00194 
-<a name="l00202"></a>00202 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a413d2b02feb780526dc5f52dba2fbefe">encryptUpdate</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
-<a name="l00203"></a>00203 
-<a name="l00211"></a>00211 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a6531497a158f60683a99ccdd27da4d05">encryptFinal</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
-<a name="l00212"></a>00212 
-<a name="l00217"></a>00217 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a7280c0420eb580d9ccd49ef0ab0956d7">encryptFree</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx);
-<a name="l00218"></a>00218 
-<a name="l00219"></a>00219 <span class="preprocessor">#endif</span>
+<a name="l00169"></a>00169 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a0ccb05403a59b12490380f57c20d72ff">encryptModeFinal</a>(<a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* ctx, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
+<a name="l00170"></a>00170 
+<a name="l00176"></a>00176 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#ada8e8c1933363578b573bb270a78fa22">encryptModeFree</a>(<a class="code" href="struct_e_n_c_r_y_p_t___m_o_d_e___c_o_n_t_e_x_t.html" title="Mode of operation context.">ENCRYPT_MODE_CONTEXT</a>* ctx, <a class="code" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html" title="Cipher primitive context.">CIPHER_PRIMITIVE_CONTEXT</a>* cipher);
+<a name="l00177"></a>00177 
+<a name="l00182"></a>00182 <a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* <a class="code" href="encrypt_8h.html#a4383b4295ff553f245623483fa17b5ba">encryptCreate</a>(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode);
+<a name="l00183"></a>00183 
+<a name="l00196"></a>00196 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a4fb43e9f859010383ff272dc19474c6a">encryptInit</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* iv, <span class="keywordtype">void</span>* cipherParams, <span class="keywordtype">void</span>* modeParams, <span class="keywordtype">int</span> direction);
+<a name="l00197"></a>00197 
+<a name="l00205"></a>00205 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a413d2b02feb780526dc5f52dba2fbefe">encryptUpdate</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* in, <span class="keywordtype">size_t</span> inlen, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
+<a name="l00206"></a>00206 
+<a name="l00214"></a>00214 <span class="keywordtype">int</span> <a class="code" href="encrypt_8h.html#a6531497a158f60683a99ccdd27da4d05">encryptFinal</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* out, <span class="keywordtype">size_t</span>* outlen);
+<a name="l00215"></a>00215 
+<a name="l00220"></a>00220 <span class="keywordtype">void</span> <a class="code" href="encrypt_8h.html#a7280c0420eb580d9ccd49ef0ab0956d7">encryptFree</a>(<a class="code" href="struct_e_n_c_r_y_p_t_i_o_n___c_o_n_t_e_x_t.html" title="Symmetric encryption context.">ENCRYPTION_CONTEXT</a>* ctx);
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Sep 13 2012 22:45:21 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
