@@ -25,14 +25,14 @@ ENCRYPT_MODE_CONTEXT* CBC_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
     if (ctx)
     {
         ctx->mode = mode;
-        ctx->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT));
-        if (ctx->ctx)
+        if ((ctx->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT))))
         {
+            /* Allocate extra buffers for the running IV and temporary block. */
             cbc(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
             cbc(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
 
-            /* Return if everything succeeded. */
-            if ((cbc(ctx->ctx)->block) && (cbc(ctx->ctx)->iv))
+            /* Return if every allocation succeeded. */
+            if ((cbc(ctx->ctx)->iv) && (cbc(ctx->ctx)->block))
             {
                 cbc(ctx->ctx)->available = 0;
                 return ctx;
@@ -56,7 +56,7 @@ int CBC_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void*
     memcpy(cbc(mode->ctx)->iv, iv, cipher->primitive->szBlock);
 
     /* Check and save the parameters. */
-    cbc(mode->ctx)->padding = (params == 0) ? 1 : params->padding;
+    cbc(mode->ctx)->padding = (params == 0) ? 1 : params->padding & 1;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -144,11 +144,9 @@ int CBC_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     /* If padding is disabled, we need to handle things differently. */
     if (cbc(mode->ctx)->padding == 0)
     {
-        /* If there is data left, return an error. */
-        if (cbc(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
-
-        /* Otherwise, just set the output size to zero. */
-        if (outlen != 0) *outlen = 0;
+        /* If there is data left, return an error and the number of plaintext left in outlen. */
+        *outlen = cbc(mode->ctx)->available;
+        if (*outlen != 0) return ORDO_ELEFTOVER;
     }
     else
     {
@@ -180,11 +178,9 @@ int CBC_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     /* If padding is disabled, we need to handle things differently. */
     if (!cbc(mode->ctx)->padding)
     {
-        /* If there is data left, return an error. */
-        if (cbc(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
-
-        /* Otherwise, just set the output size to zero. */
-        if (outlen != 0) *outlen = 0;
+        /* If there is data left, return an error and the number of plaintext left in outlen. */
+        *outlen = cbc(mode->ctx)->available;
+        if (*outlen != 0) return ORDO_ELEFTOVER;
     }
     else
     {

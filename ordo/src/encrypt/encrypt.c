@@ -16,66 +16,47 @@
 /* Macro to the cipher primitive object of an encryption context. */
 #define cipherobj(ctx) (ctx->cipher->primitive)
 
-/* Mode of operation list. */
-ENCRYPT_MODE* _ECB;
-ENCRYPT_MODE* _CBC;
-ENCRYPT_MODE* _CTR;
-ENCRYPT_MODE* _CFB;
-ENCRYPT_MODE* _OFB;
-ENCRYPT_MODE* _STREAM;
+/* Encryption mode of operation list. */
+ENCRYPT_MODE encryptModes[ENCRYPT_MODE_COUNT];
 
 /* Loads all cipher modes. */
 void encryptLoad()
 {
-    _ECB = malloc(sizeof(ENCRYPT_MODE));
-    ECB_SetMode(_ECB);
-
-    _CBC = malloc(sizeof(ENCRYPT_MODE));
-    CBC_SetMode(_CBC);
-
-    _CTR = malloc(sizeof(ENCRYPT_MODE));
-    CTR_SetMode(_CTR);
-
-    _CFB = malloc(sizeof(ENCRYPT_MODE));
-    CFB_SetMode(_CFB);
-
-    _OFB = malloc(sizeof(ENCRYPT_MODE));
-    OFB_SetMode(_OFB);
-
-    _STREAM = malloc(sizeof(ENCRYPT_MODE));
-    STREAM_SetMode(_STREAM);
-}
-
-/* Unloads all cipher modes. */
-void encryptUnload()
-{
-    free(_ECB);
-    free(_CBC);
-    free(_CTR);
-    free(_CFB);
-    free(_OFB);
-    free(_STREAM);
+    /* Initialize each encryption mode object. */
+    ECB_SetMode   (&encryptModes[ENCRYPT_MODE_ECB]);
+    CBC_SetMode   (&encryptModes[ENCRYPT_MODE_CBC]);
+    CTR_SetMode   (&encryptModes[ENCRYPT_MODE_CTR]);
+    CFB_SetMode   (&encryptModes[ENCRYPT_MODE_CFB]);
+    OFB_SetMode   (&encryptModes[ENCRYPT_MODE_OFB]);
+    STREAM_SetMode(&encryptModes[ENCRYPT_MODE_STREAM]);
 }
 
 /* Pass-through functions to acquire modes of operation. */
-ENCRYPT_MODE* ECB() { return _ECB; }
-ENCRYPT_MODE* CBC() { return _CBC; }
-ENCRYPT_MODE* CTR() { return _CTR; }
-ENCRYPT_MODE* CFB() { return _CFB; }
-ENCRYPT_MODE* OFB() { return _OFB; }
-ENCRYPT_MODE* STREAM() { return _STREAM; }
+ENCRYPT_MODE* ECB()    { return &encryptModes[ENCRYPT_MODE_ECB]; }
+ENCRYPT_MODE* CBC()    { return &encryptModes[ENCRYPT_MODE_CBC]; }
+ENCRYPT_MODE* CTR()    { return &encryptModes[ENCRYPT_MODE_CTR]; }
+ENCRYPT_MODE* CFB()    { return &encryptModes[ENCRYPT_MODE_CFB]; }
+ENCRYPT_MODE* OFB()    { return &encryptModes[ENCRYPT_MODE_OFB]; }
+ENCRYPT_MODE* STREAM() { return &encryptModes[ENCRYPT_MODE_STREAM]; }
 
 /* Gets an encryption mode object from a name. */
-ENCRYPT_MODE* getEncryptMode(char* name)
+ENCRYPT_MODE* getEncryptModeByName(char* name)
 {
-    /* Simply compare against the existing list. */
-    if (strcmp(name, ECB()->name) == 0) return ECB();
-    if (strcmp(name, CBC()->name) == 0) return CBC();
-    if (strcmp(name, CTR()->name) == 0) return CTR();
-    if (strcmp(name, CFB()->name) == 0) return CFB();
-    if (strcmp(name, OFB()->name) == 0) return OFB();
-    if (strcmp(name, STREAM()->name) == 0) return STREAM();
+    ssize_t t;
+    for (t = 0; t < ENCRYPT_MODE_COUNT; t++)
+    {
+        /* Simply compare against the encryption mode list. */
+        if (strcmp(name, encryptModes[t].name) == 0) return &encryptModes[t];
+    }
+
+    /* No match found. */
     return 0;
+}
+
+/* Returns an encryption mode object from an ID. */
+ENCRYPT_MODE* getEncryptModeByID(size_t ID)
+{
+    return (ID < ENCRYPT_MODE_COUNT) ? &encryptModes[ID] : 0;
 }
 
 /* This function returns an initialized encryption mode context using a specific primitive. */
@@ -126,12 +107,10 @@ ENCRYPTION_CONTEXT* encryptCreate(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mod
     if (ctx)
     {
         /* Create the cipher context. */
-        ctx->cipher = cipherCreate(primitive);
-        if (ctx->cipher)
+        if ((ctx->cipher = cipherCreate(primitive)))
         {
             /* Create the mode context. */
-            ctx->mode = encryptModeCreate(mode, ctx->cipher);
-            if (ctx->mode) return ctx;
+            if ((ctx->mode = encryptModeCreate(mode, ctx->cipher))) return ctx;
             cipherFree(ctx->cipher);
         }
         sfree(ctx, sizeof(ENCRYPTION_CONTEXT));

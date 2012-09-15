@@ -23,6 +23,8 @@ typedef struct ORDO_BUILD_INFO
 	char* version;
 	/*! The library's devtag. */
 	char* devtag;
+	/*! The build type. */
+	char* build;
 	/*! The library's platform. */
 	char* platform;
 	/*! The targeted ABI. */
@@ -34,6 +36,6 @@ typedef struct ORDO_BUILD_INFO
 } ORDO_BUILD_INFO;
 
 /*! Returns library build information in a structure. */
-ORDO_BUILD_INFO* ordoBuildInfo();
+const ORDO_BUILD_INFO* ordoBuildInfo();
 
 #endif

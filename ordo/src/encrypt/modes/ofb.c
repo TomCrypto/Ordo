@@ -21,13 +21,10 @@ ENCRYPT_MODE_CONTEXT* OFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
     if (ctx)
     {
         ctx->mode = mode;
-        ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT));
-        if (ctx->ctx)
+        if ((ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT))))
         {
-            ofb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
-
             /* Return if everything succeeded. */
-            if (ofb(ctx->ctx)->iv)
+            if ((ofb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock)))
             {
                 ofb(ctx->ctx)->remaining = 0;
                 return ctx;
@@ -92,7 +89,7 @@ void OFB_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
 int OFB_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
-    if (outlen != 0) *outlen = 0;
+    if (outlen) *outlen = 0;
 
     /* Return success. */
     return ORDO_ESUCCESS;

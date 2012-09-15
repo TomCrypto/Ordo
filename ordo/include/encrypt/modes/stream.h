@@ -14,6 +14,9 @@
  * way of adding an initialization vector to a stream cipher. To do this, you must use custom constructs to integrate
  * the initialization vector into the encryption key somehow, within the primitive interface.
  *
+ * \c STREAM_Final accepts 0 as an argument for \c outlen, since stream ciphers never produce any final data.
+ * However, if a valid pointer is passed, its value will be set to zero as expected.
+ *
  * @see stream.c
  */
 

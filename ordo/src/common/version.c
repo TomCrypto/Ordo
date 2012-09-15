@@ -1,10 +1,16 @@
 #include <common/version.h>
 
-ORDO_BUILD_INFO ordoInfo = {
+const ORDO_BUILD_INFO ordoInfo = {
 /* Library version. */
-"1.2.0",
+"1.3.0",
 /* Devtag. */
-"Stable/noleak",
+"Stable",
+/* Build. */
+#if ORDO_DEBUG
+"Debug",
+#else
+"Release",
+#endif
 /* Platform. */
 #if PLATFORM_WINDOWS
 "Windows",
@@ -33,4 +39,4 @@ ORDO_BUILD_INFO ordoInfo = {
 #endif
 };
 
-ORDO_BUILD_INFO* ordoBuildInfo() { return &ordoInfo; }
+const ORDO_BUILD_INFO* ordoBuildInfo() { return &ordoInfo; }

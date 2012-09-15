@@ -49,6 +49,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="include/common/environment.h" />
+		<Unit filename="include/common/identification.h" />
 		<Unit filename="include/common/ordotypes.h" />
 		<Unit filename="include/common/securemem.h" />
 		<Unit filename="include/common/version.h" />

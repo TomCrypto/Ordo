@@ -29,7 +29,8 @@
  even months after the event occurred. This function prevents this by instructing
  the operating system not to page out the allocated memory.
  \remark Note that this is a hint to the operating system, nothing more. Consult
- your operating system's implementation of virtual memory locking to know more. */
+ your operating system's implementation of virtual memory locking to know more.
+ \remark Memory is left uninitialized upon allocation, and thus may contain garbage. */
 void* salloc(size_t size);
 
 /*! This function sets memory as read-only. If this function succeeds, any attempt to

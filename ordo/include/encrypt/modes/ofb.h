@@ -14,6 +14,9 @@
  * used for more than one message. This also means the block cipher's inverse permutation is
  * never used.
  *
+ * \c OFB_Final accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
+ * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
+ *
  * @see ofb.c
  */
 

@@ -10,16 +10,6 @@ void ordoLoad()
     encryptLoad();
 }
 
-/* Unload Ordo. */
-void ordoUnload()
-{
-    /* Unload all encryption modes of operation. */
-    encryptUnload();
-
-    /* Unload all cryptographic primitives. */
-    primitivesUnload();
-}
-
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
 int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {

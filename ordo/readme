@@ -1,4 +1,4 @@
-Ordo v1.2.0
+Ordo v1.3.0
 -----------
 
 This directory contains code and headers for the shared library Ordo. A simple makefile is provided with two build targets:
@@ -11,11 +11,10 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
- - all memory leaks have been eradicated & memory allocation is safe
- - encryption API is essentially finished
+ - new algorithm handling, with functions such as getCipherPrimitiveByName("RC4") or getEncryptModeByID(ENCRYPT_MODE_CTR).
 
 Current work is focused towards finishing the cipher interface. Important todo's:
- - fix some syntax quirks in the library code
+ - fix some syntax quirks in the library code and improve consistency
  - sort out the test driver properly (perhaps divide into multiple programs)
  - wrap up the encryption API and move on to hashes/misc.
 
@@ -61,7 +60,7 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
 -------- COMPILER FLAGS --------
 
 List of define flags to pass during compilation and their actions:
-ORDO_DEBUG: indicates this is a debug build, some specific features may be disabled if this flag is enabled (right now it does absolutely nothing - it might be removed, we do not know yet what to do with it)
+ORDO_DEBUG: indicates this is a debug build, some specific features may be disabled if this flag is enabled (right now it has its own place in the version structure (see version.h) and just has the test program print out whether it is running a debug or release build of the library)
 
 ------- HOW TO COMPILE -------
 

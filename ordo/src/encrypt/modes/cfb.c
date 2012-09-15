@@ -21,13 +21,10 @@ ENCRYPT_MODE_CONTEXT* CFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
     if (ctx)
     {
         ctx->mode = mode;
-        ctx->ctx = salloc(sizeof(CFB_ENCRYPT_CONTEXT));
-        if (ctx->ctx)
+        if ((ctx->ctx = salloc(sizeof(CFB_ENCRYPT_CONTEXT))))
         {
-            cfb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
-
             /* Return if everything succeeded. */
-            if (cfb(ctx->ctx)->iv)
+            if ((cfb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock)))
             {
                 cfb(ctx->ctx)->remaining = 0;
                 return ctx;
@@ -127,7 +124,7 @@ void CFB_DecryptUpdate(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cip
 int CFB_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
-    if (outlen != 0) *outlen = 0;
+    if (outlen) *outlen = 0;
 
     /* Return success. */
     return ORDO_ESUCCESS;

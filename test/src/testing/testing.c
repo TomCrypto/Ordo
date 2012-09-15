@@ -146,8 +146,8 @@ int runEncryptTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    CIPHER_PRIMITIVE* primitive = getCipherPrimitive(primitiveName);
-    ENCRYPT_MODE* mode = getEncryptMode(modeName);
+    CIPHER_PRIMITIVE* primitive = getCipherPrimitiveByName(primitiveName);
+    ENCRYPT_MODE* mode = getEncryptModeByName(modeName);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if ((primitive == 0) || (mode == 0))

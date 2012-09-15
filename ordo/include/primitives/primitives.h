@@ -67,24 +67,24 @@ typedef struct CIPHER_PRIMITIVE
     char* name;
 } CIPHER_PRIMITIVE;
 
-/*! Loads all primitives. This must be called (or the primitive objects must be initialized by some other means) before
- * the NullCipher, RC4, etc... global variables can be used in any way through this interface. */
+/*! Loads all primitivs. This must be called before you may use \c RC4(), \c NullCipher(), etc...
+ * or the helper functions \c getCipherPrimitiveByName() and \c getCipherPrimitiveByID(). */
 void primitivesLoad();
-
-/*! Unloads all primitives. After calling this, the NullCipher, RC4... primitive objects may no longer be used. */
-void primitivesUnload();
 
 /*! The NullCipher cipher primitive. */
 CIPHER_PRIMITIVE* NullCipher();
 
-/*! The RC4 cipher primitive. */
-CIPHER_PRIMITIVE* RC4();
-
 /*! The Threefish-256 cipher primitive. */
 CIPHER_PRIMITIVE* Threefish256();
 
+/*! The RC4 cipher primitive. */
+CIPHER_PRIMITIVE* RC4();
+
 /*! Returns a cipher primitive object from a name. */
-CIPHER_PRIMITIVE* getCipherPrimitive(char* name);
+CIPHER_PRIMITIVE* getCipherPrimitiveByName(char* name);
+
+/*! Returns a cipher primitive object from an ID. */
+CIPHER_PRIMITIVE* getCipherPrimitiveByID(size_t ID);
 
 /*! This function returns an allocated cipher primitive context using a specific cipher primitive.
  \param primitive The primitive object to be used.

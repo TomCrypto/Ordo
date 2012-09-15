@@ -23,8 +23,7 @@ CIPHER_PRIMITIVE_CONTEXT* Threefish256_Create(CIPHER_PRIMITIVE* primitive)
     if (ctx)
     {
         ctx->primitive = primitive;
-        ctx->cipher = salloc(sizeof(THREEFISH256_SUBKEYS));
-        if (ctx->cipher) return ctx;
+        if ((ctx->cipher = salloc(sizeof(THREEFISH256_SUBKEYS)))) return ctx;
         sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
     }
 

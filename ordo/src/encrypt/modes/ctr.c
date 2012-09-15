@@ -23,14 +23,14 @@ ENCRYPT_MODE_CONTEXT* CTR_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
     if (ctx)
     {
         ctx->mode = mode;
-        ctx->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT));
-        if (ctx->ctx)
+        if ((ctx->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT))))
         {
+            /* Allocate extra buffers for the IV and counter. */
             ctr(ctx->ctx)->iv = salloc(cipher->primitive->szBlock);
             ctr(ctx->ctx)->counter = salloc(cipher->primitive->szBlock);
 
             /* Return if everything succeeded. */
-            if ((ctr(ctx->ctx)->counter) && (ctr(ctx->ctx)->iv))
+            if ((ctr(ctx->ctx)->iv) && (ctr(ctx->ctx)->counter))
             {
                 ctr(ctx->ctx)->remaining = 0;
                 return ctx;
@@ -102,7 +102,7 @@ void CTR_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
 int CTR_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
-    if (outlen != 0) *outlen = 0;
+    if (outlen) *outlen = 0;
 
     /* Return success. */
     return ORDO_ESUCCESS;

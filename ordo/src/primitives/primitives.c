@@ -6,51 +6,46 @@
 #include <primitives/ciphers/rc4.h>
 
 /* Cipher primitive list. */
-CIPHER_PRIMITIVE* _NullCipher;
-CIPHER_PRIMITIVE* _RC4;
-CIPHER_PRIMITIVE* _Threefish256;
+CIPHER_PRIMITIVE ciphers[CIPHER_COUNT];
 
 /* Loads all primitives. */
 void primitivesLoad()
 {
     /* Cipher primitives. */
-    _NullCipher = malloc(sizeof(CIPHER_PRIMITIVE));
-    NullCipher_SetPrimitive(_NullCipher);
-
-    _Threefish256 = malloc(sizeof(CIPHER_PRIMITIVE));
-    Threefish256_SetPrimitive(_Threefish256);
-
-    _RC4 = malloc(sizeof(CIPHER_PRIMITIVE));
-    RC4_SetPrimitive(_RC4);
+    NullCipher_SetPrimitive  (&ciphers[CIPHER_NULLCIPHER]);
+    Threefish256_SetPrimitive(&ciphers[CIPHER_THREEFISH256]);
+    RC4_SetPrimitive         (&ciphers[CIPHER_RC4]);
 
     /* Hash primitives. */
     /* empty :[ */
 }
 
-/* Unloads all primitives. */
-void primitivesUnload()
-{
-    free(_NullCipher);
-    free(_Threefish256);
-    free(_RC4);
-}
-
 /* Pass-through functions to acquire primitives. */
-CIPHER_PRIMITIVE* NullCipher() { return _NullCipher; }
-CIPHER_PRIMITIVE* RC4() { return _RC4; }
-CIPHER_PRIMITIVE* Threefish256() { return _Threefish256; }
+CIPHER_PRIMITIVE* NullCipher()   { return &ciphers[CIPHER_NULLCIPHER]; }
+CIPHER_PRIMITIVE* Threefish256() { return &ciphers[CIPHER_THREEFISH256]; }
+CIPHER_PRIMITIVE* RC4()          { return &ciphers[CIPHER_RC4]; }
 
 /* Returns a cipher primitive object from a name. */
-CIPHER_PRIMITIVE* getCipherPrimitive(char* name)
+CIPHER_PRIMITIVE* getCipherPrimitiveByName(char* name)
 {
-    /* Simply compare against the existing list. */
-    if (strcmp(name, NullCipher()->name) == 0) return NullCipher();
-    if (strcmp(name, Threefish256()->name) == 0) return Threefish256();
-    if (strcmp(name, RC4()->name) == 0) return RC4();
+    ssize_t t;
+    for (t = 0; t < CIPHER_COUNT; t++)
+    {
+        /* Simply compare against the cipher list. */
+        if (strcmp(name, ciphers[t].name) == 0) return &ciphers[t];
+    }
+
+    /* No match found. */
     return 0;
 }
 
-/* This function returns an initialized cipher primitive context using a specific primitive. */
+/* Returns a cipher primitive object from an ID. */
+CIPHER_PRIMITIVE* getCipherPrimitiveByID(size_t ID)
+{
+    return (ID < CIPHER_COUNT) ? &ciphers[ID] : 0;
+}
+
+/* This function returns an initialized cipher primitive context using a specific primitive object. */
 CIPHER_PRIMITIVE_CONTEXT* cipherCreate(CIPHER_PRIMITIVE* primitive)
 {
     /* Allocate the cipher context. */

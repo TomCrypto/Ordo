@@ -98,12 +98,9 @@ typedef struct ENCRYPTION_CONTEXT
     ENCRYPT_MODE_CONTEXT* mode;
 } ENCRYPTION_CONTEXT;
 
-/*! Loads all encryption modes of operation. This must be called (or the mode of operation objects must be initialized by some other means) before
- * the ECB, CBC, etc... global variables can be used for encryption or decryption. */
+/*! Loads all encryption modes of operation. This must be called before you may use \c ECB(), \c CBC(), etc...
+ * or the helper functions \c getEncryptModeByName() and \c getEncryptModeByID(). */
 void encryptLoad();
-
-/*! Unloads all encryption modes of operation. After calling this, the ECB, CBC... mode of operation objects may no longer be used. */
-void encryptUnload();
 
 /*! The ECB (Electronic CodeBook) mode of operation. */
 ENCRYPT_MODE* ECB();
@@ -119,7 +116,10 @@ ENCRYPT_MODE* OFB();
 ENCRYPT_MODE* STREAM();
 
 /*! Gets an encryption mode object from a name. */
-ENCRYPT_MODE* getEncryptMode(char* name);
+ENCRYPT_MODE* getEncryptModeByName(char* name);
+
+/*! Gets an encryption mode object from an ID. */
+ENCRYPT_MODE* getEncryptModeByID(size_t ID);
 
 /*! This function returns an allocated encryption mode context using a specific mode of operation and initialized cipher context.
  \param mode The mode of operation object to be used.
@@ -162,7 +162,10 @@ void encryptModeUpdate(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* ciph
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
  \remark If padding is disabled, and the mode of operation is a block mode, this function will fail if there is any unprocessed data left in the context.
  \remark If padding is disabled, or there is no padding in the mode of operation associated with the encryption context, this function returns no additional data.
- \remark If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data. */
+ \remark If padding is enabled, out should have space to hold at most one additional block of data (cipher primitive's block size), and at least one byte of data.
+ \remark You may pass 0 in \c outlen if it makes sense, e.g. if you are using a stream cipher or stream mode, where no final data will ever be returned by design.
+ In such situations, the implementation will ignore \c outlen if you pass it zero, and will set its value to zero if it is specified. Consult the documentation of
+ the appropriate mode to learn what it does. */
 int encryptModeFinal(ENCRYPT_MODE_CONTEXT* ctx, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized encryption mode context.

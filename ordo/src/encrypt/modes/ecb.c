@@ -23,13 +23,10 @@ ENCRYPT_MODE_CONTEXT* ECB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
     if (ctx)
     {
         ctx->mode = mode;
-        ctx->ctx = salloc(sizeof(ECB_ENCRYPT_CONTEXT));
-        if (ctx->ctx)
+        if ((ctx->ctx = salloc(sizeof(ECB_ENCRYPT_CONTEXT))))
         {
-            ecb(ctx->ctx)->block = salloc(cipher->primitive->szBlock);
-
             /* Return if everything succeeded. */
-            if (ecb(ctx->ctx)->block)
+            if ((ecb(ctx->ctx)->block = salloc(cipher->primitive->szBlock)))
             {
                 ecb(ctx->ctx)->available = 0;
                 return ctx;
@@ -48,7 +45,7 @@ ENCRYPT_MODE_CONTEXT* ECB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
 int ECB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, ECB_PARAMS* params)
 {
     /* Check and save the parameters. */
-    ecb(mode->ctx)->padding = (params == 0) ? 1 : params->padding;
+    ecb(mode->ctx)->padding = (params == 0) ? 1 : params->padding & 1;
 
     /* Return success. */
     return ORDO_ESUCCESS;
@@ -121,11 +118,9 @@ int ECB_EncryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     /* If padding is disabled, we need to handle things differently. */
     if (ecb(mode->ctx)->padding == 0)
     {
-        /* If there is data left, return an error. */
-        if (ecb(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
-
-        /* Otherwise, just set the output size to zero. */
-        if (outlen != 0) *outlen = 0;
+        /* If there is data left, return an error and the number of plaintext left in outlen. */
+        *outlen = ecb(mode->ctx)->available;
+        if (*outlen != 0) return ORDO_ELEFTOVER;
     }
     else
     {
@@ -154,11 +149,9 @@ int ECB_DecryptFinal(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* ciphe
     /* If padding is disabled, we need to handle things differently. */
     if (!ecb(mode->ctx)->padding)
     {
-        /* If there is data left, return an error. */
-        if (ecb(mode->ctx)->available != 0) return ORDO_ELEFTOVER;
-
-        /* Otherwise, just set the output size to zero. */
-        if (outlen != 0) *outlen = 0;
+        /* If there is data left, return an error and the number of plaintext left in outlen. */
+        *outlen = ecb(mode->ctx)->available;
+        if (*outlen != 0) return ORDO_ELEFTOVER;
     }
     else
     {

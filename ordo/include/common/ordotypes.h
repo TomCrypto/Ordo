@@ -21,6 +21,7 @@
 #include <common/version.h>
 #include <common/securemem.h>
 #include <common/environment.h>
+#include <common/identification.h>
 
 /* The following are some composite data types used in primitives. */
 

@@ -37,8 +37,7 @@ CIPHER_PRIMITIVE_CONTEXT* RC4_Create(CIPHER_PRIMITIVE* primitive)
     if (ctx)
     {
         ctx->primitive = primitive;
-        ctx->cipher = salloc(sizeof(RC4_STATE));
-        if (ctx->cipher) return ctx;
+        if ((ctx->cipher = salloc(sizeof(RC4_STATE)))) return ctx;
         sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
     }
 

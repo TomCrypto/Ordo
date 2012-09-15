@@ -40,7 +40,7 @@ void STREAM_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher,
 int STREAM_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
-    if (outlen != 0) *outlen = 0;
+    if (outlen) *outlen = 0;
 
     /* Return success. */
     return ORDO_ESUCCESS;
