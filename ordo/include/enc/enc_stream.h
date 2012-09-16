@@ -40,7 +40,7 @@ int enc_stream_init(ENC_STREAM_CONTEXT* ctx, void* key, size_t keySize, void* ci
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This points to a variable which will contain the number of bytes written to out.
  \remark See \c blockEncryptModeUpdate remarks about output buffer size. */
-void enc_stream_update(ENC_STREAM_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out);
+void enc_stream_update(ENC_STREAM_CONTEXT* ctx, unsigned char* inout, size_t len);
 
 /*! This function frees (deallocates) an initialized encryption context.
  \param ctx The encryption context to be freed. This context needs to at least have been allocated.

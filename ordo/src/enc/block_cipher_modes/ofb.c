@@ -76,7 +76,7 @@ void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
         process = (inlen < ofb(mode->ctx)->remaining) ? inlen : ofb(mode->ctx)->remaining;
 
         /* Process this amount of data. */
-        memmove(out, in, process);
+        if (out != in) memcpy(out, in, process);
         xorBuffer(out, (unsigned char*)ofb(mode->ctx)->iv + cipherCtx->cipher->blockSize - ofb(mode->ctx)->remaining, process);
         ofb(mode->ctx)->remaining -= process;
         (*outlen) += process;

@@ -89,7 +89,7 @@ void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
         process = (inlen < ctr(mode->ctx)->remaining) ? inlen : ctr(mode->ctx)->remaining;
 
         /* Process this amount of data. */
-        memmove(out, in, process);
+        if (out != in) memcpy(out, in, process);
         xorBuffer(out, (unsigned char*)ctr(mode->ctx)->iv + cipherCtx->cipher->blockSize - ctr(mode->ctx)->remaining, process);
         ctr(mode->ctx)->remaining -= process;
         (*outlen) += process;

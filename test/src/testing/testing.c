@@ -230,14 +230,16 @@ int runStreamCipherTest(char* line, int n)
     result = 0;
 
     /* Perform the encryption test. */
-    error = ordoEncryptStream(plaintext, plaintextlen, computedCiphertext, primitive, key, keylen, 0);
+    memcpy(computedCiphertext, plaintext, ciphertextlen);
+    error = ordoEncryptStream(computedCiphertext, plaintextlen, primitive, key, keylen, 0);
     if (error == ORDO_ESUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
         if (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0)
         {
             /* Perform the decryption test. */
-            error = ordoDecryptStream(computedCiphertext, ciphertextlen, computedPlaintext, primitive, key, keylen, 0);
+            memcpy(computedPlaintext, computedCiphertext, ciphertextlen);
+            error = ordoDecryptStream(computedPlaintext, ciphertextlen, primitive, key, keylen, 0);
             if (error == ORDO_ESUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
@@ -341,7 +343,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     /* Randomize the plaintext buffer first, to defeat caching. */
     randomizeBuffer(buffer, bufferSize);
 
-    /* Allocate a buffer of the right size (= cipher block size) for the IV. This can be zero for stream ciphers. */
+    /* Allocate a buffer of the right size (= cipher block size) for the IV. */
     iv = malloc(blockCipherBlockSize(primitive));
     memset(iv, 0, blockCipherBlockSize(primitive));
 
@@ -355,7 +357,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     /* Save starting time. */
     start = clock();
 
-    /* Encryption test. */                   // this is to make sure we have enough space for padding (yeah, bad design)
+    /* Encryption test. */                   // this is to make sure we have enough space for padding (yeah, bad test program design)
     error = ordoEncrypt(buffer, bufferSize - blockCipherBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
     else
@@ -407,7 +409,7 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
     start = clock();
 
     /* Encryption test. */
-    error = ordoEncryptStream(buffer, bufferSize, buffer, primitive, key, keySize, 0);
+    error = ordoEncryptStream(buffer, bufferSize, primitive, key, keySize, 0);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
     else
     {
@@ -419,7 +421,7 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecryptStream(buffer, bufferSize, buffer, primitive, key, keySize, 0);
+        error = ordoDecryptStream(buffer, bufferSize, primitive, key, keySize, 0);
         if (error < 0) printf("[!] An error occurred during decryption [%s].\n", errorMsg(error));
         else
         {

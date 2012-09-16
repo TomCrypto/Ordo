@@ -21,11 +21,10 @@ int enc_stream_init(ENC_STREAM_CONTEXT* ctx, void* key, size_t keySize, void* ci
     return stream_cipher_init(ctx->cipherCtx, key, keySize, cipherParams);
 }
 
-void enc_stream_update(ENC_STREAM_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out)
+void enc_stream_update(ENC_STREAM_CONTEXT* ctx, unsigned char* inout, size_t len)
 {
     /* Encrypt the given buffer. */
-    memmove(out, in, inlen);
-    ctx->cipherCtx->cipher->fUpdate(ctx->cipherCtx, out, inlen);
+    ctx->cipherCtx->cipher->fUpdate(ctx->cipherCtx, inout, len);
 }
 
 void enc_stream_free(ENC_STREAM_CONTEXT* ctx)

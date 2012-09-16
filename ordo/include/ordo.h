@@ -56,8 +56,8 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
  \remark Same remarks as for ordoEncrypt. */
 int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
 
-int ordoEncryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
+int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
 
-int ordoDecryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
+int ordoDecryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
 
 #endif

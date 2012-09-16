@@ -67,7 +67,7 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
-int ordoEncryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
+int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
 {
     int error;
 
@@ -80,7 +80,7 @@ int ordoEncryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREA
     if (error < 0) return error;
 
     /* Encrypt the buffer. */
-    enc_stream_update(ctx, in, inlen, out);
+    enc_stream_update(ctx, inout, len);
 
     /* Free it and return success. */
     enc_stream_free(ctx);
@@ -88,7 +88,7 @@ int ordoEncryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREA
 }
 
 /* This convenience function decrypts a buffer with a given key, tweak and IV. */
-int ordoDecryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
+int ordoDecryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
 {
     int error;
 
@@ -101,7 +101,7 @@ int ordoDecryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREA
     if (error < 0) return error;
 
     /* Decrypt the buffer. */
-    enc_stream_update(ctx, in, inlen, out);
+    enc_stream_update(ctx, inout, len);
 
     /* Free it and return success. */
     enc_stream_free(ctx);

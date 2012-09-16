@@ -76,7 +76,7 @@ void CFB_EncryptUpdate(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* ci
         process = (inlen < cfb(mode->ctx)->remaining) ? inlen : cfb(mode->ctx)->remaining;
 
         /* Process this amount of data. */
-        memmove(out, in, process);
+        if (out != in) memcpy(out, in, process);
         xorBuffer(out, (unsigned char*)cfb(mode->ctx)->iv + cipherCtx->cipher->blockSize - cfb(mode->ctx)->remaining, process);
         memcpy((unsigned char*)cfb(mode->ctx)->iv + cipherCtx->cipher->blockSize - cfb(mode->ctx)->remaining, out, process);
         cfb(mode->ctx)->remaining -= process;
@@ -110,7 +110,7 @@ void CFB_DecryptUpdate(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* ci
         process = (inlen < cfb(mode->ctx)->remaining) ? inlen : cfb(mode->ctx)->remaining;
 
         /* Process this amount of data. */
-        memmove(out, in, process);
+        if (out != in) memcpy(out, in, process);
         xorBuffer(out, (unsigned char*)cfb(mode->ctx)->iv + cipherCtx->cipher->blockSize - cfb(mode->ctx)->remaining, process);
         memcpy((unsigned char*)cfb(mode->ctx)->iv + cipherCtx->cipher->blockSize - cfb(mode->ctx)->remaining, in, process);
         cfb(mode->ctx)->remaining -= process;
