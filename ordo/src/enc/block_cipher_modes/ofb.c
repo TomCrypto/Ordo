@@ -1,6 +1,6 @@
 #include <primitives/primitives.h>
-#include <encrypt/encrypt.h>
-#include <encrypt/modes/ofb.h>
+#include <enc/enc_block.h>
+#include <enc/block_cipher_modes/ofb.h>
 
 /* This is extra context space required by the OFB mode to store the amount of state not used.*/
 typedef struct OFB_ENCRYPT_CONTEXT
@@ -14,17 +14,17 @@ typedef struct OFB_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define ofb(ctx) ((OFB_ENCRYPT_CONTEXT*)ctx)
 
-ENCRYPT_MODE_CONTEXT* OFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
     /* Allocate the context and extra buffers in it. */
-    ENCRYPT_MODE_CONTEXT* ctx = salloc(sizeof(ENCRYPT_MODE_CONTEXT));
+    BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
     if (ctx)
     {
         ctx->mode = mode;
         if ((ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT))))
         {
             /* Return if everything succeeded. */
-            if ((ofb(ctx->ctx)->iv = salloc(cipher->primitive->szBlock)))
+            if ((ofb(ctx->ctx)->iv = salloc(cipherCtx->cipher->blockSize)))
             {
                 ofb(ctx->ctx)->remaining = 0;
                 return ctx;
@@ -33,27 +33,27 @@ ENCRYPT_MODE_CONTEXT* OFB_Create(ENCRYPT_MODE* mode, CIPHER_PRIMITIVE_CONTEXT* c
             /* Clean up if an error occurred. */
             sfree(ctx->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
         }
-        sfree(ctx, sizeof(ENCRYPT_MODE_CONTEXT));
+        sfree(ctx, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
     }
 
     /* Allocation failed, return zero. */
     return 0;
 }
 
-int OFB_Init(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, void* iv, void* params)
+int OFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params)
 {
     /* Copy the IV (required) into the context IV. */
-    memcpy(ofb(mode->ctx)->iv, iv, cipher->primitive->szBlock);
+    memcpy(ofb(mode->ctx)->iv, iv, cipherCtx->cipher->blockSize);
 
     /* Compute the initial keystream block. */
-    cipher->primitive->fForward(cipher, ofb(mode->ctx)->iv, cipher->primitive->szBlock);
-    ofb(mode->ctx)->remaining = cipher->primitive->szBlock;
+    cipherCtx->cipher->fForward(cipherCtx, ofb(mode->ctx)->iv);
+    ofb(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
 
     /* Return success. */
     return ORDO_ESUCCESS;
 }
 
-void OFB_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t process = 0;
@@ -68,8 +68,8 @@ void OFB_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
         if (ofb(mode->ctx)->remaining == 0)
         {
             /* OFB update (simply apply the permutation function again). */
-            cipher->primitive->fForward(cipher, ofb(mode->ctx)->iv, cipher->primitive->szBlock);
-            ofb(mode->ctx)->remaining = cipher->primitive->szBlock;
+            cipherCtx->cipher->fForward(cipherCtx, ofb(mode->ctx)->iv);
+            ofb(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
         }
 
         /* Compute the amount of data to process. */
@@ -77,7 +77,7 @@ void OFB_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
 
         /* Process this amount of data. */
         memmove(out, in, process);
-        xorBuffer(out, (unsigned char*)ofb(mode->ctx)->iv + cipher->primitive->szBlock - ofb(mode->ctx)->remaining, process);
+        xorBuffer(out, (unsigned char*)ofb(mode->ctx)->iv + cipherCtx->cipher->blockSize - ofb(mode->ctx)->remaining, process);
         ofb(mode->ctx)->remaining -= process;
         (*outlen) += process;
         inlen -= process;
@@ -86,7 +86,7 @@ void OFB_Update(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, un
     }
 }
 
-int OFB_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* out, size_t* outlen)
+int OFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
@@ -95,16 +95,16 @@ int OFB_Final(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher, unsi
     return ORDO_ESUCCESS;
 }
 
-void OFB_Free(ENCRYPT_MODE_CONTEXT* mode, CIPHER_PRIMITIVE_CONTEXT* cipher)
+void OFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
     /* Free context space. */
-    sfree(ofb(mode->ctx)->iv, cipher->primitive->szBlock);
+    sfree(ofb(mode->ctx)->iv, cipherCtx->cipher->blockSize);
     sfree(mode->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
-    sfree(mode, sizeof(ENCRYPT_MODE_CONTEXT));
+    sfree(mode, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
 }
 
-/* Fills a ENCRYPT_MODE struct with the correct information. */
-void OFB_SetMode(ENCRYPT_MODE* mode)
+/* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
+void OFB_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    ENCRYPT_MAKEMODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
+    MAKE_ENCRYPT_MODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
 }

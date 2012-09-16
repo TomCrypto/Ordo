@@ -121,10 +121,10 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
     return buf;
 }
 
-/* Runs an encryption test vector. */
-int runEncryptTest(char* line, int n)
+/* Runs a block cipher test vector. */
+int runBlockCipherTest(char* line, int n)
 {
-    /* An encrypt test vector takes this form: encrypt:primitive:mode:key:iv:plaintext:ciphertext~
+    /* An encrypt test vector takes this form: enc_block:primitive:mode:key:iv:plaintext:ciphertext~
      * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
      * hexadecimal notation. If a key or iv is not required, it may be omitted between two colons.
      * The primitive field should be the name of the primitive e.g. "NullCipher" or "RC4". */
@@ -146,8 +146,8 @@ int runEncryptTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    CIPHER_PRIMITIVE* primitive = getCipherPrimitiveByName(primitiveName);
-    ENCRYPT_MODE* mode = getEncryptModeByName(modeName);
+    BLOCK_CIPHER* primitive = getBlockCipherByName(primitiveName);
+    BLOCK_CIPHER_MODE* mode = getBlockCipherModeByName(modeName);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if ((primitive == 0) || (mode == 0))
@@ -196,11 +196,77 @@ int runEncryptTest(char* line, int n)
     return result;
 }
 
+/* Runs a stream cipher test vector. */
+int runStreamCipherTest(char* line, int n)
+{
+    /* An encrypt test vector takes this form: enc_stream:cipher:key:plaintext:ciphertext~
+     * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
+     * hexadecimal notation. If a key or iv is not required, it may be omitted between two colons.
+     * The primitive field should be the name of the primitive e.g. "NullCipher" or "RC4". */
+
+    /* Parse the test vector and initialize variables. */
+    char* primitiveName = readToken(line, 1);
+    size_t keylen, plaintextlen, ciphertextlen;
+    unsigned char* key = hexToBuffer(readToken(line, 2), &keylen);
+    unsigned char* plaintext = hexToBuffer(readToken(line, 3), &plaintextlen);
+    unsigned char* ciphertext = hexToBuffer(readToken(line, 4), &ciphertextlen);
+
+    /* Create a temporary buffer to store the computed ciphertext and plaintext. */
+    unsigned char* computedPlaintext = malloc(plaintextlen);
+    unsigned char* computedCiphertext = malloc(ciphertextlen);
+    int error, result;
+
+    /* Get the proper primitive and mode. */
+    STREAM_CIPHER* primitive = getStreamCipherByName(primitiveName);
+
+    /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
+    if (primitive == 0)
+    {
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        return 1;
+    }
+
+    /* Initialize the test result. */
+    result = 0;
+
+    /* Perform the encryption test. */
+    error = ordoEncryptStream(plaintext, plaintextlen, computedCiphertext, primitive, key, keylen, 0);
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Check the computed ciphertext against the expected ciphertext. */
+        if (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0)
+        {
+            /* Perform the decryption test. */
+            error = ordoDecryptStream(computedCiphertext, ciphertextlen, computedPlaintext, primitive, key, keylen, 0);
+            if (error == ORDO_ESUCCESS)
+            {
+                /* Check the computed plaintext against the expected plaintext. */
+                if (memcmp(computedPlaintext, plaintext, plaintextlen) == ORDO_ESUCCESS)
+                {
+                    /* Report success. */
+                    result = 1;
+                    printf("[+] Test vector #%.3d (%s) passed!\n", n, primitiveName);
+                } else printf("[!] Test vector #%.3d (%s) failed: did not get expected plaintext.\n", n, primitiveName);
+            } else printf("[!] Test vector #%.3d (%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, errorMsg(error));
+        } else printf("[!] Test vector #%.3d (%s) failed: did not get expected ciphertext.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, errorMsg(error));
+
+    /* Clean up. */
+    free(computedPlaintext);
+    free(computedCiphertext);
+    free(plaintext);
+    free(ciphertext);
+    free(key);
+    free(primitiveName);
+    return result;
+}
+
 /* Runs all test vectors. */
 void runTestVectors(FILE* file)
 {
     /* Different possible actions. */
-    #define TOKEN_ENCRYPT "encrypt"
+    #define TOKEN_ENC_BLOCK "enc_block"
+    #define TOKEN_ENC_STREAM "enc_stream"
 
     /* We keep track of how many lines we read. */
     char* line = readLine(file);
@@ -218,7 +284,8 @@ void runTestVectors(FILE* file)
             token = readToken(line, 0);
 
             /* Depending on the token, perform the appropriate test. */
-            if (strcmp(token, TOKEN_ENCRYPT) == 0) success += runEncryptTest(line, n++);
+            if (strcmp(token, TOKEN_ENC_BLOCK) == 0) success += runBlockCipherTest(line, n++);
+            if (strcmp(token, TOKEN_ENC_STREAM) == 0) success += runStreamCipherTest(line, n++);
 
             /* Free the token buffer. */
             free(token);
@@ -261,7 +328,7 @@ void randomTest()
 }
 
 /* Rates the performance of a cipher primitive/encryption mode combination. Uses an existing buffer. */
-void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
+void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     int error;
@@ -275,8 +342,8 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     randomizeBuffer(buffer, bufferSize);
 
     /* Allocate a buffer of the right size (= cipher block size) for the IV. This can be zero for stream ciphers. */
-    iv = malloc(cipherPrimitiveBlockSize(primitive));
-    memset(iv, 0, cipherPrimitiveBlockSize(primitive));
+    iv = malloc(blockCipherBlockSize(primitive));
+    memset(iv, 0, blockCipherBlockSize(primitive));
 
     /* Allocate a buffer of the right size for the key. */
     key = malloc(keySize);
@@ -288,8 +355,8 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     /* Save starting time. */
     start = clock();
 
-    /* Encryption test. */
-    error = ordoEncrypt(buffer, bufferSize - cipherPrimitiveBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
+    /* Encryption test. */                   // this is to make sure we have enough space for padding (yeah, bad design)
+    error = ordoEncrypt(buffer, bufferSize - blockCipherBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
     else
     {
@@ -316,4 +383,54 @@ void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t 
     /* Clean up. */
     free(key);
     free(iv);
+}
+
+void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize)
+{
+    /* Declare variables. */
+    int error;
+    void* key;
+    clock_t start;
+    float time;
+
+    /* Randomize the plaintext buffer first, to defeat caching. */
+    randomizeBuffer(buffer, bufferSize);
+
+    /* Allocate a buffer of the right size for the key. */
+    key = malloc(keySize);
+    memset(key, 0, keySize);
+
+    /* Print primitive/mode information. */
+    printf("[+] Testing %s with a %d-bit key...\n", primitiveName(primitive), (int)keySize * 8);
+
+    /* Save starting time. */
+    start = clock();
+
+    /* Encryption test. */
+    error = ordoEncryptStream(buffer, bufferSize, buffer, primitive, key, keySize, 0);
+    if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
+    else
+    {
+        /* Get total time and display speed. */
+        time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+        printf("[+] Encryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+
+        /* Save starting time. */
+        start = clock();
+
+        /* Decryption test. */
+        error = ordoDecryptStream(buffer, bufferSize, buffer, primitive, key, keySize, 0);
+        if (error < 0) printf("[!] An error occurred during decryption [%s].\n", errorMsg(error));
+        else
+        {
+            /* Get total time and display speed. */
+            time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+            printf("[+] Decryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+        }
+    }
+
+    printf("\n");
+
+    /* Clean up. */
+    free(key);
 }

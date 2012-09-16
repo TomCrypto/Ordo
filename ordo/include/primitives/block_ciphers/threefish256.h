@@ -23,16 +23,16 @@ typedef struct THREEFISH256_PARAMS
     uint64_t tweak[2];
 } THREEFISH256_PARAMS;
 
-CIPHER_PRIMITIVE_CONTEXT* Threefish256_Create(CIPHER_PRIMITIVE* primitive);
+BLOCK_CIPHER_CONTEXT* Threefish256_Create(BLOCK_CIPHER* cipher);
 
-int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params);
+int Threefish256_Init(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params);
 
-void Threefish256_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, size_t len);
+void Threefish256_Forward(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block);
 
-void Threefish256_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, size_t len);
+void Threefish256_Inverse(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block);
 
-void Threefish256_Free(CIPHER_PRIMITIVE_CONTEXT* cipher);
+void Threefish256_Free(BLOCK_CIPHER_CONTEXT* ctx);
 
-void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void Threefish256_SetPrimitive(BLOCK_CIPHER* cipher);
 
 #endif

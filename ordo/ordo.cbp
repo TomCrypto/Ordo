@@ -53,18 +53,18 @@
 		<Unit filename="include/common/ordotypes.h" />
 		<Unit filename="include/common/securemem.h" />
 		<Unit filename="include/common/version.h" />
-		<Unit filename="include/encrypt/encrypt.h" />
-		<Unit filename="include/encrypt/modes/cbc.h" />
-		<Unit filename="include/encrypt/modes/cfb.h" />
-		<Unit filename="include/encrypt/modes/ctr.h" />
-		<Unit filename="include/encrypt/modes/ecb.h" />
-		<Unit filename="include/encrypt/modes/ofb.h" />
-		<Unit filename="include/encrypt/modes/stream.h" />
+		<Unit filename="include/enc/block_cipher_modes/cbc.h" />
+		<Unit filename="include/enc/block_cipher_modes/cfb.h" />
+		<Unit filename="include/enc/block_cipher_modes/ctr.h" />
+		<Unit filename="include/enc/block_cipher_modes/ecb.h" />
+		<Unit filename="include/enc/block_cipher_modes/ofb.h" />
+		<Unit filename="include/enc/enc_block.h" />
+		<Unit filename="include/enc/enc_stream.h" />
 		<Unit filename="include/ordo.h" />
-		<Unit filename="include/primitives/ciphers/nullcipher.h" />
-		<Unit filename="include/primitives/ciphers/rc4.h" />
-		<Unit filename="include/primitives/ciphers/threefish256.h" />
+		<Unit filename="include/primitives/block_ciphers/nullcipher.h" />
+		<Unit filename="include/primitives/block_ciphers/threefish256.h" />
 		<Unit filename="include/primitives/primitives.h" />
+		<Unit filename="include/primitives/stream_ciphers/rc4.h" />
 		<Unit filename="include/random/random.h" />
 		<Unit filename="src/common/ordotypes.c">
 			<Option compilerVar="CC" />
@@ -75,42 +75,43 @@
 		<Unit filename="src/common/version.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/encrypt.c">
+		<Unit filename="src/enc/block_cipher_modes/cbc.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/cbc.c">
+		<Unit filename="src/enc/block_cipher_modes/cfb.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/cfb.c">
+		<Unit filename="src/enc/block_cipher_modes/ctr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/ctr.c">
+		<Unit filename="src/enc/block_cipher_modes/ecb.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/ecb.c">
+		<Unit filename="src/enc/block_cipher_modes/ofb.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/ofb.c">
+		<Unit filename="src/enc/enc_block.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/encrypt/modes/stream.c">
+		<Unit filename="src/enc/enc_stream.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/ordo.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/primitives/ciphers/asm/rc4.S" />
-		<Unit filename="src/primitives/ciphers/asm/threefish256.S" />
-		<Unit filename="src/primitives/ciphers/nullcipher.c">
+		<Unit filename="src/primitives/block_ciphers/asm/threefish256.S" />
+		<Unit filename="src/primitives/block_ciphers/nullcipher.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/primitives/ciphers/rc4.c">
+		<Unit filename="src/primitives/block_ciphers/threefish256.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/primitives/ciphers/threefish256.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="src/primitives/blockciphers/asm/threefish256.S" />
 		<Unit filename="src/primitives/primitives.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/primitives/stream_ciphers/asm/rc4.S" />
+		<Unit filename="src/primitives/stream_ciphers/rc4.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/random/random.c">

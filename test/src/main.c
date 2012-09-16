@@ -27,12 +27,12 @@ void performanceTest()
     }
 
     /* Test some cipher primitives & encryption modes. */
-    encryptPerformance(Threefish256(), ECB(), 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256(), CBC(), 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256(), CTR(), 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256(), CFB(), 32, buffer, BUFSIZE);
-    encryptPerformance(Threefish256(), OFB(), 32, buffer, BUFSIZE);
-    encryptPerformance(RC4(), STREAM(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(Threefish256(), ECB(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(Threefish256(), CBC(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(Threefish256(), CTR(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(Threefish256(), CFB(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(Threefish256(), OFB(), 32, buffer, BUFSIZE);
+    streamCipherPerformance(RC4(), 32, buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */
     free(buffer);

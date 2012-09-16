@@ -18,16 +18,16 @@
 
 #include <primitives/primitives.h>
 
-CIPHER_PRIMITIVE_CONTEXT* NullCipher_Create(CIPHER_PRIMITIVE* primitive);
+BLOCK_CIPHER_CONTEXT* NullCipher_Create(BLOCK_CIPHER* cipher);
 
-int NullCipher_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, void* key, size_t keySize, void* params);
+int NullCipher_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* params);
 
-void NullCipher_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len);
+void NullCipher_Forward(BLOCK_CIPHER_CONTEXT* ctx, void* block);
 
-void NullCipher_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, void* block, size_t len);
+void NullCipher_Inverse(BLOCK_CIPHER_CONTEXT* ctx, void* block);
 
-void NullCipher_Free(CIPHER_PRIMITIVE_CONTEXT* cipher);
+void NullCipher_Free(BLOCK_CIPHER_CONTEXT* ctx);
 
-void NullCipher_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void NullCipher_SetPrimitive(BLOCK_CIPHER* cipher);
 
 #endif

@@ -42,6 +42,8 @@ void randomTest();
     \param buffer A buffer to use to store the plaintext/ciphertexts.
     \param bufferSize The size, in bytes, of the buffer.
     \remark The bigger the storage buffer, the more accurate the performance reading, but the slower the function. */
-void encryptPerformance(CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
+void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
+
+void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize);
 
 #endif

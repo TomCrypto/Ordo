@@ -28,14 +28,14 @@ typedef struct RC4_PARAMS
     size_t drop;
 } RC4_PARAMS;
 
-CIPHER_PRIMITIVE_CONTEXT* RC4_Create(CIPHER_PRIMITIVE* primitive);
+STREAM_CIPHER_CONTEXT* RC4_Create(STREAM_CIPHER* cipher);
 
-int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySize, RC4_PARAMS* params);
+int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4_PARAMS* params);
 
-void RC4_Update(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* block, size_t len);
+void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len);
 
-void RC4_Free(CIPHER_PRIMITIVE_CONTEXT* cipher);
+void RC4_Free(STREAM_CIPHER_CONTEXT* ctx);
 
-void RC4_SetPrimitive(CIPHER_PRIMITIVE* primitive);
+void RC4_SetPrimitive(STREAM_CIPHER* cipher);
 
 #endif

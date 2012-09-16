@@ -29,6 +29,7 @@ enc_block:Threefish-256:ECB:7F986EA4561128BA944F8C9762755CBD7E7E0147A32E65891721
 # *enc_stream* will test a stream cipher.
 # Format to follow: enc_stream:primitive:key:plaintext:ciphertext~
 # If any field is unneeded, it can simply be omitted between two colons
+# The NullCipher can be used to safely test the modes of operation.
 
 # Short-key RC4 test vector... remember the default Ordo implementation drops 2048 bytes!
 enc_stream:RC4:0102030405:0123456789ABCDEF:cd7b6aec2059a80d~

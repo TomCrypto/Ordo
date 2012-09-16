@@ -1,5 +1,5 @@
 #include <primitives/primitives.h>
-#include <primitives/ciphers/threefish256.h>
+#include <primitives/block_ciphers/threefish256.h>
 
 #define THREEFISH256_BLOCK (32) /* 256-bit block */
 
@@ -14,24 +14,24 @@ typedef struct THREEFISH256_SUBKEYS
 } THREEFISH256_SUBKEYS;
 
 /* Shorthand macro for context casting. */
-#define ctx(x) ((THREEFISH256_SUBKEYS*)(x->cipher))
+#define state(x) ((THREEFISH256_SUBKEYS*)(x->ctx))
 
-CIPHER_PRIMITIVE_CONTEXT* Threefish256_Create(CIPHER_PRIMITIVE* primitive)
+BLOCK_CIPHER_CONTEXT* Threefish256_Create(BLOCK_CIPHER* cipher)
 {
     /* Allocate space for the Threefish-256 key material. */
-    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
     if (ctx)
     {
-        ctx->primitive = primitive;
-        if ((ctx->cipher = salloc(sizeof(THREEFISH256_SUBKEYS)))) return ctx;
-        sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+        ctx->cipher = cipher;
+        if ((ctx->ctx = salloc(sizeof(THREEFISH256_SUBKEYS)))) return ctx;
+        sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
     }
 
     /* Allocation failed. */
     return 0;
 }
 
-int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params)
+int Threefish256_Init(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params)
 {
     size_t t;
     uint64_t keyWords[5];
@@ -57,10 +57,10 @@ int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t 
     /* Generate each subkey in a cyclic fashion. */
     for (t = 0; t < 19; t++)
     {
-        ctx(cipher)->subkey[t].words[0] = keyWords[(t + 0) %  5];
-        ctx(cipher)->subkey[t].words[1] = keyWords[(t + 1) %  5] + tweakWords[(t + 0) % 3];
-        ctx(cipher)->subkey[t].words[2] = keyWords[(t + 2) %  5] + tweakWords[(t + 1) % 3];
-        ctx(cipher)->subkey[t].words[3] = keyWords[(t + 3) %  5] + t;
+        state(ctx)->subkey[t].words[0] = keyWords[(t + 0) %  5];
+        state(ctx)->subkey[t].words[1] = keyWords[(t + 1) %  5] + tweakWords[(t + 0) % 3];
+        state(ctx)->subkey[t].words[2] = keyWords[(t + 2) %  5] + tweakWords[(t + 1) % 3];
+        state(ctx)->subkey[t].words[3] = keyWords[(t + 3) %  5] + t;
     }
 
     /* Returns success. */
@@ -68,19 +68,19 @@ int Threefish256_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* key, size_t 
 }
 
 /* Threefish-256 forward permutation function. */
-void Threefish256_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, size_t len)
+void Threefish256_Forward(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block)
 {
     #if ENVIRONMENT_64
-    Threefish256_Forward_ASM(block, &ctx(cipher)->subkey[0]);
+    Threefish256_Forward_ASM(block, &state(ctx)->subkey[0]);
     #else
     size_t t;
     uint64_t s;
 
     /* Initial key whitening. */
-    block->words[0] += ctx(cipher)->subkey[0].words[0];
-    block->words[1] += ctx(cipher)->subkey[0].words[1];
-    block->words[2] += ctx(cipher)->subkey[0].words[2];
-    block->words[3] += ctx(cipher)->subkey[0].words[3];
+    block->words[0] += state(ctx)->subkey[0].words[0];
+    block->words[1] += state(ctx)->subkey[0].words[1];
+    block->words[2] += state(ctx)->subkey[0].words[2];
+    block->words[3] += state(ctx)->subkey[0].words[3];
 
     /* 8 big rounds. */
     for (t = 0; t < 9; t++)
@@ -142,10 +142,10 @@ void Threefish256_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, s
         block->words[3] = s;
 
         /* Subkey addition. */
-        block->words[0] += ctx(cipher)->subkey[t * 2 + 1].words[0];
-        block->words[1] += ctx(cipher)->subkey[t * 2 + 1].words[1];
-        block->words[2] += ctx(cipher)->subkey[t * 2 + 1].words[2];
-        block->words[3] += ctx(cipher)->subkey[t * 2 + 1].words[3];
+        block->words[0] += state(ctx)->subkey[t * 2 + 1].words[0];
+        block->words[1] += state(ctx)->subkey[t * 2 + 1].words[1];
+        block->words[2] += state(ctx)->subkey[t * 2 + 1].words[2];
+        block->words[3] += state(ctx)->subkey[t * 2 + 1].words[3];
 
         /* MIX */
         block->words[0] += block->words[1];
@@ -204,19 +204,19 @@ void Threefish256_Forward(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, s
         block->words[3] = s;
 
         /* Subkey addition. */
-        block->words[0] += ctx(cipher)->subkey[t * 2 + 2].words[0];
-        block->words[1] += ctx(cipher)->subkey[t * 2 + 2].words[1];
-        block->words[2] += ctx(cipher)->subkey[t * 2 + 2].words[2];
-        block->words[3] += ctx(cipher)->subkey[t * 2 + 2].words[3];
+        block->words[0] += state(ctx)->subkey[t * 2 + 2].words[0];
+        block->words[1] += state(ctx)->subkey[t * 2 + 2].words[1];
+        block->words[2] += state(ctx)->subkey[t * 2 + 2].words[2];
+        block->words[3] += state(ctx)->subkey[t * 2 + 2].words[3];
     }
     #endif
 }
 
 /* Threefish-256 inverse permutation function. */
-void Threefish256_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, size_t len)
+void Threefish256_Inverse(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block)
 {
     #if ENVIRONMENT_64
-    Threefish256_Inverse_ASM(block, &ctx(cipher)->subkey[0]);
+    Threefish256_Inverse_ASM(block, &state(ctx)->subkey[0]);
     #else
     size_t t;
     uint64_t s;
@@ -225,10 +225,10 @@ void Threefish256_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, s
     for (t = 9; t > 0; t--)
     {
         /* Subkey subtraction. */
-        block->words[0] -= ctx(cipher)->subkey[(t - 1) * 2 + 2].words[0];
-        block->words[1] -= ctx(cipher)->subkey[(t - 1) * 2 + 2].words[1];
-        block->words[2] -= ctx(cipher)->subkey[(t - 1) * 2 + 2].words[2];
-        block->words[3] -= ctx(cipher)->subkey[(t - 1) * 2 + 2].words[3];
+        block->words[0] -= state(ctx)->subkey[(t - 1) * 2 + 2].words[0];
+        block->words[1] -= state(ctx)->subkey[(t - 1) * 2 + 2].words[1];
+        block->words[2] -= state(ctx)->subkey[(t - 1) * 2 + 2].words[2];
+        block->words[3] -= state(ctx)->subkey[(t - 1) * 2 + 2].words[3];
 
         /* Permutation */
         s = block->words[1];
@@ -287,10 +287,10 @@ void Threefish256_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, s
         block->words[2] -= block->words[3];
 
         /* Subkey subtraction. */
-        block->words[0] -= ctx(cipher)->subkey[(t - 1) * 2 + 1].words[0];
-        block->words[1] -= ctx(cipher)->subkey[(t - 1) * 2 + 1].words[1];
-        block->words[2] -= ctx(cipher)->subkey[(t - 1) * 2 + 1].words[2];
-        block->words[3] -= ctx(cipher)->subkey[(t - 1) * 2 + 1].words[3];
+        block->words[0] -= state(ctx)->subkey[(t - 1) * 2 + 1].words[0];
+        block->words[1] -= state(ctx)->subkey[(t - 1) * 2 + 1].words[1];
+        block->words[2] -= state(ctx)->subkey[(t - 1) * 2 + 1].words[2];
+        block->words[3] -= state(ctx)->subkey[(t - 1) * 2 + 1].words[3];
 
         /* Permutation */
         s = block->words[1];
@@ -350,22 +350,22 @@ void Threefish256_Inverse(CIPHER_PRIMITIVE_CONTEXT* cipher, UINT256_64* block, s
     }
 
     /* Final key whitening. */
-    block->words[0] -= ctx(cipher)->subkey[0].words[0];
-    block->words[1] -= ctx(cipher)->subkey[0].words[1];
-    block->words[2] -= ctx(cipher)->subkey[0].words[2];
-    block->words[3] -= ctx(cipher)->subkey[0].words[3];
+    block->words[0] -= state(ctx)->subkey[0].words[0];
+    block->words[1] -= state(ctx)->subkey[0].words[1];
+    block->words[2] -= state(ctx)->subkey[0].words[2];
+    block->words[3] -= state(ctx)->subkey[0].words[3];
     #endif
 }
 
-void Threefish256_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
+void Threefish256_Free(BLOCK_CIPHER_CONTEXT* ctx)
 {
     /* Deallocate space for the Threefish-256 key material. */
-    sfree(cipher->cipher, sizeof(THREEFISH256_SUBKEYS));
-    sfree(cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    sfree(ctx->ctx, sizeof(THREEFISH256_SUBKEYS));
+    sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
 }
 
-/* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void Threefish256_SetPrimitive(CIPHER_PRIMITIVE* primitive)
+/* Fills a BLOCK_CIPHER struct with the correct information. */
+void Threefish256_SetPrimitive(BLOCK_CIPHER* cipher)
 {
-    PRIMITIVE_MAKECIPHER(primitive, THREEFISH256_BLOCK, Threefish256_Create, Threefish256_Init, Threefish256_Forward, Threefish256_Inverse, Threefish256_Free, "Threefish-256");
+    MAKE_BLOCK_CIPHER(cipher, THREEFISH256_BLOCK, Threefish256_Create, Threefish256_Init, Threefish256_Forward, Threefish256_Inverse, Threefish256_Free, "Threefish-256");
 }

@@ -1,5 +1,5 @@
 #include <primitives/primitives.h>
-#include <primitives/ciphers/rc4.h>
+#include <primitives/stream_ciphers/rc4.h>
 
 /* A structure containing an RC4 state. */
 #if ENVIRONMENT_64
@@ -19,7 +19,7 @@ typedef struct RC4_STATE
 #endif
 
 /* Shorthand macro for context casting. */
-#define state(x) ((RC4_STATE*)(x->cipher))
+#define state(x) ((RC4_STATE*)(x->ctx))
 
 /* Swaps two bytes. */
 void swapByte(uint8_t* a, uint8_t* b)
@@ -30,22 +30,22 @@ void swapByte(uint8_t* a, uint8_t* b)
     *b = c;
 }
 
-CIPHER_PRIMITIVE_CONTEXT* RC4_Create(CIPHER_PRIMITIVE* primitive)
+STREAM_CIPHER_CONTEXT* RC4_Create(STREAM_CIPHER* cipher)
 {
     /* Allocate memory for the RC4 state. */
-    CIPHER_PRIMITIVE_CONTEXT* ctx = salloc(sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    STREAM_CIPHER_CONTEXT* ctx = salloc(sizeof(STREAM_CIPHER_CONTEXT));
     if (ctx)
     {
-        ctx->primitive = primitive;
-        if ((ctx->cipher = salloc(sizeof(RC4_STATE)))) return ctx;
-        sfree(ctx, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+        ctx->cipher = cipher;
+        if ((ctx->ctx = salloc(sizeof(RC4_STATE)))) return ctx;
+        sfree(ctx, sizeof(STREAM_CIPHER_CONTEXT));
     }
 
     /* Allocation failed. */
     return 0;
 }
 
-int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySize, RC4_PARAMS* params)
+int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4_PARAMS* params)
 {
     /* Loop variables. */
     size_t t, drop;
@@ -55,43 +55,43 @@ int RC4_Init(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* key, size_t keySiz
     if ((keySize < 5) || (keySize > 256)) return ORDO_EKEYSIZE;
 
     /* Initialize the permutation array. */
-    for (t = 0; t < 256; t++) state(cipher)->s[t] = t;
+    for (t = 0; t < 256; t++) state(ctx)->s[t] = t;
 
     /* Mix the key into the RC4 state. */
-    state(cipher)->j = 0;
+    state(ctx)->j = 0;
     for (t = 0; t < 256; t++)
     {
         /* Update state pointer. */
-        state(cipher)->j = (state(cipher)->j + state(cipher)->s[t] + key[t % keySize]) & 0xFF;
+        state(ctx)->j = (state(ctx)->j + state(ctx)->s[t] + key[t % keySize]) & 0xFF;
 
         /* Swap. */
-        tmp = state(cipher)->s[t];
-        state(cipher)->s[t] = state(cipher)->s[state(cipher)->j];
-        state(cipher)->s[state(cipher)->j] = tmp;
+        tmp = state(ctx)->s[t];
+        state(ctx)->s[t] = state(ctx)->s[state(ctx)->j];
+        state(ctx)->s[state(ctx)->j] = tmp;
     }
 
     /* Reset the state pointers. */
-    state(cipher)->i = 0;
-    state(cipher)->j = 0;
+    state(ctx)->i = 0;
+    state(ctx)->j = 0;
 
     /* Calculate the amount of bytes to drop (default is 2048). */
     drop = (params == 0) ? 2048 : params->drop;
 
     /* Throw away the first drop bytes. */
-    for (t = 0; t < drop; t++) RC4_Update(cipher, &tmp, 1);
+    for (t = 0; t < drop; t++) RC4_Update(ctx, &tmp, 1);
 
     /* Return success. */
     return ORDO_ESUCCESS;
 }
 
-void RC4_Update(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* block, size_t len)
+void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len)
 {
     #if ENVIRONMENT_64
     /* Fast 64-bit implementation (note in 64-bit mode, len is a 64-bit unsigned integer). */
-    RC4_Update_ASM(state(cipher), len, block, block);
+    RC4_Update_ASM(state(ctx), len, buffer, buffer);
     #else
     /* Loop variable. */
-    RC4_STATE state = *(RC4_STATE*)cipher->cipher;
+    RC4_STATE state = *state(ctx);
     size_t t = 0;
 
     /* Iterate over each byte and xor the keystream with the plaintext. */
@@ -99,7 +99,7 @@ void RC4_Update(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* block, size_t l
     {
         state.j += state.s[++state.i];
         swapByte(&state.s[state.i], &state.s[state.j]);
-        block[t++] ^= state.s[(state.s[state.i] + state.s[state.j]) & 0xFF];
+        buffer[t++] ^= state.s[(state.s[state.i] + state.s[state.j]) & 0xFF];
     }
 
     /* Copy the state back in. */
@@ -107,15 +107,15 @@ void RC4_Update(CIPHER_PRIMITIVE_CONTEXT* cipher, unsigned char* block, size_t l
     #endif
 }
 
-void RC4_Free(CIPHER_PRIMITIVE_CONTEXT* cipher)
+void RC4_Free(STREAM_CIPHER_CONTEXT* ctx)
 {
     /* Free memory for the RC4 state. */
-    sfree(cipher->cipher, sizeof(RC4_STATE));
-    sfree(cipher, sizeof(CIPHER_PRIMITIVE_CONTEXT));
+    sfree(ctx->ctx, sizeof(RC4_STATE));
+    sfree(ctx, sizeof(STREAM_CIPHER_CONTEXT));
 }
 
-/* Fills a CIPHER_PRIMITIVE struct with the correct information. */
-void RC4_SetPrimitive(CIPHER_PRIMITIVE* primitive)
+/* Fills a STREAM_CIPHER struct with the correct information. */
+void RC4_SetPrimitive(STREAM_CIPHER* cipher)
 {
-    PRIMITIVE_MAKECIPHER(primitive, 0, RC4_Create, RC4_Init, RC4_Update, 0, RC4_Free, "RC4");
+    MAKE_STREAM_CIPHER(cipher, RC4_Create, RC4_Init, RC4_Update, RC4_Free, "RC4");
 }

@@ -14,7 +14,8 @@
 
 #include <common/ordotypes.h>
 #include <primitives/primitives.h>
-#include <encrypt/encrypt.h>
+#include <enc/enc_block.h>
+#include <enc/enc_stream.h>
 #include <random/random.h>
 
 /*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). */
@@ -37,7 +38,7 @@ void ordoLoad();
  If your requirements make this unacceptable, you should use the encryption interface, located one level of abstraction lower - see encrypt.h.
  \remark The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a block mode with padding enabled
  is used. See remarks about padding in encrypt.h. */
-int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
+int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
 
 /*! This function decrypts a buffer of a given length with the provided parameters.
  \param in This points to a ciphertext buffer.
@@ -53,6 +54,10 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
  \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
  \remark Same remarks as for ordoEncrypt. */
-int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, CIPHER_PRIMITIVE* primitive, ENCRYPT_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
+int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams);
+
+int ordoEncryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
+
+int ordoDecryptStream(unsigned char* in, size_t inlen, unsigned char* out, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams);
 
 #endif

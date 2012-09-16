@@ -9,23 +9,27 @@
  *
  */
 
-/* Number of cipher primitives. */
-#define CIPHER_COUNT                            3
+/* Number of block cipher primitives. */
+#define BLOCK_CIPHER_COUNT                      2
 
-/* Cipher primitive algorithms. */
-#define CIPHER_NULLCIPHER                       0
-#define CIPHER_THREEFISH256                     1
-#define CIPHER_RC4                              2
+/* Block cipher primitive algorithms. */
+#define BLOCK_CIPHER_NULLCIPHER                 0
+#define BLOCK_CIPHER_THREEFISH256               1
 
-/* Number of encryption modes of operation. */
-#define ENCRYPT_MODE_COUNT                      6
+/* Number of stream cipher primitives. */
+#define STREAM_CIPHER_COUNT                     1
+
+/* Stream cipher primitive algorithms. */
+#define STREAM_CIPHER_RC4                       0
+
+/* Number of block cipher modes of operation. */
+#define BLOCK_CIPHER_MODE_COUNT                 5
 
 /* Encryption modes of operation. */
-#define ENCRYPT_MODE_ECB                        0
-#define ENCRYPT_MODE_CBC                        1
-#define ENCRYPT_MODE_CTR                        2
-#define ENCRYPT_MODE_CFB                        3
-#define ENCRYPT_MODE_OFB                        4
-#define ENCRYPT_MODE_STREAM                     5
+#define BLOCK_CIPHER_MODE_ECB                   0
+#define BLOCK_CIPHER_MODE_CBC                   1
+#define BLOCK_CIPHER_MODE_CTR                   2
+#define BLOCK_CIPHER_MODE_CFB                   3
+#define BLOCK_CIPHER_MODE_OFB                   4
 
 #endif
