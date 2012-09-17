@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: THREEFISH256_PARAMS Struct Reference</title>
+<title>Ordo: ENC_STREAM_CIPHER_CONTEXT Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -56,39 +56,39 @@
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">THREEFISH256_PARAMS Struct Reference</div>  </div>
+<div class="title">ENC_STREAM_CIPHER_CONTEXT Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="THREEFISH256_PARAMS" -->
-<p>Threefish-256 cipher parameters.  
- <a href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#details">More...</a></p>
+<!-- doxytag: class="ENC_STREAM_CIPHER_CONTEXT" -->
+<p>Symmetric encryption context (for stream ciphers).  
+ <a href="struct_e_n_c___s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="threefish256_8h_source.html">threefish256.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="enc__stream_8h_source.html">enc_stream.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#a2ae3555262d658263484a0d5264b0b87">tweak</a> [2]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_e_n_c___s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a1bccd96a0a48288dfb0dac0abf00fd14">cipherCtx</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Threefish-256 cipher parameters. </p>
-<p>A parameter structure for Threefish-256 - contains the 128-bit tweak word. </p>
+<div class="textblock"><p>Symmetric encryption context (for stream ciphers). </p>
+<p>This structure describes a high-level symmetric encryption context, for stream ciphers. It only contains the stream cipher's context, and is used only for consistency purposes with the block cipher encryption interface. </p>
 </div><hr/><h2>Field Documentation</h2>
-<a class="anchor" id="a2ae3555262d658263484a0d5264b0b87"></a><!-- doxytag: member="THREEFISH256_PARAMS::tweak" ref="a2ae3555262d658263484a0d5264b0b87" args="[2]" -->
+<a class="anchor" id="a1bccd96a0a48288dfb0dac0abf00fd14"></a><!-- doxytag: member="ENC_STREAM_CIPHER_CONTEXT::cipherCtx" ref="a1bccd96a0a48288dfb0dac0abf00fd14" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t <a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#a2ae3555262d658263484a0d5264b0b87">tweak</a>[2]</td>
+          <td class="memname"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a>* <a class="el" href="struct_e_n_c___s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a1bccd96a0a48288dfb0dac0abf00fd14">cipherCtx</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The tweak word, on a pair of 64-bit words. </p>
+<p>The stream cipher context. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/primitives/block_ciphers/<a class="el" href="threefish256_8h_source.html">threefish256.h</a></li>
+<li>include/enc/<a class="el" href="enc__stream_8h_source.html">enc_stream.h</a></li>
 </ul>
 </div><!-- contents -->
 

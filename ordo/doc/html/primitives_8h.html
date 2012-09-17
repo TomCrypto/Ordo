@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.3.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -68,7 +68,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>Cryptographic primitive interface.  
+<p>Cryptographic primitives.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="ordotypes_8h_source.html">common/ordotypes.h</a>&gt;</code><br/>
 </div>
@@ -76,27 +76,38 @@
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Cipher primitive context.  <a href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Block cipher context.  <a href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream cipher context.  <a href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Block cipher object.  <a href="struct_b_l_o_c_k___c_i_p_h_e_r.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream cipher object.  <a href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aaa140feea06574c7ce23da0ab827ae76">primitiveName</a>(p)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a3f1e79017e1ef0a015460c4447b7eb83">cipherPrimitiveBlockSize</a>(p)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a3f2408ac091b433d9fc84cbc25af77fe">blockCipherBlockSize</a>(p)</td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a83f8b6aef410edcd3f8d9e76e3f2125f">getCipherPrimitiveByName</a> (char *name)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a413193542bed03d9c6ff0fb5d44a8a38">getCipherPrimitiveByID</a> (size_t ID)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a> (CIPHER_PRIMITIVE *primitive)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a> (<a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *ctx)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aa8ca829d19d2f9ccc6d10d4875ecdba6">NullCipher</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a787e5188ca29afd82bae6e7e43ad2b93">Threefish256</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a4ad642d8895cd711628f67f9fc5044fc">getBlockCipherByName</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a2622c451643f211369cd0f26f5759e88">getBlockCipherByID</a> (size_t ID)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a4d3de40a911db9699a43718a7e7aa5ea">getStreamCipherByName</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a7766c38eea82ea7b72a14cc3a50822ff">getStreamCipherByID</a> (size_t ID)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a75387b57f414dcd38004a7bf35ed4b98">blockCipherCreate</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *cipher)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a5cf63cf79be63b337eb9f7e84d4ed69b">blockCipherInit</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a8f6701faf266bb4baf72c3238f991761">blockCipherFree</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *ctx)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a000500a65981fbeb6c7b98090320e7cb">streamCipherCreate</a> (<a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *cipher)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1990852bf9e8632595fae05637515d31">streamCipherInit</a> (<a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a07a8d1944bedccd3cea5ea34b49cf562">streamCipherFree</a> (<a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *ctx)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Cryptographic primitive interface. </p>
-<p>Exposes the Ordo primitive interface, which abstracts various cryptographic primitives through high-level interfaces. Note it is always possible to skip this API and directly access the lower-level primitive functions, but it is discouraged.</p>
+<div class="textblock"><p>Cryptographic primitives. </p>
+<p>This declares all the cryptographic primitives in the library, abstracting various categories through high-level interfaces.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>primitives.c </dd></dl>
 </div><hr/><h2>Define Documentation</h2>
 <a class="anchor" id="aaa140feea06574c7ce23da0ab827ae76"></a><!-- doxytag: member="primitives.h::primitiveName" ref="aaa140feea06574c7ce23da0ab827ae76" args="(p)" -->
@@ -113,16 +124,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the name of a primitive. </p>
+<p>Returns the name of a cryptographic primitive. </p>
 
 </div>
 </div>
-<a class="anchor" id="a3f1e79017e1ef0a015460c4447b7eb83"></a><!-- doxytag: member="primitives.h::cipherPrimitiveBlockSize" ref="a3f1e79017e1ef0a015460c4447b7eb83" args="(p)" -->
+<a class="anchor" id="a3f2408ac091b433d9fc84cbc25af77fe"></a><!-- doxytag: member="primitives.h::blockCipherBlockSize" ref="a3f2408ac091b433d9fc84cbc25af77fe" args="(p)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define <a class="el" href="primitives_8h.html#a3f1e79017e1ef0a015460c4447b7eb83">cipherPrimitiveBlockSize</a></td>
+          <td class="memname">#define <a class="el" href="primitives_8h.html#a3f2408ac091b433d9fc84cbc25af77fe">blockCipherBlockSize</a></td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">p</td><td>)</td>
@@ -131,7 +142,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the block size of a cipher primitive. </p>
+<p>Returns the block size of a block cipher primitive. </p>
 
 </div>
 </div>
@@ -149,16 +160,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Loads all primitivs. This must be called before you may use <code><a class="el" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4()</a></code>, <code><a class="el" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher()</a></code>, etc... or the helper functions <code><a class="el" href="primitives_8h.html#a83f8b6aef410edcd3f8d9e76e3f2125f">getCipherPrimitiveByName()</a></code> and <code><a class="el" href="primitives_8h.html#a413193542bed03d9c6ff0fb5d44a8a38">getCipherPrimitiveByID()</a></code>. </p>
+<p>Loads all primitivs. This must be called before you may use <code><a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4()</a></code>, <code><a class="el" href="primitives_8h.html#aa8ca829d19d2f9ccc6d10d4875ecdba6">NullCipher()</a></code>, etc... or the helper functions <code><a class="el" href="primitives_8h.html#a4ad642d8895cd711628f67f9fc5044fc">getBlockCipherByName()</a></code> or <code><a class="el" href="primitives_8h.html#a7766c38eea82ea7b72a14cc3a50822ff">getStreamCipherByID()</a></code>, etc... </p>
 
 </div>
 </div>
-<a class="anchor" id="aee2b2e66afcd0d46ad3109f09c4a4ea4"></a><!-- doxytag: member="primitives.h::NullCipher" ref="aee2b2e66afcd0d46ad3109f09c4a4ea4" args="()" -->
+<a class="anchor" id="aa8ca829d19d2f9ccc6d10d4875ecdba6"></a><!-- doxytag: member="primitives.h::NullCipher" ref="aa8ca829d19d2f9ccc6d10d4875ecdba6" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#aee2b2e66afcd0d46ad3109f09c4a4ea4">NullCipher</a> </td>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a>* <a class="el" href="primitives_8h.html#aa8ca829d19d2f9ccc6d10d4875ecdba6">NullCipher</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -166,16 +177,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The NullCipher cipher primitive. </p>
+<p>The NullCipher block cipher. </p>
 
 </div>
 </div>
-<a class="anchor" id="a1ccfe5f032046ade6f93b40cdedcf20d"></a><!-- doxytag: member="primitives.h::Threefish256" ref="a1ccfe5f032046ade6f93b40cdedcf20d" args="()" -->
+<a class="anchor" id="a787e5188ca29afd82bae6e7e43ad2b93"></a><!-- doxytag: member="primitives.h::Threefish256" ref="a787e5188ca29afd82bae6e7e43ad2b93" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#a1ccfe5f032046ade6f93b40cdedcf20d">Threefish256</a> </td>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a>* <a class="el" href="primitives_8h.html#a787e5188ca29afd82bae6e7e43ad2b93">Threefish256</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -183,33 +194,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The Threefish-256 cipher primitive. </p>
+<p>The Threefish-256 block cipher. </p>
 
 </div>
 </div>
-<a class="anchor" id="ade66aa42cbd334eef608799770928ea8"></a><!-- doxytag: member="primitives.h::RC4" ref="ade66aa42cbd334eef608799770928ea8" args="()" -->
+<a class="anchor" id="a4ad642d8895cd711628f67f9fc5044fc"></a><!-- doxytag: member="primitives.h::getBlockCipherByName" ref="a4ad642d8895cd711628f67f9fc5044fc" args="(char *name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#ade66aa42cbd334eef608799770928ea8">RC4</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The RC4 cipher primitive. </p>
-
-</div>
-</div>
-<a class="anchor" id="a83f8b6aef410edcd3f8d9e76e3f2125f"></a><!-- doxytag: member="primitives.h::getCipherPrimitiveByName" ref="a83f8b6aef410edcd3f8d9e76e3f2125f" args="(char *name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#a83f8b6aef410edcd3f8d9e76e3f2125f">getCipherPrimitiveByName</a> </td>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a>* <a class="el" href="primitives_8h.html#a4ad642d8895cd711628f67f9fc5044fc">getBlockCipherByName</a> </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -218,16 +212,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a cipher primitive object from a name. </p>
+<p>Returns a block cipher object from a name. </p>
 
 </div>
 </div>
-<a class="anchor" id="a413193542bed03d9c6ff0fb5d44a8a38"></a><!-- doxytag: member="primitives.h::getCipherPrimitiveByID" ref="a413193542bed03d9c6ff0fb5d44a8a38" args="(size_t ID)" -->
+<a class="anchor" id="a2622c451643f211369cd0f26f5759e88"></a><!-- doxytag: member="primitives.h::getBlockCipherByID" ref="a2622c451643f211369cd0f26f5759e88" args="(size_t ID)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CIPHER_PRIMITIVE* <a class="el" href="primitives_8h.html#a413193542bed03d9c6ff0fb5d44a8a38">getCipherPrimitiveByID</a> </td>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a>* <a class="el" href="primitives_8h.html#a2622c451643f211369cd0f26f5759e88">getBlockCipherByID</a> </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>ID</em></td><td>)</td>
@@ -236,43 +230,96 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a cipher primitive object from an ID. </p>
+<p>Returns a block cipher object from an ID. </p>
 
 </div>
 </div>
-<a class="anchor" id="afd13603a5ffa8764448c1dfcf3241e97"></a><!-- doxytag: member="primitives.h::cipherCreate" ref="afd13603a5ffa8764448c1dfcf3241e97" args="(CIPHER_PRIMITIVE *primitive)" -->
+<a class="anchor" id="affcdd0336f2ef80e969781c03dfd2b92"></a><!-- doxytag: member="primitives.h::RC4" ref="affcdd0336f2ef80e969781c03dfd2b92" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a>* <a class="el" href="primitives_8h.html#afd13603a5ffa8764448c1dfcf3241e97">cipherCreate</a> </td>
+          <td class="memname"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a>* <a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4</a> </td>
           <td>(</td>
-          <td class="paramtype">CIPHER_PRIMITIVE *&#160;</td>
-          <td class="paramname"><em>primitive</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>This function returns an allocated cipher primitive context using a specific cipher primitive. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">primitive</td><td>The primitive object to be used. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated cipher primitive context, or 0 if an allocation error occurred. </dd></dl>
+<p>The RC4 stream cipher. </p>
 
 </div>
 </div>
-<a class="anchor" id="a1f4bb054fc3c4fbb196ce3d961be2c01"></a><!-- doxytag: member="primitives.h::cipherInit" ref="a1f4bb054fc3c4fbb196ce3d961be2c01" args="(CIPHER_PRIMITIVE_CONTEXT *ctx, void *key, size_t keySize, void *cipherParams)" -->
+<a class="anchor" id="a4d3de40a911db9699a43718a7e7aa5ea"></a><!-- doxytag: member="primitives.h::getStreamCipherByName" ref="a4d3de40a911db9699a43718a7e7aa5ea" args="(char *name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="primitives_8h.html#a1f4bb054fc3c4fbb196ce3d961be2c01">cipherInit</a> </td>
+          <td class="memname"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a>* <a class="el" href="primitives_8h.html#a4d3de40a911db9699a43718a7e7aa5ea">getStreamCipherByName</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns a stream cipher object from a name. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7766c38eea82ea7b72a14cc3a50822ff"></a><!-- doxytag: member="primitives.h::getStreamCipherByID" ref="a7766c38eea82ea7b72a14cc3a50822ff" args="(size_t ID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a>* <a class="el" href="primitives_8h.html#a7766c38eea82ea7b72a14cc3a50822ff">getStreamCipherByID</a> </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns a stream cipher object from an ID. </p>
+
+</div>
+</div>
+<a class="anchor" id="a75387b57f414dcd38004a7bf35ed4b98"></a><!-- doxytag: member="primitives.h::blockCipherCreate" ref="a75387b57f414dcd38004a7bf35ed4b98" args="(BLOCK_CIPHER *cipher)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a>* <a class="el" href="primitives_8h.html#a75387b57f414dcd38004a7bf35ed4b98">blockCipherCreate</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function returns an allocated block cipher context using a given block cipher. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cipher</td><td>The block cipher to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated block cipher context, or 0 if an error occurred. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5cf63cf79be63b337eb9f7e84d4ed69b"></a><!-- doxytag: member="primitives.h::blockCipherInit" ref="a5cf63cf79be63b337eb9f7e84d4ed69b" args="(BLOCK_CIPHER_CONTEXT *ctx, void *key, size_t keySize, void *cipherParams)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="primitives_8h.html#a5cf63cf79be63b337eb9f7e84d4ed69b">blockCipherInit</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *&#160;</td>
           <td class="paramname"><em>ctx</em>, </td>
         </tr>
         <tr>
@@ -301,11 +348,11 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>This function initializes an cipher primitive context for encryption, provided a key and cipher parameters. </p>
+<p>This function initializes a block cipher context for encryption, provided a key, and cipher parameters. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ctx</td><td>An allocated cipher primitive context. </td></tr>
-    <tr><td class="paramname">key</td><td>A pointer to a buffer containing the key to use for encryption. </td></tr>
+    <tr><td class="paramname">ctx</td><td>An allocated block cipher context. </td></tr>
+    <tr><td class="paramname">key</td><td>A buffer containing the key to use for encryption. </td></tr>
     <tr><td class="paramname">keySize</td><td>The size, in bytes, of the encryption key. </td></tr>
     <tr><td class="paramname">cipherParams</td><td>This points to specific cipher parameters, set to zero for default behavior. </td></tr>
   </table>
@@ -315,28 +362,128 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="afdfe5f11118ced0be5058ceb1b72db50"></a><!-- doxytag: member="primitives.h::cipherFree" ref="afdfe5f11118ced0be5058ceb1b72db50" args="(CIPHER_PRIMITIVE_CONTEXT *ctx)" -->
+<a class="anchor" id="a8f6701faf266bb4baf72c3238f991761"></a><!-- doxytag: member="primitives.h::blockCipherFree" ref="a8f6701faf266bb4baf72c3238f991761" args="(BLOCK_CIPHER_CONTEXT *ctx)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="primitives_8h.html#afdfe5f11118ced0be5058ceb1b72db50">cipherFree</a> </td>
+          <td class="memname">void <a class="el" href="primitives_8h.html#a8f6701faf266bb4baf72c3238f991761">blockCipherFree</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html">CIPHER_PRIMITIVE_CONTEXT</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *&#160;</td>
           <td class="paramname"><em>ctx</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>This function frees (deallocates) an initialized cipher primitive context. </p>
+<p>This function frees (deallocates) an initialized block cipher context. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ctx</td><td>The cipher primitive context to be freed. This context needs to at least have been allocated. </td></tr>
+    <tr><td class="paramname">ctx</td><td>The block cipher context to be freed. This context needs to at least have been allocated. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if <code>cipherCreate</code> failed. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if <code><a class="el" href="primitives_8h.html#a75387b57f414dcd38004a7bf35ed4b98">blockCipherCreate()</a></code> failed, as the latter already works hard to ensure no memory is leaked if an error occurs. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a000500a65981fbeb6c7b98090320e7cb"></a><!-- doxytag: member="primitives.h::streamCipherCreate" ref="a000500a65981fbeb6c7b98090320e7cb" args="(STREAM_CIPHER *cipher)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a>* <a class="el" href="primitives_8h.html#a000500a65981fbeb6c7b98090320e7cb">streamCipherCreate</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function returns an allocated stream cipher context using a given stream cipher. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cipher</td><td>The stream cipher to use. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns the allocated stream cipher context, or 0 if an error occurred. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1990852bf9e8632595fae05637515d31"></a><!-- doxytag: member="primitives.h::streamCipherInit" ref="a1990852bf9e8632595fae05637515d31" args="(STREAM_CIPHER_CONTEXT *ctx, void *key, size_t keySize, void *cipherParams)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="primitives_8h.html#a1990852bf9e8632595fae05637515d31">streamCipherInit</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keySize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>cipherParams</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function initializes a stream cipher context for encryption, provided a key and cipher parameters. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>An allocated stream cipher context. </td></tr>
+    <tr><td class="paramname">key</td><td>A buffer containing the key to use for encryption. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The size, in bytes, of the encryption key. </td></tr>
+    <tr><td class="paramname">cipherParams</td><td>This points to specific cipher parameters, set to zero for default behavior. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, and a negative value on error. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a07a8d1944bedccd3cea5ea34b49cf562"></a><!-- doxytag: member="primitives.h::streamCipherFree" ref="a07a8d1944bedccd3cea5ea34b49cf562" args="(STREAM_CIPHER_CONTEXT *ctx)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="primitives_8h.html#a07a8d1944bedccd3cea5ea34b49cf562">streamCipherFree</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function frees (deallocates) an initialized stream cipher context. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The stream cipher context to be freed. This context needs to at least have been allocated. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if <code><a class="el" href="primitives_8h.html#a000500a65981fbeb6c7b98090320e7cb">streamCipherCreate()</a></code> failed, as the latter already works hard to ensure no memory is leaked if an error occurs. </dd></dl>
 
 </div>
 </div>
@@ -344,7 +491,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

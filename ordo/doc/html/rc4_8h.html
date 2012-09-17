@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: include/primitives/ciphers/rc4.h File Reference</title>
+<title>Ordo: include/primitives/stream_ciphers/rc4.h File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.3.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -55,7 +55,7 @@
     <ul>
       <li class="navelem"><a class="el" href="dir_cfc40bcf945a94a5aced014fdc532bf3.html">include</a>      </li>
       <li class="navelem"><a class="el" href="dir_fea4578e5fe7580cadc5b6ddf44e6cef.html">primitives</a>      </li>
-      <li class="navelem"><a class="el" href="dir_554ecf4a3fce06877cb1b04462a0e5ee.html">ciphers</a>      </li>
+      <li class="navelem"><a class="el" href="dir_68ea59e1644781384c3f220cf6099733.html">stream_ciphers</a>      </li>
     </ul>
   </div>
 </div>
@@ -67,7 +67,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>RC4 stream cipher interface.  
+<p>RC4 stream cipher.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives/primitives.h</a>&gt;</code><br/>
 </div>
@@ -79,16 +79,15 @@ Data Structures</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">RC4 cipher parameters.  <a href="struct_r_c4___p_a_r_a_m_s.html#details">More...</a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>RC4 stream cipher interface. </p>
-<p>RC4 is a stream cipher, which has no block size and accepts keys between 40 and 2048 bits (in multiples of 8 bits only). It accepts a parameter consisting of the number of initial keystream bytes to drop immediately after key schedule, effectively implementing RC4-drop[n]. If no drop parameter is passed, the implementation drops 2048 bytes by default.</p>
-<p>By virtue of being a stream cipher, it is only compatible with the STREAM encryption mode of operation.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Better ABI translation for Windows assembler implementation (right now it's a brute force push/pop/swap to explicitly translate parameter passing).</dd></dl>
+<div class="textblock"><p>RC4 stream cipher. </p>
+<p>RC4 is a stream cipher, which accepts keys between 40 and 2048 bits (in multiples of 8 bits only). It accepts a parameter consisting of the number of initial keystream bytes to drop immediately after key schedule, effectively implementing RC4-drop[n]. If no drop parameter is passed, the implementation drops 2048 bytes by default.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Better ABI translation for Windows assembler implementation (right now it's a brute force push/pop/swap to explicitly translate parameter passing).</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>rc4.c </dd></dl>
 </div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.3.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -86,19 +86,17 @@ Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#ae0f944227bbf3dfcbd05b2aa1a395517">ORDO_ELEFTOVER</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a98b7e4789d6bcb5800667ac2b080ac13">ORDO_EKEYSIZE</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a16c79abf7ed3ec2dd50cc4dccc28e735">ORDO_EPADDING</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a16c79abf7ed3ec2dd50cc4dccc28e735">ORDO_EPADDING</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a788be2263bb4cdc192771ac59f53e1dd">ORDO_EHEAPALLOC</a></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a06315fdc1142d5e779cafdd62f5a79a3">padCheck</a> (unsigned char *buffer, unsigned char padding)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a22c9995cda7034232cd881f4f1e24e3c">xorBuffer</a> (unsigned char *dst, unsigned char *src, size_t len)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a9ce4e1ce679945a5cf57d16894ea0ae1">incBuffer</a> (unsigned char *n, size_t len)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a07a02e95c6520a59799d5b8aab98926a">incBuffer</a> (unsigned char *buffer, size_t len)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordotypes_8h.html#a6efeae665193f91fc186c1566e6b1233">errorMsg</a> (int code)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Library-wide utility header. </p>
-<p>Contains various library-wide definitions, includes, and utility functions.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Improve code related to error handling.</dd></dl>
+<p>Contains various definitions, includes, and utility functions used throughout the library. For instance, this contains all error definitions, a few special data types, some general-purpose routines such as exclusive-or'ing two memory buffers together.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>ordotypes.c </dd></dl>
 </div><hr/><h2>Define Documentation</h2>
 <a class="anchor" id="adaaeb963b182375b2831fed5bdd6de52"></a><!-- doxytag: member="ordotypes.h::ORDO_ESUCCESS" ref="adaaeb963b182375b2831fed5bdd6de52" args="" -->
@@ -125,7 +123,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The function failed due to an external error. This often indicates failure of an external component, such as the OS-provided pseudorandom number generator. </p>
+<p>The function failed due to an external error. This often indicates failure of an external component, such as the OS-provided pseudorandom number generator. Unless specified otherwise, Ordo is not responsible for this error. </p>
 
 </div>
 </div>
@@ -139,7 +137,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Unprocessed input was left over in the context. This applies to block cipher modes for which padding has been disabled: if the input plaintext length is not a multiple of the cipher's block size, then the remaining incomplete block cannot be handled without padding, which is an error as it generally leads to inconsistent behavior on the part of the user. </p>
+<p>Unprocessed input was left over in the context. This applies to block cipher modes of operation for which padding has been disabled: if the input plaintext length is not a multiple of the cipher's block size, then the remaining incomplete block cannot be handled without padding, which is an error as it generally leads to inconsistent behavior on the part of the user. </p>
 
 </div>
 </div>
@@ -153,7 +151,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The key size provided is invalid for this primitive. This occurs if you give a primitive an incorrect key size, such as feeding a 128-bit key into a cipher which expects a 192-bit key. Primitives either have a range of possible key lengths (often characterized by a minimum and maximum key length, but this varies among primitives) or one specific key length. If you need to accept arbitrary-length keys, you should consider hashing your key in some fashion. </p>
+<p>The key size provided is invalid for this cryptographic primitive. This occurs if you give a primitive an incorrect key size, such as feeding a 128-bit key into a cipher which expects a 192-bit key. Primitives either have a range of possible key lengths (often characterized by a minimum and maximum key length, but this varies among algorithms) or only one specific key length. If you need to accept arbitrary length keys, you should consider hashing your key in some fashion before using for encryption. </p>
 
 </div>
 </div>
@@ -167,21 +165,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct decryption impossible. </p>
-
-</div>
-</div>
-<a class="anchor" id="a16c79abf7ed3ec2dd50cc4dccc28e735"></a><!-- doxytag: member="ordotypes.h::ORDO_EPADDING" ref="a16c79abf7ed3ec2dd50cc4dccc28e735" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="ordotypes_8h.html#a16c79abf7ed3ec2dd50cc4dccc28e735">ORDO_EPADDING</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct decryption impossible. </p>
+<p>The padding was not recognized and decryption could not be completed. This applies to block cipher modes for which padding is enabled: if the last block containing padding information is malformed, the latter will generally be unreadable and the correct message size cannot be retrieved, making correct decryption impossible. Note this may not occur all the time, as an incorrect last block generally has a 1/256 chance of being a valid padding block, and no error will occur (on the other hand, the returned plaintext will be incorrect). If you need to ensure the plaintext is decrypted intact, you probably want to use a MAC (Message Authentication Code) along with encryption. </p>
 
 </div>
 </div>
@@ -195,7 +179,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>An attempt to allocate heap memory failed - this can be due to the system being low on memory or - more likely - the process to which the library is attached has reached its memory locking quota. If the former, there is not much to be done except get more memory. If the latter, either use less locked memory (which means avoiding using salloc for large memory buffers) or increase your process memory locking quota by acquiring higher privileges or changing the quota. </p>
+<p>An attempt to allocate heap memory failed - this can be due to the system being low on memory or - more likely - the process to which the library is attached has reached its memory locking quota. If the former, there is not much to be done except get more memory. If the latter, either use less locked memory (which means avoiding using salloc for large memory buffers) or increase your process memory locking quota by acquiring higher privileges, or simply changing the quota. </p>
 
 </div>
 </div>
@@ -279,15 +263,15 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9ce4e1ce679945a5cf57d16894ea0ae1"></a><!-- doxytag: member="ordotypes.h::incBuffer" ref="a9ce4e1ce679945a5cf57d16894ea0ae1" args="(unsigned char *n, size_t len)" -->
+<a class="anchor" id="a07a02e95c6520a59799d5b8aab98926a"></a><!-- doxytag: member="ordotypes.h::incBuffer" ref="a07a02e95c6520a59799d5b8aab98926a" args="(unsigned char *buffer, size_t len)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="ordotypes_8h.html#a9ce4e1ce679945a5cf57d16894ea0ae1">incBuffer</a> </td>
+          <td class="memname">void <a class="el" href="ordotypes_8h.html#a07a02e95c6520a59799d5b8aab98926a">incBuffer</a> </td>
           <td>(</td>
           <td class="paramtype">unsigned char *&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
+          <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -306,7 +290,7 @@ Functions</h2></td></tr>
 <p>Increments a buffer of arbitrary size as if it were a len-byte integer. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">n</td><td>Points to the buffer to increment. </td></tr>
+    <tr><td class="paramname">buffer</td><td>Points to the buffer to increment. </td></tr>
     <tr><td class="paramname">len</td><td>The size, in bytes, of the buffer. </td></tr>
   </table>
   </dd>
@@ -345,7 +329,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

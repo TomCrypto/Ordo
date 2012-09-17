@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: CIPHER_PRIMITIVE_CONTEXT Struct Reference</title>
+<title>Ordo: BLOCK_CIPHER_CONTEXT Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.3.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -56,49 +56,49 @@
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">CIPHER_PRIMITIVE_CONTEXT Struct Reference</div>  </div>
+<div class="title">BLOCK_CIPHER_CONTEXT Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="CIPHER_PRIMITIVE_CONTEXT" -->
-<p>Cipher primitive context.  
- <a href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#details">More...</a></p>
+<!-- doxytag: class="BLOCK_CIPHER_CONTEXT" -->
+<p>Block cipher context.  
+ <a href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct CIPHER_PRIMITIVE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#a240722479263b33136c73220b977ad60">primitive</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#a1ae290fb1d99f692eed2a69a6775f7f6">cipher</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a5225f8501c529e4b8e396d876b481ff4">cipher</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Cipher primitive context. </p>
-<p>This structure describes a cipher primitive context. It is used by cipher primitives to maintain their state across function calls (this includes key material and/or actual state for stream ciphers). It should never be modified outside of these functions. </p>
+<div class="textblock"><p>Block cipher context. </p>
+<p>This structure describes a block cipher primitive context. It is used by block cipher primitives to maintain their state across function calls (this includes key material, in particular, and possibly parameters such as number of rounds). It should never be modified outside of these functions and must be considered opaque. </p>
 </div><hr/><h2>Field Documentation</h2>
-<a class="anchor" id="a240722479263b33136c73220b977ad60"></a><!-- doxytag: member="CIPHER_PRIMITIVE_CONTEXT::primitive" ref="a240722479263b33136c73220b977ad60" args="" -->
+<a class="anchor" id="a5225f8501c529e4b8e396d876b481ff4"></a><!-- doxytag: member="BLOCK_CIPHER_CONTEXT::cipher" ref="a5225f8501c529e4b8e396d876b481ff4" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct CIPHER_PRIMITIVE* <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#a240722479263b33136c73220b977ad60">primitive</a></td>
+          <td class="memname">struct <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a>* <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a5225f8501c529e4b8e396d876b481ff4">cipher</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The cipher primitive in use. </p>
+<p>The block cipher in use. </p>
 
 </div>
 </div>
-<a class="anchor" id="a1ae290fb1d99f692eed2a69a6775f7f6"></a><!-- doxytag: member="CIPHER_PRIMITIVE_CONTEXT::cipher" ref="a1ae290fb1d99f692eed2a69a6775f7f6" args="" -->
+<a class="anchor" id="a1f6d09b30c54854dfca659b7463ac207"></a><!-- doxytag: member="BLOCK_CIPHER_CONTEXT::ctx" ref="a1f6d09b30c54854dfca659b7463ac207" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* <a class="el" href="struct_c_i_p_h_e_r___p_r_i_m_i_t_i_v_e___c_o_n_t_e_x_t.html#a1ae290fb1d99f692eed2a69a6775f7f6">cipher</a></td>
+          <td class="memname">void* <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The low-level cipher primitive context. </p>
+<p>The low-level block cipher context. </p>
 
 </div>
 </div>
@@ -109,7 +109,7 @@ Data Fields</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

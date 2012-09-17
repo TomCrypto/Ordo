@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.3.0</span>
+   &#160;<span id="projectnumber">1.4.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -69,7 +69,8 @@
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="ordotypes_8h_source.html">common/ordotypes.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives/primitives.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="encrypt_8h_source.html">encrypt/encrypt.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="enc__block_8h_source.html">enc/enc_block.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="enc__stream_8h_source.html">enc/enc_stream.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="random_8h_source.html">random/random.h</a>&gt;</code><br/>
 </div>
 <p><a href="ordo_8h_source.html">Go to the source code of this file.</a></p>
@@ -77,12 +78,13 @@
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#aedeefa4e4de4b29fe854645698993013">ordoLoad</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a6d1a8502854fc62ad137ea4dc8224169">ordoEncrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#abeb05ec51d33dc7d3465f83508241645">ordoDecrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#af8f137478025b9af25748e00e96d26d9">ordoEncrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *cipher, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___m_o_d_e.html">BLOCK_CIPHER_MODE</a> *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a459523f0d6f5a50bb02f2be6cbc9c169">ordoDecrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *cipher, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___m_o_d_e.html">BLOCK_CIPHER_MODE</a> *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#aeb9514d1eaef3b5c99e9e7aec3b0aded">ordoEncryptStream</a> (unsigned char *inout, size_t len, <a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *cipher, void *key, size_t keySize, void *cipherParams)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Ordo high-level API. </p>
-<p>This is the highest-level API for Ordo, which forgoes the use of cryptographic contexts completely, resulting in more concise code at the cost of reduced flexibility.</p>
+<p>This is the highest-level API for Ordo, which forgoes the use of cryptographic contexts completely,resulting in more concise code at the cost of reduced flexibility.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd>ordo.c </dd></dl>
 </div><hr/><h2>Function Documentation</h2>
 <a class="anchor" id="aedeefa4e4de4b29fe854645698993013"></a><!-- doxytag: member="ordo.h::ordoLoad" ref="aedeefa4e4de4b29fe854645698993013" args="()" -->
@@ -98,16 +100,16 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). </p>
+<p>Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). After this function returns, all objects such as <code><a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4()</a></code>, <code><a class="el" href="enc__block_8h.html#a3814e4841ea97f0a585571714578a7b2">CBC()</a></code>, may be used. </p>
 
 </div>
 </div>
-<a class="anchor" id="a6d1a8502854fc62ad137ea4dc8224169"></a><!-- doxytag: member="ordo.h::ordoEncrypt" ref="a6d1a8502854fc62ad137ea4dc8224169" args="(unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)" -->
+<a class="anchor" id="af8f137478025b9af25748e00e96d26d9"></a><!-- doxytag: member="ordo.h::ordoEncrypt" ref="af8f137478025b9af25748e00e96d26d9" args="(unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, BLOCK_CIPHER *cipher, BLOCK_CIPHER_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="ordo_8h.html#a6d1a8502854fc62ad137ea4dc8224169">ordoEncrypt</a> </td>
+          <td class="memname">int <a class="el" href="ordo_8h.html#af8f137478025b9af25748e00e96d26d9">ordoEncrypt</a> </td>
           <td>(</td>
           <td class="paramtype">unsigned char *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -133,13 +135,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CIPHER_PRIMITIVE *&#160;</td>
-          <td class="paramname"><em>primitive</em>, </td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ENCRYPT_MODE *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___m_o_d_e.html">BLOCK_CIPHER_MODE</a> *&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
@@ -180,36 +182,36 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>This function encrypts a buffer of a given length with the provided parameters. </p>
+<p>This function encrypts a buffer of a given length using a block cipher in a given mode of operation with the passed parameters. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">in</td><td>This points to a plaintext buffer. </td></tr>
-    <tr><td class="paramname">inlen</td><td>This contains the number of bytes of plaintext. </td></tr>
-    <tr><td class="paramname">out</td><td>This points to the buffer to which to write the ciphertext. </td></tr>
-    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to out. </td></tr>
-    <tr><td class="paramname">primitive</td><td>This must point to the cryptographic primitive to be used. </td></tr>
-    <tr><td class="paramname">mode</td><td>This must point to the cryptographic mode of operation to be used. </td></tr>
-    <tr><td class="paramname">key</td><td>This should point to a buffer containing the encryption key. </td></tr>
-    <tr><td class="paramname">keySize</td><td>This represents the length, in bytes, of the key buffer. </td></tr>
-    <tr><td class="paramname">iv</td><td>This points to the initialization vector (this may be zero if the mode does not use an IV). </td></tr>
-    <tr><td class="paramname">cipherParams</td><td>This points to specific cipher parameters, set to zero for default behavior. </td></tr>
+    <tr><td class="paramname">in</td><td>The plaintext buffer. </td></tr>
+    <tr><td class="paramname">inlen</td><td>Number of bytes to read from the <code>in</code> buffer. </td></tr>
+    <tr><td class="paramname">out</td><td>The ciphertext buffer, to which the ciphertext should be written. </td></tr>
+    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to <code>out</code>. </td></tr>
+    <tr><td class="paramname">cipher</td><td>A block cipher object, describing the block cipher to use for encryption. </td></tr>
+    <tr><td class="paramname">mode</td><td>The block cipher mode of operation to be used for encryption. </td></tr>
+    <tr><td class="paramname">key</td><td>A buffer containing the key material to use for encryption. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The length, in bytes, of the <code>key</code> buffer. </td></tr>
+    <tr><td class="paramname">iv</td><td>A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV). </td></tr>
+    <tr><td class="paramname">cipherParams</td><td>This points to specific block cipher parameters, set to zero for default behavior. </td></tr>
     <tr><td class="paramname">modeParams</td><td>This points to specific mode of operation parameters, set to zero for default behavior. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must be available before encryption can begin. If your requirements make this unacceptable, you should use the encryption interface, located one level of abstraction lower - see <a class="el" href="encrypt_8h.html" title="Symmetric encryption interface.">encrypt.h</a>. </dd>
-<dd>
-The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a block mode with padding enabled is used. See remarks about padding in <a class="el" href="encrypt_8h.html" title="Symmetric encryption interface.">encrypt.h</a>. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must be available before encryption can begin. If your requirements make this unacceptable, you should use the encryption interface, located one level of abstraction lower - see <a class="el" href="enc__block_8h.html" title="Block cipher symmetric encryption.">enc_block.h</a>. <br/>
+<br/>
+ The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a mode which uses padding (with padding enabled) is used. See remarks about padding in <a class="el" href="enc__block_8h.html" title="Block cipher symmetric encryption.">enc_block.h</a>. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="abeb05ec51d33dc7d3465f83508241645"></a><!-- doxytag: member="ordo.h::ordoDecrypt" ref="abeb05ec51d33dc7d3465f83508241645" args="(unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, CIPHER_PRIMITIVE *primitive, ENCRYPT_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)" -->
+<a class="anchor" id="a459523f0d6f5a50bb02f2be6cbc9c169"></a><!-- doxytag: member="ordo.h::ordoDecrypt" ref="a459523f0d6f5a50bb02f2be6cbc9c169" args="(unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, BLOCK_CIPHER *cipher, BLOCK_CIPHER_MODE *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="ordo_8h.html#abeb05ec51d33dc7d3465f83508241645">ordoDecrypt</a> </td>
+          <td class="memname">int <a class="el" href="ordo_8h.html#a459523f0d6f5a50bb02f2be6cbc9c169">ordoDecrypt</a> </td>
           <td>(</td>
           <td class="paramtype">unsigned char *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
@@ -235,13 +237,13 @@ The out buffer should have enough space to contain the entire ciphertext, which 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CIPHER_PRIMITIVE *&#160;</td>
-          <td class="paramname"><em>primitive</em>, </td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ENCRYPT_MODE *&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___m_o_d_e.html">BLOCK_CIPHER_MODE</a> *&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
@@ -282,25 +284,99 @@ The out buffer should have enough space to contain the entire ciphertext, which 
       </table>
 </div>
 <div class="memdoc">
-<p>This function decrypts a buffer of a given length with the provided parameters. </p>
+<p>This function decrypts a buffer of a given length using a block cipher in a given mode of operation with the passed parameters. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">in</td><td>This points to a ciphertext buffer. </td></tr>
-    <tr><td class="paramname">inlen</td><td>This contains the number of bytes of ciphertext. </td></tr>
-    <tr><td class="paramname">out</td><td>This points to the buffer to which to write the plaintext. </td></tr>
-    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to out. </td></tr>
-    <tr><td class="paramname">primitive</td><td>This must point to the cryptographic primitive to be used. </td></tr>
-    <tr><td class="paramname">mode</td><td>This must point to the cryptographic mode of operation to be used. </td></tr>
-    <tr><td class="paramname">key</td><td>This should point to a buffer containing the encryption key. </td></tr>
-    <tr><td class="paramname">keySize</td><td>This represents the length, in bytes, of the key buffer. </td></tr>
-    <tr><td class="paramname">iv</td><td>This points to the initialization vector (this may be zero if the mode does not use an IV). </td></tr>
-    <tr><td class="paramname">cipherParams</td><td>This points to specific cipher parameters, set to zero for default behavior. </td></tr>
+    <tr><td class="paramname">in</td><td>The ciphertext buffer. </td></tr>
+    <tr><td class="paramname">inlen</td><td>Number of bytes to read from the <code>in</code> buffer. </td></tr>
+    <tr><td class="paramname">out</td><td>The plaintext buffer, to which the plaintext should be written. </td></tr>
+    <tr><td class="paramname">outlen</td><td>This points to a variable which will contain the number of bytes written to <code>out</code>. </td></tr>
+    <tr><td class="paramname">cipher</td><td>A block cipher object, describing the block cipher to use for decryption. </td></tr>
+    <tr><td class="paramname">mode</td><td>The block cipher mode of operation to be used for decryption. </td></tr>
+    <tr><td class="paramname">key</td><td>A buffer containing the key material to use for decryption. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The length, in bytes, of the <code>key</code> buffer. </td></tr>
+    <tr><td class="paramname">iv</td><td>A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV). </td></tr>
+    <tr><td class="paramname">cipherParams</td><td>This points to specific block cipher parameters, set to zero for default behavior. </td></tr>
     <tr><td class="paramname">modeParams</td><td>This points to specific mode of operation parameters, set to zero for default behavior. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
-<dl class="remark"><dt><b>Remarks:</b></dt><dd>Same remarks as for ordoEncrypt. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>See ordoEncrypt for additional remarks. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aeb9514d1eaef3b5c99e9e7aec3b0aded"></a><!-- doxytag: member="ordo.h::ordoEncryptStream" ref="aeb9514d1eaef3b5c99e9e7aec3b0aded" args="(unsigned char *inout, size_t len, STREAM_CIPHER *cipher, void *key, size_t keySize, void *cipherParams)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="ordo_8h.html#aeb9514d1eaef3b5c99e9e7aec3b0aded">ordoEncryptStream</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>inout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td>
+          <td class="paramname"><em>cipher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keySize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>cipherParams</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function encrypts or decrypts a buffer of a given length using a stream cipher. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inout</td><td>The plaintext or ciphertext buffer. </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes to read from the <code>inout</code> buffer. </td></tr>
+    <tr><td class="paramname">cipher</td><td>A stream cipher object, describing the stream cipher to use for encryption. </td></tr>
+    <tr><td class="paramname">key</td><td>A buffer containing the key material to use for encryption. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The length, in bytes, of the <code>key</code> buffer. </td></tr>
+    <tr><td class="paramname">cipherParams</td><td>This points to specific block cipher parameters, set to zero for default behavior. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Stream ciphers are different from block ciphers in multiple ways: <br/>
+<ul>
+<li>they do not require an IV because there is no standard way to add initialization vectors to a stream cipher.</li>
+<li>no mode of operation is required as stream ciphers work by generating a keystream and combining it with the plaintext or ciphertext (so they are a "mode" in themselves). <br/>
+</li>
+<li>there is no difference between encryption and decryption: encrypting the ciphertext again will produce the plaintext and vice versa. <br/>
+</li>
+<li>the encryption or decryption is done in-place directly in the <code>inout</code> buffer, since the ciphertext is always the same length as the plaintext. If you need two different buffers, make a copy of the plaintext before encrypting. </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -308,7 +384,7 @@ The out buffer should have enough space to contain the entire ciphertext, which 
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 15 2012 20:13:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
