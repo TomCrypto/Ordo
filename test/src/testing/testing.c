@@ -357,7 +357,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     /* Save starting time. */
     start = clock();
 
-    /* Encryption test. */                   // this is to make sure we have enough space for padding (yeah, bad test program design)
+    /* Encryption test. */                   /* this is to make sure we have enough space for padding (yeah, bad test program design) */
     error = ordoEncrypt(buffer, bufferSize - blockCipherBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
     else

@@ -141,5 +141,5 @@ void CFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 /* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
 void CFB_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    MAKE_ENCRYPT_MODE(mode, CFB_Create, CFB_Init, CFB_EncryptUpdate, CFB_DecryptUpdate, CFB_Final, CFB_Final, CFB_Free, "CFB");
+    MAKE_BLOCK_CIPHER_MODE(mode, CFB_Create, CFB_Init, CFB_EncryptUpdate, CFB_DecryptUpdate, CFB_Final, CFB_Final, CFB_Free, "CFB");
 }

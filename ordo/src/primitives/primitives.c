@@ -70,42 +70,42 @@ STREAM_CIPHER* getStreamCipherByID(size_t ID)
 }
 
 /* This function returns an initialized block cipher context using a specific block cipher object. */
-BLOCK_CIPHER_CONTEXT* block_cipher_create(BLOCK_CIPHER* cipher)
+BLOCK_CIPHER_CONTEXT* blockCipherCreate(BLOCK_CIPHER* cipher)
 {
     /* Allocate the cipher context. */
     return cipher->fCreate(cipher);
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
-int block_cipher_init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+int blockCipherInit(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
 {
     /* Initialize the cipher context. */
     return ctx->cipher->fInit(ctx, key, keySize, cipherParams);
 }
 
 /* This function frees an initialized cipher context. */
-void block_cipher_free(BLOCK_CIPHER_CONTEXT* ctx)
+void blockCipherFree(BLOCK_CIPHER_CONTEXT* ctx)
 {
     /* Free the cipher context. */
     ctx->cipher->fFree(ctx);
 }
 
 /* This function returns an initialized stream cipher context using a specific block cipher object. */
-STREAM_CIPHER_CONTEXT* stream_cipher_create(STREAM_CIPHER* cipher)
+STREAM_CIPHER_CONTEXT* streamCipherCreate(STREAM_CIPHER* cipher)
 {
     /* Allocate the cipher context. */
     return cipher->fCreate(cipher);
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
-int stream_cipher_init(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+int streamCipherInit(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
 {
     /* Initialize the cipher context. */
     return ctx->cipher->fInit(ctx, key, keySize, cipherParams);
 }
 
 /* This function frees an initialized cipher context. */
-void stream_cipher_free(STREAM_CIPHER_CONTEXT* ctx)
+void streamCipherFree(STREAM_CIPHER_CONTEXT* ctx)
 {
     /* Free the cipher context. */
     ctx->cipher->fFree(ctx);

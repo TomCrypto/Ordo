@@ -5,7 +5,7 @@
  * @file environment.h
  * \brief Precompilation environment decision unit.
  *
- * This header will decide which codepaths to use for Ordo to maximize performance  and compatibility. Make sure you
+ * This header will decide which codepaths to use for Ordo to maximize performance and compatibility. Make sure you
  * include this header whenever you need to run different code on different platforms.
  *
  * Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile.

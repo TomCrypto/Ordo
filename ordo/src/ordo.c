@@ -17,24 +17,24 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     size_t outPos = 0;
 
     /* Create the context. */
-    ENC_BLOCK_CONTEXT* ctx = enc_block_create(primitive, mode);
+    ENC_BLOCK_CIPHER_CONTEXT* ctx = encBlockCipherCreate(primitive, mode);
     if (!ctx) return ORDO_EHEAPALLOC;
 
     /* Initialize it. */
-    error = enc_block_init(ctx, key, keySize, iv, cipherParams, modeParams, 1);
+    error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 1);
     if (error < 0) return error;
 
     /* Encrypt the buffer. */
-    enc_block_update(ctx, in, inlen, out, outlen);
+    encBlockCipherUpdate(ctx, in, inlen, out, outlen);
     outPos += *outlen;
 
     /* Finalize the context. */
-    error = enc_block_final(ctx, out + outPos, outlen);
+    error = encBlockCipherFinal(ctx, out + outPos, outlen);
     if (error < 0) return error;
     *outlen += outPos;
 
     /* Free it and return success. */
-    enc_block_free(ctx);
+    encBlockCipherFree(ctx);
     return ORDO_ESUCCESS;
 }
 
@@ -45,24 +45,24 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     size_t outPos = 0;
 
     /* Create the context. */
-    ENC_BLOCK_CONTEXT* ctx = enc_block_create(primitive, mode);
+    ENC_BLOCK_CIPHER_CONTEXT* ctx = encBlockCipherCreate(primitive, mode);
     if (!ctx) return ORDO_EHEAPALLOC;
 
     /* Initialize it. */
-    error = enc_block_init(ctx, key, keySize, iv, cipherParams, modeParams, 0);
+    error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 0);
     if (error < 0) return error;
 
     /* Decrypt the buffer. */
-    enc_block_update(ctx, in, inlen, out, outlen);
+    encBlockCipherUpdate(ctx, in, inlen, out, outlen);
     outPos += *outlen;
 
     /* Finalize the context. */
-    error = enc_block_final(ctx, out + outPos, outlen);
+    error = encBlockCipherFinal(ctx, out + outPos, outlen);
     if (error < 0) return error;
     *outlen += outPos;
 
     /* Free it and return success. */
-    enc_block_free(ctx);
+    encBlockCipherFree(ctx);
     return ORDO_ESUCCESS;
 }
 
@@ -72,18 +72,18 @@ int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive
     int error;
 
     /* Create the context. */
-    ENC_STREAM_CONTEXT* ctx = enc_stream_create(primitive);
+    ENC_STREAM_CIPHER_CONTEXT* ctx = encStreamCipherCreate(primitive);
     if (!ctx) return ORDO_EHEAPALLOC;
 
     /* Initialize it. */
-    error = enc_stream_init(ctx, key, keySize, cipherParams);
+    error = encStreamCipherInit(ctx, key, keySize, cipherParams);
     if (error < 0) return error;
 
     /* Encrypt the buffer. */
-    enc_stream_update(ctx, inout, len);
+    encStreamCipherUpdate(ctx, inout, len);
 
     /* Free it and return success. */
-    enc_stream_free(ctx);
+    encStreamCipherFree(ctx);
     return ORDO_ESUCCESS;
 }
 
@@ -93,17 +93,17 @@ int ordoDecryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive
     int error;
 
     /* Create the context. */
-    ENC_STREAM_CONTEXT* ctx = enc_stream_create(primitive);
+    ENC_STREAM_CIPHER_CONTEXT* ctx = encStreamCipherCreate(primitive);
     if (!ctx) return ORDO_EHEAPALLOC;
 
     /* Initialize it. */
-    error = enc_stream_init(ctx, key, keySize, cipherParams);
+    error = encStreamCipherInit(ctx, key, keySize, cipherParams);
     if (error < 0) return error;
 
     /* Decrypt the buffer. */
-    enc_stream_update(ctx, inout, len);
+    encStreamCipherUpdate(ctx, inout, len);
 
     /* Free it and return success. */
-    enc_stream_free(ctx);
+    encStreamCipherFree(ctx);
     return ORDO_ESUCCESS;
 }

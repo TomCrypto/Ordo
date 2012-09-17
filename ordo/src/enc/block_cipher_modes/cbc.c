@@ -223,5 +223,5 @@ void CBC_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 /* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
 void CBC_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    MAKE_ENCRYPT_MODE(mode, CBC_Create, CBC_Init, CBC_EncryptUpdate, CBC_DecryptUpdate, CBC_EncryptFinal, CBC_DecryptFinal, CBC_Free, "CBC");
+    MAKE_BLOCK_CIPHER_MODE(mode, CBC_Create, CBC_Init, CBC_EncryptUpdate, CBC_DecryptUpdate, CBC_EncryptFinal, CBC_DecryptFinal, CBC_Free, "CBC");
 }

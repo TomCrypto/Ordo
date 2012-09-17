@@ -120,5 +120,5 @@ void CTR_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 /* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
 void CTR_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    MAKE_ENCRYPT_MODE(mode, CTR_Create, CTR_Init, CTR_Update, CTR_Update, CTR_Final, CTR_Final, CTR_Free, "CTR");
+    MAKE_BLOCK_CIPHER_MODE(mode, CTR_Create, CTR_Init, CTR_Update, CTR_Update, CTR_Final, CTR_Final, CTR_Free, "CTR");
 }

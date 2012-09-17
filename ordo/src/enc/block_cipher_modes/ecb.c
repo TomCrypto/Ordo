@@ -190,5 +190,5 @@ void ECB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 /* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
 void ECB_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    MAKE_ENCRYPT_MODE(mode, ECB_Create, ECB_Init, ECB_EncryptUpdate, ECB_DecryptUpdate, ECB_EncryptFinal, ECB_DecryptFinal, ECB_Free, "ECB");
+    MAKE_BLOCK_CIPHER_MODE(mode, ECB_Create, ECB_Init, ECB_EncryptUpdate, ECB_DecryptUpdate, ECB_EncryptFinal, ECB_DecryptFinal, ECB_Free, "ECB");
 }

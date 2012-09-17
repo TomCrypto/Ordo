@@ -106,5 +106,5 @@ void OFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 /* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
 void OFB_SetMode(BLOCK_CIPHER_MODE* mode)
 {
-    MAKE_ENCRYPT_MODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
+    MAKE_BLOCK_CIPHER_MODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
 }
