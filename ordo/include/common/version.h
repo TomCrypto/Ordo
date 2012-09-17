@@ -1,5 +1,5 @@
-#ifndef version_h
-#define version_h
+#ifndef VERSION_H
+#define VERSION_H
 
 /**
  * @file version.h

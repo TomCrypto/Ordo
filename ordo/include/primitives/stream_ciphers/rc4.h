@@ -1,5 +1,5 @@
-#ifndef rc4_h
-#define rc4_h
+#ifndef RC4_H
+#define RC4_H
 
 /**
  * @file rc4.h

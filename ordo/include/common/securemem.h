@@ -1,5 +1,5 @@
-#ifndef securemem_h
-#define securemem_h
+#ifndef SECUREMEM_H
+#define SECUREMEM_H
 
 /**
  * @file securemem.h

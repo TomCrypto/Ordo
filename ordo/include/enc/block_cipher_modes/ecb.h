@@ -1,5 +1,5 @@
-#ifndef ecb_h
-#define ecb_h
+#ifndef ECB_H
+#define ECB_H
 
 /**
  * @file ecb.h

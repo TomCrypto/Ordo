@@ -1,5 +1,5 @@
-#ifndef random_h
-#define random_h
+#ifndef RANDOM_H
+#define RANDOM_H
 
 /**
  * @file random.h

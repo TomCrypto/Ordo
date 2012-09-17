@@ -1,5 +1,5 @@
-#ifndef ordo_h
-#define ordo_h
+#ifndef ORDO_H
+#define ORDO_H
 
 /**
  * @file ordo.h

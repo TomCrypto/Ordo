@@ -1,5 +1,5 @@
-#ifndef identification_h
-#define identification_h
+#ifndef IDENTIFICATION_H
+#define IDENTIFICATION_H
 
 /**
  * @file identification.h

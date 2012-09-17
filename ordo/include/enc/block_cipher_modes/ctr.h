@@ -1,5 +1,5 @@
-#ifndef ctr_h
-#define ctr_h
+#ifndef CTR_H
+#define CTR_H
 
 /**
  * @file ctr.h

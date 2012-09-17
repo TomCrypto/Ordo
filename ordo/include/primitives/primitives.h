@@ -1,5 +1,5 @@
-#ifndef primitives_h
-#define primitives_h
+#ifndef PRIMITIVES_H
+#define PRIMITIVES_H
 
 /**
  * @file primitives.h

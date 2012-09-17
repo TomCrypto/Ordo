@@ -1,5 +1,5 @@
-#ifndef nullcipher_h
-#define nullcipher_h
+#ifndef NULLCIPHER_H
+#define NULLCIPHER_H
 
 /**
  * @file nullcipher.h

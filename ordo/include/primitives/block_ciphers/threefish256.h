@@ -1,5 +1,5 @@
-#ifndef threefish256_h
-#define threefish256_h
+#ifndef THREEFISH256_H
+#define THREEFISH256_H
 
 /**
  * @file threefish256.h

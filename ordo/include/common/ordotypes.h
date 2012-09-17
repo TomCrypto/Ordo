@@ -1,5 +1,5 @@
-#ifndef ordotypes_h
-#define ordotypes_h
+#ifndef ORDOTYPES_H
+#define ORDOTYPES_H
 
 /**
  * @file ordotypes.h

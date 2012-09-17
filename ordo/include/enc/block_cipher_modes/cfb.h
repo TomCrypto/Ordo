@@ -1,5 +1,5 @@
-#ifndef cfb_h
-#define cfb_h
+#ifndef CFB_H
+#define CFB_H
 
 /**
  * @file cfb.h

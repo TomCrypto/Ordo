@@ -1,5 +1,5 @@
-#ifndef ofb_h
-#define ofb_h
+#ifndef OFB_H
+#define OFB_H
 
 /**
  * @file ofb.h

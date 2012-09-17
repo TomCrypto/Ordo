@@ -1,5 +1,5 @@
-#ifndef enc_stream_h
-#define enc_stream_h
+#ifndef ENC_STREAM_H
+#define ENC_STREAM_H
 
 /* Library dependencies. */
 #include <primitives/primitives.h>

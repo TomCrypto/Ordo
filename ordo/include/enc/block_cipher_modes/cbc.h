@@ -1,5 +1,5 @@
-#ifndef cbc_h
-#define cbc_h
+#ifndef CBC_H
+#define CBC_H
 
 /**
  * @file cbc.h
