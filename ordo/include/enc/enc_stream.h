@@ -1,3 +1,6 @@
+#ifndef enc_stream_h
+#define enc_stream_h
+
 /* Library dependencies. */
 #include <primitives/primitives.h>
 #include <common/ordotypes.h>
@@ -47,3 +50,5 @@ void enc_stream_update(ENC_STREAM_CONTEXT* ctx, unsigned char* inout, size_t len
  \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
  Do not call this function if \c blockEncryptCreate failed, as the latter correctly frees dangling context buffers in case of error. */
 void enc_stream_free(ENC_STREAM_CONTEXT* ctx);
+
+#endif

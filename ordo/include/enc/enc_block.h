@@ -1,5 +1,5 @@
-#ifndef encrypt_h
-#define encrypt_h
+#ifndef enc_block_h
+#define enc_block_h
 
 /**
  * @file encrypt.h
