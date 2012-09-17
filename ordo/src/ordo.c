@@ -86,24 +86,3 @@ int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive
     encStreamCipherFree(ctx);
     return ORDO_ESUCCESS;
 }
-
-/* This convenience function decrypts a buffer with a given key, tweak and IV. */
-int ordoDecryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
-{
-    int error;
-
-    /* Create the context. */
-    ENC_STREAM_CIPHER_CONTEXT* ctx = encStreamCipherCreate(primitive);
-    if (!ctx) return ORDO_EHEAPALLOC;
-
-    /* Initialize it. */
-    error = encStreamCipherInit(ctx, key, keySize, cipherParams);
-    if (error < 0) return error;
-
-    /* Decrypt the buffer. */
-    encStreamCipherUpdate(ctx, inout, len);
-
-    /* Free it and return success. */
-    encStreamCipherFree(ctx);
-    return ORDO_ESUCCESS;
-}

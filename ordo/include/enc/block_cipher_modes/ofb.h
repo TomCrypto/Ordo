@@ -4,7 +4,7 @@
 /**
  * @file ofb.h
  *
- * \brief OFB encryption mode of operation interface.
+ * \brief OFB block cipher mode of operation.
  *
  * The OFB mode generates a keystream by repeatedly encrypting an initialization vector, effectively
  * turning a block cipher into a stream cipher. As such, OFB mode requires no padding, and outlen
@@ -14,7 +14,7 @@
  * used for more than one message. This also means the block cipher's inverse permutation is
  * never used.
  *
- * \c OFB_Final accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
+ * \c OFB_Final() accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
  *
  * @see ofb.c
@@ -26,7 +26,9 @@ BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONT
 
 int OFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
 
-void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
+                unsigned char* in, size_t inlen,
+                unsigned char* out, size_t* outlen);
 
 int OFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
 

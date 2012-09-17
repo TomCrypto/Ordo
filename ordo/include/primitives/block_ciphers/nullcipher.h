@@ -4,14 +4,11 @@
 /**
  * @file nullcipher.h
  *
- * \brief NullCipher cipher interface.
+ * \brief NullCipher block cipher.
  *
  * This cipher is compatible with all encryption modes of operation and is only used to debug the library.
  * It accepts no parameters, and has an arbitrarily-chosen 128-bit block size.
  * It accepts any key size but does not even attempt to read the key.
- *
- * While being a block cipher, this cipher primitive is actually compatible with the STREAM encryption
- * mode of operation, but this is coincidental and should not be done by definition.
  *
  * @see nullcipher.c
  */

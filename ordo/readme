@@ -1,7 +1,5 @@
-Ordo v1.4.0
+Ordo v1.4.1
 -----------
-
-### Please ignore all documentation for this version, as the library has just undergone a major API consistency overhaul (in particular, clearly distinguishing stream and block ciphers) and the documentation unfortunately did not get updated to reflect this just yet - it will be rewritten ASAP. The old documentation is however still relevant w.r.t. most lowest-level interfaces, which were not affected. ###
 
 This directory contains code and headers for the shared library Ordo. A simple makefile is provided with two build targets:
 - make debug, which includes no optimizations and adds debug symbols
@@ -13,9 +11,9 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
+ - documentation is back up to date
  - library consistency greatly improved, on the other hand documentation is completely out of date
  - stream ciphers are now cleanly separated from block ciphers, significantly improving API cohesion
- - note the medium-level API's have underscores in their names instead of standard camel-case, this is a placeholder until we can name them properly
 
 Current work is focused towards finishing the cipher interface. Important todo's:
  - fix some syntax quirks in the library code and improve consistency

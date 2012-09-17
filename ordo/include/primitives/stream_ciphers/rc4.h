@@ -4,13 +4,11 @@
 /**
  * @file rc4.h
  *
- * \brief RC4 stream cipher interface.
+ * \brief RC4 stream cipher.
  *
- * RC4 is a stream cipher, which has no block size and accepts keys between 40 and 2048 bits (in multiples of 8 bits only). It accepts a parameter
- * consisting of the number of initial keystream bytes to drop immediately after key schedule, effectively implementing RC4-drop[n]. If no drop
- * parameter is passed, the implementation drops 2048 bytes by default.
- *
- * By virtue of being a stream cipher, it is only compatible with the STREAM encryption mode of operation.
+ * RC4 is a stream cipher, which accepts keys between 40 and 2048 bits (in multiples of 8 bits only). It accepts a
+ * parameter consisting of the number of initial keystream bytes to drop immediately after key schedule, effectively
+ * implementing RC4-drop[n]. If no drop  parameter is passed, the implementation drops 2048 bytes by default.
  *
  * \todo Better ABI translation for Windows assembler implementation (right now it's a brute force push/pop/swap to explicitly translate parameter passing).
  *

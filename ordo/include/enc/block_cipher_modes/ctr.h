@@ -4,7 +4,7 @@
 /**
  * @file ctr.h
  *
- * \brief CTR encryption mode of operation interface.
+ * \brief CTR block cipher mode of operation.
  *
  * The CTR mode generates a keystream by repeatedly encrypting a counter starting from some
  * initialization vector, effectively turning a block cipher into a stream cipher. As such,
@@ -15,7 +15,7 @@
  * keystream) so care must be taken to avoid reusing the initialization vector in an insecure
  * way. This also means the block cipher's inverse permutation is never used.
  *
- * \c CTR_Final accepts 0 as an argument for \c outlen, since by design the CTR mode of operation does not
+ * \c CTR_Final() accepts 0 as an argument for \c outlen, since by design the CTR mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
  *
  * @see ctr.c
@@ -27,7 +27,9 @@ BLOCK_CIPHER_MODE_CONTEXT* CTR_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONT
 
 int CTR_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
 
-void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
+                unsigned char* in, size_t inlen,
+                unsigned char* out, size_t* outlen);
 
 int CTR_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
 

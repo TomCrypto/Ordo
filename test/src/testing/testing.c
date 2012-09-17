@@ -239,7 +239,7 @@ int runStreamCipherTest(char* line, int n)
         {
             /* Perform the decryption test. */
             memcpy(computedPlaintext, computedCiphertext, ciphertextlen);
-            error = ordoDecryptStream(computedPlaintext, ciphertextlen, primitive, key, keylen, 0);
+            error = ordoEncryptStream(computedPlaintext, ciphertextlen, primitive, key, keylen, 0);
             if (error == ORDO_ESUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
@@ -352,7 +352,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     memset(key, 0, keySize);
 
     /* Print primitive/mode information. */
-    printf("[+] Testing %s/%s with a %d-bit key...\n", primitiveName(primitive), modeName(mode), (int)keySize * 8);
+    printf("[+] Testing %s/%s with a %d-bit key...\n", primitiveName(primitive), blockCipherModeName(mode), (int)keySize * 8);
 
     /* Save starting time. */
     start = clock();
@@ -416,19 +416,6 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
         /* Get total time and display speed. */
         time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
         printf("[+] Encryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
-
-        /* Save starting time. */
-        start = clock();
-
-        /* Decryption test. */
-        error = ordoDecryptStream(buffer, bufferSize, primitive, key, keySize, 0);
-        if (error < 0) printf("[!] An error occurred during decryption [%s].\n", errorMsg(error));
-        else
-        {
-            /* Get total time and display speed. */
-            time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-            printf("[+] Decryption: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
-        }
     }
 
     printf("\n");

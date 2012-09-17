@@ -3,17 +3,20 @@
 
 /**
  * @file environment.h
- * \brief Precompilation environment decision unit.
+ * \brief Compile-time environment detection.
  *
- * This header will decide which codepaths to use for Ordo to maximize performance and compatibility. Make sure you
- * include this header whenever you need to run different code on different platforms.
+ * This header will provide definitions for the environment details under which Ordo is being built. This is useful if
+ * you need to use code for a specific platform (say an optimized assembly implementation for x86 processors, and a
+ * standard C implementation for everything else) - in this case, you would include this header in your code and use
+ * the preprocessor to include and exclude code depending on the platform, word size, CPU features, etc...
  *
  * Make sure to keep this updated and consistent whenever a new platform is added, otherwise it will refuse to compile.
- * Note the users should never need to interact with this header when using Ordo - this is for internal use only.
+ * Note the users should never need to interact with this header when using Ordo - this is meant for internal use only.
  *
- * This header may only contain preprocessor macros as it will be included in assembly files - it cannot contain declarations.
+ * This file may only contain preprocessor macros as it is included in assembly files - it cannot contain declarations.
  *
- * \todo Implement more platforms (and make sure they all work)
+ * \todo Add environmental symbols for more platforms (e.g. Mac) and possibly compilers.
+ *
  */
 
 /* These are environment flags, which must be set to sensible values. */
@@ -55,10 +58,8 @@
 #error "Cannot recognize calling convention."
 #endif
 
-/* These are feature flags used to enable various optimizations.
- * Note these can be overriden via your compiler's options, since
- * these feature flags are being read from compiler defines. */
-
+/* These are feature flags used to enable various optimizations. Note these can be overriden via your compiler's
+ * options, since they are set from whatever features the compiler reports are available for use. */
 
 #ifdef __MMX__                  /* MMX instructions (64-bit SIMD) */
 #define FEATURE_MMX 1

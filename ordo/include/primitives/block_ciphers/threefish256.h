@@ -4,10 +4,10 @@
 /**
  * @file threefish256.h
  *
- * \brief Threefish-256 block cipher interface.
+ * \brief Threefish-256 block cipher.
  *
- * Threefish-256 is a block cipher, which has a 256-bit block size and a 256-bit key size. It also has an optional 128-bit tweak.
- * The tweak can be set through the cipher parameters.
+ * Threefish-256 is a block cipher, which has a 256-bit block size and a 256-bit key size. It also has an optional
+ * 128-bit tweak. The tweak can be set through the cipher parameters.
  *
  * @see threefish256.c
  */

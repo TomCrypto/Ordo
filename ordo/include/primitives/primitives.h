@@ -4,10 +4,10 @@
 /**
  * @file primitives.h
  *
- * \brief Cryptographic primitive interface.
+ * \brief Cryptographic primitives.
  *
- * Exposes the Ordo primitive interface, which abstracts various cryptographic primitives through high-level interfaces.
- * Note it is always possible to skip this API and directly access the lower-level primitive functions, but it is discouraged.
+ * This declares all the cryptographic primitives in the library, abstracting various categories through high-level
+ * interfaces.
  *
  * @see primitives.c
  */
@@ -15,173 +15,155 @@
 /* Library dependencies. */
 #include <common/ordotypes.h>
 
-/* Useful macro to define a block cipher object. */
-#define MAKE_BLOCK_CIPHER(p, b, c, i, pf, pi, f, n){                                                                          \
-    p->blockSize = b;                                                                                                         \
-    p->fCreate = c;                                                                                                           \
-    p->fInit = (BLOCK_CIPHER_INIT)i;                                                                                          \
-    p->fForward = (BLOCK_CIPHER_UPDATE)pf;                                                                                    \
-    p->fInverse = (BLOCK_CIPHER_UPDATE)pi;                                                                                    \
-    p->fFree = f;                                                                                                             \
+/* Macro to define a block cipher object. */
+#define MAKE_BLOCK_CIPHER(p, b, c, i, pf, pi, f, n){                                                                  \
+    p->blockSize = b;                                                                                                 \
+    p->fCreate = c;                                                                                                   \
+    p->fInit = (BLOCK_CIPHER_INIT)i;                                                                                  \
+    p->fForward = (BLOCK_CIPHER_UPDATE)pf;                                                                            \
+    p->fInverse = (BLOCK_CIPHER_UPDATE)pi;                                                                            \
+    p->fFree = f;                                                                                                     \
     p->name = n;}
 
 /* Same as above, but for stream ciphers. */
-#define MAKE_STREAM_CIPHER(p, c, i, u, f, n){                                                                                 \
-    p->fCreate = c;                                                                                                           \
-    p->fInit = (STREAM_CIPHER_INIT)i;                                                                                         \
-    p->fUpdate = (STREAM_CIPHER_UPDATE)u;                                                                                     \
-    p->fFree = f;                                                                                                             \
+#define MAKE_STREAM_CIPHER(p, c, i, u, f, n){                                                                         \
+    p->fCreate = c;                                                                                                   \
+    p->fInit = (STREAM_CIPHER_INIT)i;                                                                                 \
+    p->fUpdate = (STREAM_CIPHER_UPDATE)u;                                                                             \
+    p->fFree = f;                                                                                                     \
     p->name = n;}
 
-/*! Returns the name of a primitive. */
+/*! Returns the name of a cryptographic primitive. */
 #define primitiveName(p) (p->name)
-/*! Returns the block size of a cipher primitive. */
+/*! Returns the block size of a block cipher primitive. */
 #define blockCipherBlockSize(p) (p->blockSize)
 
 /*! \brief Block cipher context.
  *
- * This structure describes a cipher primitive context. It is used by
- * cipher primitives to maintain their state across function calls (this
- * includes key material and/or actual state for stream ciphers).
- * It should never be modified outside of these functions. */
+ * This structure describes a block cipher primitive context. It is used by block cipher primitives to maintain their
+ * state across function calls (this includes key material, in particular, and possibly parameters such as number of
+ * rounds). It should never be modified outside of these functions and must be considered opaque. */
 typedef struct BLOCK_CIPHER_CONTEXT
 {
-    /*! The cipher primitive in use. */
+    /*! The block cipher in use. */
     struct BLOCK_CIPHER* cipher;
-    /*! The low-level cipher primitive context. */
+    /*! The low-level block cipher context. */
     void* ctx;
 } BLOCK_CIPHER_CONTEXT;
 
 /*! \brief Stream cipher context.
  *
- * This structure describes a cipher primitive context. It is used by
- * cipher primitives to maintain their state across function calls (this
- * includes key material and/or actual state for stream ciphers).
- * It should never be modified outside of these functions. */
+ * This structure describes a stream cipher primitive context. It is used by stream ciphers to maintain their state
+ * across function calls (usually, stream ciphers store their internal state there). */
 typedef struct STREAM_CIPHER_CONTEXT
 {
-    /*! The cipher primitive in use. */
+    /*! The stream cipher in use. */
     struct STREAM_CIPHER* cipher;
-    /*! The low-level cipher primitive context. */
+    /*! The low-level stream cipher context. */
     void* ctx;
 } STREAM_CIPHER_CONTEXT;
 
-/* Prototype for allocating and freeing cipher primitive contexts. */
+/* Block cipher interface function prototypes. */
 typedef BLOCK_CIPHER_CONTEXT* (*BLOCK_CIPHER_ALLOC)(struct BLOCK_CIPHER*);
-
-/* Prototype for initializing a cipher primitive context. */
 typedef int (*BLOCK_CIPHER_INIT)(BLOCK_CIPHER_CONTEXT*, void*, size_t, void*);
-
-/* Prototype for cipher primitive context forward and inverse updates. */
 typedef void (*BLOCK_CIPHER_UPDATE)(BLOCK_CIPHER_CONTEXT*, void*);
-
 typedef void(*BLOCK_CIPHER_FREE)(BLOCK_CIPHER_CONTEXT*);
 
-/* This structure defines a symmetric cipher primitive. */
+/*! \brief Block cipher object.
+ *
+ * This represents a block cipher object. */
 typedef struct BLOCK_CIPHER
 {
-    /* The block size, in bytes, of the cipher primitive. */
     size_t blockSize;
-    /* Points to the cipher primitive context creation function. */
     BLOCK_CIPHER_ALLOC fCreate;
-    /* Points to the cipher primitive context initialization function. */
     BLOCK_CIPHER_INIT fInit;
-    /* Points to the cipher primitive context forward update function. */
     BLOCK_CIPHER_UPDATE fForward;
-    /* Points to the cipher primitive context inverse update function. */
     BLOCK_CIPHER_UPDATE fInverse;
-    /* Points to the cipher primitive context free function. */
     BLOCK_CIPHER_FREE fFree;
-    /* The cipher primitive's name. */
     char* name;
 } BLOCK_CIPHER;
 
-/* Prototype for allocating and freeing cipher primitive contexts. */
+/* Stream cipher interface function prototypes. */
 typedef STREAM_CIPHER_CONTEXT* (*STREAM_CIPHER_ALLOC)(struct STREAM_CIPHER*);
-
-/* Prototype for initializing a cipher primitive context. */
 typedef int (*STREAM_CIPHER_INIT)(STREAM_CIPHER_CONTEXT*, void*, size_t, void*);
-
-/* Prototype for cipher primitive context forward and inverse updates. */
 typedef void (*STREAM_CIPHER_UPDATE)(STREAM_CIPHER_CONTEXT*, void*, size_t);
-
 typedef void(*STREAM_CIPHER_FREE)(STREAM_CIPHER_CONTEXT*);
 
-/* This structure defines a symmetric cipher primitive. */
+/*! \brief Stream cipher object.
+ *
+ * This represents a stream cipher object. */
 typedef struct STREAM_CIPHER
 {
-    /* Points to the cipher primitive context creation function. */
     STREAM_CIPHER_ALLOC fCreate;
-    /* Points to the cipher primitive context initialization function. */
     STREAM_CIPHER_INIT fInit;
-    /* Points to the cipher primitive context forward update function. */
     STREAM_CIPHER_UPDATE fUpdate;
-    /* Points to the cipher primitive context free function. */
     STREAM_CIPHER_FREE fFree;
-    /* The cipher primitive's name. */
     char* name;
 } STREAM_CIPHER;
 
-/*! Loads all primitivs. This must be called before you may use \c RC4(), \c NullCipher(), etc...
- * or the helper functions \c getCipherPrimitiveByName() and \c getCipherPrimitiveByID(). */
+/*! Loads all primitivs. This must be called before you may use \c RC4(), \c NullCipher(), etc... or the helper
+ * functions \c getBlockCipherByName() or \c getStreamCipherByID(), etc... */
 void primitivesLoad();
 
-/*! The NullCipher cipher primitive. */
+/*! The NullCipher block cipher. */
 BLOCK_CIPHER* NullCipher();
 
-/*! The Threefish-256 cipher primitive. */
+/*! The Threefish-256 block cipher. */
 BLOCK_CIPHER* Threefish256();
 
-/*! Returns a block cipher primitive object from a name. */
+/*! Returns a block cipher object from a name. */
 BLOCK_CIPHER* getBlockCipherByName(char* name);
 
-/*! Returns a block cipher primitive object from an ID. */
+/*! Returns a block cipher object from an ID. */
 BLOCK_CIPHER* getBlockCipherByID(size_t ID);
 
+/*! The RC4 stream cipher. */
 STREAM_CIPHER* RC4();
 
-/*! Returns a stream cipher primitive object from a name. */
+/*! Returns a stream cipher object from a name. */
 STREAM_CIPHER* getStreamCipherByName(char* name);
 
-/*! Returns a stream cipher primitive object from an ID. */
+/*! Returns a stream cipher object from an ID. */
 STREAM_CIPHER* getStreamCipherByID(size_t ID);
 
-/*! This function returns an allocated cipher primitive context using a specific cipher primitive.
- \param primitive The primitive object to be used.
- \return Returns the allocated cipher primitive context, or 0 if an allocation error occurred. */
+/*! This function returns an allocated block cipher context using a given block cipher.
+ \param cipher The block cipher to use.
+ \return Returns the allocated block cipher context, or 0 if an error occurred. */
 BLOCK_CIPHER_CONTEXT* blockCipherCreate(BLOCK_CIPHER* cipher);
 
-/*! This function initializes an cipher primitive context for encryption, provided a key and cipher parameters.
- \param ctx An allocated cipher primitive context.
- \param key A pointer to a buffer containing the key to use for encryption.
+/*! This function initializes a block cipher context for encryption, provided a key, and cipher parameters.
+ \param ctx An allocated block cipher context.
+ \param key A buffer containing the key to use for encryption.
  \param keySize The size, in bytes, of the encryption key.
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
 int blockCipherInit(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams);
 
-/*! This function frees (deallocates) an initialized cipher primitive context.
- \param ctx The cipher primitive context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
- Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if \c cipherCreate failed. */
+/*! This function frees (deallocates) an initialized block cipher context.
+ \param ctx The block cipher context to be freed. This context needs to at least have been allocated.
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
+ be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
+ \c blockCipherCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void blockCipherFree(BLOCK_CIPHER_CONTEXT* ctx);
 
-/*! This function returns an allocated cipher primitive context using a specific cipher primitive.
- \param primitive The primitive object to be used.
- \return Returns the allocated cipher primitive context, or 0 if an allocation error occurred. */
+/*! This function returns an allocated stream cipher context using a given stream cipher.
+ \param cipher The stream cipher to use.
+ \return Returns the allocated stream cipher context, or 0 if an error occurred. */
 STREAM_CIPHER_CONTEXT* streamCipherCreate(STREAM_CIPHER* cipher);
 
-/*! This function initializes an cipher primitive context for encryption, provided a key and cipher parameters.
- \param ctx An allocated cipher primitive context.
- \param key A pointer to a buffer containing the key to use for encryption.
+/*! This function initializes a stream cipher context for encryption, provided a key and cipher parameters.
+ \param ctx An allocated stream cipher context.
+ \param key A buffer containing the key to use for encryption.
  \param keySize The size, in bytes, of the encryption key.
  \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
  \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
 int streamCipherInit(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams);
 
-/*! This function frees (deallocates) an initialized cipher primitive context.
- \param ctx The cipher primitive context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will be wiped.
- Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if \c cipherCreate failed. */
+/*! This function frees (deallocates) an initialized stream cipher context.
+ \param ctx The stream cipher context to be freed. This context needs to at least have been allocated.
+ \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
+ be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
+ \c streamCipherCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void streamCipherFree(STREAM_CIPHER_CONTEXT* ctx);
 
 #endif
