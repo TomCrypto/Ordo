@@ -26,7 +26,7 @@ typedef struct RC4_PARAMS
     size_t drop;
 } RC4_PARAMS;
 
-STREAM_CIPHER_CONTEXT* RC4_Create(STREAM_CIPHER* cipher);
+STREAM_CIPHER_CONTEXT* RC4_Create();
 
 int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4_PARAMS* params);
 

@@ -53,7 +53,7 @@ typedef struct BLOCK_CIPHER_MODE_CONTEXT
 } BLOCK_CIPHER_MODE_CONTEXT;
 
 /* Block cipher mode of operation interface function prototypes. */
-typedef BLOCK_CIPHER_MODE_CONTEXT* (* BLOCK_CIPHER_MODE_CREATE)(struct BLOCK_CIPHER_MODE*, BLOCK_CIPHER_CONTEXT*);
+typedef BLOCK_CIPHER_MODE_CONTEXT* (* BLOCK_CIPHER_MODE_CREATE)(BLOCK_CIPHER_CONTEXT*);
 typedef int (* BLOCK_CIPHER_MODE_INIT)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*, void*, void*);
 typedef void (* BLOCK_CIPHER_MODE_UPDATE)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*,
                                           unsigned char*, size_t, unsigned char*, size_t*);

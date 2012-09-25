@@ -34,7 +34,7 @@ typedef struct CBC_PARAMS
     size_t padding;
 } CBC_PARAMS;
 
-BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 int CBC_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, CBC_PARAMS* params);
 

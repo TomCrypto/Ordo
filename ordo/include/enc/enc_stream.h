@@ -15,7 +15,7 @@
 #include <primitives/primitives.h>
 #include <common/ordotypes.h>
 
-/*! \brief Symmetric encryption context (for stream ciphers).
+/*! \brief Stream cipher symmetric encryption context.
  *
  * This structure describes a high-level symmetric encryption context, for stream ciphers. It only contains the stream
  * cipher's context, and is used only for consistency purposes with the block cipher encryption interface. */

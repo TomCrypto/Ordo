@@ -60,7 +60,9 @@ BLOCK_CIPHER_MODE* getBlockCipherModeByID(size_t ID)
 BLOCK_CIPHER_MODE_CONTEXT* blockCipherModeCreate(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
     /* Allocate the encryption mode context. */
-    return mode->fCreate(mode, cipherCtx);
+    BLOCK_CIPHER_MODE_CONTEXT* ctx = mode->fCreate(cipherCtx);
+    if (ctx) ctx->mode = mode;
+    return ctx;
 }
 
 /* This function returns an initialized encryption mode context with the provided parameters. */

@@ -38,7 +38,7 @@ typedef struct ECB_PARAMS
     size_t padding;
 } ECB_PARAMS;
 
-BLOCK_CIPHER_MODE_CONTEXT* ECB_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+BLOCK_CIPHER_MODE_CONTEXT* ECB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 int ECB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, ECB_PARAMS* params);
 

@@ -16,13 +16,12 @@ typedef struct THREEFISH256_SUBKEYS
 /* Shorthand macro for context casting. */
 #define state(x) ((THREEFISH256_SUBKEYS*)(x->ctx))
 
-BLOCK_CIPHER_CONTEXT* Threefish256_Create(BLOCK_CIPHER* cipher)
+BLOCK_CIPHER_CONTEXT* Threefish256_Create()
 {
     /* Allocate space for the Threefish-256 key material. */
     BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
     if (ctx)
     {
-        ctx->cipher = cipher;
         if ((ctx->ctx = salloc(sizeof(THREEFISH256_SUBKEYS)))) return ctx;
         sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
     }

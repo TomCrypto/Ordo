@@ -3,17 +3,11 @@
 
 #define NULLCIPHER_BLOCK (16)
 
-BLOCK_CIPHER_CONTEXT* NullCipher_Create(BLOCK_CIPHER* cipher)
+BLOCK_CIPHER_CONTEXT* NullCipher_Create()
 {
-    /* Allocate no state by convention. */
+    /* Allocate no state here. */
     BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
-    if (ctx)
-    {
-        ctx->cipher = cipher;
-        return ctx;
-    }
-
-    return 0;
+    return ctx;
 }
 
 int NullCipher_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* params)

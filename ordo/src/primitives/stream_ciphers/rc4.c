@@ -30,13 +30,12 @@ void swapByte(uint8_t* a, uint8_t* b)
     *b = c;
 }
 
-STREAM_CIPHER_CONTEXT* RC4_Create(STREAM_CIPHER* cipher)
+STREAM_CIPHER_CONTEXT* RC4_Create()
 {
     /* Allocate memory for the RC4 state. */
     STREAM_CIPHER_CONTEXT* ctx = salloc(sizeof(STREAM_CIPHER_CONTEXT));
     if (ctx)
     {
-        ctx->cipher = cipher;
         if ((ctx->ctx = salloc(sizeof(RC4_STATE)))) return ctx;
         sfree(ctx, sizeof(STREAM_CIPHER_CONTEXT));
     }

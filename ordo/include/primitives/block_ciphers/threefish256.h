@@ -23,7 +23,7 @@ typedef struct THREEFISH256_PARAMS
     uint64_t tweak[2];
 } THREEFISH256_PARAMS;
 
-BLOCK_CIPHER_CONTEXT* Threefish256_Create(BLOCK_CIPHER* cipher);
+BLOCK_CIPHER_CONTEXT* Threefish256_Create();
 
 int Threefish256_Init(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params);
 

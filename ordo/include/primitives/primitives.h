@@ -64,7 +64,7 @@ typedef struct STREAM_CIPHER_CONTEXT
 } STREAM_CIPHER_CONTEXT;
 
 /* Block cipher interface function prototypes. */
-typedef BLOCK_CIPHER_CONTEXT* (*BLOCK_CIPHER_ALLOC)(struct BLOCK_CIPHER*);
+typedef BLOCK_CIPHER_CONTEXT* (*BLOCK_CIPHER_ALLOC)();
 typedef int (*BLOCK_CIPHER_INIT)(BLOCK_CIPHER_CONTEXT*, void*, size_t, void*);
 typedef void (*BLOCK_CIPHER_UPDATE)(BLOCK_CIPHER_CONTEXT*, void*);
 typedef void(*BLOCK_CIPHER_FREE)(BLOCK_CIPHER_CONTEXT*);
@@ -84,7 +84,7 @@ typedef struct BLOCK_CIPHER
 } BLOCK_CIPHER;
 
 /* Stream cipher interface function prototypes. */
-typedef STREAM_CIPHER_CONTEXT* (*STREAM_CIPHER_ALLOC)(struct STREAM_CIPHER*);
+typedef STREAM_CIPHER_CONTEXT* (*STREAM_CIPHER_ALLOC)();
 typedef int (*STREAM_CIPHER_INIT)(STREAM_CIPHER_CONTEXT*, void*, size_t, void*);
 typedef void (*STREAM_CIPHER_UPDATE)(STREAM_CIPHER_CONTEXT*, void*, size_t);
 typedef void(*STREAM_CIPHER_FREE)(STREAM_CIPHER_CONTEXT*);

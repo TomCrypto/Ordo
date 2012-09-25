@@ -14,13 +14,12 @@ typedef struct OFB_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define ofb(ctx) ((OFB_ENCRYPT_CONTEXT*)ctx)
 
-BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
+BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
     /* Allocate the context and extra buffers in it. */
     BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
     if (ctx)
     {
-        ctx->mode = mode;
         if ((ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT))))
         {
             /* Return if everything succeeded. */

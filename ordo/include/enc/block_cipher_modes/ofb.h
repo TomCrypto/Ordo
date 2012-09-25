@@ -22,7 +22,7 @@
 
 #include <enc/enc_block.h>
 
-BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 int OFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
 

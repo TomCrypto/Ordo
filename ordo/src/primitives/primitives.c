@@ -73,7 +73,9 @@ STREAM_CIPHER* getStreamCipherByID(size_t ID)
 BLOCK_CIPHER_CONTEXT* blockCipherCreate(BLOCK_CIPHER* cipher)
 {
     /* Allocate the cipher context. */
-    return cipher->fCreate(cipher);
+    BLOCK_CIPHER_CONTEXT* ctx = cipher->fCreate();
+    if (ctx) ctx->cipher = cipher;
+    return ctx;
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */
@@ -94,7 +96,9 @@ void blockCipherFree(BLOCK_CIPHER_CONTEXT* ctx)
 STREAM_CIPHER_CONTEXT* streamCipherCreate(STREAM_CIPHER* cipher)
 {
     /* Allocate the cipher context. */
-    return cipher->fCreate(cipher);
+    STREAM_CIPHER_CONTEXT* ctx = cipher->fCreate();
+    if (ctx) ctx->cipher = cipher;
+    return ctx;
 }
 
 /* This function returns an initialized cipher context with the provided parameters. */

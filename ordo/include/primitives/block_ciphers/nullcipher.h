@@ -15,7 +15,7 @@
 
 #include <primitives/primitives.h>
 
-BLOCK_CIPHER_CONTEXT* NullCipher_Create(BLOCK_CIPHER* cipher);
+BLOCK_CIPHER_CONTEXT* NullCipher_Create();
 
 int NullCipher_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* params);
 

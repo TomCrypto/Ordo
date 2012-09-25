@@ -18,13 +18,12 @@ typedef struct CBC_ENCRYPT_CONTEXT
 /* Shorthand macro for context casting. */
 #define cbc(ctx) ((CBC_ENCRYPT_CONTEXT*)ctx)
 
-BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
+BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
     /* Allocate the context and extra buffers in it. */
     BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
     if (ctx)
     {
-        ctx->mode = mode;
         if ((ctx->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT))))
         {
             /* Allocate extra buffers for the running IV and temporary block. */
