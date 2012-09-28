@@ -1,11 +1,12 @@
 #include <primitives/primitives.h>
 #include <primitives/block_ciphers/nullcipher.h>
 
+/* The NulLCipher's block size. */
 #define NULLCIPHER_BLOCK (16)
 
 BLOCK_CIPHER_CONTEXT* NullCipher_Create()
 {
-    /* Allocate no state here. */
+    /* Just allocate an empty context by convention (we don't need to, but we might as well for consistency). */
     BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
     return ctx;
 }
@@ -23,12 +24,12 @@ void NullCipher_Forward(BLOCK_CIPHER_CONTEXT* ctx, void* block)
 
 void NullCipher_Inverse(BLOCK_CIPHER_CONTEXT* ctx, void* block)
 {
-    /* Idem! */
+    /* Sane! */
 }
 
 void NullCipher_Free(BLOCK_CIPHER_CONTEXT* ctx)
 {
-    /* Free the 1-byte "state". */
+    /* Free the empty context. */
     sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
 }
 

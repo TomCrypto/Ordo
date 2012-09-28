@@ -1,27 +1,24 @@
-/* Handles code related to symmetric ciphers (e.g. modes of operation). */
+/* Handles code related to symmetric block ciphers and block cipher modes of operation. */
 #include <primitives/primitives.h>
 #include <enc/enc_block.h>
 
-/* Mode of operation list. */
+/* Block cipher mode of operation list. */
 #include <enc/block_cipher_modes/ecb.h>
 #include <enc/block_cipher_modes/cbc.h>
 #include <enc/block_cipher_modes/ctr.h>
 #include <enc/block_cipher_modes/cfb.h>
 #include <enc/block_cipher_modes/ofb.h>
 
-/* Macro to the mode of operation object of an encryption context. */
-#define modeobj(ctx) (ctx->mode->mode)
-
 /* Macro to the cipher primitive object of an encryption context. */
 #define cipherobj(ctx) (ctx->cipherCtx->cipher)
 
-/* Encryption mode of operation list. */
+/* Block cipher mode of operation list. */
 BLOCK_CIPHER_MODE encryptModes[BLOCK_CIPHER_MODE_COUNT];
 
-/* Loads all cipher modes. */
+/* Loads all block cipher modes. */
 void encryptLoad()
 {
-    /* Initialize each encryption mode object. */
+    /* Initialize each block cipher mode object. */
     ECB_SetMode   (&encryptModes[BLOCK_CIPHER_MODE_ECB]);
     CBC_SetMode   (&encryptModes[BLOCK_CIPHER_MODE_CBC]);
     CTR_SetMode   (&encryptModes[BLOCK_CIPHER_MODE_CTR]);
@@ -36,13 +33,13 @@ BLOCK_CIPHER_MODE* CTR()    { return &encryptModes[BLOCK_CIPHER_MODE_CTR]; }
 BLOCK_CIPHER_MODE* CFB()    { return &encryptModes[BLOCK_CIPHER_MODE_CFB]; }
 BLOCK_CIPHER_MODE* OFB()    { return &encryptModes[BLOCK_CIPHER_MODE_OFB]; }
 
-/* Gets an encryption mode object from a name. */
+/* Gets a mode of operation object from a name. */
 BLOCK_CIPHER_MODE* getBlockCipherModeByName(char* name)
 {
     ssize_t t;
     for (t = 0; t < BLOCK_CIPHER_MODE_COUNT; t++)
     {
-        /* Simply compare against the encryption mode list. */
+        /* Simply compare against the mode of operation list. */
         if (strcmp(name, encryptModes[t].name) == 0) return &encryptModes[t];
     }
 
@@ -50,32 +47,32 @@ BLOCK_CIPHER_MODE* getBlockCipherModeByName(char* name)
     return 0;
 }
 
-/* Returns an encryption mode object from an ID. */
+/* Returns a block cipher mode object from an ID. */
 BLOCK_CIPHER_MODE* getBlockCipherModeByID(size_t ID)
 {
     return (ID < BLOCK_CIPHER_MODE_COUNT) ? &encryptModes[ID] : 0;
 }
 
-/* This function returns an initialized encryption mode context using a specific primitive. */
+/* This function returns an initialized block cipher mode context using a specific primitive. */
 BLOCK_CIPHER_MODE_CONTEXT* blockCipherModeCreate(BLOCK_CIPHER_MODE* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
-    /* Allocate the encryption mode context. */
+    /* Allocate the block cipher mode context. */
     BLOCK_CIPHER_MODE_CONTEXT* ctx = mode->fCreate(cipherCtx);
     if (ctx) ctx->mode = mode;
     return ctx;
 }
 
-/* This function returns an initialized encryption mode context with the provided parameters. */
+/* This function returns an initialized block cipher mode context with the provided parameters. */
 int blockCipherModeInit(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* modeParams, int direction)
 {
     /* Save the required direction. */
     modeCtx->direction = direction;
 
-    /* Initialize the encryption mode context. */
+    /* Initialize the block cipher mode context. */
     return modeCtx->mode->fInit(modeCtx, cipherCtx, iv, modeParams);
 }
 
-/* This function encrypts or decrypts a buffer with the encryption mode context. */
+/* This function encrypts or decrypts a buffer with the block cipher mode context. */
 void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Encrypt or decrypt the buffer. */
@@ -83,22 +80,22 @@ void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONT
     else modeCtx->mode->fDecryptUpdate(modeCtx, cipherCtx, in, inlen, out, outlen);
 }
 
-/* This function finalizes an encryption mode context and returns any final data. */
+/* This function finalizes a block cipher mode context and returns any final data. */
 int blockCipherModeFinal(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
 {
     /* Finalize the mode of operation. */
     return (modeCtx->direction) ? modeCtx->mode->fEncryptFinal(modeCtx, cipherCtx, out, outlen) : modeCtx->mode->fDecryptFinal(modeCtx, cipherCtx, out, outlen);
 }
 
-/* This function frees an initialized encryption mode context. */
+/* This function frees an initialized block cipher mode context. */
 void blockCipherModeFree(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx)
 {
-    /* Free the cipher context. */
+    /* Free the block cipher mode context. */
     modeCtx->mode->fFree(modeCtx, cipherCtx);
 }
 
-/* This function returns an initialized encryption context using a specific primitive and mode of operation.
- * Note this function uses a fall-through construction to ensure no memory is leaked in case of failure. */
+/* This function returns an initialized block cipher encryption context using a specific primitive and mode of
+ * operation. Note this function uses a fall-through construction to ensure no memory is leaked in case of failure. */
 ENC_BLOCK_CIPHER_CONTEXT* encBlockCipherCreate(BLOCK_CIPHER* cipher, BLOCK_CIPHER_MODE* mode)
 {
     /* Allocate the encryption context. */
@@ -119,7 +116,7 @@ ENC_BLOCK_CIPHER_CONTEXT* encBlockCipherCreate(BLOCK_CIPHER* cipher, BLOCK_CIPHE
     return 0;
 }
 
-/* This function returns an initialized encryption context with the provided parameters. */
+/* This function returns an initialized block cipher encryption context with the provided parameters. */
 int encBlockCipherInit(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams, int direction)
 {
     /* Initialize the cipher context. */
@@ -130,22 +127,22 @@ int encBlockCipherInit(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize,
     return blockCipherModeInit(ctx->modeCtx, ctx->cipherCtx, iv, modeParams, direction);
 }
 
-/* This function encrypts data using the passed encryption context. If decrypt is true, the cipher will decrypt instead. */
+/* This function encrypts data using the passed block cipher encryption context. If decrypt is true, the cipher will decrypt instead. */
 void encBlockCipherUpdate(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     blockCipherModeUpdate(ctx->modeCtx, ctx->cipherCtx, in, inlen, out, outlen);
 }
 
-/* This function finalizes a encryption context. */
+/* This function finalizes a block cipher encryption context. */
 int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* out, size_t* outlen)
 {
     return blockCipherModeFinal(ctx->modeCtx, ctx->cipherCtx, out, outlen);
 }
 
-/* This function frees an initialized encryption context. */
+/* This function frees an initialized block cipher encryption context. */
 void encBlockCipherFree(ENC_BLOCK_CIPHER_CONTEXT* ctx)
 {
-    /* Free the encryption mode context. */
+    /* Free the block cipher mode context. */
     blockCipherModeFree(ctx->modeCtx, ctx->cipherCtx);
 
     /* Free the cipher context. */

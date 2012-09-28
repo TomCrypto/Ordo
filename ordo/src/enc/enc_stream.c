@@ -2,7 +2,7 @@
 
 ENC_STREAM_CIPHER_CONTEXT* encStreamCipherCreate(STREAM_CIPHER* cipher)
 {
-    /* Allocate the encryption context. */
+    /* Allocate the stream cipher encryption context. */
     ENC_STREAM_CIPHER_CONTEXT* ctx = salloc(sizeof(ENC_STREAM_CIPHER_CONTEXT));
     if (ctx)
     {
@@ -17,7 +17,7 @@ ENC_STREAM_CIPHER_CONTEXT* encStreamCipherCreate(STREAM_CIPHER* cipher)
 
 int encStreamCipherInit(ENC_STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
 {
-    /* Initialize the cipher context. */
+    /* Initialize the stream cipher encryption context. */
     return streamCipherInit(ctx->cipherCtx, key, keySize, cipherParams);
 }
 
@@ -29,7 +29,7 @@ void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, unsigned char* inout,
 
 void encStreamCipherFree(ENC_STREAM_CIPHER_CONTEXT* ctx)
 {
-    /* Free the encryption mode context. */
+    /* Free the stream cipher encryption context. */
     streamCipherFree(ctx->cipherCtx);
 
     /* Free the context. */

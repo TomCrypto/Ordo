@@ -10,7 +10,7 @@ void ordoLoad()
     encryptLoad();
 }
 
-/* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
+/* This convenience function encrypts a buffer with a given block cipher, key, IV, and parameters. */
 int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {
     int error;
@@ -38,7 +38,7 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     return ORDO_ESUCCESS;
 }
 
-/* This convenience function decrypts a buffer with a given key, tweak and IV. */
+/* This convenience function decrypts a buffer with a given block cipher, key, IV, and parameters. */
 int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {
     int error;
@@ -66,7 +66,7 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
     return ORDO_ESUCCESS;
 }
 
-/* This convenience function encrypts or decrypts a buffer with a given key, tweak and IV. */
+/* This convenience function encrypts or decrypts a buffer with a given stream cipher, key, IV, and parameters. */
 int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
 {
     int error;

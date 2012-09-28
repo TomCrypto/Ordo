@@ -1,5 +1,13 @@
 #include <common/securemem.h>
 
+/* Secure memory wipe. */
+void swipe(void* ptr, size_t size)
+{
+    /* Overwrite each byte with zero. */
+    if (!ptr) return;
+    while (size--) *((uint8_t volatile*)ptr + size) = 0;
+}
+
 #if PLATFORM_LINUX
 
 #include <sys/mman.h>
@@ -18,14 +26,6 @@ void* salloc(size_t size)
 int sprotect(void* ptr, size_t size)
 {
     return mprotect(ptr, size, PROT_READ);
-}
-
-/* Secure memory wipe. */
-void swipe(void* ptr, size_t size)
-{
-    /* Overwrite each byte with zero. */
-    if (!ptr) return;
-    while (size--) *((uint8_t volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
@@ -61,14 +61,6 @@ int sprotect(void* ptr, size_t size)
 {
     DWORD old;
     return VirtualProtect(ptr, size, PAGE_READONLY, &old) ? 0 : -1;
-}
-
-/* Secure memory wipe. */
-void swipe(void* ptr, size_t size)
-{
-    /* Overwrite each byte with zero. */
-    if (!ptr) return;
-    while (size--) *((uint8_t volatile*)ptr + size) = 0;
 }
 
 /* Secure memory deallocation. */
