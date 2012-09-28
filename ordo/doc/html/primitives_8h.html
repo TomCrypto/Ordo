@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.4.1</span>
+   &#160;<span id="projectnumber">1.5.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -80,14 +80,19 @@ Data Structures</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Block cipher context.  <a href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html">STREAM_CIPHER_CONTEXT</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream cipher context.  <a href="struct_s_t_r_e_a_m___c_i_p_h_e_r___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html">HASH_FUNCTION_CONTEXT</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">hash function context.  <a href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Block cipher object.  <a href="struct_b_l_o_c_k___c_i_p_h_e_r.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream cipher object.  <a href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Hash function object.  <a href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aaa140feea06574c7ce23da0ab827ae76">primitiveName</a>(p)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a3f2408ac091b433d9fc84cbc25af77fe">blockCipherBlockSize</a>(p)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aa9cbca9f7f4fdffb0ec6b96c652c8e87">hashFunctionDigestSize</a>(p)</td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a1bb3f1cc1b36e7d5b72faf7bba8c0c2c">primitivesLoad</a> ()</td></tr>
@@ -98,6 +103,9 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a4d3de40a911db9699a43718a7e7aa5ea">getStreamCipherByName</a> (char *name)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a7766c38eea82ea7b72a14cc3a50822ff">getStreamCipherByID</a> (size_t ID)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a4d13ec6a6ddfcbcb21f2198788eb2fd6">SHA256</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#aef7b7494b08785a1d2ee2b184024d335">getHashFunctionByName</a> (char *name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a09bec44de6e6b9c4fdc72a89170b924d">getHashFunctionByID</a> (size_t ID)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a75387b57f414dcd38004a7bf35ed4b98">blockCipherCreate</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *cipher)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a5cf63cf79be63b337eb9f7e84d4ed69b">blockCipherInit</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *ctx, void *key, size_t keySize, void *cipherParams)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="primitives_8h.html#a8f6701faf266bb4baf72c3238f991761">blockCipherFree</a> (<a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html">BLOCK_CIPHER_CONTEXT</a> *ctx)</td></tr>
@@ -143,6 +151,24 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Returns the block size of a block cipher primitive. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa9cbca9f7f4fdffb0ec6b96c652c8e87"></a><!-- doxytag: member="primitives.h::hashFunctionDigestSize" ref="aa9cbca9f7f4fdffb0ec6b96c652c8e87" args="(p)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define <a class="el" href="primitives_8h.html#aa9cbca9f7f4fdffb0ec6b96c652c8e87">hashFunctionDigestSize</a></td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">p</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns the digest size of a hash function primitive. </p>
 
 </div>
 </div>
@@ -284,6 +310,59 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Returns a stream cipher object from an ID. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4d13ec6a6ddfcbcb21f2198788eb2fd6"></a><!-- doxytag: member="primitives.h::SHA256" ref="a4d13ec6a6ddfcbcb21f2198788eb2fd6" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a>* <a class="el" href="primitives_8h.html#a4d13ec6a6ddfcbcb21f2198788eb2fd6">SHA256</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The SHA256 hash function. </p>
+
+</div>
+</div>
+<a class="anchor" id="aef7b7494b08785a1d2ee2b184024d335"></a><!-- doxytag: member="primitives.h::getHashFunctionByName" ref="aef7b7494b08785a1d2ee2b184024d335" args="(char *name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a>* <a class="el" href="primitives_8h.html#aef7b7494b08785a1d2ee2b184024d335">getHashFunctionByName</a> </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns a hash function object from a name. </p>
+
+</div>
+</div>
+<a class="anchor" id="a09bec44de6e6b9c4fdc72a89170b924d"></a><!-- doxytag: member="primitives.h::getHashFunctionByID" ref="a09bec44de6e6b9c4fdc72a89170b924d" args="(size_t ID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a>* <a class="el" href="primitives_8h.html#a09bec44de6e6b9c4fdc72a89170b924d">getHashFunctionByID</a> </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>ID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Returns a hash function object from an ID. </p>
 
 </div>
 </div>
@@ -491,7 +570,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 17 2012 17:55:32 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Sep 29 2012 04:13:04 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

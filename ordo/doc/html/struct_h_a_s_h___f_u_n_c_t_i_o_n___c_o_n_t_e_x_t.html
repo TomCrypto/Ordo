@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: CBC_PARAMS Struct Reference</title>
+<title>Ordo: HASH_FUNCTION_CONTEXT Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -56,39 +56,54 @@
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">CBC_PARAMS Struct Reference</div>  </div>
+<div class="title">HASH_FUNCTION_CONTEXT Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="CBC_PARAMS" -->
-<p>CBC mode of operation parameters.  
- <a href="struct_c_b_c___p_a_r_a_m_s.html#details">More...</a></p>
+<!-- doxytag: class="HASH_FUNCTION_CONTEXT" -->
+<p>hash function context.  
+ <a href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="cbc_8h_source.html">cbc.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_b_c___p_a_r_a_m_s.html#ac20d191d0caae41b3f7854c33b428b72">padding</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a9ae055d2dbed7f4f0b059523c46188e8">hash</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>CBC mode of operation parameters. </p>
-<p>A parameter structure for CBC mode - this only contains whether padding should be enabled. </p>
+<div class="textblock"><p>hash function context. </p>
+<p>This structure describes a hash function primitive context. It is used by hash functions to maintain their state across function calls (such as current message block and total length, extra metadata, etc...). </p>
 </div><hr/><h2>Field Documentation</h2>
-<a class="anchor" id="ac20d191d0caae41b3f7854c33b428b72"></a><!-- doxytag: member="CBC_PARAMS::padding" ref="ac20d191d0caae41b3f7854c33b428b72" args="" -->
+<a class="anchor" id="a9ae055d2dbed7f4f0b059523c46188e8"></a><!-- doxytag: member="HASH_FUNCTION_CONTEXT::hash" ref="a9ae055d2dbed7f4f0b059523c46188e8" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="struct_c_b_c___p_a_r_a_m_s.html#ac20d191d0caae41b3f7854c33b428b72">padding</a></td>
+          <td class="memname">struct <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a>* <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a9ae055d2dbed7f4f0b059523c46188e8">hash</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Set the least significant bit to 0 to disable padding, 1 to enable it. All other bits are ignored. The default behaviour is 1. </p>
+<p>The hash function in use. </p>
+
+</div>
+</div>
+<a class="anchor" id="a1f6d09b30c54854dfca659b7463ac207"></a><!-- doxytag: member="HASH_FUNCTION_CONTEXT::ctx" ref="a1f6d09b30c54854dfca659b7463ac207" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The low-level hash function context. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/enc/block_cipher_modes/<a class="el" href="cbc_8h_source.html">cbc.h</a></li>
+<li>include/primitives/<a class="el" href="primitives_8h_source.html">primitives.h</a></li>
 </ul>
 </div><!-- contents -->
 
