@@ -1,4 +1,3 @@
-#include <primitives/primitives.h>
 #include <primitives/block_ciphers/threefish256.h>
 
 #define THREEFISH256_BLOCK (32) /* 256-bit block */

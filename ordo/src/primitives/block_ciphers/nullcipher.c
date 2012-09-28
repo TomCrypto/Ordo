@@ -1,4 +1,3 @@
-#include <primitives/primitives.h>
 #include <primitives/block_ciphers/nullcipher.h>
 
 /* The NulLCipher's block size. */
@@ -24,7 +23,7 @@ void NullCipher_Forward(BLOCK_CIPHER_CONTEXT* ctx, void* block)
 
 void NullCipher_Inverse(BLOCK_CIPHER_CONTEXT* ctx, void* block)
 {
-    /* Sane! */
+    /* Same! */
 }
 
 void NullCipher_Free(BLOCK_CIPHER_CONTEXT* ctx)

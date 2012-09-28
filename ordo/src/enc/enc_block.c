@@ -36,7 +36,7 @@ BLOCK_CIPHER_MODE* OFB()    { return &encryptModes[BLOCK_CIPHER_MODE_OFB]; }
 /* Gets a mode of operation object from a name. */
 BLOCK_CIPHER_MODE* getBlockCipherModeByName(char* name)
 {
-    ssize_t t;
+    int t;
     for (t = 0; t < BLOCK_CIPHER_MODE_COUNT; t++)
     {
         /* Simply compare against the mode of operation list. */

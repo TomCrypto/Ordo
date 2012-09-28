@@ -33,10 +33,22 @@
     p->fFree = f;                                                                                                     \
     p->name = n;}
 
+/* Same as above, but for hash functions. */
+#define MAKE_HASH_FUNCTION(p, d, c, i, u, fi, f, n){                                                                  \
+    p->digestSize = d;                                                                                                \
+    p->fCreate = c;                                                                                                   \
+    p->fInit = (HASH_FUNCTION_INIT)i;                                                                                 \
+    p->fUpdate = (HASH_FUNCTION_UPDATE)u;                                                                             \
+    p->fFinal = (HASH_FUNCTION_FINAL)fi;                                                                              \
+    p->fFree = f;                                                                                                     \
+    p->name = n;}
+
 /*! Returns the name of a cryptographic primitive. */
 #define primitiveName(p) (p->name)
 /*! Returns the block size of a block cipher primitive. */
 #define blockCipherBlockSize(p) (p->blockSize)
+/*! Returns the digest size of a hash function primitive. */
+#define hashFunctionDigestSize(p) (p->digestSize)
 
 /*! \brief Block cipher context.
  *
@@ -63,11 +75,23 @@ typedef struct STREAM_CIPHER_CONTEXT
     void* ctx;
 } STREAM_CIPHER_CONTEXT;
 
+/*! \brief hash function context.
+ *
+ * This structure describes a hash function primitive context. It is used by hash functions to maintain their state
+ * across function calls (such as current message block and total length, extra metadata, etc...). */
+typedef struct HASH_FUNCTION_CONTEXT
+{
+    /*! The hash function in use. */
+    struct HASH_FUNCTION* hash;
+    /*! The low-level hash function context. */
+    void* ctx;
+} HASH_FUNCTION_CONTEXT;
+
 /* Block cipher interface function prototypes. */
 typedef BLOCK_CIPHER_CONTEXT* (*BLOCK_CIPHER_ALLOC)();
 typedef int (*BLOCK_CIPHER_INIT)(BLOCK_CIPHER_CONTEXT*, void*, size_t, void*);
 typedef void (*BLOCK_CIPHER_UPDATE)(BLOCK_CIPHER_CONTEXT*, void*);
-typedef void(*BLOCK_CIPHER_FREE)(BLOCK_CIPHER_CONTEXT*);
+typedef void (*BLOCK_CIPHER_FREE)(BLOCK_CIPHER_CONTEXT*);
 
 /*! \brief Block cipher object.
  *
@@ -87,7 +111,7 @@ typedef struct BLOCK_CIPHER
 typedef STREAM_CIPHER_CONTEXT* (*STREAM_CIPHER_ALLOC)();
 typedef int (*STREAM_CIPHER_INIT)(STREAM_CIPHER_CONTEXT*, void*, size_t, void*);
 typedef void (*STREAM_CIPHER_UPDATE)(STREAM_CIPHER_CONTEXT*, void*, size_t);
-typedef void(*STREAM_CIPHER_FREE)(STREAM_CIPHER_CONTEXT*);
+typedef void (*STREAM_CIPHER_FREE)(STREAM_CIPHER_CONTEXT*);
 
 /*! \brief Stream cipher object.
  *
@@ -100,6 +124,27 @@ typedef struct STREAM_CIPHER
     STREAM_CIPHER_FREE fFree;
     char* name;
 } STREAM_CIPHER;
+
+/* Hash function interface function prototypes. */
+typedef HASH_FUNCTION_CONTEXT* (*HASH_FUNCTION_ALLOC)();
+typedef int (*HASH_FUNCTION_INIT)(HASH_FUNCTION_CONTEXT*, void*);
+typedef void (*HASH_FUNCTION_UPDATE)(HASH_FUNCTION_CONTEXT*, void*, size_t);
+typedef void (*HASH_FUNCTION_FINAL)(HASH_FUNCTION_CONTEXT*, void*);
+typedef void (*HASH_FUNCTION_FREE)(HASH_FUNCTION_CONTEXT*);
+
+/*! \brief Hash function object.
+ *
+ * This represents a hash function object. */
+typedef struct HASH_FUNCTION
+{
+    size_t digestSize;
+    HASH_FUNCTION_ALLOC fCreate;
+    HASH_FUNCTION_INIT fInit;
+    HASH_FUNCTION_UPDATE fUpdate;
+    HASH_FUNCTION_FINAL fFinal;
+    HASH_FUNCTION_FREE fFree;
+    char* name;
+} HASH_FUNCTION;
 
 /*! Loads all primitivs. This must be called before you may use \c RC4(), \c NullCipher(), etc... or the helper
  * functions \c getBlockCipherByName() or \c getStreamCipherByID(), etc... */
@@ -125,6 +170,15 @@ STREAM_CIPHER* getStreamCipherByName(char* name);
 
 /*! Returns a stream cipher object from an ID. */
 STREAM_CIPHER* getStreamCipherByID(size_t ID);
+
+/*! The SHA256 hash function. */
+HASH_FUNCTION* SHA256();
+
+/*! Returns a hash function object from a name. */
+HASH_FUNCTION* getHashFunctionByName(char* name);
+
+/*! Returns a hash function object from an ID. */
+HASH_FUNCTION* getHashFunctionByID(size_t ID);
 
 /*! This function returns an allocated block cipher context using a given block cipher.
  \param cipher The block cipher to use.

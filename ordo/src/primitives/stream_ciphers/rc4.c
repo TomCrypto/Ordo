@@ -1,4 +1,3 @@
-#include <primitives/primitives.h>
 #include <primitives/stream_ciphers/rc4.h>
 
 /* A structure containing an RC4 state. */
@@ -102,7 +101,7 @@ void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len)
     }
 
     /* Copy the state back in. */
-    *(RC4_STATE*)cipher->cipher = state;
+    *state(ctx) = state;
     #endif
 }
 

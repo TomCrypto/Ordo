@@ -16,6 +16,7 @@
 #include <primitives/primitives.h>
 #include <enc/enc_block.h>
 #include <enc/enc_stream.h>
+#include <hash/hash.h>
 #include <random/random.h>
 
 /*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). After
@@ -91,5 +92,14 @@ int ordoEncryptStream(unsigned char* inout, size_t len,
                       STREAM_CIPHER* cipher,
                       void* key, size_t keySize,
                       void* cipherParams);
+
+/*! This function hashes a buffer of a given length into a digest using a hash function.
+ \param in The input buffer to hash.
+ \param len Number of bytes to read from the \c in buffer.
+ \param out The buffer in which to put the digest.
+ \param hash A hash function object, describing the hash function to use.
+ \param hashParams This points to specific hash function parameters, set to zero for default behavior.
+ \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure. */
+int ordoHash(unsigned char* in, size_t len, unsigned char* out, HASH_FUNCTION* hash, void* hashParams);
 
 #endif

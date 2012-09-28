@@ -39,4 +39,9 @@
 #define BLOCK_CIPHER_MODE_CFB                                                                                        3
 #define BLOCK_CIPHER_MODE_OFB                                                                                        4
 
+/* Hash functions. */
+#define HASH_FUNCTION_COUNT                                                                                          1
+
+#define HASH_FUNCTION_SHA256                                                                                         0
+
 #endif

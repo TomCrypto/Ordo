@@ -1,7 +1,7 @@
-Ordo v1.4.1
+Ordo v1.5.0
 -----------
 
-This directory contains code and headers for the shared library Ordo. A simple makefile is provided with two build targets:
+This directory contains code and headers for the shared library Ordo, which is currently a work in progress. A simple makefile is provided with two build targets:
 - make debug, which includes no optimizations and adds debug symbols
 - make release, adding all optimizations for maximum performance
 A Code::Blocks project file (ordo.cbp) is also included for your (or rather my) convenience. Note the test program shipped along with the library is a little driver to check if Ordo is working properly and for some code examples.
@@ -11,9 +11,9 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
- - documentation is back up to date
- - library consistency greatly improved, on the other hand documentation is completely out of date
- - stream ciphers are now cleanly separated from block ciphers, significantly improving API cohesion
+ - the first version of the hash (digest) interface has been implemented and documented, along with a standard C implementation of SHA-256 tested under Linux 64-bit and Windows 32/64-bit*
+ - the testing program has been extended to accept hash functions and a few test vectors for SHA-256 have been added
+ * endianness support isn't done quite right for Windows, see end of ordotypes.h
 
 Current work is focused towards finishing the cipher interface. Important todo's:
  - fix some syntax quirks in the library code and improve consistency
@@ -26,7 +26,7 @@ The design of the library is to have cryptographic primitives (be it cipher prim
 
 primitives -> contains declarations for all crypto primitives (block and stream ciphers, hashes, etc...)
 enc -> for encryption only (either using block ciphers with modes of operation (CBC, CTR, etc...) via enc_block, or with stream ciphers with enc_stream)
-hash -> for hashing modes of operation (MD5/MD, Skein/UBI, etc...)
+hash -> for hashing/digest operations (MD5, Skein, etc...)
 auth -> for authentication-only modes of operation (HMAC, VMAC, etc...)
 encauth -> for encryption+authentication modes (GCM, CCM, etc...)
 random -> for pseudorandom number generation (using the OS-provided CSPRNG)
@@ -42,7 +42,8 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
         [x] Threefish-256
     [-] stream_ciphers
         [x] RC4
-    [ ] hashes
+    [-] hash_functions
+        [x] SHA-256
     [ ] misc
 [x] enc
     [x] enc_block
@@ -52,7 +53,7 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
         [x] CFB
         [x] CFB
     [x] enc_stream
-[ ] hash
+[-] hash
 [ ] auth
 [ ] encauth
 [-] testing (test drivers)

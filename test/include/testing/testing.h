@@ -35,15 +35,13 @@ void unloadTestVectors(FILE* file);
 /*! Tests the random module by generating a few pseudorandom bytes. Outputs results to stdout. */
 void randomTest();
 
-/*! Rates the performance of a cipher primitive/encryption mode combination. Outputs results to stdout.
-    \param primitive The cipher primitive to use.
-    \param mode The encryption mode to use.
-    \param keySize The key size to use, in bytes.
-    \param buffer A buffer to use to store the plaintext/ciphertexts.
-    \param bufferSize The size, in bytes, of the buffer.
-    \remark The bigger the storage buffer, the more accurate the performance reading, but the slower the function. */
+/*! Rates the performance of a block cipher in a given mode of operation. */
 void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
 
+/*! Rates the performance of a stream cipher. */
 void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize);
+
+/*! Rates the performance of a hash function. */
+void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize);
 
 #endif

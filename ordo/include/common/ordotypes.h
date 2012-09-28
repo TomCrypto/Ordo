@@ -97,4 +97,26 @@ inline void incBuffer(unsigned char* buffer, size_t len);
     \remark This is a placeholder convenience function used for testing only. */
 char* errorMsg(int code);
 
+/* Some byteswap definitions, for Windows, which seems to lack them. */
+#if PLATFORM_WINDOWS
+#define bswap_16(x) (((x) << 8) & 0xff00) | (((x) >> 8 ) & 0xff)
+#define bswap_32(x) (((x) << 24) & 0xff000000)  \
+                    | (((x) << 8) & 0xff0000)   \
+                    | (((x) >> 8) & 0xff00)     \
+                    | (((x) >> 24) & 0xff )
+#define bswap_64(x) ((((x) & 0xff00000000000000ull) >> 56) \
+                    | (((x) & 0x00ff000000000000ull) >> 40) \
+                    | (((x) & 0x0000ff0000000000ull) >> 24) \
+                    | (((x) & 0x000000ff00000000ull) >> 8) \
+                    | (((x) & 0x00000000ff000000ull) << 8) \
+                    | (((x) & 0x0000000000ff0000ull) << 24) \
+                    | (((x) & 0x000000000000ff00ull) << 40) \
+                    | (((x) & 0x00000000000000ffull) << 56))
+
+/* This isn't correct and was hacked in to make SHA-256 work on Windows. Will be fixed soon(tm). */
+#define htobe32(x) (bswap_32(x))
+#define be32toh(x) (bswap_32(x))
+#define htobe64(x) (bswap_64(x))
+#endif
+
 #endif

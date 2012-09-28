@@ -4,10 +4,12 @@
 #include <primitives/block_ciphers/nullcipher.h>
 #include <primitives/block_ciphers/threefish256.h>
 #include <primitives/stream_ciphers/rc4.h>
+#include <primitives/hash_functions/sha256.h>
 
 /* Primitive lists. */
 BLOCK_CIPHER blockCiphers[BLOCK_CIPHER_COUNT];
 STREAM_CIPHER streamCiphers[STREAM_CIPHER_COUNT];
+HASH_FUNCTION hashFunctions[HASH_FUNCTION_COUNT];
 
 /* Loads all primitives. */
 void primitivesLoad()
@@ -20,7 +22,7 @@ void primitivesLoad()
     RC4_SetPrimitive(&streamCiphers[STREAM_CIPHER_RC4]);
 
     /* Hash primitives. */
-    /* empty :[ */
+    SHA256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SHA256]);
 }
 
 /* Pass-through functions to acquire primitives. */
@@ -29,10 +31,12 @@ BLOCK_CIPHER* Threefish256() { return &blockCiphers[BLOCK_CIPHER_THREEFISH256]; 
 
 STREAM_CIPHER* RC4() { return &streamCiphers[STREAM_CIPHER_RC4]; }
 
+HASH_FUNCTION* SHA256() { return &hashFunctions[HASH_FUNCTION_SHA256]; }
+
 /* Returns a block cipher primitive object from a name. */
 BLOCK_CIPHER* getBlockCipherByName(char* name)
 {
-    ssize_t t;
+    int t;
     for (t = 0; t < BLOCK_CIPHER_COUNT; t++)
     {
         /* Simply compare against the cipher list. */
@@ -52,7 +56,7 @@ BLOCK_CIPHER* getBlockCipherByID(size_t ID)
 /* Returns a stream cipher primitive object from a name. */
 STREAM_CIPHER* getStreamCipherByName(char* name)
 {
-    ssize_t t;
+    int t;
     for (t = 0; t < STREAM_CIPHER_COUNT; t++)
     {
         /* Simply compare against the cipher list. */
@@ -67,6 +71,26 @@ STREAM_CIPHER* getStreamCipherByName(char* name)
 STREAM_CIPHER* getStreamCipherByID(size_t ID)
 {
     return (ID < STREAM_CIPHER_COUNT) ? &streamCiphers[ID] : 0;
+}
+
+/* Returns a hash function primitive object from a name. */
+HASH_FUNCTION* getHashFunctionByName(char* name)
+{
+    int t;
+    for (t = 0; t < HASH_FUNCTION_COUNT; t++)
+    {
+        /* Simply compare against the cipher list. */
+        if (strcmp(name, hashFunctions[t].name) == 0) return &hashFunctions[t];
+    }
+
+    /* No match found. */
+    return 0;
+}
+
+/* Returns a hash function primitive object from an ID. */
+HASH_FUNCTION* getHashFunctionByID(size_t ID)
+{
+    return (ID < HASH_FUNCTION_COUNT) ? &hashFunctions[ID] : 0;
 }
 
 /* This function returns an initialized block cipher context using a specific block cipher object. */

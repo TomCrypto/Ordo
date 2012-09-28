@@ -124,11 +124,6 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
 /* Runs a block cipher test vector. */
 int runBlockCipherTest(char* line, int n)
 {
-    /* An encrypt test vector takes this form: enc_block:primitive:mode:key:iv:plaintext:ciphertext~
-     * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
-     * hexadecimal notation. If a key or iv is not required, it may be omitted between two colons.
-     * The primitive field should be the name of the primitive e.g. "NullCipher" or "RC4". */
-
     /* Parse the test vector and initialize variables. */
     char* primitiveName = readToken(line, 1);
     char* modeName = readToken(line, 2);
@@ -199,11 +194,6 @@ int runBlockCipherTest(char* line, int n)
 /* Runs a stream cipher test vector. */
 int runStreamCipherTest(char* line, int n)
 {
-    /* An encrypt test vector takes this form: enc_stream:cipher:key:plaintext:ciphertext~
-     * Mode may be the strings "ECB", "CBC", etc... and key, iv, plaintext & ciphertext are in
-     * hexadecimal notation. If a key or iv is not required, it may be omitted between two colons.
-     * The primitive field should be the name of the primitive e.g. "NullCipher" or "RC4". */
-
     /* Parse the test vector and initialize variables. */
     char* primitiveName = readToken(line, 1);
     size_t keylen, plaintextlen, ciphertextlen;
@@ -263,12 +253,60 @@ int runStreamCipherTest(char* line, int n)
     return result;
 }
 
+/* Runs a hash function test vector. */
+int runHashTest(char* line, int n)
+{
+    /* Parse the test vector and initialize variables. */
+    char* primitiveName = readToken(line, 1);
+    size_t messagelen, digestlen;
+    unsigned char* message = hexToBuffer(readToken(line, 2), &messagelen);
+    unsigned char* digest = hexToBuffer(readToken(line, 3), &digestlen);
+
+    /* Create a temporary buffer to store the computed digest. */
+    unsigned char* computedDigest = malloc(digestlen);
+    int error, result;
+
+    /* Get the proper primitive and mode. */
+    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+
+    /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
+    if (primitive == 0)
+    {
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        return 1;
+    }
+
+    /* Initialize the test result. */
+    result = 0;
+
+    /* Perform the hash test. */
+    error = ordoHash(message, messagelen, computedDigest, primitive, 0);
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Check the computed digest against the expected digest. */
+        if (memcmp(computedDigest, digest, digestlen) == 0)
+        {
+
+            /* Report success. */
+            result = 1;
+            printf("[+] Test vector #%.3d (%s) passed!\n", n, primitiveName);
+        } else printf("[!] Test vector #%.3d (%s) failed: did not get expected digest.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (%s) failed: @ordoHash, %s.\n", n, primitiveName, errorMsg(error));
+
+    /* Clean up. */
+    free(computedDigest);
+    free(message);
+    free(primitiveName);
+    return result;
+}
+
 /* Runs all test vectors. */
 void runTestVectors(FILE* file)
 {
     /* Different possible actions. */
     #define TOKEN_ENC_BLOCK "enc_block"
     #define TOKEN_ENC_STREAM "enc_stream"
+    #define TOKEN_HASH "hash"
 
     /* We keep track of how many lines we read. */
     char* line = readLine(file);
@@ -288,6 +326,7 @@ void runTestVectors(FILE* file)
             /* Depending on the token, perform the appropriate test. */
             if (strcmp(token, TOKEN_ENC_BLOCK) == 0) success += runBlockCipherTest(line, n++);
             if (strcmp(token, TOKEN_ENC_STREAM) == 0) success += runStreamCipherTest(line, n++);
+            if (strcmp(token, TOKEN_HASH) == 0) success += runHashTest(line, n++);
 
             /* Free the token buffer. */
             free(token);
@@ -422,4 +461,41 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
 
     /* Clean up. */
     free(key);
+}
+
+void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize)
+{
+    /* Declare variables. */
+    int error;
+    void* digest;
+    clock_t start;
+    float time;
+
+    /* Randomize the plaintext buffer first, to defeat caching. */
+    randomizeBuffer(buffer, bufferSize);
+
+    /* Allocate a buffer of the right size for the digest. */
+    digest = malloc(hashFunctionDigestSize(primitive));
+    memset(digest, 0, hashFunctionDigestSize(primitive));
+
+    /* Print primitive/mode information. */
+    printf("[+] Testing %s...\n", primitiveName(primitive));
+
+    /* Save starting time. */
+    start = clock();
+
+    /* Hashing test. */
+    error = ordoHash(buffer, bufferSize, digest, primitive, 0);
+    if (error < 0) printf("[!] An error occurred during hashing [%s].\n", errorMsg(error));
+    else
+    {
+        /* Get total time and display speed. */
+        time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+        printf("[+] Hashing: %.1fMB/s.\n", (float)(bufferSize >> 20) / time);
+    }
+
+    printf("\n");
+
+    /* Clean up. */
+    free(digest);
 }

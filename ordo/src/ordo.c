@@ -86,3 +86,27 @@ int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive
     encStreamCipherFree(ctx);
     return ORDO_ESUCCESS;
 }
+
+/* Hashes a message. */
+int ordoHash(unsigned char* in, size_t len, unsigned char* out, HASH_FUNCTION* hash, void* hashParams)
+{
+    int error;
+
+    /* Create the context. */
+    HASH_FUNCTION_CONTEXT* ctx = hashFunctionCreate(hash);
+    if (!ctx) return ORDO_EHEAPALLOC;
+
+    /* Initialize it. */
+    error = hashFunctionInit(ctx, hashParams);
+    if (error < 0) return error;
+
+    /* Feed the buffer. */
+    hashFunctionUpdate(ctx, in, len);
+
+    /* Finalize. */
+    hashFunctionFinal(ctx, out);
+
+    /* Free the context. */
+    hashFunctionFree(ctx);
+    return ORDO_ESUCCESS;
+}

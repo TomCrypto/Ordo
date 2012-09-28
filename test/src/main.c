@@ -2,6 +2,8 @@
 #include <testing/testing.h>
 #include <common/ordotypes.h>
 
+#include <hash/hash.h>
+
 void testVectors()
 {
     /* Open the test vector file. */
@@ -33,6 +35,7 @@ void performanceTest()
     blockCipherPerformance(Threefish256(), CFB(), 32, buffer, BUFSIZE);
     blockCipherPerformance(Threefish256(), OFB(), 32, buffer, BUFSIZE);
     streamCipherPerformance(RC4(), 32, buffer, BUFSIZE);
+    hashFunctionPerformance(SHA256(), buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */
     free(buffer);
