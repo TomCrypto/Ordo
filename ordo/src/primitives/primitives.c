@@ -23,6 +23,7 @@ void primitivesLoad()
 
     /* Hash primitives. */
     SHA256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SHA256]);
+    MD5_SetPrimitive(&hashFunctions[HASH_FUNCTION_MD5]);
 }
 
 /* Pass-through functions to acquire primitives. */
@@ -32,6 +33,7 @@ BLOCK_CIPHER* Threefish256() { return &blockCiphers[BLOCK_CIPHER_THREEFISH256]; 
 STREAM_CIPHER* RC4() { return &streamCiphers[STREAM_CIPHER_RC4]; }
 
 HASH_FUNCTION* SHA256() { return &hashFunctions[HASH_FUNCTION_SHA256]; }
+HASH_FUNCTION* MD5() { return &hashFunctions[HASH_FUNCTION_MD5]; }
 
 /* Returns a block cipher primitive object from a name. */
 BLOCK_CIPHER* getBlockCipherByName(char* name)

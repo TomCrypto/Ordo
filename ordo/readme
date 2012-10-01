@@ -11,8 +11,8 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
- - the first version of the hash (digest) interface has been implemented and documented, along with a standard C implementation of SHA-256 tested under Linux 64-bit and Windows 32/64-bit*
- - the testing program has been extended to accept hash functions and a few test vectors for SHA-256 have been added
+ - the first version of the hash (digest) interface has been implemented and documented, along with standard C implementations of SHA-256 and MD5 tested under Linux 64-bit and Windows 32/64-bit*
+ - the testing program has been extended to accept hash functions and a few test vectors for the two hash functions so far have been added
  * endianness support isn't done quite right for Windows, see end of ordotypes.h
 
 Current work is focused towards finishing the cipher interface. Important todo's:
@@ -44,6 +44,7 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
         [x] RC4
     [-] hash_functions
         [x] SHA-256
+        [x] MD5
     [ ] misc
 [x] enc
     [x] enc_block

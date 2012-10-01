@@ -3,8 +3,8 @@
 #define THREEFISH256_BLOCK (32) /* 256-bit block */
 
 /* 64-bit left and right rotation. */
-#define ROL(n, r) ((n << r) | (n >> (64 - r)))
-#define ROR(n, r) ((n >> r) | (n << (64 - r)))
+#define ROL(n, r) (((n) << (r)) | ((n) >> (64 - (r))))
+#define ROR(n, r) (((n) >> (r)) | ((n) << (64 - (r))))
 
 /* A structure containing a Threefish subkey list. */
 typedef struct THREEFISH256_SUBKEYS

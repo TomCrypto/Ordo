@@ -117,6 +117,7 @@ char* errorMsg(int code);
 #define htobe32(x) (bswap_32(x))
 #define be32toh(x) (bswap_32(x))
 #define htobe64(x) (bswap_64(x))
+#define htole64(x) (x)
 #endif
 
 #endif

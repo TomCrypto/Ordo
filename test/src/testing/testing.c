@@ -286,7 +286,6 @@ int runHashTest(char* line, int n)
         /* Check the computed digest against the expected digest. */
         if (memcmp(computedDigest, digest, digestlen) == 0)
         {
-
             /* Report success. */
             result = 1;
             printf("[+] Test vector #%.3d (%s) passed!\n", n, primitiveName);
