@@ -188,7 +188,7 @@ void MD5_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest)
     size_t zeroBytes;
     uint64_t len;
 
-    /* Save the message's length (in bits) before final processing. In BIG-ENDIAN! */
+    /* Save the message's length (in bits) before final processing (little-endian for MD5). */
     len = htole64(state(ctx)->messageLength * 8);
 
     /* Append a '1' bit to the message. */
