@@ -294,6 +294,7 @@ int runHashTest(char* line, int n)
 
     /* Clean up. */
     free(computedDigest);
+    free(digest);
     free(message);
     free(primitiveName);
     return result;
