@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.5.0</span>
+   &#160;<span id="projectnumber">1.5.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -86,12 +86,16 @@
 <a name="l00035"></a>00035 
 <a name="l00036"></a>00036 <span class="keywordtype">void</span> Threefish256_SetPrimitive(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r.html" title="Block cipher object.">BLOCK_CIPHER</a>* cipher);
 <a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <span class="preprocessor">#endif</span>
+<a name="l00038"></a>00038 <span class="keyword">inline</span> <span class="keywordtype">void</span> Threefish256_KeySchedule(UINT256_64* key, uint64_t tweak[2], UINT256_64* subkeys);
+<a name="l00039"></a>00039 <span class="keyword">inline</span> <span class="keywordtype">void</span> Threefish256_Forward_Raw(UINT256_64* block, UINT256_64* subkeys);
+<a name="l00040"></a>00040 <span class="keyword">inline</span> <span class="keywordtype">void</span> Threefish256_Inverse_Raw(UINT256_64* block, UINT256_64* subkeys);
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Sep 29 2012 04:13:04 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 5 2012 01:02:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

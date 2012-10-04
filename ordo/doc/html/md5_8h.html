@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: include/common/identification.h File Reference</title>
+<title>Ordo: include/primitives/hash_functions/md5.h File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -54,25 +54,26 @@
   <div id="nav-path" class="navpath">
     <ul>
       <li class="navelem"><a class="el" href="dir_cfc40bcf945a94a5aced014fdc532bf3.html">include</a>      </li>
-      <li class="navelem"><a class="el" href="dir_8f9a411e77482bba10282a572dbcb6a1.html">common</a>      </li>
+      <li class="navelem"><a class="el" href="dir_fea4578e5fe7580cadc5b6ddf44e6cef.html">primitives</a>      </li>
+      <li class="navelem"><a class="el" href="dir_d553c42fa2618733cddb5c1f7d3a381a.html">hash_functions</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">identification.h File Reference</div>  </div>
+<div class="title">md5.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Object ID manager.  
+<p>MD5 hash function.  
 <a href="#details">More...</a></p>
-
-<p><a href="identification_8h_source.html">Go to the source code of this file.</a></p>
+<div class="textblock"><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives/primitives.h</a>&gt;</code><br/>
+</div>
+<p><a href="md5_8h_source.html">Go to the source code of this file.</a></p>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Object ID manager. </p>
-<p>This header contains definitions associating unique identifiers to block/stream ciphers, block cipher modes of operation, compression functions, hash functions, etc... This is important because the Ordo library's high level API's are based on objects (so to use the RC4 stream cipher, you would use the <code><a class="el" href="primitives_8h.html#affcdd0336f2ef80e969781c03dfd2b92">RC4()</a></code> object) which are located in arrays to facilitate the implementation of functions such as <code><a class="el" href="primitives_8h.html#a4ad642d8895cd711628f67f9fc5044fc">getBlockCipherByName()</a></code>, and are initialized via functions such as <code>loadPrimitives()</code> which should be called before using Ordo.</p>
-<p>Each object has its own ID, for instance the NullCipher has the ID <code>BLOCK_CIPHER_NULLCIPHER</code> (which is defined as 0 since this is the most basic cipher, but this is arbitrary). This ID can then be used in functions such as <code><a class="el" href="primitives_8h.html#a2622c451643f211369cd0f26f5759e88">getBlockCipherByID()</a></code> which will return the correct block cipher object.</p>
-<p>This also allows for a quick overview of what is implemented in Ordo so far. </p>
+<div class="textblock"><p>MD5 hash function. </p>
+<p>This is the MD5 hash function, which produces a 128-bit digest.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd>md5.c </dd></dl>
 </div></div><!-- contents -->
 
 

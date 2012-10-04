@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: include/primitives/block_ciphers/nullcipher.h Source File</title>
+<title>Ordo: include/primitives/hash_functions/md5.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -55,33 +55,33 @@
     <ul>
       <li class="navelem"><a class="el" href="dir_cfc40bcf945a94a5aced014fdc532bf3.html">include</a>      </li>
       <li class="navelem"><a class="el" href="dir_fea4578e5fe7580cadc5b6ddf44e6cef.html">primitives</a>      </li>
-      <li class="navelem"><a class="el" href="dir_9af5d45ce29d98281430cb35787b3e97.html">block_ciphers</a>      </li>
+      <li class="navelem"><a class="el" href="dir_d553c42fa2618733cddb5c1f7d3a381a.html">hash_functions</a>      </li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">nullcipher.h</div>  </div>
+<div class="title">md5.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="nullcipher_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef NULLCIPHER_H</span>
-<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define NULLCIPHER_H</span>
+<a href="md5_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef MD5_H</span>
+<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define MD5_H</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="primitives_8h.html" title="Cryptographic primitives.">primitives/primitives.h</a>&gt;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="primitives_8h.html" title="Cryptographic primitives.">primitives/primitives.h</a>&gt;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 <a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html" title="hash function context.">HASH_FUNCTION_CONTEXT</a>* MD5_Create();
 <a name="l00017"></a>00017 
-<a name="l00018"></a>00018 <a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html" title="Block cipher context.">BLOCK_CIPHER_CONTEXT</a>* NullCipher_Create();
+<a name="l00018"></a>00018 <span class="keywordtype">int</span> MD5_Init(<a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html" title="hash function context.">HASH_FUNCTION_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* params);
 <a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="keywordtype">int</span> NullCipher_Init(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html" title="Block cipher context.">BLOCK_CIPHER_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* key, <span class="keywordtype">size_t</span> keySize, <span class="keywordtype">void</span>* params);
+<a name="l00020"></a>00020 <span class="keywordtype">void</span> MD5_Update(<a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html" title="hash function context.">HASH_FUNCTION_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* buffer, <span class="keywordtype">size_t</span> size);
 <a name="l00021"></a>00021 
-<a name="l00022"></a>00022 <span class="keywordtype">void</span> NullCipher_Forward(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html" title="Block cipher context.">BLOCK_CIPHER_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* block);
+<a name="l00022"></a>00022 <span class="keywordtype">void</span> MD5_Final(<a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html" title="hash function context.">HASH_FUNCTION_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* digest);
 <a name="l00023"></a>00023 
-<a name="l00024"></a>00024 <span class="keywordtype">void</span> NullCipher_Inverse(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html" title="Block cipher context.">BLOCK_CIPHER_CONTEXT</a>* ctx, <span class="keywordtype">void</span>* block);
+<a name="l00024"></a>00024 <span class="keywordtype">void</span> MD5_Free(<a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html" title="hash function context.">HASH_FUNCTION_CONTEXT</a>* ctx);
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="keywordtype">void</span> NullCipher_Free(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r___c_o_n_t_e_x_t.html" title="Block cipher context.">BLOCK_CIPHER_CONTEXT</a>* ctx);
+<a name="l00026"></a>00026 <span class="keywordtype">void</span> MD5_SetPrimitive(<a class="code" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html" title="Hash function object.">HASH_FUNCTION</a>* hash);
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="keywordtype">void</span> NullCipher_SetPrimitive(<a class="code" href="struct_b_l_o_c_k___c_i_p_h_e_r.html" title="Block cipher object.">BLOCK_CIPHER</a>* cipher);
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030 <span class="preprocessor">#endif</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 
 

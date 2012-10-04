@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: include/primitives/block_ciphers/threefish256.h File Reference</title>
+<title>Ordo: include/primitives/hash_functions/skein256.h File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -55,7 +55,7 @@
     <ul>
       <li class="navelem"><a class="el" href="dir_cfc40bcf945a94a5aced014fdc532bf3.html">include</a>      </li>
       <li class="navelem"><a class="el" href="dir_fea4578e5fe7580cadc5b6ddf44e6cef.html">primitives</a>      </li>
-      <li class="navelem"><a class="el" href="dir_9af5d45ce29d98281430cb35787b3e97.html">block_ciphers</a>      </li>
+      <li class="navelem"><a class="el" href="dir_d553c42fa2618733cddb5c1f7d3a381a.html">hash_functions</a>      </li>
     </ul>
   </div>
 </div>
@@ -63,25 +63,28 @@
   <div class="summary">
 <a href="#nested-classes">Data Structures</a>  </div>
   <div class="headertitle">
-<div class="title">threefish256.h File Reference</div>  </div>
+<div class="title">skein256.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Threefish-256 block cipher.  
+<p>Skein-256 hash function.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives/primitives.h</a>&gt;</code><br/>
 </div>
-<p><a href="threefish256_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="skein256_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Threefish-256 cipher parameters.  <a href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Skein-256 hash parameters.  <a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#details">More...</a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Threefish-256 block cipher. </p>
-<p>Threefish-256 is a block cipher, which has a 256-bit block size and a 256-bit key size. It also has an optional 128-bit tweak. The tweak can be set through the cipher parameters.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd>threefish256.c </dd></dl>
+<div class="textblock"><p>Skein-256 hash function. </p>
+<p>This is the Skein-256 hash function, which produces a 256-bit digest by default (but has parameters to output a longer digest) and has a 256-bit internal state. This implementation supports messages up to a length of 2^64 - 1 bytes instead of the 2^96 - 1 available, but we trust this will not be an issue. This is a rather flexible hash with lots of options. The following features are marked [x] if available, [ ] otherwise:</p>
+<p>[x] Simple hashing (256-bit digest, any-length message) [x] Variable-length output (any-length digest, any-length message, uses parameters) [x] Semi-personalizable configuration block (everything is changeable, but generally you should only change the output length field if you want to remain compliant) [ ] Personalization block [ ] HMAC block [ ] Other blocks</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Expand Skein-256 parameters (add possible extra blocks, such as personalization, hmac, nonce, etc...). This will probably require a rewrite of the UBI subsystem which is rather hardcoded and rigid at the moment.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Rewrite the UBI code properly.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd>skein256.c </dd></dl>
 </div></div><!-- contents -->
 
 
