@@ -24,6 +24,7 @@ void primitivesLoad()
     /* Hash primitives. */
     SHA256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SHA256]);
     MD5_SetPrimitive(&hashFunctions[HASH_FUNCTION_MD5]);
+    Skein256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SKEIN256]);
 }
 
 /* Pass-through functions to acquire primitives. */
@@ -34,6 +35,7 @@ STREAM_CIPHER* RC4() { return &streamCiphers[STREAM_CIPHER_RC4]; }
 
 HASH_FUNCTION* SHA256() { return &hashFunctions[HASH_FUNCTION_SHA256]; }
 HASH_FUNCTION* MD5() { return &hashFunctions[HASH_FUNCTION_MD5]; }
+HASH_FUNCTION* Skein256() { return &hashFunctions[HASH_FUNCTION_SKEIN256]; }
 
 /* Returns a block cipher primitive object from a name. */
 BLOCK_CIPHER* getBlockCipherByName(char* name)

@@ -48,6 +48,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../ordo/include/primitives/hash_functions/skein256.h" />
 		<Unit filename="include/testing/testing.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />

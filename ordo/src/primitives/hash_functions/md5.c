@@ -22,7 +22,7 @@ typedef struct MD5_STATE
 
 HASH_FUNCTION_CONTEXT* MD5_Create()
 {
-    /* Allocate memory for the SHA-256 state. */
+    /* Allocate memory for the MD5 state. */
     HASH_FUNCTION_CONTEXT* ctx = salloc(sizeof(HASH_FUNCTION_CONTEXT));
     if (ctx)
     {

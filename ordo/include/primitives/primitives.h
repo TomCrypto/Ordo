@@ -177,6 +177,9 @@ HASH_FUNCTION* SHA256();
 /*! The MD5 hash function. */
 HASH_FUNCTION* MD5();
 
+/*! The Skein-256 hash function. */
+HASH_FUNCTION* Skein256();
+
 /*! Returns a hash function object from a name. */
 HASH_FUNCTION* getHashFunctionByName(char* name);
 

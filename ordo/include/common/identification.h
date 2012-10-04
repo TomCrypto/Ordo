@@ -40,9 +40,10 @@
 #define BLOCK_CIPHER_MODE_OFB                                                                                        4
 
 /* Hash functions. */
-#define HASH_FUNCTION_COUNT                                                                                          2
+#define HASH_FUNCTION_COUNT                                                                                          3
 
 #define HASH_FUNCTION_SHA256                                                                                         0
 #define HASH_FUNCTION_MD5                                                                                            1
+#define HASH_FUNCTION_SKEIN256                                                                                       2
 
 #endif

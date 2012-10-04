@@ -31,6 +31,10 @@ typedef struct UINT128_64 { uint64_t words[2]; } UINT128_64;
 /* A 256-bit structure with four 64-bit words. */
 typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
 
+/* Some helpful macros. */
+#define min(a, b) ((a < b) ? a : b)
+#define max(a, b) ((a > b) ? a : b)
+
 /* The following are error codes. */
 
 /*! The function succeeded. This is defined as zero and is returned if a function encountered no error, unless

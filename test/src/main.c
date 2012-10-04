@@ -3,6 +3,7 @@
 #include <common/ordotypes.h>
 
 #include <hash/hash.h>
+#include <primitives/hash_functions/skein256.h>
 
 void testVectors()
 {
@@ -37,6 +38,7 @@ void performanceTest()
     streamCipherPerformance(RC4(), 32, buffer, BUFSIZE);
     hashFunctionPerformance(SHA256(), buffer, BUFSIZE);
     hashFunctionPerformance(MD5(), buffer, BUFSIZE);
+    hashFunctionPerformance(Skein256(), buffer, BUFSIZE);
 
     /* Free the buffer used for tests. */
     free(buffer);
