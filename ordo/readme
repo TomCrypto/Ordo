@@ -1,4 +1,4 @@
-Ordo v1.5.0
+Ordo v1.5.1
 -----------
 
 This directory contains code and headers for the shared library Ordo, which is currently a work in progress. A simple makefile is provided with two build targets:

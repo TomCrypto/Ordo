@@ -1,9 +1,5 @@
 #include <ordo.h>
 #include <testing/testing.h>
-#include <common/ordotypes.h>
-
-#include <hash/hash.h>
-#include <primitives/hash_functions/skein256.h>
 
 void testVectors()
 {
