@@ -4,7 +4,7 @@ const ORDO_BUILD_INFO ordoInfo = {
 /* Library version. */
 "1.5.1",
 /* Devtag. */
-"Stable",
+"Stable/cpplink",
 /* Build. */
 #if ORDO_DEBUG
 "Debug",

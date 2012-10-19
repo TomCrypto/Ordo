@@ -1,6 +1,10 @@
 #ifndef THREEFISH256_H
 #define THREEFISH256_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file threefish256.h
  *
@@ -38,5 +42,9 @@ void Threefish256_SetPrimitive(BLOCK_CIPHER* cipher);
 inline void Threefish256_KeySchedule(UINT256_64* key, uint64_t tweak[2], UINT256_64* subkeys);
 inline void Threefish256_Forward_Raw(UINT256_64* block, UINT256_64* subkeys);
 inline void Threefish256_Inverse_Raw(UINT256_64* block, UINT256_64* subkeys);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

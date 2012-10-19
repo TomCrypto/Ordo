@@ -1,6 +1,10 @@
 #ifndef ECB_H
 #define ECB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file ecb.h
  *
@@ -51,5 +55,9 @@ int ECB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, 
 void ECB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 void ECB_SetMode(BLOCK_CIPHER_MODE* mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

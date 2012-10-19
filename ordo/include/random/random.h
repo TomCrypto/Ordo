@@ -1,6 +1,10 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file random.h
  *
@@ -25,5 +29,9 @@
   \return Returns \c ORDO_ESUCCESS on success, and returns an error code on failure.
   \remark This function uses the underlying CSPRNG provided by your operating system. */
 int ordoRandom(unsigned char* buffer, size_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

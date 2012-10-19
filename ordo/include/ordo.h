@@ -1,6 +1,10 @@
 #ifndef ORDO_H
 #define ORDO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file ordo.h
  *
@@ -101,5 +105,9 @@ int ordoEncryptStream(unsigned char* inout, size_t len,
  \param hashParams This points to specific hash function parameters, set to zero for default behavior.
  \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure. */
 int ordoHash(unsigned char* in, size_t len, unsigned char* out, HASH_FUNCTION* hash, void* hashParams);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef ENC_BLOCK_H
 #define ENC_BLOCK_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file enc_block.h
  *
@@ -90,6 +94,13 @@ typedef struct ENC_BLOCK_CIPHER_CONTEXT
 /*! Loads all encryption modes of operation. This must be called before you may use \c ECB(), \c CBC(), etc... or the
  * helper functions \c getBlockCipherModeByName() and \c getBlockCipherModeByID(). */
 void encryptLoad();
+
+/* Block cipher mode of operation list. */
+#include <enc/block_cipher_modes/ecb.h>
+#include <enc/block_cipher_modes/cbc.h>
+#include <enc/block_cipher_modes/ctr.h>
+#include <enc/block_cipher_modes/cfb.h>
+#include <enc/block_cipher_modes/ofb.h>
 
 /*! The ECB (Electronic CodeBook) mode of operation. */
 BLOCK_CIPHER_MODE* ECB();
@@ -224,5 +235,9 @@ int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* out, size_
  be wiped. Do not call this function if \c blockEncryptCreate() failed, as the latter correctly frees dangling context
  buffers in case of error. */
 void encBlockCipherFree(ENC_BLOCK_CIPHER_CONTEXT* ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

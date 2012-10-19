@@ -1,6 +1,10 @@
 #ifndef OFB_H
 #define OFB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file ofb.h
  *
@@ -35,5 +39,9 @@ int OFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, 
 void OFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 void OFB_SetMode(BLOCK_CIPHER_MODE* mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

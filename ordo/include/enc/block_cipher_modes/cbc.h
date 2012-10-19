@@ -1,6 +1,10 @@
 #ifndef CBC_H
 #define CBC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file cbc.h
  *
@@ -47,5 +51,9 @@ int CBC_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, 
 void CBC_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 void CBC_SetMode(BLOCK_CIPHER_MODE* mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

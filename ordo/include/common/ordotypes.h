@@ -1,6 +1,10 @@
 #ifndef ORDOTYPES_H
 #define ORDOTYPES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file ordotypes.h
  * \brief Library-wide utility header.
@@ -122,6 +126,10 @@ char* errorMsg(int code);
 #define be32toh(x) (bswap_32(x))
 #define htobe64(x) (bswap_64(x))
 #define htole64(x) (x)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

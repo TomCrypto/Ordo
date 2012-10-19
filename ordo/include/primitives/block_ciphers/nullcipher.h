@@ -1,6 +1,10 @@
 #ifndef NULLCIPHER_H
 #define NULLCIPHER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file nullcipher.h
  *
@@ -26,5 +30,9 @@ void NullCipher_Inverse(BLOCK_CIPHER_CONTEXT* ctx, void* block);
 void NullCipher_Free(BLOCK_CIPHER_CONTEXT* ctx);
 
 void NullCipher_SetPrimitive(BLOCK_CIPHER* cipher);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

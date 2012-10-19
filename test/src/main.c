@@ -16,8 +16,8 @@ void testVectors()
 
 void performanceTest()
 {
-    /* Use a 128MB buffer size in performance tests to get decent resolution. */
-    #define BUFSIZE (1024 * 1024 * 128)
+    /* Use a 256MB buffer size in performance tests to get decent resolution. */
+    #define BUFSIZE (1024 * 1024 * 256)
     unsigned char* buffer = malloc(BUFSIZE);
     if (buffer == 0)
     {

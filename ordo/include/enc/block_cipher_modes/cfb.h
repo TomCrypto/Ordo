@@ -1,6 +1,10 @@
 #ifndef CFB_H
 #define CFB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file cfb.h
  *
@@ -34,5 +38,9 @@ int CFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, 
 void CFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 void CFB_SetMode(BLOCK_CIPHER_MODE* mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

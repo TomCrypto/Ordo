@@ -1,6 +1,10 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file environment.h
  * \brief Compile-time environment detection.
@@ -107,6 +111,10 @@
 #define FEATURE_AES 1
 #else
 #define FEATURE_AES 0
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

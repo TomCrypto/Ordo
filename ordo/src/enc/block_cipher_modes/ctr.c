@@ -1,5 +1,3 @@
-#include <primitives/primitives.h>
-#include <enc/enc_block.h>
 #include <enc/block_cipher_modes/ctr.h>
 
 /* This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/

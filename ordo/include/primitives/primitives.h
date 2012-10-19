@@ -1,6 +1,10 @@
 #ifndef PRIMITIVES_H
 #define PRIMITIVES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file primitives.h
  *
@@ -225,5 +229,9 @@ int streamCipherInit(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void
  be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
  \c streamCipherCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void streamCipherFree(STREAM_CIPHER_CONTEXT* ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

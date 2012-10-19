@@ -1,6 +1,10 @@
 #ifndef SHA256_H
 #define SHA256_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file sha256.h
  *
@@ -24,5 +28,9 @@ void SHA256_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
 void SHA256_Free(HASH_FUNCTION_CONTEXT* ctx);
 
 void SHA256_SetPrimitive(HASH_FUNCTION* hash);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,5 +1,3 @@
-#include <primitives/primitives.h>
-#include <enc/enc_block.h>
 #include <enc/block_cipher_modes/ofb.h>
 
 /* This is extra context space required by the OFB mode to store the amount of state not used.*/

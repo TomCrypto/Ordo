@@ -1,6 +1,10 @@
 #ifndef HASH_H
 #define HASH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file hash.h
  *
@@ -42,5 +46,9 @@ void hashFunctionFinal(HASH_FUNCTION_CONTEXT* ctx, void* digest);
  be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
  \c hashFunctionCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void hashFunctionFree(HASH_FUNCTION_CONTEXT* ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

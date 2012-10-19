@@ -372,6 +372,7 @@ void randomTest()
 void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
+    ECB_PARAMS modeParams;
     int error;
     void* iv;
     void* key;
@@ -396,8 +397,12 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     /* Save starting time. */
     start = clock();
 
-    /* Encryption test. */                   /* this is to make sure we have enough space for padding (yeah, bad test program design) */
-    error = ordoEncrypt(buffer, bufferSize - blockCipherBlockSize(primitive), buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
+    /* We want to disable padding (note this works because the only block cipher modes to use parameters happen to have
+     * the same parameter structure, a single integer describing whether padding should be enabled or not). */
+    modeParams.padding = 0;
+
+    /* Encryption test. */
+    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
     else
     {
@@ -409,7 +414,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, 0);
+        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
         if (error < 0) printf("[!] An error occurred during decryption [%s].\n", errorMsg(error));
         else
         {
@@ -441,7 +446,7 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
     key = malloc(keySize);
     memset(key, 0, keySize);
 
-    /* Print primitive/mode information. */
+    /* Print primitive information. */
     printf("[+] Testing %s with a %d-bit key...\n", primitiveName(primitive), (int)keySize * 8);
 
     /* Save starting time. */
@@ -471,14 +476,10 @@ void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, si
     clock_t start;
     float time;
 
-    /* Randomize the plaintext buffer first, to defeat caching. */
-    randomizeBuffer(buffer, bufferSize);
-
     /* Allocate a buffer of the right size for the digest. */
     digest = malloc(hashFunctionDigestSize(primitive));
-    memset(digest, 0, hashFunctionDigestSize(primitive));
 
-    /* Print primitive/mode information. */
+    /* Print primitive information. */
     printf("[+] Testing %s...\n", primitiveName(primitive));
 
     /* Save starting time. */

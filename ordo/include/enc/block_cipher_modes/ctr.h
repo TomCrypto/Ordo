@@ -1,6 +1,10 @@
 #ifndef CTR_H
 #define CTR_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file ctr.h
  *
@@ -36,5 +40,9 @@ int CTR_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, 
 void CTR_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
 
 void CTR_SetMode(BLOCK_CIPHER_MODE* mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

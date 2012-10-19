@@ -1,13 +1,5 @@
 /* Handles code related to symmetric block ciphers and block cipher modes of operation. */
-#include <primitives/primitives.h>
 #include <enc/enc_block.h>
-
-/* Block cipher mode of operation list. */
-#include <enc/block_cipher_modes/ecb.h>
-#include <enc/block_cipher_modes/cbc.h>
-#include <enc/block_cipher_modes/ctr.h>
-#include <enc/block_cipher_modes/cfb.h>
-#include <enc/block_cipher_modes/ofb.h>
 
 /* Macro to the cipher primitive object of an encryption context. */
 #define cipherobj(ctx) (ctx->cipherCtx->cipher)

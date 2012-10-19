@@ -1,5 +1,3 @@
-#include <primitives/primitives.h>
-#include <enc/enc_block.h>
 #include <enc/block_cipher_modes/cbc.h>
 
 /* This is extra context space required by the CBC mode to store temporary incomplete data buffers.*/

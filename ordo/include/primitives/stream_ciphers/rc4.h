@@ -1,6 +1,10 @@
 #ifndef RC4_H
 #define RC4_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file rc4.h
  *
@@ -35,5 +39,9 @@ void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len);
 void RC4_Free(STREAM_CIPHER_CONTEXT* ctx);
 
 void RC4_SetPrimitive(STREAM_CIPHER* cipher);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

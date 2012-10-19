@@ -1,6 +1,10 @@
 #ifndef MD5_H
 #define MD5_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file md5.h
  *
@@ -24,5 +28,9 @@ void MD5_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
 void MD5_Free(HASH_FUNCTION_CONTEXT* ctx);
 
 void MD5_SetPrimitive(HASH_FUNCTION* hash);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file version.h
  * \brief Library version header.
@@ -37,5 +41,9 @@ typedef struct ORDO_BUILD_INFO
 
 /*! Returns library build information in a structure. */
 const ORDO_BUILD_INFO* ordoBuildInfo();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

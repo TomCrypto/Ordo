@@ -1,6 +1,10 @@
 #ifndef SECUREMEM_H
 #define SECUREMEM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file securemem.h
  * \brief Secure memory API.
@@ -46,5 +50,9 @@ void swipe(void* ptr, size_t size);
  \param size The amount of memory, in bytes, pointed to by ptr.
  \remark Passing zero to this function is valid and will do nothing. */
 void sfree(void* ptr, size_t size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

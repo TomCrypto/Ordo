@@ -1,6 +1,10 @@
 #ifndef ENC_STREAM_H
 #define ENC_STREAM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file enc_stream.h
  *
@@ -50,5 +54,9 @@ void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, unsigned char* inout,
  \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
  be wiped. Do not call this function if \c encStreamCipherCreate() failed. */
 void encStreamCipherFree(ENC_STREAM_CIPHER_CONTEXT* ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

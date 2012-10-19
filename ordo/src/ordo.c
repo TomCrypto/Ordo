@@ -22,20 +22,20 @@ int ordoEncrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 
     /* Initialize it. */
     error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 1);
-    if (error < 0) return error;
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Encrypt the buffer. */
+        encBlockCipherUpdate(ctx, in, inlen, out, outlen);
+        outPos += *outlen;
 
-    /* Encrypt the buffer. */
-    encBlockCipherUpdate(ctx, in, inlen, out, outlen);
-    outPos += *outlen;
+        /* Finalize the context. */
+        error = encBlockCipherFinal(ctx, out + outPos, outlen);
+        if (error == ORDO_ESUCCESS) *outlen += outPos;
+    }
 
-    /* Finalize the context. */
-    error = encBlockCipherFinal(ctx, out + outPos, outlen);
-    if (error < 0) return error;
-    *outlen += outPos;
-
-    /* Free it and return success. */
+    /* Free the context and return success or failure. */
     encBlockCipherFree(ctx);
-    return ORDO_ESUCCESS;
+    return error;
 }
 
 /* This convenience function decrypts a buffer with a given block cipher, key, IV, and parameters. */
@@ -50,20 +50,20 @@ int ordoDecrypt(unsigned char* in, size_t inlen, unsigned char* out, size_t* out
 
     /* Initialize it. */
     error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 0);
-    if (error < 0) return error;
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Encrypt the buffer. */
+        encBlockCipherUpdate(ctx, in, inlen, out, outlen);
+        outPos += *outlen;
 
-    /* Decrypt the buffer. */
-    encBlockCipherUpdate(ctx, in, inlen, out, outlen);
-    outPos += *outlen;
+        /* Finalize the context. */
+        error = encBlockCipherFinal(ctx, out + outPos, outlen);
+        if (error == ORDO_ESUCCESS) *outlen += outPos;
+    }
 
-    /* Finalize the context. */
-    error = encBlockCipherFinal(ctx, out + outPos, outlen);
-    if (error < 0) return error;
-    *outlen += outPos;
-
-    /* Free it and return success. */
+    /* Free the context and return success or failure. */
     encBlockCipherFree(ctx);
-    return ORDO_ESUCCESS;
+    return error;
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given stream cipher, key, IV, and parameters. */
@@ -75,16 +75,13 @@ int ordoEncryptStream(unsigned char* inout, size_t len, STREAM_CIPHER* primitive
     ENC_STREAM_CIPHER_CONTEXT* ctx = encStreamCipherCreate(primitive);
     if (!ctx) return ORDO_EHEAPALLOC;
 
-    /* Initialize it. */
+    /* Initialize it and encrypt the buffer. */
     error = encStreamCipherInit(ctx, key, keySize, cipherParams);
-    if (error < 0) return error;
+    if (error == ORDO_ESUCCESS) encStreamCipherUpdate(ctx, inout, len);
 
-    /* Encrypt the buffer. */
-    encStreamCipherUpdate(ctx, inout, len);
-
-    /* Free it and return success. */
+    /* Free the context and return success or failure. */
     encStreamCipherFree(ctx);
-    return ORDO_ESUCCESS;
+    return error;
 }
 
 /* Hashes a message. */
@@ -98,15 +95,16 @@ int ordoHash(unsigned char* in, size_t len, unsigned char* out, HASH_FUNCTION* h
 
     /* Initialize it. */
     error = hashFunctionInit(ctx, hashParams);
-    if (error < 0) return error;
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Hash the buffer. */
+        hashFunctionUpdate(ctx, in, len);
 
-    /* Feed the buffer. */
-    hashFunctionUpdate(ctx, in, len);
+        /* Finalize the context. */
+        hashFunctionFinal(ctx, out);
+    }
 
-    /* Finalize. */
-    hashFunctionFinal(ctx, out);
-
-    /* Free the context. */
+    /* Free the context and return success or failure. */
     hashFunctionFree(ctx);
-    return ORDO_ESUCCESS;
+    return error;
 }
