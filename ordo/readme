@@ -1,4 +1,4 @@
-Ordo v1.5.1
+Ordo v1.5.2
 -----------
 
 This directory contains code and headers for the shared library Ordo, which is currently a work in progress. A simple makefile is provided with two build targets:
@@ -11,9 +11,10 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
- - a limited version of Skein-256 has been implemented (it is functional as a basic hash function like all the others, but most extended features are not available yet, for now only the variable output length feature is enabled)
- - Skein-256 has a few test vectors too, though they will not exhaustively test the code since the test vector interface doesn't support parameters yet (we need to add this)
- * endianness support isn't done quite right for Windows, see end of ordotypes.h
+ - General-purpose HMAC's have been added (conformant to RFC 2104)
+
+To-do list:
+ - fix endianness support for Windows which is rather precarious
 
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file (in the test program) and the test driver's code to know more about this.
 
@@ -51,7 +52,8 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
         [x] CFB
     [x] enc_stream
 [x] hash
-[ ] auth
+[-] auth
+    [x] hmac
 [ ] encauth
 [-] testing (test drivers)
     [-] vectors

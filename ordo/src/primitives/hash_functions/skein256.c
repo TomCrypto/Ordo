@@ -185,6 +185,6 @@ void Skein256_Free(HASH_FUNCTION_CONTEXT* ctx)
 /* Fills a HASH_FUNCTION struct with the correct information. */
 void Skein256_SetPrimitive(HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, SKEIN256_INTERNAL, Skein256_Create, Skein256_Init, Skein256_Update, Skein256_Final, Skein256_Free, "Skein-256");
+    MAKE_HASH_FUNCTION(hash, SKEIN256_INTERNAL, SKEIN256_BLOCK, Skein256_Create, Skein256_Init, Skein256_Update, Skein256_Final, Skein256_Free, "Skein-256");
 }
 

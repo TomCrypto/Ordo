@@ -38,8 +38,9 @@ extern "C" {
     p->name = n;}
 
 /* Same as above, but for hash functions. */
-#define MAKE_HASH_FUNCTION(p, d, c, i, u, fi, f, n){                                                                  \
+#define MAKE_HASH_FUNCTION(p, d, b, c, i, u, fi, f, n){                                                               \
     p->digestSize = d;                                                                                                \
+    p->blockSize = b;                                                                                                 \
     p->fCreate = c;                                                                                                   \
     p->fInit = (HASH_FUNCTION_INIT)i;                                                                                 \
     p->fUpdate = (HASH_FUNCTION_UPDATE)u;                                                                             \
@@ -142,6 +143,7 @@ typedef void (*HASH_FUNCTION_FREE)(HASH_FUNCTION_CONTEXT*);
 typedef struct HASH_FUNCTION
 {
     size_t digestSize;
+    size_t blockSize;
     HASH_FUNCTION_ALLOC fCreate;
     HASH_FUNCTION_INIT fInit;
     HASH_FUNCTION_UPDATE fUpdate;

@@ -199,5 +199,5 @@ void SHA256_Free(HASH_FUNCTION_CONTEXT* ctx)
 /* Fills a HASH_FUNCTION struct with the correct information. */
 void SHA256_SetPrimitive(HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, SHA256_DIGEST, SHA256_Create, SHA256_Init, SHA256_Update, SHA256_Final, SHA256_Free, "SHA-256");
+    MAKE_HASH_FUNCTION(hash, SHA256_DIGEST, SHA256_BLOCK, SHA256_Create, SHA256_Init, SHA256_Update, SHA256_Final, SHA256_Free, "SHA-256");
 }

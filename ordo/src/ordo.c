@@ -108,3 +108,28 @@ int ordoHash(unsigned char* in, size_t len, unsigned char* out, HASH_FUNCTION* h
     hashFunctionFree(ctx);
     return error;
 }
+
+/* HMAC. */
+int ordoHMAC(unsigned char* in, size_t len, void* key, size_t keySize, unsigned char* out, HASH_FUNCTION* hash, void* hashParams)
+{
+    int error;
+
+    /* Create the context. */
+    HMAC_CONTEXT* ctx = hmacCreate(hash);
+    if (!ctx) return ORDO_EHEAPALLOC;
+
+    /* Initialize it. */
+    error = hmacInit(ctx, key, keySize, hashParams);
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Hash the buffer. */
+        hmacUpdate(ctx, in, len);
+
+        /* Finalize the context. */
+        error = hmacFinal(ctx, out);
+    }
+
+    /* Free the context and return success or failure. */
+    hmacFree(ctx);
+    return error;
+}

@@ -3,7 +3,7 @@
 /* This function returns an initialized hash function context using a specific hash function object. */
 HASH_FUNCTION_CONTEXT* hashFunctionCreate(HASH_FUNCTION* hash)
 {
-    /* Allocate the cipher context. */
+    /* Allocate the context. */
     HASH_FUNCTION_CONTEXT* ctx = hash->fCreate();
     if (ctx) ctx->hash = hash;
     return ctx;
@@ -12,7 +12,7 @@ HASH_FUNCTION_CONTEXT* hashFunctionCreate(HASH_FUNCTION* hash)
 /* This function returns an initialized hash function context with the provided parameters. */
 int hashFunctionInit(HASH_FUNCTION_CONTEXT* ctx, void* hashParams)
 {
-    /* Initialize the cipher context. */
+    /* Initialize the context. */
     return ctx->hash->fInit(ctx, hashParams);
 }
 
@@ -33,6 +33,6 @@ void hashFunctionFinal(HASH_FUNCTION_CONTEXT* ctx, void* digest)
 /* This function frees an initialized hash function context. */
 void hashFunctionFree(HASH_FUNCTION_CONTEXT* ctx)
 {
-    /* Free the cipher context. */
+    /* Free the context. */
     ctx->hash->fFree(ctx);
 }

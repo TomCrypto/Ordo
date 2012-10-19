@@ -39,7 +39,7 @@ FILE* loadTestVectors(char* path)
 /* Reads the next line of a file in a buffer. */
 char* readLine(FILE* file)
 {
-    #define MAX_LINE_LENGTH 512
+    #define MAX_LINE_LENGTH 2048
     char* line = malloc(MAX_LINE_LENGTH);
     if (fgets(line, MAX_LINE_LENGTH, file) == 0) return 0;
 
@@ -173,11 +173,11 @@ int runBlockCipherTest(char* line, int n)
                 {
                     /* Report success. */
                     result = 1;
-                    printf("[+] Test vector #%.3d (%s/%s) passed!\n", n, primitiveName, modeName);
-                } else printf("[!] Test vector #%.3d (%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
-            } else printf("[!] Test vector #%.3d (%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
-        } else printf("[!] Test vector #%.3d (%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
-    } else printf("[!] Test vector #%.3d (%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
+                    printf("[+] Test vector #%.3d (enc/%s/%s) passed!\n", n, primitiveName, modeName);
+                } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
+            } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
+        } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
+    } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -237,11 +237,11 @@ int runStreamCipherTest(char* line, int n)
                 {
                     /* Report success. */
                     result = 1;
-                    printf("[+] Test vector #%.3d (%s) passed!\n", n, primitiveName);
-                } else printf("[!] Test vector #%.3d (%s) failed: did not get expected plaintext.\n", n, primitiveName);
-            } else printf("[!] Test vector #%.3d (%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, errorMsg(error));
-        } else printf("[!] Test vector #%.3d (%s) failed: did not get expected ciphertext.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, errorMsg(error));
+                    printf("[+] Test vector #%.3d (enc/%s) passed!\n", n, primitiveName);
+                } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected plaintext.\n", n, primitiveName);
+            } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, errorMsg(error));
+        } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected ciphertext.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, errorMsg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -288,9 +288,57 @@ int runHashTest(char* line, int n)
         {
             /* Report success. */
             result = 1;
-            printf("[+] Test vector #%.3d (%s) passed!\n", n, primitiveName);
-        } else printf("[!] Test vector #%.3d (%s) failed: did not get expected digest.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (%s) failed: @ordoHash, %s.\n", n, primitiveName, errorMsg(error));
+            printf("[+] Test vector #%.3d (hash/%s) passed!\n", n, primitiveName);
+        } else printf("[!] Test vector #%.3d (hash/%s) failed: did not get expected digest.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (hash/%s) failed: @ordoHash, %s.\n", n, primitiveName, errorMsg(error));
+
+    /* Clean up. */
+    free(computedDigest);
+    free(digest);
+    free(message);
+    free(primitiveName);
+    return result;
+}
+
+/* Runs a HMAC test vector. */
+int runHMACTest(char* line, int n)
+{
+    /* Parse the test vector and initialize variables. */
+    char* primitiveName = readToken(line, 1);
+    size_t messagelen, keylen, digestlen;
+    unsigned char* key = hexToBuffer(readToken(line, 2), &keylen);
+    unsigned char* message = hexToBuffer(readToken(line, 3), &messagelen);
+    unsigned char* digest = hexToBuffer(readToken(line, 4), &digestlen);
+
+    /* Create a temporary buffer to store the computed digest. */
+    unsigned char* computedDigest = malloc(digestlen);
+    int error, result;
+
+    /* Get the proper primitive and mode. */
+    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+
+    /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
+    if (primitive == 0)
+    {
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        return 1;
+    }
+
+    /* Initialize the test result. */
+    result = 0;
+
+    /* Perform the hash test. */
+    error = ordoHMAC(message, messagelen, key, keylen, computedDigest, primitive, 0);
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Check the computed digest against the expected digest. */
+        if (memcmp(computedDigest, digest, digestlen) == 0)
+        {
+            /* Report success. */
+            result = 1;
+            printf("[+] Test vector #%.3d (hmac/%s) passed!\n", n, primitiveName);
+        } else printf("[!] Test vector #%.3d (hmac/%s) failed: did not get expected digest.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (hmac/%s) failed: @ordoHMAC, %s.\n", n, primitiveName, errorMsg(error));
 
     /* Clean up. */
     free(computedDigest);
@@ -307,6 +355,7 @@ void runTestVectors(FILE* file)
     #define TOKEN_ENC_BLOCK "enc_block"
     #define TOKEN_ENC_STREAM "enc_stream"
     #define TOKEN_HASH "hash"
+    #define TOKEN_HMAC "hmac"
 
     /* We keep track of how many lines we read. */
     char* line = readLine(file);
@@ -327,6 +376,7 @@ void runTestVectors(FILE* file)
             if (strcmp(token, TOKEN_ENC_BLOCK) == 0) success += runBlockCipherTest(line, n++);
             if (strcmp(token, TOKEN_ENC_STREAM) == 0) success += runStreamCipherTest(line, n++);
             if (strcmp(token, TOKEN_HASH) == 0) success += runHashTest(line, n++);
+            if (strcmp(token, TOKEN_HMAC) == 0) success += runHMACTest(line, n++);
 
             /* Free the token buffer. */
             free(token);
