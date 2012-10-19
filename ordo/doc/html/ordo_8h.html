@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.5.1</span>
+   &#160;<span id="projectnumber">1.5.2</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -72,6 +72,7 @@
 <code>#include &lt;<a class="el" href="enc__block_8h_source.html">enc/enc_block.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="enc__stream_8h_source.html">enc/enc_stream.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="hash_8h_source.html">hash/hash.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="hmac_8h_source.html">auth/hmac.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="random_8h_source.html">random/random.h</a>&gt;</code><br/>
 </div>
 <p><a href="ordo_8h_source.html">Go to the source code of this file.</a></p>
@@ -83,6 +84,7 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a459523f0d6f5a50bb02f2be6cbc9c169">ordoDecrypt</a> (unsigned char *in, size_t inlen, unsigned char *out, size_t *outlen, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r.html">BLOCK_CIPHER</a> *cipher, <a class="el" href="struct_b_l_o_c_k___c_i_p_h_e_r___m_o_d_e.html">BLOCK_CIPHER_MODE</a> *mode, void *key, size_t keySize, void *iv, void *cipherParams, void *modeParams)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#aeb9514d1eaef3b5c99e9e7aec3b0aded">ordoEncryptStream</a> (unsigned char *inout, size_t len, <a class="el" href="struct_s_t_r_e_a_m___c_i_p_h_e_r.html">STREAM_CIPHER</a> *cipher, void *key, size_t keySize, void *cipherParams)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a7b9fa83cd667984ee34c9931370d7894">ordoHash</a> (unsigned char *in, size_t len, unsigned char *out, <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *hash, void *hashParams)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ordo_8h.html#a9273db635a388391fbbf6296611897b0">ordoHMAC</a> (unsigned char *in, size_t len, void *key, size_t keySize, unsigned char *out, <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *hash, void *hashParams)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Ordo high-level API. </p>
@@ -439,11 +441,83 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a9273db635a388391fbbf6296611897b0"></a><!-- doxytag: member="ordo.h::ordoHMAC" ref="a9273db635a388391fbbf6296611897b0" args="(unsigned char *in, size_t len, void *key, size_t keySize, unsigned char *out, HASH_FUNCTION *hash, void *hashParams)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="ordo_8h.html#a9273db635a388391fbbf6296611897b0">ordoHMAC</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>keySize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td>
+          <td class="paramname"><em>hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>hashParams</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>This function returns the HMAC of a buffer using a key with any hash function. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in</td><td>The input buffer to hash. </td></tr>
+    <tr><td class="paramname">len</td><td>Number of bytes to read from the <code>in</code> buffer. </td></tr>
+    <tr><td class="paramname">key</td><td>The key to use. </td></tr>
+    <tr><td class="paramname">keySize</td><td>The length of the key to use, in bytes. </td></tr>
+    <tr><td class="paramname">out</td><td>The buffer in which to put the digest. </td></tr>
+    <tr><td class="paramname">hash</td><td>A hash function object, describing the hash function to use. </td></tr>
+    <tr><td class="paramname">hashParams</td><td>This points to specific hash function parameters, set to zero for default behavior. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Returns <code>ORDO_ESUCCESS</code> on success, a negative error code on failure. </dd></dl>
+<dl class="remark"><dt><b>Remarks:</b></dt><dd>Note the hash parameters only affect the inner hash (the one hashing the buffer), not the outer one or the potential key-processing one. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 5 2012 01:02:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Oct 20 2012 00:51:10 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

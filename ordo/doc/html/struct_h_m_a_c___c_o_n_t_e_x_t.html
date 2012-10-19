@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Ordo: HASH_FUNCTION_CONTEXT Struct Reference</title>
+<title>Ordo: HMAC_CONTEXT Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -56,54 +56,65 @@
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">HASH_FUNCTION_CONTEXT Struct Reference</div>  </div>
+<div class="title">HMAC_CONTEXT Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="HASH_FUNCTION_CONTEXT" -->
-<p>hash function context.  
- <a href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="primitives_8h_source.html">primitives.h</a>&gt;</code></p>
+<!-- doxytag: class="HMAC_CONTEXT" -->
+<p><code>#include &lt;<a class="el" href="hmac_8h_source.html">hmac.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a9ae055d2dbed7f4f0b059523c46188e8">hash</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html">HASH_FUNCTION_CONTEXT</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#abc675c4de384737fbc6ef726f4714d67">ctx</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#a302e2291dbff57f770bf469af498ec3a">key</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#a8c10244ce3e1fc2bfb9fc8d2992a40b9">digest</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>hash function context. </p>
-<p>This structure describes a hash function primitive context. It is used by hash functions to maintain their state across function calls (such as current message block and total length, extra metadata, etc...). </p>
+<div class="textblock"><p>This is an HMAC context, which simply wraps a hash function context around a key. </p>
 </div><hr/><h2>Field Documentation</h2>
-<a class="anchor" id="a9ae055d2dbed7f4f0b059523c46188e8"></a><!-- doxytag: member="HASH_FUNCTION_CONTEXT::hash" ref="a9ae055d2dbed7f4f0b059523c46188e8" args="" -->
+<a class="anchor" id="abc675c4de384737fbc6ef726f4714d67"></a><!-- doxytag: member="HMAC_CONTEXT::ctx" ref="abc675c4de384737fbc6ef726f4714d67" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n.html">HASH_FUNCTION</a>* <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a9ae055d2dbed7f4f0b059523c46188e8">hash</a></td>
+          <td class="memname"><a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html">HASH_FUNCTION_CONTEXT</a>* <a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#abc675c4de384737fbc6ef726f4714d67">ctx</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The hash function in use. </p>
+<p>The hash function context. </p>
 
 </div>
 </div>
-<a class="anchor" id="a1f6d09b30c54854dfca659b7463ac207"></a><!-- doxytag: member="HASH_FUNCTION_CONTEXT::ctx" ref="a1f6d09b30c54854dfca659b7463ac207" args="" -->
+<a class="anchor" id="a302e2291dbff57f770bf469af498ec3a"></a><!-- doxytag: member="HMAC_CONTEXT::key" ref="a302e2291dbff57f770bf469af498ec3a" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* <a class="el" href="struct_h_a_s_h___f_u_n_c_t_i_o_n___c_o_n_t_e_x_t.html#a1f6d09b30c54854dfca659b7463ac207">ctx</a></td>
+          <td class="memname">uint8_t* <a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#a302e2291dbff57f770bf469af498ec3a">key</a></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The low-level hash function context. </p>
+<p>The HMAC key. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8c10244ce3e1fc2bfb9fc8d2992a40b9"></a><!-- doxytag: member="HMAC_CONTEXT::digest" ref="a8c10244ce3e1fc2bfb9fc8d2992a40b9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* <a class="el" href="struct_h_m_a_c___c_o_n_t_e_x_t.html#a8c10244ce3e1fc2bfb9fc8d2992a40b9">digest</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The middle digest. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/primitives/<a class="el" href="primitives_8h_source.html">primitives.h</a></li>
+<li>include/auth/<a class="el" href="hmac_8h_source.html">hmac.h</a></li>
 </ul>
 </div><!-- contents -->
 

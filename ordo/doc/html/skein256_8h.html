@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">1.5.1</span>
+   &#160;<span id="projectnumber">1.5.2</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -81,7 +81,13 @@ Data Structures</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Skein-256 hash function. </p>
 <p>This is the Skein-256 hash function, which produces a 256-bit digest by default (but has parameters to output a longer digest) and has a 256-bit internal state. This implementation supports messages up to a length of 2^64 - 1 bytes instead of the 2^96 - 1 available, but we trust this will not be an issue. This is a rather flexible hash with lots of options. The following features are marked [x] if available, [ ] otherwise:</p>
-<p>[x] Simple hashing (256-bit digest, any-length message) [x] Variable-length output (any-length digest, any-length message, uses parameters) [x] Semi-personalizable configuration block (everything is changeable, but generally you should only change the output length field if you want to remain compliant) [ ] Personalization block [ ] HMAC block [ ] Other blocks</p>
+<p>[x] Simple hashing (256-bit digest, any-length message) <br/>
+ [x] Variable-length output (any-length digest, any-length message, uses parameters) <br/>
+ [x] Semi-personalizable configuration block (everything is changeable, but generally you should only change the output length field if you want to remain compliant) <br/>
+ [ ] Personalization block <br/>
+ [ ] HMAC block <br/>
+ [ ] Other blocks <br/>
+</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Expand Skein-256 parameters (add possible extra blocks, such as personalization, hmac, nonce, etc...). This will probably require a rewrite of the UBI subsystem which is rather hardcoded and rigid at the moment.</dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Rewrite the UBI code properly.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>skein256.c </dd></dl>
@@ -89,7 +95,7 @@ Data Structures</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 5 2012 01:02:58 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Oct 20 2012 00:51:10 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
