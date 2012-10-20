@@ -63,6 +63,7 @@
 		<Unit filename="include/enc/enc_stream.h" />
 		<Unit filename="include/hash/hash.h" />
 		<Unit filename="include/ordo.h" />
+		<Unit filename="include/primitives/block_ciphers/aes.h" />
 		<Unit filename="include/primitives/block_ciphers/nullcipher.h" />
 		<Unit filename="include/primitives/block_ciphers/threefish256.h" />
 		<Unit filename="include/primitives/hash_functions/md5.h" />
@@ -108,6 +109,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/ordo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/primitives/block_ciphers/aes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/primitives/block_ciphers/asm/threefish256.S" />

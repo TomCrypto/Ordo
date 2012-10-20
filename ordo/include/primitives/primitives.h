@@ -162,6 +162,9 @@ BLOCK_CIPHER* NullCipher();
 /*! The Threefish-256 block cipher. */
 BLOCK_CIPHER* Threefish256();
 
+/*! The AES block cipher. */
+BLOCK_CIPHER* AES();
+
 /*! Returns a block cipher object from a name. */
 BLOCK_CIPHER* getBlockCipherByName(char* name);
 

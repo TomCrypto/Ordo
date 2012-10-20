@@ -3,6 +3,7 @@
 /* Primitive list. */
 #include <primitives/block_ciphers/nullcipher.h>
 #include <primitives/block_ciphers/threefish256.h>
+#include <primitives/block_ciphers/aes.h>
 #include <primitives/stream_ciphers/rc4.h>
 #include <primitives/hash_functions/sha256.h>
 
@@ -17,6 +18,7 @@ void primitivesLoad()
     /* Block cipher primitives. */
     NullCipher_SetPrimitive  (&blockCiphers[BLOCK_CIPHER_NULLCIPHER]);
     Threefish256_SetPrimitive(&blockCiphers[BLOCK_CIPHER_THREEFISH256]);
+    AES_SetPrimitive         (&blockCiphers[BLOCK_CIPHER_AES]);
 
     /* Stream cipher primitives. */
     RC4_SetPrimitive(&streamCiphers[STREAM_CIPHER_RC4]);
@@ -30,6 +32,7 @@ void primitivesLoad()
 /* Pass-through functions to acquire primitives. */
 BLOCK_CIPHER* NullCipher()   { return &blockCiphers[BLOCK_CIPHER_NULLCIPHER]; }
 BLOCK_CIPHER* Threefish256() { return &blockCiphers[BLOCK_CIPHER_THREEFISH256]; }
+BLOCK_CIPHER* AES()          { return &blockCiphers[BLOCK_CIPHER_AES]; }
 
 STREAM_CIPHER* RC4() { return &streamCiphers[STREAM_CIPHER_RC4]; }
 

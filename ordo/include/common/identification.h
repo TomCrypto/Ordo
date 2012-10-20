@@ -24,10 +24,11 @@ extern "C" {
  */
 
 /* Block ciphers. */
-#define BLOCK_CIPHER_COUNT                                                                                           2
+#define BLOCK_CIPHER_COUNT                                                                                           3
 
 #define BLOCK_CIPHER_NULLCIPHER                                                                                      0
 #define BLOCK_CIPHER_THREEFISH256                                                                                    1
+#define BLOCK_CIPHER_AES                                                                                             2
 
 /* Stream ciphers. */
 #define STREAM_CIPHER_COUNT                                                                                          1

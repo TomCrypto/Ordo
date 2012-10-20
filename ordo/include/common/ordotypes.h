@@ -77,6 +77,9 @@ typedef struct UINT256_64 { uint64_t words[4]; } UINT256_64;
  * changing the quota. */
 #define ORDO_EHEAPALLOC -5
 
+/*! An invalid parameter was passed to a function. Perhaps it was out of bounds. */
+#define ORDO_EPARAM -6
+
 /* The following are utility functions. */
 
 /*! Checks whether a buffer conforms to PKCS padding.

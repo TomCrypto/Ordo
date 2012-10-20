@@ -31,6 +31,11 @@ void performanceTest()
     blockCipherPerformance(Threefish256(), CTR(), 32, buffer, BUFSIZE);
     blockCipherPerformance(Threefish256(), CFB(), 32, buffer, BUFSIZE);
     blockCipherPerformance(Threefish256(), OFB(), 32, buffer, BUFSIZE);
+    blockCipherPerformance(AES(), ECB(), 16, buffer, BUFSIZE);
+    blockCipherPerformance(AES(), CBC(), 16, buffer, BUFSIZE);
+    blockCipherPerformance(AES(), CTR(), 16, buffer, BUFSIZE);
+    blockCipherPerformance(AES(), CFB(), 16, buffer, BUFSIZE);
+    blockCipherPerformance(AES(), OFB(), 16, buffer, BUFSIZE);
     streamCipherPerformance(RC4(), 32, buffer, BUFSIZE);
     hashFunctionPerformance(SHA256(), buffer, BUFSIZE);
     hashFunctionPerformance(MD5(), buffer, BUFSIZE);
