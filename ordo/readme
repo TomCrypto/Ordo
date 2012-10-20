@@ -1,4 +1,4 @@
-Ordo v1.5.3
+Ordo v1.5.4
 -----------
 
 This directory contains code and headers for the shared library Ordo, which is currently a work in progress. A simple makefile is provided with two build targets:
@@ -12,6 +12,10 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 
 Current version highlight:
  - A slow but portable version of AES (all key sizes) is now available
+ - An AES implementation taking advantage of the AES-NI instructions is available for 64-bit Windows & Linux
+   -> untested under Linux, but it should work
+   -> not available yet for 32-bit because of compiler issues, but the code is there
+   -> key schedule is still done in plain C even with the instructions for the moment
 
 To-do list:
  - fix endianness support for Windows which is rather precarious

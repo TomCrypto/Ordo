@@ -19,7 +19,7 @@
 /* Intel syntax only! */
 .intel_syntax noprefix;
 
-/* Declarations (this should match the header declaration names). */
+/* Declarations. */
 .globl Threefish256_Forward_ASM
 .globl Threefish256_Inverse_ASM
 

@@ -2,7 +2,7 @@
 
 const ORDO_BUILD_INFO ordoInfo = {
 /* Library version. */
-"1.5.3",
+"1.5.4",
 /* Devtag. */
 "Stable",
 /* Build. */

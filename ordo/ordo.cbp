@@ -114,6 +114,7 @@
 		<Unit filename="src/primitives/block_ciphers/aes.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/primitives/block_ciphers/asm/aes.S" />
 		<Unit filename="src/primitives/block_ciphers/asm/threefish256.S" />
 		<Unit filename="src/primitives/block_ciphers/nullcipher.c">
 			<Option compilerVar="CC" />

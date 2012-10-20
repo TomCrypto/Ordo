@@ -15,6 +15,7 @@ REDISTRIBUTION OF THIS SOFTWARE.
 */
 
 #include <primitives/block_ciphers/aes.h>
+#include <common/environment.h>
 
 /* The block size of AES. */
 #define AES_BLOCK (16)
@@ -37,6 +38,9 @@ const uint8_t sbox[256] = {
     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16};
+
+/* Don't need all the code if we have AES-NI! Still need the sbox for the key schedule though. */
+#if !(FEATURE_AES && ENVIRONMENT_64)
 
 /* The inverse substitution box... */
 const uint8_t ibox[256] = {
@@ -331,6 +335,8 @@ void AddRoundKey (uint8_t *state, uint8_t *key)
     for (t = 0; t < 16; ++t) state[t] ^= key[t];
 }
 
+#endif /* AES-NI barrier. */
+
 /* Key schedule constants. */
 uint8_t ks[11] = {0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
@@ -444,6 +450,10 @@ int AES_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, AES_PARAMS* p
 
 void AES_Forward(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
 {
+    /* If we have AES-NI, just use that. */
+    #if (FEATURE_AES && ENVIRONMENT_64)
+    AES_Forward_ASM(block, state(ctx)->key, state(ctx)->rounds);
+    #else
     /* Local variables. */
     size_t t;
 
@@ -459,10 +469,15 @@ void AES_Forward(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
         /* Add the round key. */
         AddRoundKey(block, state(ctx)->key + 16 * t);
     }
+    #endif
 }
 
 void AES_Inverse(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
 {
+    /* If we have AES-NI, just use that. */
+    #if (FEATURE_AES && ENVIRONMENT_64)
+    AES_Inverse_ASM(block, state(ctx)->key + 16 * state(ctx)->rounds, state(ctx)->rounds);
+    #else
     /* Local variables. */
     size_t t;
 
@@ -483,6 +498,7 @@ void AES_Inverse(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
             InvMixSubColumns(block);
         }
     }
+    #endif
 }
 
 void AES_Free(BLOCK_CIPHER_CONTEXT* ctx)
