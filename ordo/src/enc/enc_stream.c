@@ -21,7 +21,7 @@ int encStreamCipherInit(ENC_STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySiz
     return streamCipherInit(ctx->cipherCtx, key, keySize, cipherParams);
 }
 
-void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, unsigned char* inout, size_t len)
+void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, void* inout, size_t len)
 {
     /* Encrypt the given buffer. */
     ctx->cipherCtx->cipher->fUpdate(ctx->cipherCtx, inout, len);

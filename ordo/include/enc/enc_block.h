@@ -60,8 +60,8 @@ typedef struct BLOCK_CIPHER_MODE_CONTEXT
 typedef BLOCK_CIPHER_MODE_CONTEXT* (* BLOCK_CIPHER_MODE_CREATE)(BLOCK_CIPHER_CONTEXT*);
 typedef int (* BLOCK_CIPHER_MODE_INIT)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*, void*, void*);
 typedef void (* BLOCK_CIPHER_MODE_UPDATE)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*,
-                                          unsigned char*, size_t, unsigned char*, size_t*);
-typedef int (* BLOCK_CIPHER_MODE_FINAL)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*, unsigned char*, size_t*);
+                                          void*, size_t, void*, size_t*);
+typedef int (* BLOCK_CIPHER_MODE_FINAL)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*, void*, size_t*);
 typedef void (* BLOCK_CIPHER_MODE_FREE)(BLOCK_CIPHER_MODE_CONTEXT*, BLOCK_CIPHER_CONTEXT*);
 
 /*! \brief Block cipher mode of operation object.
@@ -155,8 +155,8 @@ int blockCipherModeInit(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT
  \c blockEncryptModeInit() and a \c blockEncryptModeFinal() call to be part of one large buffer, hence care must be
  taken to respect this assumption. */
 void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx,
-                           unsigned char* in, size_t inlen,
-                           unsigned char* out, size_t* outlen);
+                           void* in, size_t inlen,
+                           void* out, size_t* outlen);
 
 /*! This function finalizes a block cipher mode of operation context, and will process and return any leftover
  * plaintext or ciphertext.
@@ -176,7 +176,7 @@ void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONT
  pass zero, and will set its value to zero if it is specified. Consult the documentation of the appropriate mode to
  learn what it does. */
 int blockCipherModeFinal(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx,
-                         unsigned char* out, size_t* outlen);
+                         void* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized block cipher mode of operation context.
  \param modeCtx The encryption context to be freed. This context needs to at least have been allocated.
@@ -216,8 +216,8 @@ int encBlockCipherInit(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize,
  \param outlen This points to a variable which will contain the number of bytes written to \c out.
  \remark See \c blockEncryptModeUpdate() for remarks about output buffer size. */
 void encBlockCipherUpdate(ENC_BLOCK_CIPHER_CONTEXT* ctx,
-                          unsigned char* in, size_t inlen,
-                          unsigned char* out, size_t* outlen);
+                          void* in, size_t inlen,
+                          void* out, size_t* outlen);
 
 /*! This function finalizes a block cipher encryption context, and will process and return any leftover plaintext or
  * ciphertext.
@@ -227,7 +227,7 @@ void encBlockCipherUpdate(ENC_BLOCK_CIPHER_CONTEXT* ctx,
  \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
  \remark See \c blockEncryptModeFinal() for remarks. */
-int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* out, size_t* outlen);
+int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* out, size_t* outlen);
 
 /*! This function frees (deallocates) an initialized block cipher encryption context.
  \param ctx The block cipher encryption context to be freed. This context needs to at least have been allocated.

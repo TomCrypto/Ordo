@@ -65,7 +65,7 @@ int blockCipherModeInit(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT
 }
 
 /* This function encrypts or decrypts a buffer with the block cipher mode context. */
-void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, void* in, size_t inlen, void* out, size_t* outlen)
 {
     /* Encrypt or decrypt the buffer. */
     if (modeCtx->direction) modeCtx->mode->fEncryptUpdate(modeCtx, cipherCtx, in, inlen, out, outlen);
@@ -73,7 +73,7 @@ void blockCipherModeUpdate(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONT
 }
 
 /* This function finalizes a block cipher mode context and returns any final data. */
-int blockCipherModeFinal(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
+int blockCipherModeFinal(BLOCK_CIPHER_MODE_CONTEXT* modeCtx, BLOCK_CIPHER_CONTEXT* cipherCtx, void* out, size_t* outlen)
 {
     /* Finalize the mode of operation. */
     return (modeCtx->direction) ? modeCtx->mode->fEncryptFinal(modeCtx, cipherCtx, out, outlen) : modeCtx->mode->fDecryptFinal(modeCtx, cipherCtx, out, outlen);
@@ -120,13 +120,13 @@ int encBlockCipherInit(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize,
 }
 
 /* This function encrypts data using the passed block cipher encryption context. If decrypt is true, the cipher will decrypt instead. */
-void encBlockCipherUpdate(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void encBlockCipherUpdate(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* in, size_t inlen, void* out, size_t* outlen)
 {
     blockCipherModeUpdate(ctx->modeCtx, ctx->cipherCtx, in, inlen, out, outlen);
 }
 
 /* This function finalizes a block cipher encryption context. */
-int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, unsigned char* out, size_t* outlen)
+int encBlockCipherFinal(ENC_BLOCK_CIPHER_CONTEXT* ctx, void* out, size_t* outlen)
 {
     return blockCipherModeFinal(ctx->modeCtx, ctx->cipherCtx, out, outlen);
 }

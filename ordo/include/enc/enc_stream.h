@@ -47,7 +47,7 @@ int encStreamCipherInit(ENC_STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySiz
  \param inout The plaintext or ciphertext buffer.
  \param len Number of bytes to read from the \c inout buffer.
  \remark See \c ordoEncryptStream() for remarks about output buffer size. */
-void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, unsigned char* inout, size_t len);
+void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, void* inout, size_t len);
 
 /*! This function frees (deallocates) an initialized stream cipher encryption context.
  \param ctx The stream cipher encryption context to be freed. This context needs to at least have been allocated.

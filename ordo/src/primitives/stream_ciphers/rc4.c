@@ -43,7 +43,7 @@ STREAM_CIPHER_CONTEXT* RC4_Create()
     return 0;
 }
 
-int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4_PARAMS* params)
+int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, uint8_t* key, size_t keySize, RC4_PARAMS* params)
 {
     /* Loop variables. */
     size_t t, drop;
@@ -82,7 +82,7 @@ int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4
     return ORDO_ESUCCESS;
 }
 
-void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len)
+void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, uint8_t* buffer, size_t len)
 {
     #if ENVIRONMENT_64
     /* Fast 64-bit implementation (note in 64-bit mode, len is a 64-bit unsigned integer). */

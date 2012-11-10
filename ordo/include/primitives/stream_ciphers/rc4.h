@@ -32,9 +32,9 @@ typedef struct RC4_PARAMS
 
 STREAM_CIPHER_CONTEXT* RC4_Create();
 
-int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, unsigned char* key, size_t keySize, RC4_PARAMS* params);
+int RC4_Init(STREAM_CIPHER_CONTEXT* ctx, uint8_t* key, size_t keySize, RC4_PARAMS* params);
 
-void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, unsigned char* buffer, size_t len);
+void RC4_Update(STREAM_CIPHER_CONTEXT* ctx, uint8_t* buffer, size_t len);
 
 void RC4_Free(STREAM_CIPHER_CONTEXT* ctx);
 

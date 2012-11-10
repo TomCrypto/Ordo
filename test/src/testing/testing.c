@@ -341,6 +341,7 @@ int runHMACTest(char* line, int n)
     } else printf("[!] Test vector #%.3d (hmac/%s) failed: @ordoHMAC, %s.\n", n, primitiveName, errorMsg(error));
 
     /* Clean up. */
+    free(key);
     free(computedDigest);
     free(digest);
     free(message);
