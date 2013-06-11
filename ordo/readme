@@ -1,4 +1,4 @@
-Ordo v1.5.4
+Ordo v1.5.5
 -----------
 
 This directory contains code and headers for the shared library Ordo, which is currently a work in progress. A simple makefile is provided with two build targets:
@@ -11,11 +11,8 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 -------- STATUS --------
 
 Current version highlight:
- - A slow but portable version of AES (all key sizes) is now available
- - An AES implementation taking advantage of the AES-NI instructions is available for 64-bit Windows & Linux
-   -> untested under Linux, but it should work
-   -> not available yet for 32-bit because of compiler issues, but the code is there
-   -> key schedule is still done in plain C even with the instructions for the moment
+ - The old AES-NI implementation works under Linux!
+ - A basic and unfinished (functional, but rather slow and no error checking) PBKDF2/HMAC implementation is available.
 
 To-do list:
  - fix endianness support for Windows which is rather precarious
@@ -59,6 +56,7 @@ Feature Map ([x] = essentially finished, [-] = in progress, [ ] = not started)
 [x] hash
 [-] auth
     [x] hmac
+    [-] PBKDF2 (w/ HMAC)
 [ ] encauth
 [-] testing (test drivers)
     [-] vectors
@@ -73,7 +71,7 @@ ORDO_DEBUG: indicates this is a debug build, some specific features may be disab
 
 The code on Github should normally be functional in some way (unless we screwed a commit up), but of course it has only been tested under a limited number of platforms, so you may have to patch up the code to make it work under your compiler/OS, as what shows up as warnings or hints for us may come up as errors for you. Ordo also features a different code path for 32-bit and 64-bit platforms and also based on CPU feature flags for special instructions (we strive to provide decent to excellent performance) which is probably a compatibility black hole, so bear with us until we've got it all sorted out. Tested platforms so far:
 
-- Linux Mint 13 [64-bit] GCC v4.6.3
+- Linux Mint 14 [64-bit] GCC v4.6.3
 - Windows 7 [32-bit] GCC v4.6.2 (+MinGW)
 - Windows 7 [64-bit] GCC v4.7.1 (+MinGW)
 

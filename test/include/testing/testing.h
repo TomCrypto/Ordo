@@ -44,4 +44,7 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
 /*! Rates the performance of a hash function. */
 void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize);
 
+/*! Rates the performance of PBKDF2. */
+void pbkdf2Performance(HASH_FUNCTION* primitive, size_t iterations);
+
 #endif

@@ -152,7 +152,7 @@ typedef struct HASH_FUNCTION
     char* name;
 } HASH_FUNCTION;
 
-/*! Loads all primitivs. This must be called before you may use \c RC4(), \c NullCipher(), etc... or the helper
+/*! Loads all primitives. This must be called before you may use \c RC4(), \c NullCipher(), etc... or the helper
  * functions \c getBlockCipherByName() or \c getStreamCipherByID(), etc... */
 void primitivesLoad();
 

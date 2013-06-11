@@ -93,4 +93,18 @@ hmac:SHA-256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 hmac:MD5:0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b:4869205468657265:9294727a3638bb1c13f48ef8158bfc9d~
 hmac:MD5:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd:56be34521d144c88dbb8c733f0e8b3f6~
 
+# Some PBKDF2 test vectors, of the form pbkdf2:HashFunction:Password:Salt:Iterations:OutputLength:ExpectedDigest~
+# Explicitly covers the following test cases:
+# -> iteration count
+# -> output length (smaller than digest length, equal to, and larger than)
+# Implicitly covers the following test cases:
+# -> arbitrary password length (assumed to hold true if the underlying hash function and the HMAC implementation is valid)
+# -> arbitrary salt length (assumed to hold true if the underlying hash function and the HMAC implementation is valid)
+pbkdf2:SHA-256:70617373776f7264:73616c74:1:32:120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b~
+pbkdf2:SHA-256:70617373776f7264:73616c74:2:32:ae4d0c95af6b46d32d0adff928f06dd02a303f8ef3c251dfd6e2d85a95474c43~
+# test vector below removed because it takes painfully long with 16 million iterations. It did pass at the last check, though, and only really examines the iteration for loop codepath, so w/e
+# pbkdf2:SHA-256:70617373776f7264:73616c74:16777216:32:cf81c66fe8cfc04d1f31ecb65dab4089f7f179e89b3b0bcb17ad10e3ac6eba46~
+pbkdf2:SHA-256:7061737300776f7264:7361006c74:4096:16:89b69d0516f829893c696226650a8687~
+pbkdf2:SHA-256:70617373776f726450415353574f524470617373776f7264:73616c7453414c5473616c7453414c5473616c7453414c5473616c7453414c5473616c74:4096:40:348c89dbcbd32b2f32d814b8116e84cf2b17347ebc1800181c4e2a1fb8dd53e1c635518c7dac47e9~
+
 ~ # The last line of the test vector file should always start with a tilde to indicate the voluntary end of the file.

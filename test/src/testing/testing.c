@@ -349,6 +349,59 @@ int runHMACTest(char* line, int n)
     return result;
 }
 
+/* Runs a PBKDF2 test vector. */
+int runPBKDF2Test(char* line, int n)
+{
+    /* Parse the test vector and initialize variables. */
+    char* primitiveName = readToken(line, 1);
+    size_t saltLen, passwordLen, digestlen;
+    unsigned char* password = hexToBuffer(readToken(line, 2), &passwordLen);
+    unsigned char* salt = hexToBuffer(readToken(line, 3), &saltLen);
+    char* tmp1 = readToken(line, 4); size_t iterations = atoi(tmp1);
+    char* tmp2 = readToken(line, 5); size_t outputLen = atoi(tmp2);
+    unsigned char* digest = hexToBuffer(readToken(line, 6), &digestlen);
+
+    /* Create a temporary buffer to store the computed digest. */
+    unsigned char* computedDigest = malloc(digestlen);
+    int error, result;
+
+    /* Get the proper primitive and mode. */
+    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+
+    /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
+    if (primitive == 0)
+    {
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        return 1;
+    }
+
+    /* Initialize the test result. */
+    result = 0;
+
+    /* Perform the hash test. */
+    error = pbkdf2(primitive, password, passwordLen, salt, saltLen, iterations, outputLen, computedDigest, 0);
+    if (error == ORDO_ESUCCESS)
+    {
+        /* Check the computed digest against the expected digest. */
+        if (memcmp(computedDigest, digest, digestlen) == 0)
+        {
+            /* Report success. */
+            result = 1;
+            printf("[+] Test vector #%.3d (pbkdf2/%s) passed!\n", n, primitiveName);
+        } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: did not get expected digest.\n", n, primitiveName);
+    } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: @pbkdf2, %s.\n", n, primitiveName, errorMsg(error));
+
+    /* Clean up. */
+    free(password);
+    free(computedDigest);
+    free(digest);
+    free(salt);
+    free(tmp1);
+    free(tmp2);
+    free(primitiveName);
+    return result;
+}
+
 /* Runs all test vectors. */
 void runTestVectors(FILE* file)
 {
@@ -357,6 +410,7 @@ void runTestVectors(FILE* file)
     #define TOKEN_ENC_STREAM "enc_stream"
     #define TOKEN_HASH "hash"
     #define TOKEN_HMAC "hmac"
+    #define TOKEN_PBKDF2 "pbkdf2"
 
     /* We keep track of how many lines we read. */
     char* line = readLine(file);
@@ -378,6 +432,7 @@ void runTestVectors(FILE* file)
             if (strcmp(token, TOKEN_ENC_STREAM) == 0) success += runStreamCipherTest(line, n++);
             if (strcmp(token, TOKEN_HASH) == 0) success += runHashTest(line, n++);
             if (strcmp(token, TOKEN_HMAC) == 0) success += runHMACTest(line, n++);
+            if (strcmp(token, TOKEN_PBKDF2) == 0) success += runPBKDF2Test(line, n++);
 
             /* Free the token buffer. */
             free(token);
@@ -550,4 +605,28 @@ void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, si
 
     /* Clean up. */
     free(digest);
+}
+
+void pbkdf2Performance(HASH_FUNCTION* primitive, size_t iterations)
+{
+    char *password = "my password";
+    char *salt = "a salt";
+    size_t outputLen = hashFunctionDigestSize(primitive); /* testing speed for a single iteration loop */
+    void *output = malloc(outputLen);
+    clock_t start;
+    float time;
+    int error;
+
+    start = clock();
+
+    error = pbkdf2(primitive, password, strlen(password), salt, strlen(salt), iterations, outputLen, output, 0);
+    if (error < 0) printf("[!] An error occurred during pbkdf2 [%s].\n", errorMsg(error));
+    else
+    {
+        /* Get total time and display speed. */
+        time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
+        printf("[+] PBKDF2/%s: %.1f seconds for %d iterations.\n", primitiveName(primitive), time, (int)iterations);
+    }
+
+    free(output);
 }

@@ -40,6 +40,12 @@ void performanceTest()
     hashFunctionPerformance(SHA256(), buffer, BUFSIZE);
     hashFunctionPerformance(MD5(), buffer, BUFSIZE);
     hashFunctionPerformance(Skein256(), buffer, BUFSIZE);
+    pbkdf2Performance(SHA256(), 1000);
+    pbkdf2Performance(SHA256(), 10000);
+    pbkdf2Performance(SHA256(), 50000);
+    pbkdf2Performance(Skein256(), 1000);
+    pbkdf2Performance(Skein256(), 10000);
+    pbkdf2Performance(Skein256(), 50000);
 
     /* Free the buffer used for tests. */
     free(buffer);
@@ -68,6 +74,6 @@ int main(int argc, char* argv[])
     performanceTest();
 
     /* All done! */
-    printf("[+] All operations completed.\n");
+    printf("\n[+] All operations completed.\n");
     return 0;
 }

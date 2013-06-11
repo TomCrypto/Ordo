@@ -22,6 +22,7 @@ extern "C" {
 #include <enc/enc_stream.h>
 #include <hash/hash.h>
 #include <auth/hmac.h>
+#include <auth/pbkdf2.h>
 #include <random/random.h>
 
 /*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). After

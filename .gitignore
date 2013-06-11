@@ -2,3 +2,8 @@
 ordo/lib/
 ordo/doc/
 test/bin/
+
+# Tmp files
+*.c~
+*.h~
+*~
