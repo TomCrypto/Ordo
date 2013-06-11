@@ -24,19 +24,19 @@ extern "C" {
 typedef struct ORDO_BUILD_INFO
 {
     /*! The library's version. */
-	char* version;
-	/*! The library's devtag. */
-	char* devtag;
-	/*! The build type. */
-	char* build;
-	/*! The library's platform. */
-	char* platform;
-	/*! The targeted ABI. */
-	char* ABI;
-	/*! The native word size, in bits. */
-	int wordSize;
-	/*! Whether AES-NI is targeted. */
-	int feature_AES;
+    char* version;
+    /*! The library's devtag. */
+    char* devtag;
+    /*! The build type. */
+    char* build;
+    /*! The library's platform. */
+    char* platform;
+    /*! The targeted ABI. */
+    char* ABI;
+    /*! The native word size, in bits. */
+    int wordSize;
+    /*! Whether AES-NI is targeted. */
+    int feature_AES;
 } ORDO_BUILD_INFO;
 
 /*! Returns library build information in a structure. */

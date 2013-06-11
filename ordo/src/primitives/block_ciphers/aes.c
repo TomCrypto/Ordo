@@ -200,29 +200,29 @@ void ShiftRows (uint8_t *state)
     /* Local variables. */
     uint8_t tmp;
 
-	/* Don't shift the first row, and just substitute it. */
-	state[ 0] = sbox[state[ 0]];
-	state[ 4] = sbox[state[ 4]];
-	state[ 8] = sbox[state[ 8]];
-	state[12] = sbox[state[12]];
+    /* Don't shift the first row, and just substitute it. */
+    state[ 0] = sbox[state[ 0]];
+    state[ 4] = sbox[state[ 4]];
+    state[ 8] = sbox[state[ 8]];
+    state[12] = sbox[state[12]];
 
-	/* Rotate the second row by 1, and substitute... */
-	tmp = sbox[state[1]];
+    /* Rotate the second row by 1, and substitute... */
+    tmp = sbox[state[1]];
     state[ 1] = sbox[state[ 5]];
-	state[ 5] = sbox[state[ 9]];
-	state[ 9] = sbox[state[13]];
-	state[13] = tmp;
+    state[ 5] = sbox[state[ 9]];
+    state[ 9] = sbox[state[13]];
+    state[13] = tmp;
 
-	/* Rotate the third row, substitute... */
-	tmp = sbox[state[2]]; state[2] = sbox[state[10]]; state[10] = tmp;
-	tmp = sbox[state[6]]; state[6] = sbox[state[14]]; state[14] = tmp;
+    /* Rotate the third row, substitute... */
+    tmp = sbox[state[2]]; state[2] = sbox[state[10]]; state[10] = tmp;
+    tmp = sbox[state[6]]; state[6] = sbox[state[14]]; state[14] = tmp;
 
-	/* Finally, rotate the last row. */
-	tmp = sbox[state[15]];
-	state[15] = sbox[state[11]];
-	state[11] = sbox[state[ 7]];
-	state[ 7] = sbox[state[ 3]];
-	state[ 3] = tmp;
+    /* Finally, rotate the last row. */
+    tmp = sbox[state[15]];
+    state[15] = sbox[state[11]];
+    state[11] = sbox[state[ 7]];
+    state[ 7] = sbox[state[ 3]];
+    state[ 3] = tmp;
 }
 
 /* Reverses the row shifts and substitutions. */
@@ -231,29 +231,29 @@ void InvShiftRows (uint8_t *state)
     /* Local variables. */
     uint8_t tmp;
 
-	/* Restore row 0. */
-	state[ 0] = ibox[state[ 0]];
-	state[ 4] = ibox[state[ 4]];
-	state[ 8] = ibox[state[ 8]];
-	state[12] = ibox[state[12]];
+    /* Restore row 0. */
+    state[ 0] = ibox[state[ 0]];
+    state[ 4] = ibox[state[ 4]];
+    state[ 8] = ibox[state[ 8]];
+    state[12] = ibox[state[12]];
 
-	/* Restore row 1. */
-	tmp = ibox[state[13]];
-	state[13] = ibox[state[ 9]];
-	state[ 9] = ibox[state[ 5]];
-	state[ 5] = ibox[state[ 1]];
-	state[ 1] = tmp;
+    /* Restore row 1. */
+    tmp = ibox[state[13]];
+    state[13] = ibox[state[ 9]];
+    state[ 9] = ibox[state[ 5]];
+    state[ 5] = ibox[state[ 1]];
+    state[ 1] = tmp;
 
-	/* Restore row 2. */
-	tmp = ibox[state[2]]; state[2] = ibox[state[10]]; state[10] = tmp;
-	tmp = ibox[state[6]]; state[6] = ibox[state[14]]; state[14] = tmp;
+    /* Restore row 2. */
+    tmp = ibox[state[2]]; state[2] = ibox[state[10]]; state[10] = tmp;
+    tmp = ibox[state[6]]; state[6] = ibox[state[14]]; state[14] = tmp;
 
-	/* Restore row 3. */
-	tmp = ibox[state[ 3]];
-	state[ 3] = ibox[state[ 7]];
-	state[ 7] = ibox[state[11]];
-	state[11] = ibox[state[15]];
-	state[15] = tmp;
+    /* Restore row 3. */
+    tmp = ibox[state[ 3]];
+    state[ 3] = ibox[state[ 7]];
+    state[ 7] = ibox[state[11]];
+    state[11] = ibox[state[15]];
+    state[15] = tmp;
 }
 
 /* Recombine and mix the state. */
@@ -262,32 +262,32 @@ void MixSubColumns (uint8_t *state)
     /* Local variables. */
     uint8_t tmp[16];
 
-	/* Mix column 0. */
-	tmp[ 0] = sbox2[state[ 0]] ^ sbox3[state[ 5]] ^  sbox[state[10]] ^  sbox[state[15]];
-	tmp[ 1] =  sbox[state[ 0]] ^ sbox2[state[ 5]] ^ sbox3[state[10]] ^  sbox[state[15]];
-	tmp[ 2] =  sbox[state[ 0]] ^  sbox[state[ 5]] ^ sbox2[state[10]] ^ sbox3[state[15]];
-	tmp[ 3] = sbox3[state[ 0]] ^  sbox[state[ 5]] ^  sbox[state[10]] ^ sbox2[state[15]];
+    /* Mix column 0. */
+    tmp[ 0] = sbox2[state[ 0]] ^ sbox3[state[ 5]] ^  sbox[state[10]] ^  sbox[state[15]];
+    tmp[ 1] =  sbox[state[ 0]] ^ sbox2[state[ 5]] ^ sbox3[state[10]] ^  sbox[state[15]];
+    tmp[ 2] =  sbox[state[ 0]] ^  sbox[state[ 5]] ^ sbox2[state[10]] ^ sbox3[state[15]];
+    tmp[ 3] = sbox3[state[ 0]] ^  sbox[state[ 5]] ^  sbox[state[10]] ^ sbox2[state[15]];
 
-	/* Mix column 1. */
-	tmp[ 4] = sbox2[state[ 4]] ^ sbox3[state[ 9]] ^  sbox[state[14]] ^  sbox[state[ 3]];
-	tmp[ 5] =  sbox[state[ 4]] ^ sbox2[state[ 9]] ^ sbox3[state[14]] ^  sbox[state[ 3]];
-	tmp[ 6] =  sbox[state[ 4]] ^  sbox[state[ 9]] ^ sbox2[state[14]] ^ sbox3[state[ 3]];
-	tmp[ 7] = sbox3[state[ 4]] ^  sbox[state[ 9]] ^  sbox[state[14]] ^ sbox2[state[ 3]];
+    /* Mix column 1. */
+    tmp[ 4] = sbox2[state[ 4]] ^ sbox3[state[ 9]] ^  sbox[state[14]] ^  sbox[state[ 3]];
+    tmp[ 5] =  sbox[state[ 4]] ^ sbox2[state[ 9]] ^ sbox3[state[14]] ^  sbox[state[ 3]];
+    tmp[ 6] =  sbox[state[ 4]] ^  sbox[state[ 9]] ^ sbox2[state[14]] ^ sbox3[state[ 3]];
+    tmp[ 7] = sbox3[state[ 4]] ^  sbox[state[ 9]] ^  sbox[state[14]] ^ sbox2[state[ 3]];
 
-	/* Mix column 2. */
-	tmp[ 8] = sbox2[state[ 8]] ^ sbox3[state[13]] ^  sbox[state[ 2]] ^  sbox[state[ 7]];
-	tmp[ 9] =  sbox[state[ 8]] ^ sbox2[state[13]] ^ sbox3[state[ 2]] ^  sbox[state[ 7]];
-	tmp[10] =  sbox[state[ 8]] ^  sbox[state[13]] ^ sbox2[state[ 2]] ^ sbox3[state[ 7]];
-	tmp[11] = sbox3[state[ 8]] ^  sbox[state[13]] ^  sbox[state[ 2]] ^ sbox2[state[ 7]];
+    /* Mix column 2. */
+    tmp[ 8] = sbox2[state[ 8]] ^ sbox3[state[13]] ^  sbox[state[ 2]] ^  sbox[state[ 7]];
+    tmp[ 9] =  sbox[state[ 8]] ^ sbox2[state[13]] ^ sbox3[state[ 2]] ^  sbox[state[ 7]];
+    tmp[10] =  sbox[state[ 8]] ^  sbox[state[13]] ^ sbox2[state[ 2]] ^ sbox3[state[ 7]];
+    tmp[11] = sbox3[state[ 8]] ^  sbox[state[13]] ^  sbox[state[ 2]] ^ sbox2[state[ 7]];
 
-	/* Mix column 3. */
-	tmp[12] = sbox2[state[12]] ^ sbox3[state[ 1]] ^  sbox[state[ 6]] ^  sbox[state[11]];
-	tmp[13] =  sbox[state[12]] ^ sbox2[state[ 1]] ^ sbox3[state[ 6]] ^  sbox[state[11]];
-	tmp[14] =  sbox[state[12]] ^  sbox[state[ 1]] ^ sbox2[state[ 6]] ^ sbox3[state[11]];
-	tmp[15] = sbox3[state[12]] ^  sbox[state[ 1]] ^  sbox[state[ 6]] ^ sbox2[state[11]];
+    /* Mix column 3. */
+    tmp[12] = sbox2[state[12]] ^ sbox3[state[ 1]] ^  sbox[state[ 6]] ^  sbox[state[11]];
+    tmp[13] =  sbox[state[12]] ^ sbox2[state[ 1]] ^ sbox3[state[ 6]] ^  sbox[state[11]];
+    tmp[14] =  sbox[state[12]] ^  sbox[state[ 1]] ^ sbox2[state[ 6]] ^ sbox3[state[11]];
+    tmp[15] = sbox3[state[12]] ^  sbox[state[ 1]] ^  sbox[state[ 6]] ^ sbox2[state[11]];
 
     /* Copy back the mixed state. */
-	memcpy(state, tmp, sizeof(tmp));
+    memcpy(state, tmp, sizeof(tmp));
 }
 
 /* Restore and unmix the state. */
@@ -297,32 +297,32 @@ void InvMixSubColumns (uint8_t *state)
     uint8_t tmp[16];
     size_t t;
 
-	/* Restore column 0. */
-	tmp[ 0] = mulE[state[ 0]] ^ mulB[state[ 1]] ^ mulD[state[ 2]] ^ mul9[state[ 3]];
-	tmp[ 5] = mul9[state[ 0]] ^ mulE[state[ 1]] ^ mulB[state[ 2]] ^ mulD[state[ 3]];
-	tmp[10] = mulD[state[ 0]] ^ mul9[state[ 1]] ^ mulE[state[ 2]] ^ mulB[state[ 3]];
-	tmp[15] = mulB[state[ 0]] ^ mulD[state[ 1]] ^ mul9[state[ 2]] ^ mulE[state[ 3]];
+    /* Restore column 0. */
+    tmp[ 0] = mulE[state[ 0]] ^ mulB[state[ 1]] ^ mulD[state[ 2]] ^ mul9[state[ 3]];
+    tmp[ 5] = mul9[state[ 0]] ^ mulE[state[ 1]] ^ mulB[state[ 2]] ^ mulD[state[ 3]];
+    tmp[10] = mulD[state[ 0]] ^ mul9[state[ 1]] ^ mulE[state[ 2]] ^ mulB[state[ 3]];
+    tmp[15] = mulB[state[ 0]] ^ mulD[state[ 1]] ^ mul9[state[ 2]] ^ mulE[state[ 3]];
 
-	/* Restore column 1. */
-	tmp[ 4] = mulE[state[ 4]] ^ mulB[state[ 5]] ^ mulD[state[ 6]] ^ mul9[state[ 7]];
-	tmp[ 9] = mul9[state[ 4]] ^ mulE[state[ 5]] ^ mulB[state[ 6]] ^ mulD[state[ 7]];
-	tmp[14] = mulD[state[ 4]] ^ mul9[state[ 5]] ^ mulE[state[ 6]] ^ mulB[state[ 7]];
-	tmp[ 3] = mulB[state[ 4]] ^ mulD[state[ 5]] ^ mul9[state[ 6]] ^ mulE[state[ 7]];
+    /* Restore column 1. */
+    tmp[ 4] = mulE[state[ 4]] ^ mulB[state[ 5]] ^ mulD[state[ 6]] ^ mul9[state[ 7]];
+    tmp[ 9] = mul9[state[ 4]] ^ mulE[state[ 5]] ^ mulB[state[ 6]] ^ mulD[state[ 7]];
+    tmp[14] = mulD[state[ 4]] ^ mul9[state[ 5]] ^ mulE[state[ 6]] ^ mulB[state[ 7]];
+    tmp[ 3] = mulB[state[ 4]] ^ mulD[state[ 5]] ^ mul9[state[ 6]] ^ mulE[state[ 7]];
 
-	/* Restore column 2. */
-	tmp[ 8] = mulE[state[ 8]] ^ mulB[state[ 9]] ^ mulD[state[10]] ^ mul9[state[11]];
-	tmp[13] = mul9[state[ 8]] ^ mulE[state[ 9]] ^ mulB[state[10]] ^ mulD[state[11]];
-	tmp[ 2] = mulD[state[ 8]] ^ mul9[state[ 9]] ^ mulE[state[10]] ^ mulB[state[11]];
-	tmp[ 7] = mulB[state[ 8]] ^ mulD[state[ 9]] ^ mul9[state[10]] ^ mulE[state[11]];
+    /* Restore column 2. */
+    tmp[ 8] = mulE[state[ 8]] ^ mulB[state[ 9]] ^ mulD[state[10]] ^ mul9[state[11]];
+    tmp[13] = mul9[state[ 8]] ^ mulE[state[ 9]] ^ mulB[state[10]] ^ mulD[state[11]];
+    tmp[ 2] = mulD[state[ 8]] ^ mul9[state[ 9]] ^ mulE[state[10]] ^ mulB[state[11]];
+    tmp[ 7] = mulB[state[ 8]] ^ mulD[state[ 9]] ^ mul9[state[10]] ^ mulE[state[11]];
 
-	/* Restore column 3. */
-	tmp[12] = mulE[state[12]] ^ mulB[state[13]] ^ mulD[state[14]] ^ mul9[state[15]];
-	tmp[ 1] = mul9[state[12]] ^ mulE[state[13]] ^ mulB[state[14]] ^ mulD[state[15]];
-	tmp[ 6] = mulD[state[12]] ^ mul9[state[13]] ^ mulE[state[14]] ^ mulB[state[15]];
-	tmp[11] = mulB[state[12]] ^ mulD[state[13]] ^ mul9[state[14]] ^ mulE[state[15]];
+    /* Restore column 3. */
+    tmp[12] = mulE[state[12]] ^ mulB[state[13]] ^ mulD[state[14]] ^ mul9[state[15]];
+    tmp[ 1] = mul9[state[12]] ^ mulE[state[13]] ^ mulB[state[14]] ^ mulD[state[15]];
+    tmp[ 6] = mulD[state[12]] ^ mul9[state[13]] ^ mulE[state[14]] ^ mulB[state[15]];
+    tmp[11] = mulB[state[12]] ^ mulD[state[13]] ^ mul9[state[14]] ^ mulE[state[15]];
 
     /* Copy back the modified state through the inverse substitution box. */
-	for (t = 0; t < 16; ++t) state[t] = ibox[tmp[t]];
+    for (t = 0; t < 16; ++t) state[t] = ibox[tmp[t]];
 }
 
 /* Add the round key to the state. */
@@ -348,40 +348,40 @@ void ExpandKey (uint8_t *key, uint8_t *ext, size_t keySize, size_t rounds)
     size_t t;
 
     /* Copy the key into the extended array. */
-	memcpy(ext, key, keySize * 4);
+    memcpy(ext, key, keySize * 4);
 
     /* Perform the key schedule... */
-	for (t = keySize; t < 4 * (rounds + 1); ++t)
-	{
-	    /* Get the first "word". */
-		tmp[0] = ext[4 * t - 4];
-		tmp[1] = ext[4 * t - 3];
-		tmp[2] = ext[4 * t - 2];
-		tmp[3] = ext[4 * t - 1];
+    for (t = keySize; t < 4 * (rounds + 1); ++t)
+    {
+        /* Get the first "word". */
+        tmp[0] = ext[4 * t - 4];
+        tmp[1] = ext[4 * t - 3];
+        tmp[2] = ext[4 * t - 2];
+        tmp[3] = ext[4 * t - 1];
 
         /* Conditional depending on key size. */
-		if (!(t % keySize))
-		{
-			tmp[4] = tmp[3];
-			tmp[3] = sbox[tmp[0]];
-			tmp[0] = sbox[tmp[1]] ^ ks[t / keySize];
-			tmp[1] = sbox[tmp[2]];
-			tmp[2] = sbox[tmp[4]];
-		}
-		else if (keySize > 6 && t % keySize == 4 )
-		{
-			tmp[0] = sbox[tmp[0]];
-			tmp[1] = sbox[tmp[1]];
-			tmp[2] = sbox[tmp[2]];
-			tmp[3] = sbox[tmp[3]];
-		}
+        if (!(t % keySize))
+        {
+            tmp[4] = tmp[3];
+            tmp[3] = sbox[tmp[0]];
+            tmp[0] = sbox[tmp[1]] ^ ks[t / keySize];
+            tmp[1] = sbox[tmp[2]];
+            tmp[2] = sbox[tmp[4]];
+        }
+        else if (keySize > 6 && t % keySize == 4 )
+        {
+            tmp[0] = sbox[tmp[0]];
+            tmp[1] = sbox[tmp[1]];
+            tmp[2] = sbox[tmp[2]];
+            tmp[3] = sbox[tmp[3]];
+        }
 
         /* Update the extended key array. */
-		ext[4 * t + 0] = ext[4 * t - 4 * keySize + 0] ^ tmp[0];
-		ext[4 * t + 1] = ext[4 * t - 4 * keySize + 1] ^ tmp[1];
-		ext[4 * t + 2] = ext[4 * t - 4 * keySize + 2] ^ tmp[2];
-		ext[4 * t + 3] = ext[4 * t - 4 * keySize + 3] ^ tmp[3];
-	}
+        ext[4 * t + 0] = ext[4 * t - 4 * keySize + 0] ^ tmp[0];
+        ext[4 * t + 1] = ext[4 * t - 4 * keySize + 1] ^ tmp[1];
+        ext[4 * t + 2] = ext[4 * t - 4 * keySize + 2] ^ tmp[2];
+        ext[4 * t + 3] = ext[4 * t - 4 * keySize + 3] ^ tmp[3];
+    }
 }
 
 

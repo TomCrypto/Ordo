@@ -1,29 +1,43 @@
-# Debug flags (no optimization, native feature flags, warnings, and ordo debug flag)
-CFLAGS_DEBUG = -O0 -Wall -Wno-implicit-function-declaration -Wno-long-long -pedantic -pipe -march=native -mno-avx -D ORDO_DEBUG -ggdb
+ASM = $(subst .S,.o,$(subst src/,obj/,$(shell find src/ -name '*.S')))
+OBJ = $(subst .c,.o,$(subst src/,obj/,$(shell find src/ -name '*.c')))
+HEADERS = $(shell find include/ -name '*.h')
+TARGET = libordo.so
+LDFLAGS = -shared
+CC = gcc
 
-# Release flags (full optimization, native feature flags, warnings)
-CFLAGS_RELEASE = -O6 -Wall -Wno-implicit-function-declaration -Wno-long-long -pedantic -pipe -march=native -mno-avx
+CFLAGS_DEBUG = -fpic -O0 -D ORDO_DEBUG -ggdb \
+               -Wall -Wno-implicit-function-declaration -Wno-long-long \
+               -pedantic -pipe
 
-# The default build target is release
-default: release
+CFLAGS_RELEASE = -fpic -O6 -march=native -mno-avx \
+                 -Wall -Wno-implicit-function-declaration -Wno-long-long \
+                 -pedantic -pipe
 
-# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure the lib/ folder exists...
-debug: $(shell find src/ -name '*.c')
-	@mkdir lib -p
-	gcc -shared -fpic -Iinclude/ $(CFLAGS_DEBUG) -o lib/libordo.so $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
-	@echo "\n[#] Ordo built in <debug> mode."
+# Sets DEBUG to 0 if it hasn't been set by command-line (e.g. make DEBUG=1)
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	CFLAGS = $(CFLAGS_DEBUG)
+else
+	CFLAGS = $(CFLAGS_RELEASE)
+endif
 
-# Simply push all the source files (+ assembler files) to gcc and build/link. Make sure the lib/ folder exists...
-release: $(shell find src/ -name '*.c')
-	@mkdir lib -p
-	gcc --shared -fpic -Iinclude/ $(CFLAGS_RELEASE) -o lib/libordo.so $(shell find src/ -name '*.c') $(shell find src/ -name '*.S')
-	@echo "\n[#] Ordo built in <release> mode."
+debug: $(TARGET)
 
-# Generate the doxygen documentation
+$(TARGET): $(OBJ) $(ASM)
+	@mkdir -p lib/
+	@$(CC) $(LDFLAGS) $(OBJ) $(ASM) -o $(addprefix lib/, $(TARGET))
+
+$(OBJ): obj/%.o : src/%.c $(HEADERS)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -Iinclude/ -c $< -o $@
+
+$(ASM): obj/%.o : src/%.S $(HEADERS)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -Iinclude/ -c $< -o $@
+
 documentation:
 	@doxygen Doxyfile
-	@echo "\n[#] Ordo documentation generated."
 
-# Removes the shared library
 clean:
-	@rm -f ./lib/ --recursive
+	@rm -f obj/ --recursive
+	@rm -f lib/ --recursive

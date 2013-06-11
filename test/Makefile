@@ -1,24 +1,32 @@
-# Debug flags (no optimization and debug symbols on)
-CFLAGS_DEBUG = -O0 -pedantic -pipe -ggdb
+OBJ = $(subst .c,.o,$(subst src/,obj/,$(shell find src/ -name '*.c')))
+HEADERS = $(shell find include/ -name '*.h')
+LIBINCLUDE = ../ordo/include/
+LIBPATH = ../ordo/lib/
+TARGET = ordo
+CC = gcc
 
-# Release flags (optimization on, no debug symbols)
+CFLAGS_DEBUG = -O0 -ggdb -pedantic -pipe
 CFLAGS_RELEASE = -O2 -pedantic -pipe
 
-# Default build is release
-default: release
+# Sets DEBUG to 0 if it hasn't been set by command-line (e.g. make DEBUG=1)
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	CFLAGS = $(CFLAGS_DEBUG)
+else
+	CFLAGS = $(CFLAGS_RELEASE)
+endif
 
-# Simply compile all files and give gcc the libordo.so
-debug: $(shell find src/ -name '*.c')
-	@mkdir bin -p
-	gcc -I../ordo/include/ -Iinclude/ $(CFLAGS_DEBUG) -o ./bin/ordo $(shell find src/ -name '*.c') ../ordo/lib/libordo.so
-	@echo "\n[#] Test unit built in <debug> mode."
+debug: $(TARGET)
 
-# Simply compile all files and give gcc the libordo.so
-release: $(shell find src/ -name '*.c')
-	@mkdir bin -p
-	gcc -I../ordo/include/ -Iinclude/ $(CFLAGS_RELEASE) -o ./bin/ordo $(shell find src/ -name '*.c') ../ordo/lib/libordo.so
-	@echo "\n[#] Test unit built in <release> mode."
+$(TARGET): $(OBJ) $(ASM)
+	@mkdir -p bin/
+	@$(CC) $(OBJ) -o $(addprefix bin/, $(TARGET)) $(addprefix $(LIBPATH), libordo.so)
 
-# Removes the test unit
+$(OBJ): obj/%.o : src/%.c $(HEADERS)
+	@mkdir -p $(@D)
+	echo $(CFLAGS)
+	@$(CC) $(CFLAGS) -I$(LIBINCLUDE) -Iinclude/ -c $< -o $@
+
 clean:
-	@rm -f ./bin/ --recursive
+	@rm -f obj/ --recursive
+	@rm -f bin/ --recursive
