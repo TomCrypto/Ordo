@@ -196,8 +196,13 @@ void SHA256_Free(HASH_FUNCTION_CONTEXT* ctx)
     sfree(ctx, sizeof(HASH_FUNCTION_CONTEXT));
 }
 
+void SHA256_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+{
+    memcpy(state(dst), state(src), sizeof(SHA256_STATE));
+}
+
 /* Fills a HASH_FUNCTION struct with the correct information. */
 void SHA256_SetPrimitive(HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, SHA256_DIGEST, SHA256_BLOCK, SHA256_Create, SHA256_Init, SHA256_Update, SHA256_Final, SHA256_Free, "SHA-256");
+    MAKE_HASH_FUNCTION(hash, SHA256_DIGEST, SHA256_BLOCK, SHA256_Create, SHA256_Init, SHA256_Update, SHA256_Final, SHA256_Free, SHA256_Copy, "SHA-256");
 }

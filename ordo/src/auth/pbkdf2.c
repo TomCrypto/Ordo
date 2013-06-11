@@ -11,6 +11,9 @@ int pbkdf2(HASH_FUNCTION* hash, void *password, size_t passwordLen, void *salt,
     size_t bufLen = outputLen - outputLen % digestLen + digestLen;
     size_t t, i;
 
+    HMAC_CONTEXT *ctx = hmacCreate(hash);
+    HMAC_CONTEXT *ini = hmacCreate(hash);
+
     void *buf = malloc(bufLen);
     void *tmp = malloc(digestLen);
     void *initial = malloc(digestLen);
@@ -23,18 +26,25 @@ int pbkdf2(HASH_FUNCTION* hash, void *password, size_t passwordLen, void *salt,
     {
         void *bufPtr = (unsigned char*)buf + (t - 1) * digestLen;
 
-        uint32_t counter = htobe32(t);
+        uint32_t counter = htobe32(t); /* Big-endian counter. */
         memcpy((unsigned char*)in + saltLen, &counter, sizeof(uint32_t));
         ordoHMAC(in, saltLen + sizeof(uint32_t), password, passwordLen,
                  initial, hash, hashParams);
         memcpy(bufPtr, initial, digestLen);
 
+        hmacInit(ini, password, passwordLen, hashParams);
+
         /* Now chain over the desired number of iterations, xor together. */
         for (i = 1; i < iterations; ++i)
         {
             memcpy(tmp, initial, digestLen);
-            ordoHMAC(tmp, digestLen, password, passwordLen, initial, hash,
-                     hashParams);
+
+            /* Doing some state copying here since the inner HMAC doesn't
+             * actually change across iterations, so we may as well reuse
+             * it and save a lot of time. */
+            hmacCopy(ctx, ini);
+            hmacUpdate(ctx, tmp, digestLen);
+            hmacFinal(ctx, initial);
 
             xorBuffer(bufPtr, initial, digestLen);
         }
@@ -46,6 +56,9 @@ int pbkdf2(HASH_FUNCTION* hash, void *password, size_t passwordLen, void *salt,
     free(buf);
     free(tmp);
     free(in);
+
+    hmacFree(ctx);
+    hmacFree(ini);
 
     return ORDO_ESUCCESS;
 }

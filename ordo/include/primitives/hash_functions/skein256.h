@@ -60,6 +60,8 @@ void Skein256_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
 
 void Skein256_Free(HASH_FUNCTION_CONTEXT* ctx);
 
+void Skein256_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src);
+
 void Skein256_SetPrimitive(HASH_FUNCTION* hash);
 
 #ifdef __cplusplus

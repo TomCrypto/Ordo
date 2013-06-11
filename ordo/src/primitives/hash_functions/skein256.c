@@ -182,9 +182,14 @@ void Skein256_Free(HASH_FUNCTION_CONTEXT* ctx)
     sfree(ctx, sizeof(HASH_FUNCTION_CONTEXT));
 }
 
+void Skein256_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+{
+    memcpy(state(dst), state(src), sizeof(SKEIN256_STATE));
+}
+
 /* Fills a HASH_FUNCTION struct with the correct information. */
 void Skein256_SetPrimitive(HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, SKEIN256_INTERNAL, SKEIN256_BLOCK, Skein256_Create, Skein256_Init, Skein256_Update, Skein256_Final, Skein256_Free, "Skein-256");
+    MAKE_HASH_FUNCTION(hash, SKEIN256_INTERNAL, SKEIN256_BLOCK, Skein256_Create, Skein256_Init, Skein256_Update, Skein256_Final, Skein256_Free, Skein256_Copy, "Skein-256");
 }
 

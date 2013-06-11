@@ -38,7 +38,7 @@ extern "C" {
     p->name = n;}
 
 /* Same as above, but for hash functions. */
-#define MAKE_HASH_FUNCTION(p, d, b, c, i, u, fi, f, n){                                                               \
+#define MAKE_HASH_FUNCTION(p, d, b, c, i, u, fi, f, cp, n){                                                           \
     p->digestSize = d;                                                                                                \
     p->blockSize = b;                                                                                                 \
     p->fCreate = c;                                                                                                   \
@@ -46,6 +46,7 @@ extern "C" {
     p->fUpdate = (HASH_FUNCTION_UPDATE)u;                                                                             \
     p->fFinal = (HASH_FUNCTION_FINAL)fi;                                                                              \
     p->fFree = f;                                                                                                     \
+    p->fCopy = cp;                                                                                                    \
     p->name = n;}
 
 /*! Returns the name of a cryptographic primitive. */
@@ -136,6 +137,7 @@ typedef int (*HASH_FUNCTION_INIT)(HASH_FUNCTION_CONTEXT*, void*);
 typedef void (*HASH_FUNCTION_UPDATE)(HASH_FUNCTION_CONTEXT*, void*, size_t);
 typedef void (*HASH_FUNCTION_FINAL)(HASH_FUNCTION_CONTEXT*, void*);
 typedef void (*HASH_FUNCTION_FREE)(HASH_FUNCTION_CONTEXT*);
+typedef void (*HASH_FUNCTION_COPY)(HASH_FUNCTION_CONTEXT*, HASH_FUNCTION_CONTEXT*);
 
 /*! \brief Hash function object.
  *
@@ -149,6 +151,7 @@ typedef struct HASH_FUNCTION
     HASH_FUNCTION_UPDATE fUpdate;
     HASH_FUNCTION_FINAL fFinal;
     HASH_FUNCTION_FREE fFree;
+    HASH_FUNCTION_COPY fCopy;
     char* name;
 } HASH_FUNCTION;
 

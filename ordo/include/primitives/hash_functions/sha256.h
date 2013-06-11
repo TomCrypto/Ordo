@@ -27,6 +27,8 @@ void SHA256_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
 
 void SHA256_Free(HASH_FUNCTION_CONTEXT* ctx);
 
+void SHA256_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src);
+
 void SHA256_SetPrimitive(HASH_FUNCTION* hash);
 
 #ifdef __cplusplus

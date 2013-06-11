@@ -269,8 +269,13 @@ void MD5_Free(HASH_FUNCTION_CONTEXT* ctx)
     sfree(ctx, sizeof(HASH_FUNCTION_CONTEXT));
 }
 
+void MD5_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+{
+    memcpy(state(dst), state(src), sizeof(MD5_STATE));
+}
+
 /* Fills a HASH_FUNCTION struct with the correct information. */
 void MD5_SetPrimitive(HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, MD5_DIGEST, MD5_BLOCK, MD5_Create, MD5_Init, MD5_Update, MD5_Final, MD5_Free, "MD5");
+    MAKE_HASH_FUNCTION(hash, MD5_DIGEST, MD5_BLOCK, MD5_Create, MD5_Init, MD5_Update, MD5_Final, MD5_Free, MD5_Copy, "MD5");
 }

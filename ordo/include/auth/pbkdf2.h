@@ -17,6 +17,8 @@ extern "C" {
  * Unlike most cryptographic interfaces, the PBKDF2 API does not follow the usual init/update/final
  * pattern but is a context-free function.
  *
+ * \todo Add error-checking to the function.
+ *
  * @see pbkdf2.c
  */
 

@@ -108,3 +108,10 @@ void hmacFree(HMAC_CONTEXT* ctx)
     hashFunctionFree(ctx->ctx);
     sfree(ctx, sizeof(HMAC_CONTEXT));
 }
+
+void hmacCopy(HMAC_CONTEXT* dst, HMAC_CONTEXT* src)
+{
+    memcpy(dst->key, src->key, dst->ctx->hash->blockSize);
+    memcpy(dst->digest, src->digest, dst->ctx->hash->digestSize);
+    hashFunctionCopy(dst->ctx, src->ctx);
+}

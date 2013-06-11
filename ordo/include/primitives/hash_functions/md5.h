@@ -27,6 +27,8 @@ void MD5_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
 
 void MD5_Free(HASH_FUNCTION_CONTEXT* ctx);
 
+void MD5_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src);
+
 void MD5_SetPrimitive(HASH_FUNCTION* hash);
 
 #ifdef __cplusplus

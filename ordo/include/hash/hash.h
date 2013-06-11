@@ -47,6 +47,8 @@ void hashFunctionFinal(HASH_FUNCTION_CONTEXT* ctx, void* digest);
  \c hashFunctionCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void hashFunctionFree(HASH_FUNCTION_CONTEXT* ctx);
 
+void hashFunctionCopy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src);
+
 #ifdef __cplusplus
 }
 #endif

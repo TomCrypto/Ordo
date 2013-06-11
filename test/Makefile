@@ -24,7 +24,6 @@ $(TARGET): $(OBJ) $(ASM)
 
 $(OBJ): obj/%.o : src/%.c $(HEADERS)
 	@mkdir -p $(@D)
-	echo $(CFLAGS)
 	@$(CC) $(CFLAGS) -I$(LIBINCLUDE) -Iinclude/ -c $< -o $@
 
 clean:

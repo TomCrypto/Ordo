@@ -36,3 +36,9 @@ void hashFunctionFree(HASH_FUNCTION_CONTEXT* ctx)
     /* Free the context. */
     ctx->hash->fFree(ctx);
 }
+
+void hashFunctionCopy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+{
+    dst->hash = src->hash;
+    dst->hash->fCopy(dst, src);
+}

@@ -63,6 +63,9 @@ int hmacFinal(HMAC_CONTEXT* ctx, void* digest);
  \c hmacCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
 void hmacFree(HMAC_CONTEXT* ctx);
 
+/*! This function deep-copies a context in its current state to another context. */
+void hmacCopy(HMAC_CONTEXT* dst, HMAC_CONTEXT* src);
+
 #ifdef __cplusplus
 }
 #endif

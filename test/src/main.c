@@ -42,10 +42,10 @@ void performanceTest()
     hashFunctionPerformance(Skein256(), buffer, BUFSIZE);
     pbkdf2Performance(SHA256(), 1000);
     pbkdf2Performance(SHA256(), 10000);
-    pbkdf2Performance(SHA256(), 50000);
+    pbkdf2Performance(SHA256(), 100000);
     pbkdf2Performance(Skein256(), 1000);
     pbkdf2Performance(Skein256(), 10000);
-    pbkdf2Performance(Skein256(), 50000);
+    pbkdf2Performance(Skein256(), 100000);
 
     /* Free the buffer used for tests. */
     free(buffer);
