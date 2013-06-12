@@ -407,7 +407,11 @@ BLOCK_CIPHER_CONTEXT* AES_Create()
     {
         /* Allocate the AES state. */
         ctx->ctx = salloc(sizeof(AES_STATE));
-        if (ctx->ctx) return ctx;
+        if (ctx->ctx)
+        {
+            state(ctx)->keyBytes = 0;
+            return ctx;
+        }
 
         /* Allocation failed. */
         sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
@@ -510,7 +514,7 @@ void AES_Free(BLOCK_CIPHER_CONTEXT* ctx)
     {
         if (ctx->ctx)
         {
-            sfree(state(ctx)->key, state(ctx)->keyBytes);
+            if (state(ctx)->keyBytes) sfree(state(ctx)->key, state(ctx)->keyBytes);
             sfree(ctx->ctx, sizeof(AES_STATE));
         }
 

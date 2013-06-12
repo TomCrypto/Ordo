@@ -49,6 +49,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="include/auth/hmac.h" />
+		<Unit filename="include/auth/pbkdf2.h" />
 		<Unit filename="include/common/environment.h" />
 		<Unit filename="include/common/identification.h" />
 		<Unit filename="include/common/ordotypes.h" />
@@ -73,6 +74,9 @@
 		<Unit filename="include/primitives/stream_ciphers/rc4.h" />
 		<Unit filename="include/random/random.h" />
 		<Unit filename="src/auth/hmac.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/auth/pbkdf2.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/common/ordotypes.c">

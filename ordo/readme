@@ -12,9 +12,10 @@ Documentation: The headers and assembly files are documented for Doxygen, the so
 
 Current version highlight:
  - The old AES-NI implementation works under Linux!
- - A basic and unfinished (functional but no error checking) PBKDF2/HMAC implementation is available.
+ - A PBKDF2/HMAC implementation is now available for all hash functions (will always use the generic HMAC construct, functions with special HMAC support such as Skein cannot use it as a PRF)
  - The makefiles have (finally) been updated for object-based compilation
  - Added some context copy functions for hashes (will extend to other primitives later on)
+ - Worked around a long-standing memory freeing bug in AES (will be fixed soon)
 
 To-do list:
  - fix endianness support for Windows which is rather precarious
