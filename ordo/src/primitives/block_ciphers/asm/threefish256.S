@@ -20,14 +20,14 @@
 .intel_syntax noprefix;
 
 /* Declarations. */
-.globl Threefish256_Forward_ASM
-.globl Threefish256_Inverse_ASM
+.globl threefish256_forward_ASM
+.globl threefish256_inverse_ASM
 
 /* This is x64 assembler for Linux. */
 #if (ENVIRONMENT_64 && ABI_LINUX_64)
 
 /* Forward Threefish-256 permutation. */
-Threefish256_Forward_ASM:
+threefish256_forward_ASM:
     xor %RAX, %RAX
 
     mov  %R8, [%RDI + 0x00]
@@ -121,7 +121,7 @@ Threefish256_Forward_ASM:
     ret
 
 /* Inverse Threefish-256 permutation. */
-Threefish256_Inverse_ASM:
+threefish256_inverse_ASM:
     xor %RAX, %RAX
 
     add %RSI, 0x240
@@ -220,7 +220,7 @@ Threefish256_Inverse_ASM:
 #elif (ENVIRONMENT_64 && ABI_WINDOWS_64)
 
 /* Forward Threefish-256 permutation. */
-Threefish256_Forward_ASM:
+threefish256_forward_ASM:
     xor %RAX, %RAX
 
     mov  %R8, [%RCX + 0x00]
@@ -314,7 +314,7 @@ Threefish256_Forward_ASM:
     ret
 
 /* Inverse Threefish-256 permutation. */
-Threefish256_Inverse_ASM:
+threefish256_inverse_ASM:
     xor %RAX, %RAX
 
     add %RDX, 0x240

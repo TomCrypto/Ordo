@@ -1,135 +1,139 @@
 #include <ordo.h>
 
+#include <common/ordo_errors.h>
+
+/******************************************************************************/
+
 /* Load Ordo. */
-void ordoLoad()
+void load_ordo()
 {
     /* Load all cryptographic primitives. */
-    primitivesLoad();
+    load_primitives();
 
     /* Load all encryption modes of operation. */
     encryptLoad();
 }
 
 /* This convenience function encrypts a buffer with a given block cipher, key, IV, and parameters. */
-int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
+int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {
     int error;
     size_t outPos = 0;
 
     /* Create the context. */
-    ENC_BLOCK_CIPHER_CONTEXT* ctx = encBlockCipherCreate(primitive, mode);
-    if (!ctx) return ORDO_EHEAPALLOC;
+    struct ENC_BLOCK_CTX* ctx = enc_block_alloc(primitive, mode);
+    if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 1);
-    if (error == ORDO_ESUCCESS)
+    error = enc_block_init(ctx, key, keySize, iv, 1, cipherParams, modeParams);
+    if (error == ORDO_SUCCESS)
     {
         /* Encrypt the buffer. */
-        encBlockCipherUpdate(ctx, in, inlen, out, outlen);
+        enc_block_update(ctx, in, inlen, out, outlen);
         outPos += *outlen;
 
         /* Finalize the context. */
-        error = encBlockCipherFinal(ctx, (unsigned char*)out + outPos, outlen);
-        if (error == ORDO_ESUCCESS) *outlen += outPos;
+        error = enc_block_final(ctx, (unsigned char*)out + outPos, outlen);
+        if (error == ORDO_SUCCESS) *outlen += outPos;
     }
 
     /* Free the context and return success or failure. */
-    encBlockCipherFree(ctx);
+    enc_block_free(ctx);
     return error;
 }
 
 /* This convenience function decrypts a buffer with a given block cipher, key, IV, and parameters. */
-int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
+int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
 {
     int error;
     size_t outPos = 0;
 
     /* Create the context. */
-    ENC_BLOCK_CIPHER_CONTEXT* ctx = encBlockCipherCreate(primitive, mode);
-    if (!ctx) return ORDO_EHEAPALLOC;
+    struct ENC_BLOCK_CTX* ctx = enc_block_alloc(primitive, mode);
+    if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = encBlockCipherInit(ctx, key, keySize, iv, cipherParams, modeParams, 0);
-    if (error == ORDO_ESUCCESS)
+    error = enc_block_init(ctx, key, keySize, iv, 0, cipherParams, modeParams);
+    if (error == ORDO_SUCCESS)
     {
         /* Encrypt the buffer. */
-        encBlockCipherUpdate(ctx, in, inlen, out, outlen);
+        enc_block_update(ctx, in, inlen, out, outlen);
         outPos += *outlen;
 
         /* Finalize the context. */
-        error = encBlockCipherFinal(ctx, (unsigned char*)out + outPos, outlen);
-        if (error == ORDO_ESUCCESS) *outlen += outPos;
+        error = enc_block_final(ctx, (unsigned char*)out + outPos, outlen);
+        if (error == ORDO_SUCCESS) *outlen += outPos;
     }
 
     /* Free the context and return success or failure. */
-    encBlockCipherFree(ctx);
+    enc_block_free(ctx);
     return error;
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given stream cipher, key, IV, and parameters. */
-int ordoEncryptStream(void* inout, size_t len, STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
+int ordoEncryptStream(void* inout, size_t len, struct STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
 {
     int error;
 
     /* Create the context. */
-    ENC_STREAM_CIPHER_CONTEXT* ctx = encStreamCipherCreate(primitive);
-    if (!ctx) return ORDO_EHEAPALLOC;
+    struct ENC_STREAM_CTX* ctx = enc_stream_alloc(primitive);
+    if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it and encrypt the buffer. */
-    error = encStreamCipherInit(ctx, key, keySize, cipherParams);
-    if (error == ORDO_ESUCCESS) encStreamCipherUpdate(ctx, inout, len);
+    error = enc_stream_init(ctx, key, keySize, cipherParams);
+    if (error == ORDO_SUCCESS) enc_stream_update(ctx, inout, len);
 
     /* Free the context and return success or failure. */
-    encStreamCipherFree(ctx);
+    enc_stream_free(ctx);
     return error;
 }
 
 /* Hashes a message. */
-int ordoHash(void* in, size_t len, void* out, HASH_FUNCTION* hash, void* hashParams)
+int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* hashParams)
 {
     int error;
 
     /* Create the context. */
-    HASH_FUNCTION_CONTEXT* ctx = hashFunctionCreate(hash);
-    if (!ctx) return ORDO_EHEAPALLOC;
+    struct HASH_CTX* ctx = hash_alloc(hash);
+    if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = hashFunctionInit(ctx, hashParams);
-    if (error == ORDO_ESUCCESS)
+    error = hash_init(ctx, hashParams);
+    if (error == ORDO_SUCCESS)
     {
         /* Hash the buffer. */
-        hashFunctionUpdate(ctx, in, len);
+        hash_update(ctx, in, len);
 
         /* Finalize the context. */
-        hashFunctionFinal(ctx, out);
+        hash_final(ctx, out);
     }
 
     /* Free the context and return success or failure. */
-    hashFunctionFree(ctx);
+    hash_free(ctx);
     return error;
 }
 
 /* HMAC. */
-int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, HASH_FUNCTION* hash, void* hashParams)
+int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, struct HASH_FUNCTION* hash, void* hashParams)
 {
     int error;
 
     /* Create the context. */
-    HMAC_CONTEXT* ctx = hmacCreate(hash);
-    if (!ctx) return ORDO_EHEAPALLOC;
+    struct HMAC_CTX* ctx = hmac_alloc(hash);
+    if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = hmacInit(ctx, key, keySize, hashParams);
-    if (error == ORDO_ESUCCESS)
+    error = hmac_init(ctx, key, keySize, hashParams);
+    if (error == ORDO_SUCCESS)
     {
         /* Hash the buffer. */
-        hmacUpdate(ctx, in, len);
+        hmac_update(ctx, in, len);
 
         /* Finalize the context. */
-        error = hmacFinal(ctx, out);
+        error = hmac_final(ctx, out);
     }
 
     /* Free the context and return success or failure. */
-    hmacFree(ctx);
+    hmac_free(ctx);
     return error;
 }

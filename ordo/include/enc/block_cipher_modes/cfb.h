@@ -1,5 +1,9 @@
-#ifndef CFB_H
-#define CFB_H
+#ifndef ORDO_CFB_H
+#define ORDO_CFB_H
+
+#include <enc/block_modes.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,27 +21,27 @@ extern "C" {
  * Note that the CFB keystream depends on the plaintext fed into it, as opposed to OFB mode. This also
  * means the block cipher's inverse permutation is never used.
  *
- * \c CFB_Final() accepts 0 as an argument for \c outlen, since by design the CFB mode of operation does not
+ * \c cfb_final() accepts 0 as an argument for \c outlen, since by design the CFB mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
  *
  * @see cfb.c
  */
 
-#include <enc/enc_block.h>
+struct CFB_STATE;
 
-BLOCK_CIPHER_MODE_CONTEXT* CFB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
+struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int CFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
+int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params);
 
-void CFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
+void cfb_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state,
                 unsigned char* in, size_t inlen,
                 unsigned char* out, size_t* outlen);
 
-int CFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
+int cfb_final(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void CFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+void cfb_free(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-void CFB_SetMode(BLOCK_CIPHER_MODE* mode);
+void cfb_set_mode(struct BLOCK_MODE* mode);
 
 #ifdef __cplusplus
 }

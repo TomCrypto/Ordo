@@ -1,58 +1,63 @@
 #include <enc/block_cipher_modes/ofb.h>
 
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
+
+/******************************************************************************/
+
 /* This is extra context space required by the OFB mode to store the amount of state not used.*/
-typedef struct OFB_ENCRYPT_CONTEXT
+struct OFB_STATE
 {
     /* A buffer for the IV. */
     void* iv;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
-} OFB_ENCRYPT_CONTEXT;
+};
 
-/* Shorthand macro for context casting. */
-#define ofb(ctx) ((OFB_ENCRYPT_CONTEXT*)ctx)
-
-BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx)
+struct OFB_STATE* ofb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    /* Allocate the context and extra buffers in it. */
-    BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
-    if (ctx)
-    {
-        if ((ctx->ctx = salloc(sizeof(OFB_ENCRYPT_CONTEXT))))
-        {
-            /* Return if everything succeeded. */
-            if ((ofb(ctx->ctx)->iv = salloc(cipherCtx->cipher->blockSize)))
-            {
-                ofb(ctx->ctx)->remaining = 0;
-                return ctx;
-            }
+    size_t block_size = cipher_block_size(cipher);
 
-            /* Clean up if an error occurred. */
-            sfree(ctx->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
+    /* Allocate the context and extra buffers in it. */
+    struct OFB_STATE* state = secure_alloc(sizeof(struct OFB_STATE));
+
+    if (state)
+    {
+        /* Return if everything succeeded. */
+        if ((state->iv = secure_alloc(block_size)))
+        {
+            state->remaining = 0;
+            return state;
         }
-        sfree(ctx, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+
+        /* Clean up if an error occurred. */
+        secure_free(state, sizeof(struct OFB_STATE));
     }
 
     /* Allocation failed, return zero. */
     return 0;
 }
 
-int OFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params)
+int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
 {
+    size_t block_size = cipher_block_size(cipher);
+
     /* Copy the IV (required) into the context IV. */
-    memcpy(ofb(mode->ctx)->iv, iv, cipherCtx->cipher->blockSize);
+    memcpy(state->iv, iv, block_size);
 
     /* Compute the initial keystream block. */
-    cipherCtx->cipher->fForward(cipherCtx, ofb(mode->ctx)->iv);
-    ofb(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
+	block_cipher_forward(cipher, cipher_state, state->iv);
+    state->remaining = block_size;
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
+    size_t block_size = cipher_block_size(cipher);
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -62,20 +67,20 @@ void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
     while (inlen != 0)
     {
         /* If there is no data left in the context block, update. */
-        if (ofb(mode->ctx)->remaining == 0)
+        if (state->remaining == 0)
         {
             /* OFB update (simply apply the permutation function again). */
-            cipherCtx->cipher->fForward(cipherCtx, ofb(mode->ctx)->iv);
-            ofb(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
+			block_cipher_forward(cipher, cipher_state, state->iv);
+            state->remaining = block_size;
         }
 
         /* Compute the amount of data to process. */
-        process = (inlen < ofb(mode->ctx)->remaining) ? inlen : ofb(mode->ctx)->remaining;
+        process = (inlen < state->remaining) ? inlen : state->remaining;
 
         /* Process this amount of data. */
         if (out != in) memcpy(out, in, process);
-        xorBuffer(out, (unsigned char*)ofb(mode->ctx)->iv + cipherCtx->cipher->blockSize - ofb(mode->ctx)->remaining, process);
-        ofb(mode->ctx)->remaining -= process;
+        xor_buffer(out, (unsigned char*)state->iv + block_size - state->remaining, process);
+        state->remaining -= process;
         (*outlen) += process;
         inlen -= process;
         out += process;
@@ -83,25 +88,30 @@ void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
     }
 }
 
-int OFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
+int ofb_final(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void OFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
+void ofb_free(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Free context space. */
-    sfree(ofb(mode->ctx)->iv, cipherCtx->cipher->blockSize);
-    sfree(mode->ctx, sizeof(OFB_ENCRYPT_CONTEXT));
-    sfree(mode, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+    secure_free(state->iv, cipher_block_size(cipher));
+    secure_free(state, sizeof(struct OFB_STATE));
 }
 
-/* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
-void OFB_SetMode(BLOCK_CIPHER_MODE* mode)
+/* Fills a BLOCK_MODE struct with the correct information. */
+void ofb_set_mode(struct BLOCK_MODE* mode)
 {
-    MAKE_BLOCK_CIPHER_MODE(mode, OFB_Create, OFB_Init, OFB_Update, OFB_Update, OFB_Final, OFB_Final, OFB_Free, "OFB");
+    make_block_mode(mode,
+                    (BLOCK_MODE_ALLOC)ofb_alloc,
+                    (BLOCK_MODE_INIT)ofb_init,
+                    (BLOCK_MODE_UPDATE)ofb_update,
+                    (BLOCK_MODE_FINAL)ofb_final,
+                    (BLOCK_MODE_FREE)ofb_free,
+                    "OFB");
 }

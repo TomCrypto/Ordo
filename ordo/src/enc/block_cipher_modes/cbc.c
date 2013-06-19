@@ -1,7 +1,13 @@
 #include <enc/block_cipher_modes/cbc.h>
 
-/* This is extra context space required by the CBC mode to store temporary incomplete data buffers.*/
-typedef struct CBC_ENCRYPT_CONTEXT
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
+
+/******************************************************************************/
+
+/* This is extra context space required by the CBC state to store temporary incomplete data buffers.*/
+struct CBC_STATE
 {
     /* A buffer for the IV. */
     void* iv;
@@ -11,214 +17,239 @@ typedef struct CBC_ENCRYPT_CONTEXT
     size_t available;
     /* Whether to pad the ciphertext. */
     size_t padding;
-} CBC_ENCRYPT_CONTEXT;
 
-/* Shorthand macro for context casting. */
-#define cbc(ctx) ((CBC_ENCRYPT_CONTEXT*)ctx)
+    int direction;
+};
 
-BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_CONTEXT* cipherCtx)
+struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
+	size_t block_size = cipher_block_size(cipher);
+
     /* Allocate the context and extra buffers in it. */
-    BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
-    if (ctx)
+    struct CBC_STATE *state = secure_alloc(sizeof(struct CBC_STATE));
+
+    if (state)
     {
-        if ((ctx->ctx = salloc(sizeof(CBC_ENCRYPT_CONTEXT))))
+        /* Allocate extra buffers for the running IV and temporary block. */
+        state->iv = secure_alloc(block_size);
+        state->block = secure_alloc(block_size);
+
+        /* Return if every allocation succeeded. */
+        if ((state->iv) && (state->block))
         {
-            /* Allocate extra buffers for the running IV and temporary block. */
-            cbc(ctx->ctx)->iv = salloc(cipherCtx->cipher->blockSize);
-            cbc(ctx->ctx)->block = salloc(cipherCtx->cipher->blockSize);
-
-            /* Return if every allocation succeeded. */
-            if ((cbc(ctx->ctx)->iv) && (cbc(ctx->ctx)->block))
-            {
-                cbc(ctx->ctx)->available = 0;
-                return ctx;
-            }
-
-            /* Clean up if an error occurred. */
-            sfree(cbc(ctx->ctx)->block, cipherCtx->cipher->blockSize);
-            sfree(cbc(ctx->ctx)->iv, cipherCtx->cipher->blockSize);
-            sfree(ctx->ctx, sizeof(CBC_ENCRYPT_CONTEXT));
+            state->available = 0;
+            return state;
         }
-        sfree(ctx, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+
+        /* Clean up if an error occurred. */
+        secure_free(state->block, block_size);
+        secure_free(state->iv, block_size);
+        secure_free(state, sizeof(struct CBC_STATE));
     }
 
     /* Allocation failed, return zero. */
     return 0;
 }
 
-int CBC_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, CBC_PARAMS* params)
+int cbc_init(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct CBC_PARAMS* params)
 {
+    state->direction = dir;
+
     /* Copy the IV (required) into the context IV. */
-    memcpy(cbc(mode->ctx)->iv, iv, cipherCtx->cipher->blockSize);
+    memcpy(state->iv, iv, cipher_block_size(cipher));
 
     /* Check and save the parameters. */
-    cbc(mode->ctx)->padding = (params == 0) ? 1 : params->padding & 1;
+    state->padding = (params == 0) ? 1 : params->padding & 1;
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void CBC_EncryptUpdate(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cbc_encrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    size_t block_size = cipher_block_size(cipher);
+
     /* Initialize output size. */
     *outlen = 0;
 
     /* Process all full blocks. */
-    while (cbc(mode->ctx)->available + inlen >= cipherCtx->cipher->blockSize)
+    while (state->available + inlen >= block_size)
     {
         /* Copy it in, and process it. */
-        memcpy(cbc(mode->ctx)->block + cbc(mode->ctx)->available, in, cipherCtx->cipher->blockSize - cbc(mode->ctx)->available);
+        memcpy(state->block + state->available, in, block_size - state->available);
 
         /* Exclusive-or the plaintext block with the running IV. */
-        xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipherCtx->cipher->blockSize);
+        xor_buffer(state->block, state->iv, block_size);
 
         /* Encrypt the block. */
-        cipherCtx->cipher->fForward(cipherCtx, cbc(mode->ctx)->block);
+        block_cipher_forward(cipher, cipher_state, state->block);
 
         /* Set this as the new running IV. */
-        memcpy(cbc(mode->ctx)->iv, cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
+        memcpy(state->iv, state->block, block_size);
 
         /* Write back the block to the output. */
-        memcpy(out, cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
-        *outlen += cipherCtx->cipher->blockSize;
-        out += cipherCtx->cipher->blockSize;
+        memcpy(out, state->block, block_size);
+        *outlen += block_size;
+        out += block_size;
 
         /* Go forward in the input buffer. */
-        inlen -= cipherCtx->cipher->blockSize - cbc(mode->ctx)->available;
-        in += cipherCtx->cipher->blockSize - cbc(mode->ctx)->available;
-        cbc(mode->ctx)->available = 0;
+        inlen -= block_size - state->available;
+        in += block_size - state->available;
+        state->available = 0;
     }
 
     /* Add whatever is left in the temporary buffer. */
-    memcpy(cbc(mode->ctx)->block + cbc(mode->ctx)->available, in, inlen);
-    cbc(mode->ctx)->available += inlen;
+    memcpy(state->block + state->available, in, inlen);
+    state->available += inlen;
 }
 
-void CBC_DecryptUpdate(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cbc_decrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
+    size_t block_size = cipher_block_size(cipher);
+
     /* Initialize output size. */
     *outlen = 0;
 
     /* Process all full blocks except the last potential block (if padding is disabled, also process the last block). */
-    while (cbc(mode->ctx)->available + inlen > cipherCtx->cipher->blockSize - (1 - cbc(mode->ctx)->padding))
+    while (state->available + inlen > block_size - (1 - state->padding))
     {
         /* Copy it in, and process it. */
-        memcpy(cbc(mode->ctx)->block + cbc(mode->ctx)->available, in, cipherCtx->cipher->blockSize - cbc(mode->ctx)->available);
+        memcpy(state->block + state->available, in, block_size - state->available);
 
         /* Save this ciphertext block. */
-        memcpy(out, cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
+        memcpy(out, state->block, block_size);
 
         /* Decrypt the block. */
-        cipherCtx->cipher->fInverse(cipherCtx, cbc(mode->ctx)->block);
+        block_cipher_inverse(cipher, cipher_state, state->block);
 
         /* Exclusive-or the block with the running IV. */
-        xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipherCtx->cipher->blockSize);
+        xor_buffer(state->block, state->iv, block_size);
 
         /* Get the original ciphertext back as running IV. */
-        memcpy(cbc(mode->ctx)->iv, out, cipherCtx->cipher->blockSize);
+        memcpy(state->iv, out, block_size);
 
         /* Write back the block to the output. */
-        memcpy(out, cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
-        *outlen += cipherCtx->cipher->blockSize;
-        out += cipherCtx->cipher->blockSize;
+        memcpy(out, state->block, block_size);
+        *outlen += block_size;
+        out += block_size;
 
         /* Go forward in the input buffer. */
-        inlen -= cipherCtx->cipher->blockSize - cbc(mode->ctx)->available;
-        in += cipherCtx->cipher->blockSize - cbc(mode->ctx)->available;
-        cbc(mode->ctx)->available = 0;
+        inlen -= block_size - state->available;
+        in += block_size - state->available;
+        state->available = 0;
     }
 
     /* Save the final block. */
-    memcpy(cbc(mode->ctx)->block + cbc(mode->ctx)->available, in, inlen);
-    cbc(mode->ctx)->available += inlen;
+    memcpy(state->block + state->available, in, inlen);
+    state->available += inlen;
 }
 
-int CBC_EncryptFinal(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
+int cbc_encrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
+    size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (cbc(mode->ctx)->padding == 0)
+    if (state->padding == 0)
     {
         /* If there is data left, return an error and the number of plaintext left in outlen. */
-        *outlen = cbc(mode->ctx)->available;
-        if (*outlen != 0) return ORDO_ELEFTOVER;
+        *outlen = state->available;
+        if (*outlen != 0) return ORDO_LEFTOVER;
     }
     else
     {
         /* Compute the amount of padding required. */
-        padding = cipherCtx->cipher->blockSize - cbc(mode->ctx)->available % cipherCtx->cipher->blockSize;
+        padding = block_size - state->available % block_size;
 
         /* Write padding to the last block. */
-        memset(cbc(mode->ctx)->block + cbc(mode->ctx)->available, padding, padding);
+        memset(state->block + state->available, padding, padding);
 
         /* Exclusive-or the last block with the running IV. */
-        xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipherCtx->cipher->blockSize);
+        xor_buffer(state->block, state->iv, block_size);
 
         /* Encrypt the last block. */
-        cipherCtx->cipher->fForward(cipherCtx, cbc(mode->ctx)->block);
+        block_cipher_forward(cipher, cipher_state, state->block);
 
         /* Write it out to the buffer. */
-        memcpy(out, cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
-        *outlen = cipherCtx->cipher->blockSize;
+        memcpy(out, state->block, block_size);
+        *outlen = block_size;
     }
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-int CBC_DecryptFinal(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
+int cbc_decrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
+    size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
-    if (!cbc(mode->ctx)->padding)
+    if (!state->padding)
     {
         /* If there is data left, return an error and the number of plaintext left in outlen. */
-        *outlen = cbc(mode->ctx)->available;
-        if (*outlen != 0) return ORDO_ELEFTOVER;
+        *outlen = state->available;
+        if (*outlen != 0) return ORDO_LEFTOVER;
     }
     else
     {
         /* Otherwise, decrypt the last block. */
-        cipherCtx->cipher->fInverse(cipherCtx, cbc(mode->ctx)->block);
+        block_cipher_inverse(cipher, cipher_state, state->block);
 
         /* Exclusive-or the last block with the running IV. */
-        xorBuffer(cbc(mode->ctx)->block, cbc(mode->ctx)->iv, cipherCtx->cipher->blockSize);
+        xor_buffer(state->block, state->iv, block_size);
 
         /* Read the amount of padding. */
-        padding = *(cbc(mode->ctx)->block + cipherCtx->cipher->blockSize - 1);
+        padding = *(state->block + block_size - 1);
 
         /* Check the padding. */
-        if ((padding != 0) && (padding <= cipherCtx->cipher->blockSize) && (padCheck(cbc(mode->ctx)->block + cipherCtx->cipher->blockSize - padding, padding)))
+        if ((padding != 0) && (padding <= block_size) && (pad_check(state->block + block_size - padding, padding)))
         {
             /* Remove the padding data and output the plaintext. */
-            *outlen = cipherCtx->cipher->blockSize - padding;
-            memcpy(out, cbc(mode->ctx)->block, *outlen);
+            *outlen = block_size - padding;
+            memcpy(out, state->block, *outlen);
         }
         else
         {
             *outlen = 0;
-            return ORDO_EPADDING;
+            return ORDO_PADDING;
         }
     }
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void CBC_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
+void cbc_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+{
+    (state->direction
+     ? cbc_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
+     : cbc_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
+}
+
+int cbc_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+{
+    return (state->direction
+            ? cbc_encrypt_final(state, cipher, cipher_state, out, outlen)
+            : cbc_decrypt_final(state, cipher, cipher_state, out, outlen));
+}
+
+void cbc_free(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Deallocate context fields. */
-    sfree(cbc(mode->ctx)->block, cipherCtx->cipher->blockSize);
-    sfree(cbc(mode->ctx)->iv, cipherCtx->cipher->blockSize);
-    sfree(mode->ctx, sizeof(CBC_ENCRYPT_CONTEXT));
-    sfree(mode, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+    secure_free(state->block, cipher_block_size(cipher));
+    secure_free(state->iv, cipher_block_size(cipher));
+    secure_free(state, sizeof(struct CBC_STATE));
 }
 
-/* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
-void CBC_SetMode(BLOCK_CIPHER_MODE* mode)
+/* Fills a BLOCK_MODE struct with the correct information. */
+void cbc_set_mode(struct BLOCK_MODE* mode)
 {
-    MAKE_BLOCK_CIPHER_MODE(mode, CBC_Create, CBC_Init, CBC_EncryptUpdate, CBC_DecryptUpdate, CBC_EncryptFinal, CBC_DecryptFinal, CBC_Free, "CBC");
+    make_block_mode(mode,
+                    (BLOCK_MODE_ALLOC)cbc_alloc,
+                    (BLOCK_MODE_INIT)cbc_init,
+                    (BLOCK_MODE_UPDATE)cbc_update,
+                    (BLOCK_MODE_FINAL)cbc_final,
+                    (BLOCK_MODE_FREE)cbc_free,
+                    "CBC");
 }

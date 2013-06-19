@@ -4,6 +4,8 @@ ordo/doc/
 test/bin/
 ordo/obj/
 test/obj/
+samples/bin/
+samples/obj/
 
 # Tmp files
 *.c~

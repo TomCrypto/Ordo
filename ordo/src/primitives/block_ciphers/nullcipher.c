@@ -1,39 +1,54 @@
 #include <primitives/block_ciphers/nullcipher.h>
 
-/* The NulLCipher's block size. */
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+
+/******************************************************************************/
+
 #define NULLCIPHER_BLOCK (16)
 
-BLOCK_CIPHER_CONTEXT* NullCipher_Create()
+struct NULLCIPHER_STATE
 {
-    /* Just allocate an empty context by convention (we don't need to, but we might as well for consistency). */
-    BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
-    return ctx;
+    size_t dummy;
+};
+
+struct NULLCIPHER_STATE* nullcipher_alloc()
+{
+    /* A block cipher always needs to allocate some state (returning nil means
+       an allocation failed, so we can't use that even for this cipher). */
+	return secure_alloc(sizeof(struct NULLCIPHER_STATE));
 }
 
-int NullCipher_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* params)
+int nullcipher_init(struct NULLCIPHER_STATE *state,
+                    void* key, size_t keySize,
+                    void* params)
 {
-    /* Ignore everything! */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void NullCipher_Forward(BLOCK_CIPHER_CONTEXT* ctx, void* block)
+void nullcipher_forward(struct NULLCIPHER_STATE *state, void* block)
 {
-    /* Identity permutation... do nothing. */
+    return;
 }
 
-void NullCipher_Inverse(BLOCK_CIPHER_CONTEXT* ctx, void* block)
+void nullcipher_inverse(struct NULLCIPHER_STATE *state, void* block)
 {
-    /* Same! */
+    return;
 }
 
-void NullCipher_Free(BLOCK_CIPHER_CONTEXT* ctx)
+void nullcipher_free(struct NULLCIPHER_STATE *state)
 {
-    /* Free the empty context. */
-    sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
+    secure_free(state, sizeof(struct NULLCIPHER_STATE));
 }
 
-/* Fills a BLOCK_CIPHER struct with the correct information. */
-void NullCipher_SetPrimitive(BLOCK_CIPHER* cipher)
+void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)
 {
-    MAKE_BLOCK_CIPHER(cipher, NULLCIPHER_BLOCK, NullCipher_Create, NullCipher_Init, NullCipher_Forward, NullCipher_Inverse, NullCipher_Free, "NullCipher");
+    make_block_cipher(cipher,
+                      NULLCIPHER_BLOCK,
+                      (BLOCK_ALLOC)nullcipher_alloc,
+                      (BLOCK_INIT)nullcipher_init,
+                      (BLOCK_UPDATE)nullcipher_forward,
+                      (BLOCK_UPDATE)nullcipher_inverse,
+                      (BLOCK_FREE)nullcipher_free,
+                      "NullCipher");
 }

@@ -1,5 +1,15 @@
-#ifndef ORDO_H
-#define ORDO_H
+#ifndef ORDO_ORDO_H
+#define ORDO_ORDO_H
+
+#include <enc/enc_stream.h>
+#include <enc/enc_block.h>
+
+#include <random/random.h>
+
+#include <kdf/pbkdf2.h>
+#include <auth/hmac.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,18 +26,9 @@ extern "C" {
  * @see ordo.c
  */
 
-#include <common/ordotypes.h>
-#include <primitives/primitives.h>
-#include <enc/enc_block.h>
-#include <enc/enc_stream.h>
-#include <hash/hash.h>
-#include <auth/hmac.h>
-#include <auth/pbkdf2.h>
-#include <random/random.h>
-
 /*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). After
  * this function returns, all objects such as \c RC4(), \c CBC(), may be used. */
-void ordoLoad();
+void load_ordo();
 
 /*! This function encrypts a buffer of a given length using a block cipher in a given mode of operation with the passed
  * parameters.
@@ -42,7 +43,7 @@ void ordoLoad();
  \param iv A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV).
  \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
+ \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must
  be available before encryption can begin. If your requirements make this unacceptable, you should use the encryption
  interface, located one level of abstraction lower - see enc_block.h. \n\n
@@ -50,7 +51,7 @@ void ordoLoad();
  mode which uses padding (with padding enabled) is used. See remarks about padding in enc_block.h. */
 int ordoEncrypt(void* in, size_t inlen,
                 void* out, size_t* outlen,
-                BLOCK_CIPHER* cipher, BLOCK_CIPHER_MODE* mode,
+                struct BLOCK_CIPHER* cipher, struct BLOCK_MODE* mode,
                 void* key, size_t keySize,
                 void* iv,
                 void* cipherParams,
@@ -69,11 +70,11 @@ int ordoEncrypt(void* in, size_t inlen,
  \param iv A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV).
  \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
  \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
+ \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark See ordoEncrypt for additional remarks. */
 int ordoDecrypt(void* in, size_t inlen,
                 void* out, size_t* outlen,
-                BLOCK_CIPHER* cipher, BLOCK_CIPHER_MODE* mode,
+                struct BLOCK_CIPHER* cipher, struct BLOCK_MODE* mode,
                 void* key, size_t keySize,
                 void* iv,
                 void* cipherParams, void* modeParams);
@@ -85,7 +86,7 @@ int ordoDecrypt(void* in, size_t inlen,
  \param key A buffer containing the key material to use for encryption.
  \param keySize The length, in bytes, of the \c key buffer.
  \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
+ \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark Stream ciphers are different from block ciphers in multiple ways: \n
  - they do not require an IV because there is no standard way to add initialization vectors to a stream cipher.
  - no mode of operation is required as stream ciphers work by generating a keystream and combining it with the
@@ -95,7 +96,7 @@ int ordoDecrypt(void* in, size_t inlen,
  - the encryption or decryption is done in-place directly in the \c inout buffer, since the ciphertext is always the
  same length as the plaintext. If you need two different buffers, make a copy of the plaintext before encrypting. */
 int ordoEncryptStream(void* inout, size_t len,
-                      STREAM_CIPHER* cipher,
+                      struct STREAM_CIPHER* cipher,
                       void* key, size_t keySize,
                       void* cipherParams);
 
@@ -105,8 +106,8 @@ int ordoEncryptStream(void* inout, size_t len,
  \param out The buffer in which to put the digest.
  \param hash A hash function object, describing the hash function to use.
  \param hashParams This points to specific hash function parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure. */
-int ordoHash(void* in, size_t len, void* out, HASH_FUNCTION* hash, void* hashParams);
+ \return Returns \c ORDO_SUCCESS on success, a negative error code on failure. */
+int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* hashParams);
 
 /*! This function returns the HMAC of a buffer using a key with any hash function.
  \param in The input buffer to hash.
@@ -116,10 +117,10 @@ int ordoHash(void* in, size_t len, void* out, HASH_FUNCTION* hash, void* hashPar
  \param out The buffer in which to put the digest.
  \param hash A hash function object, describing the hash function to use.
  \param hashParams This points to specific hash function parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, a negative error code on failure.
+ \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark Note the hash parameters only affect the inner hash (the one hashing the buffer),
  not the outer one or the potential key-processing one.*/
-int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, HASH_FUNCTION* hash, void* hashParams);
+int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, struct HASH_FUNCTION* hash, void* hashParams);
 
 #ifdef __cplusplus
 }

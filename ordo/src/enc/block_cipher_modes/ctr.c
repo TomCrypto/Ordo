@@ -1,7 +1,13 @@
 #include <enc/block_cipher_modes/ctr.h>
 
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
+
+/******************************************************************************/
+
 /* This is extra context space required by the CTR mode to store the counter and the amount of state not used.*/
-typedef struct CTR_ENCRYPT_CONTEXT
+struct CTR_STATE
 {
     /* A buffer for the IV. */
     void* iv;
@@ -9,61 +15,60 @@ typedef struct CTR_ENCRYPT_CONTEXT
     unsigned char* counter;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
-} CTR_ENCRYPT_CONTEXT;
+};
 
-/* Shorthand macro for context casting. */
-#define ctr(ctx) ((CTR_ENCRYPT_CONTEXT*)ctx)
-
-BLOCK_CIPHER_MODE_CONTEXT* CTR_Create(BLOCK_CIPHER_CONTEXT* cipherCtx)
+struct CTR_STATE* ctr_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
+    size_t block_size = cipher_block_size(cipher);
+
     /* Allocate the context and extra buffers in it. */
-    BLOCK_CIPHER_MODE_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_MODE_CONTEXT));
-    if (ctx)
+    struct CTR_STATE *state = secure_alloc(sizeof(struct CTR_STATE));
+
+    if (state)
     {
-        if ((ctx->ctx = salloc(sizeof(CTR_ENCRYPT_CONTEXT))))
+        /* Allocate extra buffers for the IV and counter. */
+        state->iv = secure_alloc(block_size);
+        state->counter = secure_alloc(block_size);
+
+        /* Return if everything succeeded. */
+        if ((state->iv) && (state->counter))
         {
-            /* Allocate extra buffers for the IV and counter. */
-            ctr(ctx->ctx)->iv = salloc(cipherCtx->cipher->blockSize);
-            ctr(ctx->ctx)->counter = salloc(cipherCtx->cipher->blockSize);
-
-            /* Return if everything succeeded. */
-            if ((ctr(ctx->ctx)->iv) && (ctr(ctx->ctx)->counter))
-            {
-                ctr(ctx->ctx)->remaining = 0;
-                return ctx;
-            }
-
-            /* Clean up if an error occurred. */
-            sfree(ctr(ctx->ctx)->counter, cipherCtx->cipher->blockSize);
-            sfree(ctr(ctx->ctx)->iv, cipherCtx->cipher->blockSize);
-            sfree(ctx->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
+            state->remaining = 0;
+            return state;
         }
-        sfree(ctx, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+
+        /* Clean up if an error occurred. */
+        secure_free(state->counter, block_size);
+        secure_free(state->iv, block_size);
+        secure_free(state, sizeof(struct CTR_STATE));
     }
 
     /* Allocation failed, return zero. */
     return 0;
 }
 
-int CTR_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params)
+int ctr_init(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
 {
+    size_t block_size = cipher_block_size(cipher);
+
     /* Copy the IV (required) into the context IV. */
-    memcpy(ctr(mode->ctx)->iv, iv, cipherCtx->cipher->blockSize);
+    memcpy(state->iv, iv, block_size);
 
     /* Copy the IV into the counter. */
-    memcpy(ctr(mode->ctx)->counter, ctr(mode->ctx)->iv, cipherCtx->cipher->blockSize);
+    memcpy(state->counter, state->iv, block_size);
 
     /* Compute the initial keystream block. */
-    cipherCtx->cipher->fForward(cipherCtx, ctr(mode->ctx)->iv);
-    ctr(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
+	block_cipher_forward(cipher, cipher_state, state->iv);
+    state->remaining = block_size;
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ctr_update(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
+    size_t block_size = cipher_block_size(cipher);
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -73,22 +78,22 @@ void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
     while (inlen != 0)
     {
         /* If there is no data left in the context block, update. */
-        if (ctr(mode->ctx)->remaining == 0)
+        if (state->remaining == 0)
         {
             /* CTR update (increment counter, copy counter into IV, encrypt IV). */
-            incBuffer(ctr(mode->ctx)->counter, cipherCtx->cipher->blockSize);
-            memcpy(ctr(mode->ctx)->iv, ctr(mode->ctx)->counter, cipherCtx->cipher->blockSize);
-            cipherCtx->cipher->fForward(cipherCtx, ctr(mode->ctx)->iv);
-            ctr(mode->ctx)->remaining = cipherCtx->cipher->blockSize;
+            inc_buffer(state->counter, block_size);
+            memcpy(state->iv, state->counter, block_size);
+			block_cipher_forward(cipher, cipher_state, state->iv);
+            state->remaining = block_size;
         }
 
         /* Compute the amount of data to process. */
-        process = (inlen < ctr(mode->ctx)->remaining) ? inlen : ctr(mode->ctx)->remaining;
+        process = (inlen < state->remaining) ? inlen : state->remaining;
 
         /* Process this amount of data. */
         if (out != in) memcpy(out, in, process);
-        xorBuffer(out, (unsigned char*)ctr(mode->ctx)->iv + cipherCtx->cipher->blockSize - ctr(mode->ctx)->remaining, process);
-        ctr(mode->ctx)->remaining -= process;
+        xor_buffer(out, (unsigned char*)state->iv + block_size - state->remaining, process);
+        state->remaining -= process;
         (*outlen) += process;
         inlen -= process;
         out += process;
@@ -96,26 +101,31 @@ void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx
     }
 }
 
-int CTR_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen)
+int ctr_final(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
 
     /* Return success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void CTR_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx)
+void ctr_free(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Free context space. */
-    sfree(ctr(mode->ctx)->counter, cipherCtx->cipher->blockSize);
-    sfree(ctr(mode->ctx)->iv, cipherCtx->cipher->blockSize);
-    sfree(mode->ctx, sizeof(CTR_ENCRYPT_CONTEXT));
-    sfree(mode, sizeof(BLOCK_CIPHER_MODE_CONTEXT));
+    secure_free(state->counter, cipher_block_size(cipher));
+    secure_free(state->iv, cipher_block_size(cipher));
+    secure_free(state, sizeof(struct CTR_STATE));
 }
 
-/* Fills a BLOCK_CIPHER_MODE struct with the correct information. */
-void CTR_SetMode(BLOCK_CIPHER_MODE* mode)
+/* Fills a BLOCK_MODE struct with the correct information. */
+void ctr_set_mode(struct BLOCK_MODE* mode)
 {
-    MAKE_BLOCK_CIPHER_MODE(mode, CTR_Create, CTR_Init, CTR_Update, CTR_Update, CTR_Final, CTR_Final, CTR_Free, "CTR");
+    make_block_mode(mode,
+                    (BLOCK_MODE_ALLOC)ctr_alloc,
+                    (BLOCK_MODE_INIT)ctr_init,
+                    (BLOCK_MODE_UPDATE)ctr_update,
+                    (BLOCK_MODE_FINAL)ctr_final,
+                    (BLOCK_MODE_FREE)ctr_free,
+                    "CTR");
 }

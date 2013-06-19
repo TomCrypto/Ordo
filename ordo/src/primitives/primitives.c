@@ -1,53 +1,172 @@
 #include <primitives/primitives.h>
+#include <common/identification.h>
+#include <string.h>
 
-/* Primitive list. */
 #include <primitives/block_ciphers/nullcipher.h>
 #include <primitives/block_ciphers/threefish256.h>
 #include <primitives/block_ciphers/aes.h>
+
 #include <primitives/stream_ciphers/rc4.h>
+
+#include <primitives/hash_functions/md5.h>
 #include <primitives/hash_functions/sha256.h>
+#include <primitives/hash_functions/skein256.h>
+
+/******************************************************************************/
+
+/*! \brief Block cipher object.
+ *
+ * This represents a block cipher object. */
+struct BLOCK_CIPHER
+{
+    size_t block_size;
+    BLOCK_ALLOC alloc;
+    BLOCK_INIT init;
+    BLOCK_UPDATE forward;
+    BLOCK_UPDATE inverse;
+    BLOCK_FREE free;
+    char* name;
+};
+
+/*! \brief Stream cipher object.
+ *
+ * This represents a stream cipher object. */
+struct STREAM_CIPHER
+{
+    STREAM_ALLOC alloc;
+    STREAM_INIT init;
+    STREAM_UPDATE update;
+    STREAM_FREE free;
+    char* name;
+};
+
+/*! \brief Hash function object.
+ *
+ * This represents a hash function object. */
+struct HASH_FUNCTION
+{
+    size_t digest_length;
+    size_t block_size;
+    HASH_ALLOC alloc;
+    HASH_INIT init;
+    HASH_UPDATE update;
+    HASH_FINAL final;
+    HASH_FREE free;
+    HASH_COPY copy;
+    char* name;
+};
+
+void make_block_cipher(struct BLOCK_CIPHER *primitive, size_t block_size,
+                       BLOCK_ALLOC alloc, BLOCK_INIT init, BLOCK_UPDATE forward,
+                       BLOCK_UPDATE inverse, BLOCK_FREE free, char *name)
+{
+    primitive->block_size = block_size;
+    primitive->alloc   = alloc;
+    primitive->init    = init;
+    primitive->forward = forward;
+    primitive->inverse = inverse;
+    primitive->free    = free;
+    primitive->name    = name;
+}
+
+void make_stream_cipher(struct STREAM_CIPHER *primitive,
+                       STREAM_ALLOC alloc, STREAM_INIT init, STREAM_UPDATE update,
+                       STREAM_FREE free, char *name)
+{
+    primitive->alloc   = alloc;
+    primitive->init    = init;
+    primitive->update  = update;
+    primitive->free    = free;
+    primitive->name    = name;
+}
+
+void make_hash_function(struct HASH_FUNCTION *primitive, size_t digest_length, size_t block_size,
+                       HASH_ALLOC alloc, HASH_INIT init, HASH_UPDATE update,
+                       HASH_FINAL final, HASH_FREE free, HASH_COPY copy, char *name)
+{
+    primitive->digest_length = digest_length;
+    primitive->block_size = block_size;
+    primitive->alloc   = alloc;
+    primitive->init    = init;
+    primitive->update  = update;
+    primitive->final   = final;
+    primitive->free    = free;
+    primitive->copy    = copy;
+    primitive->name    = name;
+}
+
+const char* block_cipher_name(struct BLOCK_CIPHER *primitive)
+{
+	return primitive->name;
+}
+
+const char* stream_cipher_name(struct STREAM_CIPHER *primitive)
+{
+	return primitive->name;
+}
+
+const char* hash_function_name(struct HASH_FUNCTION *primitive)
+{
+	return primitive->name;
+}
+
+size_t cipher_block_size(struct BLOCK_CIPHER *primitive)
+{
+	return primitive->block_size;
+}
+
+size_t hash_digest_length(struct HASH_FUNCTION *primitive)
+{
+	return primitive->digest_length;
+}
+
+size_t hash_block_size(struct HASH_FUNCTION *primitive)
+{
+	return primitive->block_size;
+}
 
 /* Primitive lists. */
-BLOCK_CIPHER blockCiphers[BLOCK_CIPHER_COUNT];
-STREAM_CIPHER streamCiphers[STREAM_CIPHER_COUNT];
-HASH_FUNCTION hashFunctions[HASH_FUNCTION_COUNT];
+struct BLOCK_CIPHER block[BLOCK_COUNT];
+struct STREAM_CIPHER stream[STREAM_COUNT];
+struct HASH_FUNCTION hash[HASH_COUNT];
 
 /* Loads all primitives. */
-void primitivesLoad()
+void load_primitives()
 {
     /* Block cipher primitives. */
-    NullCipher_SetPrimitive  (&blockCiphers[BLOCK_CIPHER_NULLCIPHER]);
-    Threefish256_SetPrimitive(&blockCiphers[BLOCK_CIPHER_THREEFISH256]);
-    AES_SetPrimitive         (&blockCiphers[BLOCK_CIPHER_AES]);
+    nullcipher_set_primitive  (&block[BLOCK_NULLCIPHER]);
+    threefish256_set_primitive(&block[BLOCK_THREEFISH256]);
+    aes_set_primitive         (&block[BLOCK_AES]);
 
     /* Stream cipher primitives. */
-    RC4_SetPrimitive(&streamCiphers[STREAM_CIPHER_RC4]);
+    rc4_set_primitive(&stream[STREAM_RC4]);
 
     /* Hash primitives. */
-    SHA256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SHA256]);
-    MD5_SetPrimitive(&hashFunctions[HASH_FUNCTION_MD5]);
-    Skein256_SetPrimitive(&hashFunctions[HASH_FUNCTION_SKEIN256]);
+    sha256_set_primitive(&hash[HASH_SHA256]);
+    md5_set_primitive(&hash[HASH_MD5]);
+    skein256_set_primitive(&hash[HASH_SKEIN256]);
 }
 
 /* Pass-through functions to acquire primitives. */
-BLOCK_CIPHER* NullCipher()   { return &blockCiphers[BLOCK_CIPHER_NULLCIPHER]; }
-BLOCK_CIPHER* Threefish256() { return &blockCiphers[BLOCK_CIPHER_THREEFISH256]; }
-BLOCK_CIPHER* AES()          { return &blockCiphers[BLOCK_CIPHER_AES]; }
+struct BLOCK_CIPHER* NullCipher()   { return &block[BLOCK_NULLCIPHER]; }
+struct BLOCK_CIPHER* Threefish256() { return &block[BLOCK_THREEFISH256]; }
+struct BLOCK_CIPHER* AES()          { return &block[BLOCK_AES]; }
 
-STREAM_CIPHER* RC4() { return &streamCiphers[STREAM_CIPHER_RC4]; }
+struct STREAM_CIPHER* RC4() { return &stream[STREAM_RC4]; }
 
-HASH_FUNCTION* SHA256() { return &hashFunctions[HASH_FUNCTION_SHA256]; }
-HASH_FUNCTION* MD5() { return &hashFunctions[HASH_FUNCTION_MD5]; }
-HASH_FUNCTION* Skein256() { return &hashFunctions[HASH_FUNCTION_SKEIN256]; }
+struct HASH_FUNCTION* SHA256() { return &hash[HASH_SHA256]; }
+struct HASH_FUNCTION* MD5() { return &hash[HASH_MD5]; }
+struct HASH_FUNCTION* Skein256() { return &hash[HASH_SKEIN256]; }
 
 /* Returns a block cipher primitive object from a name. */
-BLOCK_CIPHER* getBlockCipherByName(char* name)
+struct BLOCK_CIPHER* block_cipher_by_name(char* name)
 {
     int t;
-    for (t = 0; t < BLOCK_CIPHER_COUNT; t++)
+    for (t = 0; t < BLOCK_COUNT; t++)
     {
         /* Simply compare against the cipher list. */
-        if (strcmp(name, blockCiphers[t].name) == 0) return &blockCiphers[t];
+        if (!strncmp(name, block[t].name, strlen(block[t].name)))
+            return &block[t];
     }
 
     /* No match found. */
@@ -55,19 +174,20 @@ BLOCK_CIPHER* getBlockCipherByName(char* name)
 }
 
 /* Returns a block cipher primitive object from an ID. */
-BLOCK_CIPHER* getBlockCipherByID(size_t ID)
+struct BLOCK_CIPHER* block_cipher_by_id(size_t id)
 {
-    return (ID < BLOCK_CIPHER_COUNT) ? &blockCiphers[ID] : 0;
+    return (id < BLOCK_COUNT) ? &block[id] : 0;
 }
 
 /* Returns a stream cipher primitive object from a name. */
-STREAM_CIPHER* getStreamCipherByName(char* name)
+struct STREAM_CIPHER* stream_cipher_by_name(char* name)
 {
     int t;
-    for (t = 0; t < STREAM_CIPHER_COUNT; t++)
+    for (t = 0; t < STREAM_COUNT; t++)
     {
         /* Simply compare against the cipher list. */
-        if (strcmp(name, streamCiphers[t].name) == 0) return &streamCiphers[t];
+        if (!strncmp(name, stream[t].name, strlen(stream[t].name)))
+            return &stream[t];
     }
 
     /* No match found. */
@@ -75,19 +195,20 @@ STREAM_CIPHER* getStreamCipherByName(char* name)
 }
 
 /* Returns a stream cipher primitive object from an ID. */
-STREAM_CIPHER* getStreamCipherByID(size_t ID)
+struct STREAM_CIPHER* stream_cipher_by_id(size_t id)
 {
-    return (ID < STREAM_CIPHER_COUNT) ? &streamCiphers[ID] : 0;
+    return (id < STREAM_COUNT) ? &stream[id] : 0;
 }
 
 /* Returns a hash function primitive object from a name. */
-HASH_FUNCTION* getHashFunctionByName(char* name)
+struct HASH_FUNCTION* hash_function_by_name(char* name)
 {
     int t;
-    for (t = 0; t < HASH_FUNCTION_COUNT; t++)
+    for (t = 0; t < HASH_COUNT; t++)
     {
         /* Simply compare against the cipher list. */
-        if (strcmp(name, hashFunctions[t].name) == 0) return &hashFunctions[t];
+        if (!strncmp(name, hash[t].name, strlen(hash[t].name)))
+            return &hash[t];
     }
 
     /* No match found. */
@@ -95,53 +216,94 @@ HASH_FUNCTION* getHashFunctionByName(char* name)
 }
 
 /* Returns a hash function primitive object from an ID. */
-HASH_FUNCTION* getHashFunctionByID(size_t ID)
+struct HASH_FUNCTION* hash_function_by_id(size_t id)
 {
-    return (ID < HASH_FUNCTION_COUNT) ? &hashFunctions[ID] : 0;
+    return (id < HASH_COUNT) ? &hash[id] : 0;
 }
 
-/* This function returns an initialized block cipher context using a specific block cipher object. */
-BLOCK_CIPHER_CONTEXT* blockCipherCreate(BLOCK_CIPHER* cipher)
+
+
+/**********************************************************
+**********************************************************/
+
+
+
+/* BLOCK CIPHER ABSTRACTION LAYER. */
+void* block_cipher_alloc(struct BLOCK_CIPHER* primitive)
 {
-    /* Allocate the cipher context. */
-    BLOCK_CIPHER_CONTEXT* ctx = cipher->fCreate();
-    if (ctx) ctx->cipher = cipher;
-    return ctx;
+	return primitive->alloc();
 }
 
-/* This function returns an initialized cipher context with the provided parameters. */
-int blockCipherInit(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+int block_cipher_init(struct BLOCK_CIPHER* primitive, void *ctx, void *key, size_t key_size, void *params)
 {
-    /* Initialize the cipher context. */
-    return ctx->cipher->fInit(ctx, key, keySize, cipherParams);
+	return primitive->init(ctx, key, key_size, params);
 }
 
-/* This function frees an initialized cipher context. */
-void blockCipherFree(BLOCK_CIPHER_CONTEXT* ctx)
+void block_cipher_forward(struct BLOCK_CIPHER* primitive, void *ctx, void *block)
 {
-    /* Free the cipher context. */
-    ctx->cipher->fFree(ctx);
+	primitive->forward(ctx, block);
 }
 
-/* This function returns an initialized stream cipher context using a specific block cipher object. */
-STREAM_CIPHER_CONTEXT* streamCipherCreate(STREAM_CIPHER* cipher)
+void block_cipher_inverse(struct BLOCK_CIPHER* primitive, void *ctx, void *block)
 {
-    /* Allocate the cipher context. */
-    STREAM_CIPHER_CONTEXT* ctx = cipher->fCreate();
-    if (ctx) ctx->cipher = cipher;
-    return ctx;
+	primitive->inverse(ctx, block);
 }
 
-/* This function returns an initialized cipher context with the provided parameters. */
-int streamCipherInit(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+void block_cipher_free(struct BLOCK_CIPHER* primitive, void *ctx)
 {
-    /* Initialize the cipher context. */
-    return ctx->cipher->fInit(ctx, key, keySize, cipherParams);
+	primitive->free(ctx);
 }
 
-/* This function frees an initialized cipher context. */
-void streamCipherFree(STREAM_CIPHER_CONTEXT* ctx)
+/* STREAM CIPHER ABSTRACTION LAYER. */
+
+void* stream_cipher_alloc(struct STREAM_CIPHER *primitive)
 {
-    /* Free the cipher context. */
-    ctx->cipher->fFree(ctx);
+    return primitive->alloc();
+}
+
+int stream_cipher_init(struct STREAM_CIPHER *primitive, void* ctx, void *key, size_t key_size, void *params)
+{
+    return primitive->init(ctx, key, key_size, params);
+}
+
+void stream_cipher_update(struct STREAM_CIPHER *primitive, void* ctx, void *buffer, size_t size)
+{
+	primitive->update(ctx, buffer, size);
+}
+
+void stream_cipher_free(struct STREAM_CIPHER *primitive, void *ctx)
+{
+    primitive->free(ctx);
+}
+
+/* HASH FUNCTION ABSTRACTION LAYER. */
+
+void* hash_function_alloc(struct HASH_FUNCTION *primitive)
+{
+	return primitive->alloc();
+}
+
+int hash_function_init(struct HASH_FUNCTION *primitive, void *ctx, void *params)
+{
+	return primitive->init(ctx, params);
+}
+
+void hash_function_update(struct HASH_FUNCTION *primitive, void *ctx, void *buffer, size_t size)
+{
+	primitive->update(ctx, buffer, size);
+}
+
+void hash_function_final(struct HASH_FUNCTION *primitive, void *ctx, void *digest)
+{
+	primitive->final(ctx, digest);
+}
+
+void hash_function_free(struct HASH_FUNCTION *primitive, void *ctx)
+{
+	primitive->free(ctx);
+}
+
+void hash_function_copy(struct HASH_FUNCTION *primitive, void *dst, void *src)
+{
+	primitive->copy(dst, src);
 }

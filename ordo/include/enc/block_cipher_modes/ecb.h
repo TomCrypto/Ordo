@@ -1,5 +1,9 @@
-#ifndef ECB_H
-#define ECB_H
+#ifndef ORDO_ECB_H
+#define ORDO_ECB_H
+
+#include <enc/block_modes.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,7 +24,7 @@ extern "C" {
  * always return a full blocksize of data, containing the last few ciphertext bytes containing the padding information.
  *
  * If padding is disabled, \c outlen is also required, and will return the number of unprocessed plaintext bytes in the
- * context. If this is any value other than zero, the function will also fail with \c ORDO_ELEFTOVER.
+ * context. If this is any value other than zero, the function will also fail with \c ORDO_LEFTOVER.
  *
  *
  * The ECB mode does not require an initialization vector.
@@ -30,31 +34,19 @@ extern "C" {
  * @see ecb.c
  */
 
-#include <enc/enc_block.h>
+struct ECB_STATE;
 
-/*! \brief ECB mode of operation parameters.
- *
- * A parameter structure for ECB mode - this only contains whether padding should be enabled. */
-typedef struct ECB_PARAMS
-{
-    /*! Set the least significant bit to 0 to disable padding, 1 to enable it. All other bits are ignored. The default
-    * behaviour is 1. */
-    size_t padding;
-} ECB_PARAMS;
+struct ECB_STATE* ecb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-BLOCK_CIPHER_MODE_CONTEXT* ECB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
+int ecb_init(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct ECB_PARAMS* params);
 
-int ECB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, ECB_PARAMS* params);
+void ecb_update(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-void ECB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
-                unsigned char* in, size_t inlen,
-                unsigned char* out, size_t* outlen);
+int ecb_final(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-int ECB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
+void ecb_free(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-void ECB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
-
-void ECB_SetMode(BLOCK_CIPHER_MODE* mode);
+void ecb_set_mode(struct BLOCK_MODE* mode);
 
 #ifdef __cplusplus
 }

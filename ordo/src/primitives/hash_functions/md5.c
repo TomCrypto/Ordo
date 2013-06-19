@@ -1,5 +1,12 @@
 #include <primitives/hash_functions/md5.h>
 
+#include <common/environment.h>
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
+
+/******************************************************************************/
+
 /* The Md5 digest size. */
 #define MD5_DIGEST (16)
 /* The MD5 block size. */
@@ -9,44 +16,32 @@
 const uint32_t MD5_initialState[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
 /* A MD5 state. */
-typedef struct MD5_STATE
+struct MD5_STATE
 {
     uint32_t digest[4];
     uint32_t block[16];
     uint64_t blockLength;
     uint64_t messageLength;
-} MD5_STATE;
+};
 
-/* Shorthand macro for context casting. */
-#define state(x) ((MD5_STATE*)(x->ctx))
-
-HASH_FUNCTION_CONTEXT* MD5_Create()
+struct MD5_STATE* md5_alloc()
 {
-    /* Allocate memory for the MD5 state. */
-    HASH_FUNCTION_CONTEXT* ctx = salloc(sizeof(HASH_FUNCTION_CONTEXT));
-    if (ctx)
-    {
-        if ((ctx->ctx = salloc(sizeof(MD5_STATE)))) return ctx;
-        sfree(ctx, sizeof(HASH_FUNCTION_CONTEXT));
-    }
-
-    /* Allocation failed. */
-    return 0;
+    return secure_alloc(sizeof(struct MD5_STATE));
 }
 
-int MD5_Init(HASH_FUNCTION_CONTEXT* ctx, void* params)
+int md5_init(struct MD5_STATE *state, void* params)
 {
     /* Set the digest to the initial state. */
-    memcpy(state(ctx)->digest, MD5_initialState, MD5_DIGEST);
-    state(ctx)->messageLength = 0;
-    state(ctx)->blockLength = 0;
+    memcpy(state->digest, MD5_initialState, MD5_DIGEST);
+    state->messageLength = 0;
+    state->blockLength = 0;
 
     /* Ignore the parameters, since MD5 has none. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
 /* This is the MD5 compression function. */
-inline void MD5_Compress(uint32_t block[16], uint32_t digest[4])
+void md5Compress(uint32_t block[16], uint32_t digest[4])
 {
     /* Temporary variables. */
     uint32_t a, b, c, d;
@@ -196,24 +191,24 @@ inline void MD5_Compress(uint32_t block[16], uint32_t digest[4])
     digest[3] += d;
 }
 
-void MD5_Update(HASH_FUNCTION_CONTEXT* ctx, void* buffer, size_t size)
+void md5_update(struct MD5_STATE *state, void* buffer, size_t size)
 {
     /* Some variables. */
     size_t pad = 0;
 
     /* Increment the message length. */
-    state(ctx)->messageLength += size;
+    state->messageLength += size;
 
     /* Is the message provided long enough to complete a block? */
-    if (state(ctx)->blockLength + size >= MD5_BLOCK)
+    if (state->blockLength + size >= MD5_BLOCK)
     {
         /* Compute how much of the message is needed to complete the block. */
-        pad = MD5_BLOCK - state(ctx)->blockLength;
-        memcpy(((unsigned char*)state(ctx)->block) + state(ctx)->blockLength, buffer, pad);
+        pad = MD5_BLOCK - state->blockLength;
+        memcpy(((unsigned char*)state->block) + state->blockLength, buffer, pad);
 
         /* We now have a complete block which we can process. */
-        MD5_Compress(state(ctx)->block, state(ctx)->digest);
-        state(ctx)->blockLength = 0;
+        md5Compress(state->block, state->digest);
+        state->blockLength = 0;
 
         /* Offset the message accordingly. */
         buffer = (unsigned char*)buffer + pad;
@@ -223,19 +218,19 @@ void MD5_Update(HASH_FUNCTION_CONTEXT* ctx, void* buffer, size_t size)
         while (size >= MD5_BLOCK)
         {
             /* Just process this block. */
-            memcpy(state(ctx)->block, buffer, MD5_BLOCK);
-            MD5_Compress(state(ctx)->block, state(ctx)->digest);
+            memcpy(state->block, buffer, MD5_BLOCK);
+            md5Compress(state->block, state->digest);
             buffer = (unsigned char*)buffer + MD5_BLOCK;
             size -= MD5_BLOCK;
         }
     }
 
     /* If we have anything left over, just append it to the context's block field. */
-    memcpy(((unsigned char*)state(ctx)->block) + state(ctx)->blockLength, buffer, size);
-    state(ctx)->blockLength += size;
+    memcpy(((unsigned char*)state->block) + state->blockLength, buffer, size);
+    state->blockLength += size;
 }
 
-void MD5_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest)
+void md5_final(struct MD5_STATE *state, void* digest)
 {
     /* Some variables. */
     uint8_t byte = 0x80;
@@ -243,39 +238,45 @@ void MD5_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest)
     uint64_t len;
 
     /* Save the message's length (in bits) before final processing (little-endian for MD5). */
-    len = htole64(state(ctx)->messageLength * 8);
+    len = htole64(state->messageLength * 8);
 
     /* Append a '1' bit to the message. */
-    MD5_Update(ctx, &byte, sizeof(byte));
+    md5_update(state, &byte, sizeof(byte));
 
     /* Calculate the number of '0' bits to append. */
-    zeroBytes = (MD5_BLOCK - sizeof(uint64_t) - state(ctx)->blockLength) % MD5_BLOCK;
+    zeroBytes = (MD5_BLOCK - sizeof(uint64_t) - state->blockLength) % MD5_BLOCK;
 
     /* Append that many '0' bits. */
     byte = 0x00;
-    while (zeroBytes--) MD5_Update(ctx, &byte, sizeof(byte));
+    while (zeroBytes--) md5_update(state, &byte, sizeof(byte));
 
     /* Append the message length (on 64 bits). */
-    MD5_Update(ctx, &len, sizeof(len));
+    md5_update(state, &len, sizeof(len));
 
     /* Copy the final digest. */
-    memcpy(digest, state(ctx)->digest, MD5_DIGEST);
+    memcpy(digest, state->digest, MD5_DIGEST);
 }
 
-void MD5_Free(HASH_FUNCTION_CONTEXT* ctx)
+void md5_free(struct MD5_STATE *state)
 {
-    /* Free memory for the MD5 state. */
-    sfree(ctx->ctx, sizeof(MD5_STATE));
-    sfree(ctx, sizeof(HASH_FUNCTION_CONTEXT));
+    secure_free(state, sizeof(struct MD5_STATE));
 }
 
-void MD5_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+void md5_copy(struct MD5_STATE *dst, struct MD5_STATE *src)
 {
-    memcpy(state(dst), state(src), sizeof(MD5_STATE));
+    memcpy(dst, src, sizeof(struct MD5_STATE));
 }
 
-/* Fills a HASH_FUNCTION struct with the correct information. */
-void MD5_SetPrimitive(HASH_FUNCTION* hash)
+void md5_set_primitive(struct HASH_FUNCTION* hash)
 {
-    MAKE_HASH_FUNCTION(hash, MD5_DIGEST, MD5_BLOCK, MD5_Create, MD5_Init, MD5_Update, MD5_Final, MD5_Free, MD5_Copy, "MD5");
+    make_hash_function(hash,
+                       MD5_DIGEST,
+                       MD5_BLOCK,
+                       (HASH_ALLOC)md5_alloc,
+                       (HASH_INIT)md5_init,
+                       (HASH_UPDATE)md5_update,
+                       (HASH_FINAL)md5_final,
+                       (HASH_FREE)md5_free,
+                       (HASH_COPY)md5_copy,
+                       "MD5");
 }

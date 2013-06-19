@@ -1,5 +1,9 @@
-#ifndef OFB_H
-#define OFB_H
+#ifndef ORDO_OFB_H
+#define ORDO_OFB_H
+
+#include <enc/block_modes.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,27 +22,27 @@ extern "C" {
  * used for more than one message. This also means the block cipher's inverse permutation is
  * never used.
  *
- * \c OFB_Final() accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
+ * \c ofb_final() accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
  *
  * @see ofb.c
  */
 
-#include <enc/enc_block.h>
+struct OFB_STATE;
 
-BLOCK_CIPHER_MODE_CONTEXT* OFB_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
+struct OFB_STATE* ofb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int OFB_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
+int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params);
 
-void OFB_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
+void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state,
                 unsigned char* in, size_t inlen,
                 unsigned char* out, size_t* outlen);
 
-int OFB_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
+int ofb_final(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void OFB_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+void ofb_free(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-void OFB_SetMode(BLOCK_CIPHER_MODE* mode);
+void ofb_set_mode(struct BLOCK_MODE* mode);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,9 @@
-#ifndef HMAC_H
-#define HMAC_H
+#ifndef ORDO_HMAC_H
+#define ORDO_HMAC_H
+
+#include <hash/hash.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -8,63 +12,80 @@ extern "C" {
 /**
  * @file hmac.h
  *
- * \brief HMAC interface.
+ * \brief HMAC module.
  *
- * Interface to compute HMAC's (Hash-based Message Authentication Codes), which combine a hash function
- * with a cryptographic key securely to provide both authentication and integrity, as per RFC 2104.
- *
- * @see hmac.c
+ * Module for computing HMAC's (Hash-based Message Authentication Codes), which
+ * securely combine a hash function with a cryptographic key securely in order
+ * to provide both authentication and integrity, as per RFC 2104.
  */
 
-#include <primitives/primitives.h>
-#include <hash/hash.h>
+/*! This is an HMAC context, which should be considered opaque and must not be
+ *  directly accessed outside \c hmac_* functions as its underlying layout is
+ *  implementation dependent and subject to change. */
+struct HMAC_CTX;
 
-/*! This is an HMAC context, which simply wraps a hash function context around a key. */
-typedef struct HMAC_CONTEXT
-{
-    /*! The hash function context. */
-    HASH_FUNCTION_CONTEXT* ctx;
-    /*! The HMAC key. */
-    uint8_t* key;
-    /*! The middle digest. */
-    void* digest;
-} HMAC_CONTEXT;
-
-/*! This function returns an allocated HMAC context using a given hash function.
+/*! Allocates a new HMAC context.
  \param hash The hash function to use.
- \return Returns the allocated HMAC context, or 0 if an error occurred. */
-HMAC_CONTEXT* hmacCreate(HASH_FUNCTION* hash);
+ \return Returns the allocated HMAC context, or nil if an error occurred.
+ \remarks The PRF used for the HMAC will be the hash function as it behaves
+          with default parameters. It is not possible to use hash function
+          extensions (e.g. Skein in specialized HMAC mode) via this module.
+*/
+struct HMAC_CTX* hmac_alloc(struct HASH_FUNCTION *hash);
 
-/*! This function initializes a HMAC context, provided optional parameters.
+/*! Initializes an HMAC context, provided optional parameters.
  \param ctx An allocated HMAC context.
  \param key A pointer to the key to use.
- \param keySize The size, in bytes, of the key.
- \param hashParams This points to specific hash function parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, and a negative value on error.
- \remark Note the hash parameters apply to the inner hash function only. */
-int hmacInit(HMAC_CONTEXT* ctx, void* key, size_t keySize, void* hashParams);
+ \param key_size The size, in bytes, of the key.
+ \param hash_params This points to specific hash function parameters, set to
+                    nil for default behavior.
+ \return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ \remarks The hash parameters apply to the inner hash function only (the one
+          used to hash the passed key with the inner mask).
+ \remarks Do not use hash parameters which modify the hash function's output
+          length, or this function's behavior is undefined.
+*/
+int hmac_init(struct HMAC_CTX *ctx,
+              void *key, size_t key_size,
+              void *hash_params);
 
-/*! This function updates a HMAC context, feeding more data in it.
+/*! Updates an HMAC context, feeding more data into it.
  \param ctx An allocated HMAC context.
  \param buffer A buffer containing the data.
- \param size The size, in bytes, of the buffer. */
-void hmacUpdate(HMAC_CONTEXT* ctx, void* buffer, size_t size);
+ \param size The size, in bytes, of \c buffer.
+ \remarks This function has the property that calling it in succession with
+          buffers A and B is equivalent to calling it once by concatenating
+          A and B together.
+*/
+void hmac_update(struct HMAC_CTX *ctx,
+                 void *buffer, size_t size);
 
-/*! This function finalizes a HMAC context, returning the final digest.
+/*! Finalizes a HMAC context, returning the final digest.
  \param ctx An allocated HMAC context.
- \param digest A pointer to where the digest will be written.
- \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
-int hmacFinal(HMAC_CONTEXT* ctx, void* digest);
+ \param digest A pointer to a buffer where the digest will be written.
+ \return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ \remarks The digest length is equal to the underlying hash function's digest
+          length, which may be queried via \c hash_digest_length().
+*/
+int hmac_final(struct HMAC_CTX *ctx,
+               void *digest);
 
-/*! This function frees (deallocates) an initialized HMAC context.
- \param ctx The HMAC context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
- be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
- \c hmacCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
-void hmacFree(HMAC_CONTEXT* ctx);
+/*! Frees an HMAC context.
+ \param ctx An allocated HMAC context.
+ \remarks Passing nil to this function is a no-op.
+*/
+void hmac_free(struct HMAC_CTX *ctx);
 
-/*! This function deep-copies a context in its current state to another context. */
-void hmacCopy(HMAC_CONTEXT* dst, HMAC_CONTEXT* src);
+/*! Deep-copies a context to another.
+ \param dst The destination context.
+ \param src The source context.
+ \remarks Both contexts need to have been allocated with the same hash function
+          and (if initialized, which is likely) the same hash parameters, since
+          parameters can affect the underlying hash function state's
+          representation, unless the documentation indicates otherwise.
+          
+*/
+void hmac_copy(struct HMAC_CTX *dst, struct HMAC_CTX *src);
 
 #ifdef __cplusplus
 }

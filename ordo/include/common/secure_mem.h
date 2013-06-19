@@ -1,23 +1,22 @@
-#ifndef SECUREMEM_H
-#define SECUREMEM_H
+#ifndef ORDO_SECUREMEM_H
+#define ORDO_SECUREMEM_H
+
+#include <stdlib.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @file securemem.h
+ * @file secure_mem.h
  * \brief Secure memory API.
  *
  * Exposes the Secure Memory API, which is essentially a wrapper around malloc and free, taking care of locking and
  * securely erasing memory for security-sensitive data. The library relies solely on this implementation to allocate
  * cryptographic contexts.
- *
- * @see securemem.c
  */
-
-/* Library includes. */
-#include "ordotypes.h"
 
 /*! This function returns a pointer that is locked in physical memory.
  \param size The amount of memory to allocate, in bytes.
@@ -31,25 +30,25 @@ extern "C" {
  Note that this is a hint to the operating system, nothing more. Consult your operating system's implementation
  of virtual memory locking to know more. \n\n
  Memory may be left uninitialized upon allocation. */
-void* salloc(size_t size);
+void* secure_alloc(size_t size);
 
 /*! This function sets memory as read-only. If this function succeeds, any attempt to write to the memory will incur
  * an access violation, until the read-only restriction is lifted.
  \param ptr The pointer to the memory to set as read-only.
  \param size The amount of memory, in bytes, to set as read-only.
  \return Returns 0 on success, and anything else on failure. */
-int sprotect(void* ptr, size_t size);
+int secure_read_only(void* ptr, size_t size);
 
 /*! This function wipes memory by overwriting it with zeroes.
  \param ptr The pointer to the memory to wipe.
  \param size The amount of memory, in bytes, to wipe. */
-void swipe(void* ptr, size_t size);
+void secure_erase(void* ptr, size_t size);
 
 /*! This function frees a pointer, and securely erases the memory it points to.
  \param ptr An allocated pointer to memory to erase and free.
  \param size The amount of memory, in bytes, pointed to by ptr.
  \remark Passing zero to this function is valid and will do nothing. */
-void sfree(void* ptr, size_t size);
+void secure_free(void* ptr, size_t size);
 
 #ifdef __cplusplus
 }

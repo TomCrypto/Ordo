@@ -1,33 +1,31 @@
 #include <random/random.h>
 
+#include <common/environment.h>
+#include <common/ordo_errors.h>
+
+/******************************************************************************/
+
 #if PLATFORM_LINUX
 
 #include <stdio.h>
 
-int ordoRandom(unsigned char* buffer, size_t size)
+int ordo_random(unsigned char* buffer, size_t size)
 {
-    size_t len;
-
-    /* Open /dev/urandom. */
     FILE* f = fopen("/dev/urandom", "r");
-    if (f == 0) return ORDO_EFAIL;
+    if (!f) return ORDO_FAIL;
 
     while (size != 0)
     {
-        /* Read pseudorandom bytes. */
-        len = fread(buffer, 1, size, f);
+        size_t len = fread(buffer, 1, size, f);
+        if (len == 0) return ORDO_FAIL;
 
-        /* If no bytes were read, an error occurred. */
-        if (len == 0) return ORDO_EFAIL;
-
-        /* Move the buffer forward to prepare to read the rest. */
         buffer += len;
         size -= len;
     }
 
-    /* Close and return. */
     fclose(f);
-    return ORDO_ESUCCESS;
+
+    return ORDO_SUCCESS;
 }
 
 #elif PLATFORM_WINDOWS
@@ -35,19 +33,17 @@ int ordoRandom(unsigned char* buffer, size_t size)
 #include <windows.h>
 #include <Wincrypt.h>
 
-int ordoRandom(unsigned char* buffer, size_t size)
+int ordo_random(unsigned char* buffer, size_t size)
 {
     /* Acquire a CSP token. */
     HCRYPTPROV hProv;
     CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL, 0); /* ? */
-    if (hProv == 0) return ORDO_EFAIL;
+    if (hProv == 0) return ORDO_FAIL;
 
     /* Generate pseudorandom bytes. */
     CryptGenRandom(hProv, size, (BYTE*)buffer);
     CryptReleaseContext(hProv, 0);
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-#else
-#error "Unknown platform."
 #endif

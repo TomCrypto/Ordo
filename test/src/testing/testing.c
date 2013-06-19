@@ -1,5 +1,8 @@
 #include <testing/testing.h>
 
+#include <string.h>
+#include <stdlib.h>
+
 /* Returns the hexadecimal representation of a buffer. */
 char* bufferToHex(void* input, size_t len)
 {
@@ -16,7 +19,7 @@ void randomizeBuffer(unsigned char* buffer, size_t len)
 {
     /* Get a 256-bit pseudorandom bitstring. */
     unsigned char* data = malloc(32);
-    ordoRandom(data, 32);
+    ordo_random(data, 32);
 
     /* Fill the buffer with this pattern. Assume the buffer length is a multiple of 32 bytes. */
     while (len != 0)
@@ -125,7 +128,7 @@ unsigned char* hexToBuffer(char* str, size_t* outlen)
 int runBlockCipherTest(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
-    char* primitiveName = readToken(line, 1);
+    char* primitive_name = readToken(line, 1);
     char* modeName = readToken(line, 2);
     size_t keylen, ivlen, plaintextlen, ciphertextlen;
     unsigned char* key = hexToBuffer(readToken(line, 3), &keylen);
@@ -141,14 +144,14 @@ int runBlockCipherTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    BLOCK_CIPHER* primitive = getBlockCipherByName(primitiveName);
-    BLOCK_CIPHER_MODE* mode = getBlockCipherModeByName(modeName);
+    struct BLOCK_CIPHER* primitive = block_cipher_by_name(primitive_name);
+    struct BLOCK_MODE* mode = block_mode_by_name(modeName);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if ((primitive == 0) || (mode == 0))
     {
         printf("[!] Test vector #%.3d skipped", n);
-        if (primitive == 0) printf(", primitive (%s) not recognized", primitiveName);
+        if (primitive == 0) printf(", primitive (%s) not recognized", primitive_name);
         if (mode == 0) printf(", mode (%s) not recognized", modeName);
         printf(".\n");
         return 1;
@@ -159,25 +162,25 @@ int runBlockCipherTest(char* line, int n)
 
     /* Perform the encryption test. */
     error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
-    if (error == ORDO_ESUCCESS)
+    if (error == ORDO_SUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
         if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0))
         {
             /* Perform the decryption test. */
             error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, 0, 0);
-            if (error == ORDO_ESUCCESS)
+            if (error == ORDO_SUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
-                if ((computedPlaintextLen != plaintextlen) || (memcmp(computedPlaintext, plaintext, plaintextlen) == ORDO_ESUCCESS))
+                if ((computedPlaintextLen != plaintextlen) || (memcmp(computedPlaintext, plaintext, plaintextlen) == ORDO_SUCCESS))
                 {
                     /* Report success. */
                     result = 1;
-                    printf("[+] Test vector #%.3d (enc/%s/%s) passed!\n", n, primitiveName, modeName);
-                } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected plaintext.\n", n, primitiveName, modeName);
-            } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
-        } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected ciphertext.\n", n, primitiveName, modeName);
-    } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, modeName, errorMsg(error));
+                    printf("[+] Test vector #%.3d (enc/%s/%s) passed!\n", n, primitive_name, modeName);
+                } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected plaintext.\n", n, primitive_name, modeName);
+            } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoDecrypt, %s.\n", n, primitive_name, modeName, error_msg(error));
+        } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected ciphertext.\n", n, primitive_name, modeName);
+    } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoEncrypt, %s.\n", n, primitive_name, modeName, error_msg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -186,7 +189,7 @@ int runBlockCipherTest(char* line, int n)
     free(ciphertext);
     free(key);
     free(iv);
-    free(primitiveName);
+    free(primitive_name);
     free(modeName);
     return result;
 }
@@ -195,7 +198,7 @@ int runBlockCipherTest(char* line, int n)
 int runStreamCipherTest(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
-    char* primitiveName = readToken(line, 1);
+    char* primitive_name = readToken(line, 1);
     size_t keylen, plaintextlen, ciphertextlen;
     unsigned char* key = hexToBuffer(readToken(line, 2), &keylen);
     unsigned char* plaintext = hexToBuffer(readToken(line, 3), &plaintextlen);
@@ -207,12 +210,12 @@ int runStreamCipherTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    STREAM_CIPHER* primitive = getStreamCipherByName(primitiveName);
+    struct STREAM_CIPHER* primitive = stream_cipher_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
     {
-        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitive_name);
         return 1;
     }
 
@@ -222,7 +225,7 @@ int runStreamCipherTest(char* line, int n)
     /* Perform the encryption test. */
     memcpy(computedCiphertext, plaintext, ciphertextlen);
     error = ordoEncryptStream(computedCiphertext, plaintextlen, primitive, key, keylen, 0);
-    if (error == ORDO_ESUCCESS)
+    if (error == ORDO_SUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
         if (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0)
@@ -230,18 +233,18 @@ int runStreamCipherTest(char* line, int n)
             /* Perform the decryption test. */
             memcpy(computedPlaintext, computedCiphertext, ciphertextlen);
             error = ordoEncryptStream(computedPlaintext, ciphertextlen, primitive, key, keylen, 0);
-            if (error == ORDO_ESUCCESS)
+            if (error == ORDO_SUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
-                if (memcmp(computedPlaintext, plaintext, plaintextlen) == ORDO_ESUCCESS)
+                if (memcmp(computedPlaintext, plaintext, plaintextlen) == ORDO_SUCCESS)
                 {
                     /* Report success. */
                     result = 1;
-                    printf("[+] Test vector #%.3d (enc/%s) passed!\n", n, primitiveName);
-                } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected plaintext.\n", n, primitiveName);
-            } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoDecrypt, %s.\n", n, primitiveName, errorMsg(error));
-        } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected ciphertext.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoEncrypt, %s.\n", n, primitiveName, errorMsg(error));
+                    printf("[+] Test vector #%.3d (enc/%s) passed!\n", n, primitive_name);
+                } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected plaintext.\n", n, primitive_name);
+            } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoDecrypt, %s.\n", n, primitive_name, error_msg(error));
+        } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected ciphertext.\n", n, primitive_name);
+    } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoEncrypt, %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -249,7 +252,7 @@ int runStreamCipherTest(char* line, int n)
     free(plaintext);
     free(ciphertext);
     free(key);
-    free(primitiveName);
+    free(primitive_name);
     return result;
 }
 
@@ -257,7 +260,7 @@ int runStreamCipherTest(char* line, int n)
 int runHashTest(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
-    char* primitiveName = readToken(line, 1);
+    char* primitive_name = readToken(line, 1);
     size_t messagelen, digestlen;
     unsigned char* message = hexToBuffer(readToken(line, 2), &messagelen);
     unsigned char* digest = hexToBuffer(readToken(line, 3), &digestlen);
@@ -267,12 +270,12 @@ int runHashTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
     {
-        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitive_name);
         return 1;
     }
 
@@ -281,22 +284,22 @@ int runHashTest(char* line, int n)
 
     /* Perform the hash test. */
     error = ordoHash(message, messagelen, computedDigest, primitive, 0);
-    if (error == ORDO_ESUCCESS)
+    if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
         if (memcmp(computedDigest, digest, digestlen) == 0)
         {
             /* Report success. */
             result = 1;
-            printf("[+] Test vector #%.3d (hash/%s) passed!\n", n, primitiveName);
-        } else printf("[!] Test vector #%.3d (hash/%s) failed: did not get expected digest.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (hash/%s) failed: @ordoHash, %s.\n", n, primitiveName, errorMsg(error));
+            printf("[+] Test vector #%.3d (hash/%s) passed!\n", n, primitive_name);
+        } else printf("[!] Test vector #%.3d (hash/%s) failed: did not get expected digest.\n", n, primitive_name);
+    } else printf("[!] Test vector #%.3d (hash/%s) failed: @ordoHash, %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(computedDigest);
     free(digest);
     free(message);
-    free(primitiveName);
+    free(primitive_name);
     return result;
 }
 
@@ -304,7 +307,7 @@ int runHashTest(char* line, int n)
 int runHMACTest(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
-    char* primitiveName = readToken(line, 1);
+    char* primitive_name = readToken(line, 1);
     size_t messagelen, keylen, digestlen;
     unsigned char* key = hexToBuffer(readToken(line, 2), &keylen);
     unsigned char* message = hexToBuffer(readToken(line, 3), &messagelen);
@@ -315,12 +318,12 @@ int runHMACTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
     {
-        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitive_name);
         return 1;
     }
 
@@ -329,23 +332,23 @@ int runHMACTest(char* line, int n)
 
     /* Perform the hash test. */
     error = ordoHMAC(message, messagelen, key, keylen, computedDigest, primitive, 0);
-    if (error == ORDO_ESUCCESS)
+    if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
         if (memcmp(computedDigest, digest, digestlen) == 0)
         {
             /* Report success. */
             result = 1;
-            printf("[+] Test vector #%.3d (hmac/%s) passed!\n", n, primitiveName);
-        } else printf("[!] Test vector #%.3d (hmac/%s) failed: did not get expected digest.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (hmac/%s) failed: @ordoHMAC, %s.\n", n, primitiveName, errorMsg(error));
+            printf("[+] Test vector #%.3d (hmac/%s) passed!\n", n, primitive_name);
+        } else printf("[!] Test vector #%.3d (hmac/%s) failed: did not get expected digest.\n", n, primitive_name);
+    } else printf("[!] Test vector #%.3d (hmac/%s) failed: @ordoHMAC, %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(key);
     free(computedDigest);
     free(digest);
     free(message);
-    free(primitiveName);
+    free(primitive_name);
     return result;
 }
 
@@ -353,7 +356,7 @@ int runHMACTest(char* line, int n)
 int runPBKDF2Test(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
-    char* primitiveName = readToken(line, 1);
+    char* primitive_name = readToken(line, 1);
     size_t saltLen, passwordLen, digestlen;
     unsigned char* password = hexToBuffer(readToken(line, 2), &passwordLen);
     unsigned char* salt = hexToBuffer(readToken(line, 3), &saltLen);
@@ -366,12 +369,12 @@ int runPBKDF2Test(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    HASH_FUNCTION* primitive = getHashFunctionByName(primitiveName);
+    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
     {
-        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitiveName);
+        printf("[!] Test vector #%.3d skipped, primitive (%s) not recognized.\n", n, primitive_name);
         return 1;
     }
 
@@ -379,17 +382,17 @@ int runPBKDF2Test(char* line, int n)
     result = 0;
 
     /* Perform the hash test. */
-    error = pbkdf2(primitive, password, passwordLen, salt, saltLen, iterations, outputLen, computedDigest, 0);
-    if (error == ORDO_ESUCCESS)
+    error = pbkdf2(primitive, password, passwordLen, salt, saltLen, computedDigest, outputLen, iterations, 0);
+    if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
         if (memcmp(computedDigest, digest, digestlen) == 0)
         {
             /* Report success. */
             result = 1;
-            printf("[+] Test vector #%.3d (pbkdf2/%s) passed!\n", n, primitiveName);
-        } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: did not get expected digest.\n", n, primitiveName);
-    } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: @pbkdf2, %s.\n", n, primitiveName, errorMsg(error));
+            printf("[+] Test vector #%.3d (pbkdf2/%s) passed!\n", n, primitive_name);
+        } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: did not get expected digest.\n", n, primitive_name);
+    } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: @pbkdf2, %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(password);
@@ -398,7 +401,7 @@ int runPBKDF2Test(char* line, int n)
     free(salt);
     free(tmp1);
     free(tmp2);
-    free(primitiveName);
+    free(primitive_name);
     return result;
 }
 
@@ -460,14 +463,14 @@ void randomTest()
     void* buffer = malloc(64);
 
     /* Fill it with pseudorandom data. */
-    int error = ordoRandom(buffer, 64);
+    int error = ordo_random(buffer, 64);
 
     /* Convert it to readable hexadecimal. */
     char* hex = bufferToHex(buffer, 64);
 
     /* Print any error */
     if (error == 0) printf("[+] Generation reported successful, please confirm: %s\n\n", hex);
-    else printf("[!] An error occurred during generation [%s].\n\n", errorMsg(error));
+    else printf("[!] An error occurred during generation [%s].\n\n", error_msg(error));
 
     /* Free the memory used. */
     free(hex);
@@ -475,10 +478,10 @@ void randomTest()
 }
 
 /* Rates the performance of a cipher primitive/encryption mode combination. Uses an existing buffer. */
-void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
+void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
-    ECB_PARAMS modeParams;
+    struct ECB_PARAMS modeParams;
     int error;
     void* iv;
     void* key;
@@ -490,15 +493,15 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     randomizeBuffer(buffer, bufferSize);
 
     /* Allocate a buffer of the right size (= cipher block size) for the IV. */
-    iv = malloc(blockCipherBlockSize(primitive));
-    memset(iv, 0, blockCipherBlockSize(primitive));
+    iv = malloc(cipher_block_size(primitive));
+    memset(iv, 0, cipher_block_size(primitive));
 
     /* Allocate a buffer of the right size for the key. */
     key = malloc(keySize);
     memset(key, 0, keySize);
 
     /* Print primitive/mode information. */
-    printf("[+] Testing %s/%s with a %d-bit key...\n", primitiveName(primitive), blockCipherModeName(mode), (int)keySize * 8);
+    printf("[+] Testing %s/%s with a %d-bit key...\n", block_cipher_name(primitive), block_mode_name(mode), (int)keySize * 8);
 
     /* Save starting time. */
     start = clock();
@@ -509,7 +512,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
 
     /* Encryption test. */
     error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
-    if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
+    if (error < 0) printf("[!] An error occurred during encryption [%s].\n", error_msg(error));
     else
     {
         /* Get total time and display speed. */
@@ -521,7 +524,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
 
         /* Decryption test. */
         error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
-        if (error < 0) printf("[!] An error occurred during decryption [%s].\n", errorMsg(error));
+        if (error < 0) printf("[!] An error occurred during decryption [%s].\n", error_msg(error));
         else
         {
             /* Get total time and display speed. */
@@ -537,7 +540,7 @@ void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, si
     free(iv);
 }
 
-void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize)
+void streamCipherPerformance(struct STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     int error;
@@ -553,14 +556,14 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
     memset(key, 0, keySize);
 
     /* Print primitive information. */
-    printf("[+] Testing %s with a %d-bit key...\n", primitiveName(primitive), (int)keySize * 8);
+    printf("[+] Testing %s with a %d-bit key...\n", stream_cipher_name(primitive), (int)keySize * 8);
 
     /* Save starting time. */
     start = clock();
 
     /* Encryption test. */
     error = ordoEncryptStream(buffer, bufferSize, primitive, key, keySize, 0);
-    if (error < 0) printf("[!] An error occurred during encryption [%s].\n", errorMsg(error));
+    if (error < 0) printf("[!] An error occurred during encryption [%s].\n", error_msg(error));
     else
     {
         /* Get total time and display speed. */
@@ -574,7 +577,7 @@ void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned 
     free(key);
 }
 
-void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize)
+void hashFunctionPerformance(struct HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     int error;
@@ -583,17 +586,17 @@ void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, si
     float time;
 
     /* Allocate a buffer of the right size for the digest. */
-    digest = malloc(hashFunctionDigestSize(primitive));
+    digest = malloc(hash_digest_length(primitive));
 
     /* Print primitive information. */
-    printf("[+] Testing %s...\n", primitiveName(primitive));
+    printf("[+] Testing %s...\n", hash_function_name(primitive));
 
     /* Save starting time. */
     start = clock();
 
     /* Hashing test. */
     error = ordoHash(buffer, bufferSize, digest, primitive, 0);
-    if (error < 0) printf("[!] An error occurred during hashing [%s].\n", errorMsg(error));
+    if (error < 0) printf("[!] An error occurred during hashing [%s].\n", error_msg(error));
     else
     {
         /* Get total time and display speed. */
@@ -607,11 +610,11 @@ void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, si
     free(digest);
 }
 
-void pbkdf2Performance(HASH_FUNCTION* primitive, size_t iterations)
+void pbkdf2Performance(struct HASH_FUNCTION* primitive, size_t iterations)
 {
     char *password = "my password";
     char *salt = "a salt";
-    size_t outputLen = hashFunctionDigestSize(primitive); /* testing speed for a single iteration loop */
+    size_t outputLen = hash_digest_length(primitive); /* testing speed for a single iteration loop */
     void *output = malloc(outputLen);
     clock_t start;
     float time;
@@ -619,13 +622,13 @@ void pbkdf2Performance(HASH_FUNCTION* primitive, size_t iterations)
 
     start = clock();
 
-    error = pbkdf2(primitive, password, strlen(password), salt, strlen(salt), iterations, outputLen, output, 0);
-    if (error < 0) printf("[!] An error occurred during pbkdf2 [%s].\n", errorMsg(error));
+    error = pbkdf2(primitive, password, strlen(password), salt, strlen(salt), output, outputLen, iterations, 0);
+    if (error < 0) printf("[!] An error occurred during pbkdf2 [%s].\n", error_msg(error));
     else
     {
         /* Get total time and display speed. */
         time = (float)(clock() - start) / (float)CLOCKS_PER_SEC;
-        printf("[+] PBKDF2/%s: %.1f seconds for %d iterations.\n", primitiveName(primitive), time, (int)iterations);
+        printf("[+] PBKDF2/%s: %.1f seconds for %d iterations.\n", hash_function_name(primitive), time, (int)iterations);
     }
 
     free(output);

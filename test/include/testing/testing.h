@@ -13,7 +13,8 @@
 
 /* Ordo includes. */
 #include <ordo.h>
-#include <common/ordotypes.h>
+#include <common/ordo_utils.h>
+#include <common/ordo_errors.h>
 
 /* Standard includes. */
 #include <stdio.h>
@@ -36,15 +37,15 @@ void unloadTestVectors(FILE* file);
 void randomTest();
 
 /*! Rates the performance of a block cipher in a given mode of operation. */
-void blockCipherPerformance(BLOCK_CIPHER* primitive, BLOCK_CIPHER_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
+void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
 
 /*! Rates the performance of a stream cipher. */
-void streamCipherPerformance(STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize);
+void streamCipherPerformance(struct STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize);
 
 /*! Rates the performance of a hash function. */
-void hashFunctionPerformance(HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize);
+void hashFunctionPerformance(struct HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize);
 
 /*! Rates the performance of PBKDF2. */
-void pbkdf2Performance(HASH_FUNCTION* primitive, size_t iterations);
+void pbkdf2Performance(struct HASH_FUNCTION* primitive, size_t iterations);
 
 #endif

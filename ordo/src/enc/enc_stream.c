@@ -1,37 +1,53 @@
 #include <enc/enc_stream.h>
 
-ENC_STREAM_CIPHER_CONTEXT* encStreamCipherCreate(STREAM_CIPHER* cipher)
+#include <common/secure_mem.h>
+
+/******************************************************************************/
+
+/*! \brief Stream cipher context.
+ *
+ * This structure describes a stream cipher primitive context. It is used by
+ * stream ciphers to maintain their state across function calls (usually,
+ * stream ciphers store their internal state in it). */
+struct ENC_STREAM_CTX
 {
-    /* Allocate the stream cipher encryption context. */
-    ENC_STREAM_CIPHER_CONTEXT* ctx = salloc(sizeof(ENC_STREAM_CIPHER_CONTEXT));
+    /*! The stream cipher in use. */
+    struct STREAM_CIPHER* cipher;
+    /*! The low-level stream cipher context. */
+    void* ctx;
+};
+
+struct ENC_STREAM_CTX* enc_stream_alloc(struct STREAM_CIPHER* cipher)
+{
+    struct ENC_STREAM_CTX* ctx = secure_alloc(sizeof(struct ENC_STREAM_CTX));
     if (ctx)
     {
-        /* Create the cipher context. */
-        if ((ctx->cipherCtx = streamCipherCreate(cipher))) return ctx;
-        sfree(ctx, sizeof(ENC_STREAM_CIPHER_CONTEXT));
-    };
+        ctx->cipher = cipher;
+        ctx->ctx = stream_cipher_alloc(ctx->cipher);
+        if (!ctx->ctx)
+        {
+            secure_free(ctx, sizeof(struct ENC_STREAM_CTX));
+            return 0;
+        }
 
-    /* Fail, return zero. */
+        return ctx;
+    }
+
     return 0;
 }
 
-int encStreamCipherInit(ENC_STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams)
+int enc_stream_init(struct ENC_STREAM_CTX* ctx, void* key, size_t keySize, void* cipherParams)
 {
-    /* Initialize the stream cipher encryption context. */
-    return streamCipherInit(ctx->cipherCtx, key, keySize, cipherParams);
+    return stream_cipher_init(ctx->cipher, ctx->ctx, key, keySize, cipherParams);
 }
 
-void encStreamCipherUpdate(ENC_STREAM_CIPHER_CONTEXT* ctx, void* inout, size_t len)
+void enc_stream_update(struct ENC_STREAM_CTX* ctx, void* inout, size_t len)
 {
-    /* Encrypt the given buffer. */
-    ctx->cipherCtx->cipher->fUpdate(ctx->cipherCtx, inout, len);
+    stream_cipher_update(ctx->cipher, ctx->ctx, inout, len);
 }
 
-void encStreamCipherFree(ENC_STREAM_CIPHER_CONTEXT* ctx)
+void enc_stream_free(struct ENC_STREAM_CTX* ctx)
 {
-    /* Free the stream cipher encryption context. */
-    streamCipherFree(ctx->cipherCtx);
-
-    /* Free the context. */
-    sfree(ctx, sizeof(ENC_STREAM_CIPHER_CONTEXT));
+    stream_cipher_free(ctx->cipher, ctx->ctx);
+    secure_free(ctx, sizeof(struct ENC_STREAM_CTX));
 }

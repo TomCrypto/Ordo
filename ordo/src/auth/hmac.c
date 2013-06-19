@@ -1,117 +1,117 @@
 #include <auth/hmac.h>
 
-HMAC_CONTEXT* hmacCreate(HASH_FUNCTION* hash)
-{
-    /* Allocate the HMAC context. */
-    HMAC_CONTEXT* ctx = salloc(sizeof(HMAC_CONTEXT));
-    if (ctx)
-    {
-        /* Allocate space for the key and digest. */
-        ctx->key = salloc(hash->blockSize);
-        ctx->digest = salloc(hash->digestSize);
-        if ((ctx->key) && (ctx->digest))
-        {
-            /* Allocate the hash function context. */
-            ctx->ctx = hashFunctionCreate(hash);
-            if (ctx->ctx) return ctx;
-        }
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
 
-        /* Something went wrong. */
-        sfree(ctx->digest, hash->digestSize);
-        sfree(ctx->key, hash->blockSize);
-        sfree(ctx, sizeof(HMAC_CONTEXT));
+/******************************************************************************/
+
+struct HMAC_CTX
+{
+    struct HASH_FUNCTION *hash;
+    void *ctx;
+    unsigned char *key;
+    void *digest;
+};
+
+struct HMAC_CTX* hmac_alloc(struct HASH_FUNCTION *hash)
+{
+    struct HMAC_CTX *ctx = secure_alloc(sizeof(struct HMAC_CTX));
+    if (!ctx) goto fail;
+
+    if (!(ctx->ctx = hash_alloc(hash))) goto fail;
+
+    {
+        ctx->hash = hash;
+
+        {
+            size_t digest_length = hash_digest_length(ctx->hash);
+            size_t block_size = hash_block_size(ctx->hash);
+
+            if (!(ctx->key = secure_alloc(block_size))) goto fail;
+            if (!(ctx->digest = secure_alloc(digest_length))) goto fail;
+            return ctx;
+        }
     }
 
-    /* Allocation failed! */
+fail:
+    hmac_free(ctx);
     return 0;
 }
 
-int hmacInit(HMAC_CONTEXT* ctx, void* key, size_t keySize, void* hashParams)
+int hmac_init(struct HMAC_CTX *ctx, void *key, size_t key_size, void *hash_params)
 {
-    /* Local variables. */
-    int error;
+    size_t block_size = hash_block_size(ctx->hash);
+
+    int err = ORDO_SUCCESS;
     size_t t;
 
-    /* Wipe the key block to start fresh. */
-    memset(ctx->key, 0x00, ctx->ctx->hash->blockSize);
+    /* The key may be smaller than the hash's block size, fill with zeroes. */
+    memset(ctx->key, 0x00, block_size);
 
-    /* First, we need to process the key. If it's smaller than the hash function's
-     * block size, we just pad it with zeroes, otherwise we hash it and use that. */
-    if (keySize > ctx->ctx->hash->blockSize)
+    /* If the key is larger than the hash function's block size, it needs to
+     * be reduced. This is done by hashing it once, as per RFC 2104. */
+    if (key_size > block_size)
     {
-        /* We'll need to hash the key. */
-        error = hashFunctionInit(ctx->ctx, 0);
-        if (error < ORDO_ESUCCESS) return error;
-        hashFunctionUpdate(ctx->ctx, key, keySize);
-        hashFunctionFinal(ctx->ctx, ctx->key);
+        if ((err = hash_init(ctx->ctx, 0))) return err;
+        hash_update(ctx->ctx, key, key_size);
+        hash_final(ctx->ctx, ctx->key);
     }
-    else
-    {
-        /* Key is small enough, just copy it there. */
-        memcpy(ctx->key, key, keySize);
-    }
+    else memcpy(ctx->key, key, key_size);
 
-    /* Apply the inner mask to the key block. */
-    for (t = 0; t < ctx->ctx->hash->blockSize; ++t) ctx->key[t] ^= 0x36;
+    for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x36;
+    if ((err = hash_init(ctx->ctx, hash_params))) return err;
+    hash_update(ctx->ctx, ctx->key, block_size);
 
-    /* Initialize the inner hash context. */
-    error = hashFunctionInit(ctx->ctx, hashParams);
-    if (error < ORDO_ESUCCESS) return error;
-
-    /* Feed it the processed key as per RFC 2104. */
-    hashFunctionUpdate(ctx->ctx, ctx->key, ctx->ctx->hash->blockSize);
-
-    /* Success! */
-    return ORDO_ESUCCESS;
+    return err;
 }
 
-void hmacUpdate(HMAC_CONTEXT* ctx, void* buffer, size_t size)
+void hmac_update(struct HMAC_CTX *ctx, void *buffer, size_t size)
 {
-    /* Just feed in the buffer, as usual. */
-    hashFunctionUpdate(ctx->ctx, buffer, size);
+    hash_update(ctx->ctx, buffer, size);
 }
 
-int hmacFinal(HMAC_CONTEXT* ctx, void* digest)
+int hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
-    /* Local variables. */
-    int error;
+    size_t digest_length = hash_digest_length(ctx->hash);
+    size_t block_size = hash_block_size(ctx->hash);
+
+    int err = ORDO_SUCCESS;
     size_t t;
 
-    /* Get the inner digest. */
-    hashFunctionFinal(ctx->ctx, ctx->digest);
+    hash_final(ctx->ctx, ctx->digest);
 
-    /* Implicitly mask the key with the outer mask. */
-    for (t = 0; t < ctx->ctx->hash->blockSize; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
+    for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    /* Reinitialize the hash context for the outer hash. */
-    error = hashFunctionInit(ctx->ctx, 0);
-    if (error < ORDO_ESUCCESS) return error;
+    if ((err = hash_init(ctx->ctx, 0))) return err;
+    hash_update(ctx->ctx, ctx->key, block_size);
+    hash_update(ctx->ctx, ctx->digest, digest_length);
+    hash_final(ctx->ctx, digest);
 
-    /* Feed this masked key to the hash function. */
-    hashFunctionUpdate(ctx->ctx, ctx->key, ctx->ctx->hash->blockSize);
-
-    /* Feed the inner digest to the hash function. */
-    hashFunctionUpdate(ctx->ctx, ctx->digest, ctx->ctx->hash->digestSize);
-
-    /* Get the final digest - this is the HMAC. */
-    hashFunctionFinal(ctx->ctx, digest);
-
-    /* We're done! */
-    return ORDO_ESUCCESS;
+    return err;
 }
 
-void hmacFree(HMAC_CONTEXT* ctx)
+void hmac_free(struct HMAC_CTX *ctx)
 {
-    /* Free in the right order. */
-    sfree(ctx->digest, ctx->ctx->hash->digestSize);
-    sfree(ctx->key, ctx->ctx->hash->blockSize);
-    hashFunctionFree(ctx->ctx);
-    sfree(ctx, sizeof(HMAC_CONTEXT));
+    if (ctx)
+    {
+        if (ctx->ctx)
+        {
+            size_t digest_length = hash_digest_length(ctx->hash);
+            size_t block_size = hash_block_size(ctx->hash);
+
+            secure_free(ctx->digest, digest_length);
+            secure_free(ctx->key, block_size);
+            hash_free(ctx->ctx);
+        }
+
+        secure_free(ctx, sizeof(struct HMAC_CTX));
+    }
 }
 
-void hmacCopy(HMAC_CONTEXT* dst, HMAC_CONTEXT* src)
+void hmac_copy(struct HMAC_CTX *dst, struct HMAC_CTX *src)
 {
-    memcpy(dst->key, src->key, dst->ctx->hash->blockSize);
-    memcpy(dst->digest, src->digest, dst->ctx->hash->digestSize);
-    hashFunctionCopy(dst->ctx, src->ctx);
+    memcpy(dst->digest, src->digest, hash_digest_length(dst->hash));
+    memcpy(dst->key, src->key, hash_block_size(dst->hash));
+    hash_copy(dst->ctx, src->ctx);
 }

@@ -1,5 +1,9 @@
-#ifndef CBC_H
-#define CBC_H
+#ifndef ORDO_CBC_H
+#define ORDO_CBC_H
+
+#include <enc/block_modes.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,40 +21,28 @@ extern "C" {
  * padding is explicitly disabled through the mode of operation's parameters, the input's length must be a multiple
  * of the cipher's block size.
  *
- * If padding is enabled, \c CBC_Final() requires a valid pointer to be passed in the \c outlen parameter and will
+ * If padding is enabled, \c cbc_final() requires a valid pointer to be passed in the \c outlen parameter and will
  * always return a full blocksize of data, containing the last few ciphertext bytes containing the padding information.
  *
  * If padding is disabled, \c outlen is also required, and will return the number of unprocessed plaintext bytes in the
- * context. If this is any value other than zero, the function will also fail with \c ORDO_ELEFTOVER.
+ * context. If this is any value other than zero, the function will also fail with \c ORDO_LEFTOVER.
  *
  * @see cbc.c
  */
 
-#include <enc/enc_block.h>
+struct CBC_STATE;
 
-/*! \brief CBC mode of operation parameters.
- *
- * A parameter structure for CBC mode - this only contains whether padding should be enabled. */
-typedef struct CBC_PARAMS
-{
-    /*! Set the least significant bit to 0 to disable padding, 1 to enable it. All other bits are ignored. The default
-    * behaviour is 1. */
-    size_t padding;
-} CBC_PARAMS;
+struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-BLOCK_CIPHER_MODE_CONTEXT* CBC_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
+int cbc_init(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct CBC_PARAMS* params);
 
-int CBC_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, CBC_PARAMS* params);
+void cbc_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-void CBC_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
-                unsigned char* in, size_t inlen,
-                unsigned char* out, size_t* outlen);
+int cbc_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-int CBC_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
+void cbc_free(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-void CBC_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
-
-void CBC_SetMode(BLOCK_CIPHER_MODE* mode);
+void cbc_set_mode(struct BLOCK_MODE* mode);
 
 #ifdef __cplusplus
 }

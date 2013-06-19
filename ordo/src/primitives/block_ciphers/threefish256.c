@@ -1,5 +1,11 @@
 #include <primitives/block_ciphers/threefish256.h>
 
+#include <common/environment.h>
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+
+/******************************************************************************/
+
 #define THREEFISH256_BLOCK (32) /* 256-bit block */
 
 /* 64-bit left and right rotation. */
@@ -7,57 +13,36 @@
 #define ROR(n, r) (((n) >> (r)) | ((n) << (64 - (r))))
 
 /* A structure containing a Threefish subkey list. */
-typedef struct THREEFISH256_SUBKEYS
+struct THREEFISH256_STATE
 {
-    UINT256_64 subkey[19];
-} THREEFISH256_SUBKEYS;
+    uint64_t subkey[19][4];
+};
 
-/* Shorthand macro for context casting. */
-#define state(x) ((THREEFISH256_SUBKEYS*)(x->ctx))
-
-BLOCK_CIPHER_CONTEXT* Threefish256_Create()
+struct THREEFISH256_STATE* threefish256_alloc()
 {
-    /* Allocate space for the Threefish-256 key material. */
-    BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
-    if (ctx)
-    {
-        if ((ctx->ctx = salloc(sizeof(THREEFISH256_SUBKEYS)))) return ctx;
-        sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
-    }
-
-    /* Allocation failed. */
-    return 0;
+    return secure_alloc(sizeof(struct THREEFISH256_STATE));
 }
 
 /* Macro for subkey generation. */
-#define subkey(n, s0, s1, s2, s3, t0, t1) subkeys[n].words[0] = keyWords[s0]; \
-                                          subkeys[n].words[1] = keyWords[s1] + tweakWords[t0]; \
-                                          subkeys[n].words[2] = keyWords[s2] + tweakWords[t1]; \
-                                          subkeys[n].words[3] = keyWords[s3] + n; \
+#define subkey(n, s0, s1, s2, s3, t0, t1) subkeys[n][0] = keyWords[s0]; \
+                                          subkeys[n][1] = keyWords[s1] + tweakWords[t0]; \
+                                          subkeys[n][2] = keyWords[s2] + tweakWords[t1]; \
+                                          subkeys[n][3] = keyWords[s3] + n; \
 
 /* This is the Threefish-256 key schedule. */
-inline void Threefish256_KeySchedule(UINT256_64* key, uint64_t tweak[2], UINT256_64* subkeys)
+void threefish256_key_schedule(uint64_t key[4], uint64_t tweak[2], uint64_t subkeys[19][4])
 {
     /* Some variables. */
     uint64_t tweakWords[3];
     uint64_t keyWords[5];
     /* Read the key. */
-    keyWords[0] = key->words[0];
-    keyWords[1] = key->words[1];
-    keyWords[2] = key->words[2];
-    keyWords[3] = key->words[3];
+    keyWords[0] = key[0];
+    keyWords[1] = key[1];
+    keyWords[2] = key[2];
+    keyWords[3] = key[3];
 
-    /* Read the tweak. */
-    if (tweak)
-    {
-        tweakWords[0] = tweak[0];
-        tweakWords[1] = tweak[1];
-    }
-    else
-    {
-        tweakWords[0] = 0;
-        tweakWords[1] = 0;
-    }
+    tweakWords[0] = (tweak ? tweak[0] : 0);
+    tweakWords[1] = (tweak ? tweak[1] : 0);
 
     /* Calculate the extended key and tweak words. */
     keyWords[4] = keyWords[0] ^ keyWords[1] ^ keyWords[2] ^ keyWords[3] ^ (uint64_t)0x1BD11BDAA9FC1A22ULL;
@@ -85,174 +70,174 @@ inline void Threefish256_KeySchedule(UINT256_64* key, uint64_t tweak[2], UINT256
     subkey(18, 3, 4, 0, 1, 0, 1);
 }
 
-int Threefish256_Init(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* key, size_t keySize, THREEFISH256_PARAMS* params)
+int threefish256_init(struct THREEFISH256_STATE *state, uint64_t* key, size_t keySize, struct THREEFISH256_PARAMS* params)
 {
     /* Only a 256-bit key is permitted. */
-    if (keySize != 32) return ORDO_EKEYSIZE;
+    if (keySize != 32) return ORDO_KEY_SIZE;
 
     /* Perform the key schedule (if no tweak is specified, assume zero). */
-    Threefish256_KeySchedule(key, (params == 0) ? 0 : params->tweak, state(ctx)->subkey);
+    threefish256_key_schedule(key, (params == 0) ? 0 : params->tweak, state->subkey);
 
     /* Returns success. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
 /* This is the standalone Threefish-256 forward permutation. */
-inline void Threefish256_Forward_Raw(UINT256_64* block, UINT256_64* subkeys)
+void threefish256_forward_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
     #if ENVIRONMENT_64
-    Threefish256_Forward_ASM(block, &subkeys[0]);
+    threefish256_forward_ASM(block, &subkeys[0]);
     #else
     size_t t;
     uint64_t s;
 
     /* Initial key whitening. */
-    block->words[0] += subkeys[0].words[0];
-    block->words[1] += subkeys[0].words[1];
-    block->words[2] += subkeys[0].words[2];
-    block->words[3] += subkeys[0].words[3];
+    block[0] += subkeys[0][0];
+    block[1] += subkeys[0][1];
+    block[2] += subkeys[0][2];
+    block[3] += subkeys[0][3];
 
     /* 8 big rounds. */
     for (t = 0; t < 9; t++)
     {
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 14);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 14);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 16);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 16);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 52);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 52);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 57);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 57);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 23);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 23);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 40);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 40);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1],  5);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1],  5);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 37);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 37);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Subkey addition. */
-        block->words[0] += subkeys[t * 2 + 1].words[0];
-        block->words[1] += subkeys[t * 2 + 1].words[1];
-        block->words[2] += subkeys[t * 2 + 1].words[2];
-        block->words[3] += subkeys[t * 2 + 1].words[3];
+        block[0] += subkeys[t * 2 + 1][0];
+        block[1] += subkeys[t * 2 + 1][1];
+        block[2] += subkeys[t * 2 + 1][2];
+        block[3] += subkeys[t * 2 + 1][3];
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 25);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 25);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 33);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 33);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 46);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 46);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 12);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 12);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 58);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 58);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 22);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 22);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* MIX */
-        block->words[0] += block->words[1];
-        block->words[1] = ROL(block->words[1], 32);
-        block->words[1] ^= block->words[0];
+        block[0] += block[1];
+        block[1] = ROL(block[1], 32);
+        block[1] ^= block[0];
 
-        block->words[2] += block->words[3];
-        block->words[3] = ROL(block->words[3], 32);
-        block->words[3] ^= block->words[2];
+        block[2] += block[3];
+        block[3] = ROL(block[3], 32);
+        block[3] ^= block[2];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Subkey addition. */
-        block->words[0] += subkeys[t * 2 + 2].words[0];
-        block->words[1] += subkeys[t * 2 + 2].words[1];
-        block->words[2] += subkeys[t * 2 + 2].words[2];
-        block->words[3] += subkeys[t * 2 + 2].words[3];
+        block[0] += subkeys[t * 2 + 2][0];
+        block[1] += subkeys[t * 2 + 2][1];
+        block[2] += subkeys[t * 2 + 2][2];
+        block[3] += subkeys[t * 2 + 2][3];
     }
     #endif
 }
 
 /* Threefish-256 forward permutation function. */
-void Threefish256_Forward(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block)
+void threefish256_forward(struct THREEFISH256_STATE *state, uint64_t* block)
 {
-    Threefish256_Forward_Raw(block, state(ctx)->subkey);
+    threefish256_forward_raw(block, state->subkey);
 }
 
 /* This is the standalone Threefish-256 inverse permutation. */
-inline void Threefish256_Inverse_Raw(UINT256_64* block, UINT256_64* subkeys)
+void threefish256_inverse_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
     #if ENVIRONMENT_64
-    Threefish256_Inverse_ASM(block, &subkeys[0]);
+    threefish256_inverse_ASM(block, &subkeys[0]);
     #else
     size_t t;
     uint64_t s;
@@ -261,153 +246,158 @@ inline void Threefish256_Inverse_Raw(UINT256_64* block, UINT256_64* subkeys)
     for (t = 9; t > 0; t--)
     {
         /* Subkey subtraction. */
-        block->words[0] -= subkeys[(t - 1) * 2 + 2].words[0];
-        block->words[1] -= subkeys[(t - 1) * 2 + 2].words[1];
-        block->words[2] -= subkeys[(t - 1) * 2 + 2].words[2];
-        block->words[3] -= subkeys[(t - 1) * 2 + 2].words[3];
+        block[0] -= subkeys[(t - 1) * 2 + 2][0];
+        block[1] -= subkeys[(t - 1) * 2 + 2][1];
+        block[2] -= subkeys[(t - 1) * 2 + 2][2];
+        block[3] -= subkeys[(t - 1) * 2 + 2][3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 32);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 32);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 32);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 32);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 58);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 58);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 22);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 22);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 46);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 46);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 12);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 12);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 25);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 25);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 33);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 33);
+        block[2] -= block[3];
 
         /* Subkey subtraction. */
-        block->words[0] -= subkeys[(t - 1) * 2 + 1].words[0];
-        block->words[1] -= subkeys[(t - 1) * 2 + 1].words[1];
-        block->words[2] -= subkeys[(t - 1) * 2 + 1].words[2];
-        block->words[3] -= subkeys[(t - 1) * 2 + 1].words[3];
+        block[0] -= subkeys[(t - 1) * 2 + 1][0];
+        block[1] -= subkeys[(t - 1) * 2 + 1][1];
+        block[2] -= subkeys[(t - 1) * 2 + 1][2];
+        block[3] -= subkeys[(t - 1) * 2 + 1][3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1],  5);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1],  5);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 37);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 37);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 23);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 23);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 40);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 40);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 52);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 52);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 57);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 57);
+        block[2] -= block[3];
 
         /* Permutation */
-        s = block->words[1];
-        block->words[1] = block->words[3];
-        block->words[3] = s;
+        s = block[1];
+        block[1] = block[3];
+        block[3] = s;
 
         /* Inverse MIX */
-        block->words[1] ^= block->words[0];
-        block->words[1] = ROR(block->words[1], 14);
-        block->words[0] -= block->words[1];
+        block[1] ^= block[0];
+        block[1] = ROR(block[1], 14);
+        block[0] -= block[1];
 
-        block->words[3] ^= block->words[2];
-        block->words[3] = ROR(block->words[3], 16);
-        block->words[2] -= block->words[3];
+        block[3] ^= block[2];
+        block[3] = ROR(block[3], 16);
+        block[2] -= block[3];
     }
 
     /* Final key whitening. */
-    block->words[0] -= subkeys[0].words[0];
-    block->words[1] -= subkeys[0].words[1];
-    block->words[2] -= subkeys[0].words[2];
-    block->words[3] -= subkeys[0].words[3];
+    block[0] -= subkeys[0][0];
+    block[1] -= subkeys[0][1];
+    block[2] -= subkeys[0][2];
+    block[3] -= subkeys[0][3];
     #endif
 }
 
 /* Threefish-256 inverse permutation function. */
-void Threefish256_Inverse(BLOCK_CIPHER_CONTEXT* ctx, UINT256_64* block)
+void threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t* block)
 {
-    Threefish256_Inverse_Raw(block, state(ctx)->subkey);
+    threefish256_inverse_raw(block, state->subkey);
 }
 
-void Threefish256_Free(BLOCK_CIPHER_CONTEXT* ctx)
+void threefish256_free(struct THREEFISH256_STATE *state)
 {
-    /* Deallocate space for the Threefish-256 key material. */
-    sfree(ctx->ctx, sizeof(THREEFISH256_SUBKEYS));
-    sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
+    secure_free(state, sizeof(struct THREEFISH256_STATE));
 }
 
 /* Fills a BLOCK_CIPHER struct with the correct information. */
-void Threefish256_SetPrimitive(BLOCK_CIPHER* cipher)
+void threefish256_set_primitive(struct BLOCK_CIPHER* cipher)
 {
-    MAKE_BLOCK_CIPHER(cipher, THREEFISH256_BLOCK, Threefish256_Create, Threefish256_Init, Threefish256_Forward, Threefish256_Inverse, Threefish256_Free, "Threefish-256");
+    make_block_cipher(cipher,
+               THREEFISH256_BLOCK,
+               (BLOCK_ALLOC)threefish256_alloc,
+               (BLOCK_INIT)threefish256_init,
+               (BLOCK_UPDATE)threefish256_forward,
+               (BLOCK_UPDATE)threefish256_inverse,
+               (BLOCK_FREE)threefish256_free,
+               "Threefish-256");
 }

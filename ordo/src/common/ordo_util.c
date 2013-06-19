@@ -1,7 +1,14 @@
-#include <common/ordotypes.h>
+#include <common/ordo_utils.h>
+
+#include <common/ordo_errors.h>
+
+#include <stdlib.h>
+#include <stdint.h>
+
+/******************************************************************************/
 
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
-inline int padCheck(unsigned char* buffer, unsigned char padding)
+int pad_check(unsigned char* buffer, unsigned char padding)
 {
     /* Iterate over all padding bytes at the end of the block. */
     size_t t;
@@ -14,7 +21,7 @@ inline int padCheck(unsigned char* buffer, unsigned char padding)
 }
 
 /* Xors two buffers together. */
-inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
+void xor_buffer(unsigned char* dst, unsigned char* src, size_t len)
 {
     /* Optimization will do the rest. */
     while (len--) *(dst++) ^= *(src++);
@@ -22,7 +29,7 @@ inline void xorBuffer(unsigned char* dst, unsigned char* src, size_t len)
 
 /* Increments a counter of arbitrary size as if it were a len-byte integer
    Propagation is done from left-to-right in memory storage order. */
-inline void incBuffer(unsigned char* buffer, size_t len)
+void inc_buffer(unsigned char* buffer, size_t len)
 {
     /* Set the initial carry to one. */
     size_t carry = 1;
@@ -33,16 +40,18 @@ inline void incBuffer(unsigned char* buffer, size_t len)
 }
 
 /* Returns a readable error message. */
-char* errorMsg(int code)
+char* error_msg(int code)
 {
     /* Get a proper error message. */
     switch (code)
     {
-        case ORDO_EFAIL: return "An external error occurred";
-        case ORDO_EKEYSIZE: return "The key size is invalid";
-        case ORDO_EPADDING: return "The padding block cannot be recognized";
-        case ORDO_ELEFTOVER: return "There is leftover input data";
-        case ORDO_EHEAPALLOC: return "Heap allocation failed";
+        case ORDO_SUCCESS: return "No error occurred.";
+        case ORDO_ARG: return "Invalid argument provided.";
+        case ORDO_FAIL: return "An external error occurred";
+        case ORDO_KEY_SIZE: return "The key size is invalid";
+        case ORDO_PADDING: return "The padding block cannot be recognized";
+        case ORDO_LEFTOVER: return "There is leftover input data";
+        case ORDO_ALLOC: return "Memory allocation failed";
     }
 
     /* Invalid error code... */

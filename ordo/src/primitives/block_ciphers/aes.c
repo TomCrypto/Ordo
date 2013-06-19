@@ -15,7 +15,13 @@ REDISTRIBUTION OF THIS SOFTWARE.
 */
 
 #include <primitives/block_ciphers/aes.h>
+
 #include <common/environment.h>
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <string.h>
+
+/******************************************************************************/
 
 /* The block size of AES. */
 #define AES_BLOCK (16)
@@ -386,7 +392,7 @@ void ExpandKey (uint8_t *key, uint8_t *ext, size_t keySize, size_t rounds)
 
 
 /* This is the internal state of AES. */
-typedef struct AES_STATE
+struct AES_STATE
 {
     /* The expanded key. */
     uint8_t* key;
@@ -394,108 +400,90 @@ typedef struct AES_STATE
     size_t keyBytes;
     /* The number of rounds to use. */
     size_t rounds;
-} AES_STATE;
+};
 
-/* Macro for shorthand state casting. */
-#define state(x) ((AES_STATE*)(x->ctx))
-
-BLOCK_CIPHER_CONTEXT* AES_Create()
+struct AES_STATE* aes_alloc()
 {
-    /* Allocate a block cipher context... */
-    BLOCK_CIPHER_CONTEXT* ctx = salloc(sizeof(BLOCK_CIPHER_CONTEXT));
-    if (ctx)
-    {
-        /* Allocate the AES state. */
-        ctx->ctx = salloc(sizeof(AES_STATE));
-        if (ctx->ctx)
-        {
-            state(ctx)->keyBytes = 0;
-            return ctx;
-        }
-
-        /* Allocation failed. */
-        sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
-    }
-
-    /* Something went wrong. */
-    return 0;
+    struct AES_STATE *state = secure_alloc(sizeof(struct AES_STATE));
+    if (state) state->keyBytes = 0;
+    return state;
 }
 
-int AES_Init(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, AES_PARAMS* params)
+int aes_init(struct AES_STATE *state, void* key, size_t keySize, struct AES_PARAMS* params)
 {
     /* Validate the keysize. */
-    if (!((keySize == 16) || (keySize == 24) || (keySize == 32))) return ORDO_EKEYSIZE;
+    if (!((keySize == 16) || (keySize == 24) || (keySize == 32))) return ORDO_KEY_SIZE;
 
     /* Read the parameters, if available. */
     if (params)
     {
-        if (params->rounds == 0) return ORDO_EPARAM;
-        state(ctx)->rounds = params->rounds;
+        if (params->rounds == 0) return ORDO_ARG;
+        state->rounds = params->rounds;
     }
     else
     {
         /* Set the default round numbers. */
-        if (keySize == 16) state(ctx)->rounds = 10;
-        else if (keySize == 24) state(ctx)->rounds = 12;
-        else if (keySize == 32) state(ctx)->rounds = 14;
+        if (keySize == 16) state->rounds = 10;
+        else if (keySize == 24) state->rounds = 12;
+        else if (keySize == 32) state->rounds = 14;
     }
 
     /* Allocate the expanded key array. */
-    state(ctx)->keyBytes = 16 * (state(ctx)->rounds + 1);
-    state(ctx)->key = salloc(state(ctx)->keyBytes);
-    if (!state(ctx)->key) return ORDO_EHEAPALLOC;
+    state->keyBytes = 16 * (state->rounds + 1);
+    state->key = secure_alloc(state->keyBytes);
+    if (!state->key) return ORDO_ALLOC;
 
     /* Perform the key schedule. */
-    ExpandKey(key, state(ctx)->key, keySize / 4, state(ctx)->rounds);
+    ExpandKey(key, state->key, keySize / 4, state->rounds);
 
     /* We're finished with the key schedule. */
-    return ORDO_ESUCCESS;
+    return ORDO_SUCCESS;
 }
 
-void AES_Forward(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
+void aes_forward(struct AES_STATE *state, uint8_t* block)
 {
     /* If we have AES-NI, just use that. */
     #if (FEATURE_AES && ENVIRONMENT_64)
-    AES_Forward_ASM(block, state(ctx)->key, state(ctx)->rounds);
+    aes_forward_ASM(block, state->key, state->rounds);
     #else
     /* Local variables. */
     size_t t;
 
     /* Add the initial round key. */
-    AddRoundKey(block, state(ctx)->key + 16 * 0);
+    AddRoundKey(block, state->key + 16 * 0);
 
     /* Iterate over each round... */
-    for (t = 1; t < state(ctx)->rounds + 1; ++t)
+    for (t = 1; t < state->rounds + 1; ++t)
     {
         /* Use the faster function if this isn't the last round. */
-        if (t < state(ctx)->rounds) MixSubColumns(block); else ShiftRows(block);
+        if (t < state->rounds) MixSubColumns(block); else ShiftRows(block);
 
         /* Add the round key. */
-        AddRoundKey(block, state(ctx)->key + 16 * t);
+        AddRoundKey(block, state->key + 16 * t);
     }
     #endif
 }
 
-void AES_Inverse(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
+void aes_inverse(struct AES_STATE *state, uint8_t* block)
 {
     /* If we have AES-NI, just use that. */
     #if (FEATURE_AES && ENVIRONMENT_64)
-    AES_Inverse_ASM(block, state(ctx)->key + 16 * state(ctx)->rounds, state(ctx)->rounds);
+    aes_inverse_ASM(block, state->key + 16 * state->rounds, state->rounds);
     #else
     /* Local variables. */
     size_t t;
 
     /* Add the final round key. */
-    AddRoundKey(block, state(ctx)->key + 16 * state(ctx)->rounds);
+    AddRoundKey(block, state->key + 16 * state->rounds);
 
     /* Reverse the row shifting. */
     InvShiftRows(block);
 
     /* Perform each round... */
-    for (t = state(ctx)->rounds; t--;)
+    for (t = state->rounds; t--;)
     {
         /* Add the round key. */
-        AddRoundKey(block, state(ctx)->key + 16 * t);
+        AddRoundKey(block, state->key + 16 * t);
         if (t)
         {
             /* Perform the inverse operation. */
@@ -505,25 +493,21 @@ void AES_Inverse(BLOCK_CIPHER_CONTEXT* ctx, uint8_t* block)
     #endif
 }
 
-void AES_Free(BLOCK_CIPHER_CONTEXT* ctx)
+void aes_free(struct AES_STATE *state)
 {
-    /* Because we can't allocate the expanded key array at context creation as it is dependent
-     * on the number of rounds chosen, it may have failed to allocate during initialization.
-     * We must therefore be careful when freeing it! */
-    if (ctx)
-    {
-        if (ctx->ctx)
-        {
-            if (state(ctx)->keyBytes) sfree(state(ctx)->key, state(ctx)->keyBytes);
-            sfree(ctx->ctx, sizeof(AES_STATE));
-        }
-
-        sfree(ctx, sizeof(BLOCK_CIPHER_CONTEXT));
-    }
+    if (state->keyBytes) secure_free(state->key, state->keyBytes);
+    secure_free(state, sizeof(struct AES_STATE));
 }
 
 /* Fills a BLOCK_CIPHER struct with the correct information. */
-void AES_SetPrimitive(BLOCK_CIPHER* cipher)
+void aes_set_primitive(struct BLOCK_CIPHER* cipher)
 {
-    MAKE_BLOCK_CIPHER(cipher, AES_BLOCK, AES_Create, AES_Init, AES_Forward, AES_Inverse, AES_Free, "AES");
+    make_block_cipher(cipher,
+                      AES_BLOCK,
+                      (BLOCK_ALLOC)aes_alloc,
+                      (BLOCK_INIT)aes_init,
+                      (BLOCK_UPDATE)aes_forward,
+                      (BLOCK_UPDATE)aes_inverse,
+                      (BLOCK_FREE)aes_free,
+                      "AES");
 }

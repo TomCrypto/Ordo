@@ -1,5 +1,6 @@
 #include <ordo.h>
 #include <testing/testing.h>
+#include <common/version.h>
 
 void testVectors()
 {
@@ -54,12 +55,12 @@ void performanceTest()
 int main(int argc, char* argv[])
 {
     /* Display a little header with version information. */
-    printf("[+] Ordo v%s (%s | %s).\n", ordoBuildInfo()->version, ordoBuildInfo()->build, ordoBuildInfo()->devtag);
-    printf("[+] Built for %d-bit %s (%s).\n", ordoBuildInfo()->wordSize, ordoBuildInfo()->platform, ordoBuildInfo()->ABI);
+    printf("[+] Ordo v%s (%s | %s).\n", ordo_build_info()->version, ordo_build_info()->build, ordo_build_info()->devtag);
+    printf("[+] Built for %d-bit %s (%s).\n", ordo_build_info()->word_size, ordo_build_info()->platform, ordo_build_info()->ABI);
     printf("\n");
 
     /* Initialize Ordo. */
-    ordoLoad();
+    load_ordo();
 
     /* First of all, get the CSPRNG test out of the way. */
     printf("-------- CSPRNG Tests --------\n\n");

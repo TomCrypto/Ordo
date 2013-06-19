@@ -1,5 +1,10 @@
-#ifndef PRIMITIVES_H
-#define PRIMITIVES_H
+#ifndef ORDO_PRIMITIVES_H
+#define ORDO_PRIMITIVES_H
+
+#include <stdint.h>
+#include <stdlib.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,233 +15,128 @@ extern "C" {
  *
  * \brief Cryptographic primitives.
  *
- * This declares all the cryptographic primitives in the library, abstracting various categories through high-level
- * interfaces.
- *
- * @see primitives.c
+ * This declares all the cryptographic primitives in the library, abstracting
+ * various types of primitives (block ciphers, hash functions, etc..) through
+ * higher level interfaces.
  */
 
-/* Library dependencies. */
-#include <common/ordotypes.h>
-
-/* Macro to define a block cipher object. */
-#define MAKE_BLOCK_CIPHER(p, b, c, i, pf, pi, f, n){                                                                  \
-    p->blockSize = b;                                                                                                 \
-    p->fCreate = c;                                                                                                   \
-    p->fInit = (BLOCK_CIPHER_INIT)i;                                                                                  \
-    p->fForward = (BLOCK_CIPHER_UPDATE)pf;                                                                            \
-    p->fInverse = (BLOCK_CIPHER_UPDATE)pi;                                                                            \
-    p->fFree = f;                                                                                                     \
-    p->name = n;}
-
-/* Same as above, but for stream ciphers. */
-#define MAKE_STREAM_CIPHER(p, c, i, u, f, n){                                                                         \
-    p->fCreate = c;                                                                                                   \
-    p->fInit = (STREAM_CIPHER_INIT)i;                                                                                 \
-    p->fUpdate = (STREAM_CIPHER_UPDATE)u;                                                                             \
-    p->fFree = f;                                                                                                     \
-    p->name = n;}
-
-/* Same as above, but for hash functions. */
-#define MAKE_HASH_FUNCTION(p, d, b, c, i, u, fi, f, cp, n){                                                           \
-    p->digestSize = d;                                                                                                \
-    p->blockSize = b;                                                                                                 \
-    p->fCreate = c;                                                                                                   \
-    p->fInit = (HASH_FUNCTION_INIT)i;                                                                                 \
-    p->fUpdate = (HASH_FUNCTION_UPDATE)u;                                                                             \
-    p->fFinal = (HASH_FUNCTION_FINAL)fi;                                                                              \
-    p->fFree = f;                                                                                                     \
-    p->fCopy = cp;                                                                                                    \
-    p->name = n;}
-
-/*! Returns the name of a cryptographic primitive. */
-#define primitiveName(p) (p->name)
-/*! Returns the block size of a block cipher primitive. */
-#define blockCipherBlockSize(p) (p->blockSize)
-/*! Returns the digest size of a hash function primitive. */
-#define hashFunctionDigestSize(p) (p->digestSize)
-
-/*! \brief Block cipher context.
- *
- * This structure describes a block cipher primitive context. It is used by block cipher primitives to maintain their
- * state across function calls (this includes key material, in particular, and possibly parameters such as number of
- * rounds). It should never be modified outside of these functions and must be considered opaque. */
-typedef struct BLOCK_CIPHER_CONTEXT
-{
-    /*! The block cipher in use. */
-    struct BLOCK_CIPHER* cipher;
-    /*! The low-level block cipher context. */
-    void* ctx;
-} BLOCK_CIPHER_CONTEXT;
-
-/*! \brief Stream cipher context.
- *
- * This structure describes a stream cipher primitive context. It is used by stream ciphers to maintain their state
- * across function calls (usually, stream ciphers store their internal state there). */
-typedef struct STREAM_CIPHER_CONTEXT
-{
-    /*! The stream cipher in use. */
-    struct STREAM_CIPHER* cipher;
-    /*! The low-level stream cipher context. */
-    void* ctx;
-} STREAM_CIPHER_CONTEXT;
-
-/*! \brief hash function context.
- *
- * This structure describes a hash function primitive context. It is used by hash functions to maintain their state
- * across function calls (such as current message block and total length, extra metadata, etc...). */
-typedef struct HASH_FUNCTION_CONTEXT
-{
-    /*! The hash function in use. */
-    struct HASH_FUNCTION* hash;
-    /*! The low-level hash function context. */
-    void* ctx;
-} HASH_FUNCTION_CONTEXT;
+/* Headers containing the primitive parameter structures, such that they do not
+ * require to be explicitly included for every different primitive in use. */
+#include <primitives/block_ciphers/block_params.h>
+#include <primitives/stream_ciphers/stream_params.h>
+#include <primitives/hash_functions/hash_params.h>
 
 /* Block cipher interface function prototypes. */
-typedef BLOCK_CIPHER_CONTEXT* (*BLOCK_CIPHER_ALLOC)();
-typedef int (*BLOCK_CIPHER_INIT)(BLOCK_CIPHER_CONTEXT*, void*, size_t, void*);
-typedef void (*BLOCK_CIPHER_UPDATE)(BLOCK_CIPHER_CONTEXT*, void*);
-typedef void (*BLOCK_CIPHER_FREE)(BLOCK_CIPHER_CONTEXT*);
-
-/*! \brief Block cipher object.
- *
- * This represents a block cipher object. */
-typedef struct BLOCK_CIPHER
-{
-    size_t blockSize;
-    BLOCK_CIPHER_ALLOC fCreate;
-    BLOCK_CIPHER_INIT fInit;
-    BLOCK_CIPHER_UPDATE fForward;
-    BLOCK_CIPHER_UPDATE fInverse;
-    BLOCK_CIPHER_FREE fFree;
-    char* name;
-} BLOCK_CIPHER;
+typedef void* (*BLOCK_ALLOC)();
+typedef int (*BLOCK_INIT)(void*, void*, size_t, void*);
+typedef void (*BLOCK_UPDATE)(void*, void*);
+typedef void (*BLOCK_FREE)(void*);
 
 /* Stream cipher interface function prototypes. */
-typedef STREAM_CIPHER_CONTEXT* (*STREAM_CIPHER_ALLOC)();
-typedef int (*STREAM_CIPHER_INIT)(STREAM_CIPHER_CONTEXT*, void*, size_t, void*);
-typedef void (*STREAM_CIPHER_UPDATE)(STREAM_CIPHER_CONTEXT*, void*, size_t);
-typedef void (*STREAM_CIPHER_FREE)(STREAM_CIPHER_CONTEXT*);
-
-/*! \brief Stream cipher object.
- *
- * This represents a stream cipher object. */
-typedef struct STREAM_CIPHER
-{
-    STREAM_CIPHER_ALLOC fCreate;
-    STREAM_CIPHER_INIT fInit;
-    STREAM_CIPHER_UPDATE fUpdate;
-    STREAM_CIPHER_FREE fFree;
-    char* name;
-} STREAM_CIPHER;
+typedef void* (*STREAM_ALLOC)();
+typedef int (*STREAM_INIT)(void*, void*, size_t, void*);
+typedef void (*STREAM_UPDATE)(void*, void*, size_t);
+typedef void (*STREAM_FREE)(void*);
 
 /* Hash function interface function prototypes. */
-typedef HASH_FUNCTION_CONTEXT* (*HASH_FUNCTION_ALLOC)();
-typedef int (*HASH_FUNCTION_INIT)(HASH_FUNCTION_CONTEXT*, void*);
-typedef void (*HASH_FUNCTION_UPDATE)(HASH_FUNCTION_CONTEXT*, void*, size_t);
-typedef void (*HASH_FUNCTION_FINAL)(HASH_FUNCTION_CONTEXT*, void*);
-typedef void (*HASH_FUNCTION_FREE)(HASH_FUNCTION_CONTEXT*);
-typedef void (*HASH_FUNCTION_COPY)(HASH_FUNCTION_CONTEXT*, HASH_FUNCTION_CONTEXT*);
+typedef void* (*HASH_ALLOC)();
+typedef int (*HASH_INIT)(void*, void*);
+typedef void (*HASH_UPDATE)(void*, void*, size_t);
+typedef void (*HASH_FINAL)(void*, void*);
+typedef void (*HASH_FREE)(void*);
+typedef void (*HASH_COPY)(void*, void*);
 
-/*! \brief Hash function object.
- *
- * This represents a hash function object. */
-typedef struct HASH_FUNCTION
-{
-    size_t digestSize;
-    size_t blockSize;
-    HASH_FUNCTION_ALLOC fCreate;
-    HASH_FUNCTION_INIT fInit;
-    HASH_FUNCTION_UPDATE fUpdate;
-    HASH_FUNCTION_FINAL fFinal;
-    HASH_FUNCTION_FREE fFree;
-    HASH_FUNCTION_COPY fCopy;
-    char* name;
-} HASH_FUNCTION;
+struct BLOCK_CIPHER;
+struct STREAM_CIPHER;
+struct HASH_FUNCTION;
 
-/*! Loads all primitives. This must be called before you may use \c RC4(), \c NullCipher(), etc... or the helper
- * functions \c getBlockCipherByName() or \c getStreamCipherByID(), etc... */
-void primitivesLoad();
+void make_block_cipher(struct BLOCK_CIPHER *primitive, size_t block_size,
+                       BLOCK_ALLOC alloc, BLOCK_INIT init, BLOCK_UPDATE forward,
+                       BLOCK_UPDATE inverse, BLOCK_FREE free, char *name);
+
+void make_stream_cipher(struct STREAM_CIPHER *primitive,
+                       STREAM_ALLOC alloc, STREAM_INIT init, STREAM_UPDATE update,
+                       STREAM_FREE free, char *name);
+
+void make_hash_function(struct HASH_FUNCTION *primitive, size_t digest_length, size_t block_size,
+                       HASH_ALLOC alloc, HASH_INIT init, HASH_UPDATE update,
+                       HASH_FINAL final, HASH_FREE free, HASH_COPY copy, char *name);
+
+const char* block_cipher_name(struct BLOCK_CIPHER *primitive);
+const char* stream_cipher_name(struct STREAM_CIPHER *primitive);
+const char* hash_function_name(struct HASH_FUNCTION *primitive);
+
+size_t cipher_block_size(struct BLOCK_CIPHER *primitive);
+size_t hash_digest_length(struct HASH_FUNCTION *primitive);
+size_t hash_block_size(struct HASH_FUNCTION *primitive);
+
+/*! Loads all primitives. This must be called before you may use \c RC4(),
+ * \c NullCipher(), etc... or the helper functions \c block_cipher_by_name()
+ * or \c stream_cipher_by_id(), and so on. */
+void load_primitives();
 
 /*! The NullCipher block cipher. */
-BLOCK_CIPHER* NullCipher();
+struct BLOCK_CIPHER* NullCipher();
 
 /*! The Threefish-256 block cipher. */
-BLOCK_CIPHER* Threefish256();
+struct BLOCK_CIPHER* Threefish256();
 
 /*! The AES block cipher. */
-BLOCK_CIPHER* AES();
+struct BLOCK_CIPHER* AES();
 
 /*! Returns a block cipher object from a name. */
-BLOCK_CIPHER* getBlockCipherByName(char* name);
+struct BLOCK_CIPHER* block_cipher_by_name(char* name);
 
 /*! Returns a block cipher object from an ID. */
-BLOCK_CIPHER* getBlockCipherByID(size_t ID);
+struct BLOCK_CIPHER* block_cipher_by_id(size_t id);
 
 /*! The RC4 stream cipher. */
-STREAM_CIPHER* RC4();
+struct STREAM_CIPHER* RC4();
 
 /*! Returns a stream cipher object from a name. */
-STREAM_CIPHER* getStreamCipherByName(char* name);
+struct STREAM_CIPHER* stream_cipher_by_name(char* name);
 
 /*! Returns a stream cipher object from an ID. */
-STREAM_CIPHER* getStreamCipherByID(size_t ID);
+struct STREAM_CIPHER* stream_cipher_by_id(size_t id);
 
 /*! The SHA256 hash function. */
-HASH_FUNCTION* SHA256();
+struct HASH_FUNCTION* SHA256();
 
 /*! The MD5 hash function. */
-HASH_FUNCTION* MD5();
+struct HASH_FUNCTION* MD5();
 
 /*! The Skein-256 hash function. */
-HASH_FUNCTION* Skein256();
+struct HASH_FUNCTION* Skein256();
 
 /*! Returns a hash function object from a name. */
-HASH_FUNCTION* getHashFunctionByName(char* name);
+struct HASH_FUNCTION* hash_function_by_name(char* name);
 
 /*! Returns a hash function object from an ID. */
-HASH_FUNCTION* getHashFunctionByID(size_t ID);
+struct HASH_FUNCTION* hash_function_by_id(size_t id);
 
-/*! This function returns an allocated block cipher context using a given block cipher.
- \param cipher The block cipher to use.
- \return Returns the allocated block cipher context, or 0 if an error occurred. */
-BLOCK_CIPHER_CONTEXT* blockCipherCreate(BLOCK_CIPHER* cipher);
+/* BLOCK CIPHER ABSTRACTION LAYER. */
 
-/*! This function initializes a block cipher context for encryption, provided a key, and cipher parameters.
- \param ctx An allocated block cipher context.
- \param key A buffer containing the key to use for encryption.
- \param keySize The size, in bytes, of the encryption key.
- \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
-int blockCipherInit(BLOCK_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams);
+void* block_cipher_alloc(struct BLOCK_CIPHER* primitive);
+int block_cipher_init(struct BLOCK_CIPHER* primitive, void *ctx, void *key, size_t key_size, void *params);
+void block_cipher_forward(struct BLOCK_CIPHER* primitive, void *ctx, void *block);
+void block_cipher_inverse(struct BLOCK_CIPHER* primitive, void *ctx, void *block);
+void block_cipher_free(struct BLOCK_CIPHER* primitive, void *ctx);
 
-/*! This function frees (deallocates) an initialized block cipher context.
- \param ctx The block cipher context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
- be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
- \c blockCipherCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
-void blockCipherFree(BLOCK_CIPHER_CONTEXT* ctx);
+/* STREAM CIPHER ABSTRACTION LAYER. */
 
-/*! This function returns an allocated stream cipher context using a given stream cipher.
- \param cipher The stream cipher to use.
- \return Returns the allocated stream cipher context, or 0 if an error occurred. */
-STREAM_CIPHER_CONTEXT* streamCipherCreate(STREAM_CIPHER* cipher);
+void* stream_cipher_alloc(struct STREAM_CIPHER *primitive);
+int stream_cipher_init(struct STREAM_CIPHER *primitive, void* ctx, void *key, size_t key_size, void *params);
+void stream_cipher_update(struct STREAM_CIPHER *primitive, void* ctx, void *buffer, size_t size);
+void stream_cipher_free(struct STREAM_CIPHER *primitive, void *ctx);
 
-/*! This function initializes a stream cipher context for encryption, provided a key and cipher parameters.
- \param ctx An allocated stream cipher context.
- \param key A buffer containing the key to use for encryption.
- \param keySize The size, in bytes, of the encryption key.
- \param cipherParams This points to specific cipher parameters, set to zero for default behavior.
- \return Returns \c ORDO_ESUCCESS on success, and a negative value on error. */
-int streamCipherInit(STREAM_CIPHER_CONTEXT* ctx, void* key, size_t keySize, void* cipherParams);
+/* HASH FUNCTION ABSTRACTION LAYER. */
 
-/*! This function frees (deallocates) an initialized stream cipher context.
- \param ctx The stream cipher context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
- be wiped. Passing zero to this function is invalid and will incur a segmentation fault. Do not call this function if
- \c streamCipherCreate() failed, as the latter already works hard to ensure no memory is leaked if an error occurs. */
-void streamCipherFree(STREAM_CIPHER_CONTEXT* ctx);
+void* hash_function_alloc(struct HASH_FUNCTION *primitive);
+int hash_function_init(struct HASH_FUNCTION *primitive, void *ctx, void *params);
+void hash_function_update(struct HASH_FUNCTION *primitive, void *ctx, void *buffer, size_t size);
+void hash_function_final(struct HASH_FUNCTION *primitive, void *ctx, void *digest);
+void hash_function_free(struct HASH_FUNCTION *primitive, void *ctx);
+void hash_function_copy(struct HASH_FUNCTION *primitive, void *dst, void *src);
 
 #ifdef __cplusplus
 }

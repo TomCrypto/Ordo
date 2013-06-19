@@ -1,10 +1,14 @@
 #include <common/version.h>
 
-const ORDO_BUILD_INFO ordoInfo = {
+#include <common/environment.h>
+
+/******************************************************************************/
+
+const struct ORDO_BUILD_INFO ordoInfo = {
 /* Library version. */
-"1.5.5",
+"2.0.0",
 /* Devtag. */
-"Stable",
+"Experimental",
 /* Build. */
 #if ORDO_DEBUG
 "Debug",
@@ -39,4 +43,4 @@ const ORDO_BUILD_INFO ordoInfo = {
 #endif
 };
 
-const ORDO_BUILD_INFO* ordoBuildInfo() { return &ordoInfo; }
+const struct ORDO_BUILD_INFO* ordo_build_info() { return &ordoInfo; }

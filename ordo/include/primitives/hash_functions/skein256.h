@@ -1,5 +1,9 @@
-#ifndef SKEIN256_H
-#define SKEIN256_H
+#ifndef ORDO_SKEIN256_H
+#define ORDO_SKEIN256_H
+
+#include <primitives/primitives.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,38 +35,21 @@ extern "C" {
  * @see skein256.c
  */
 
-#include <primitives/primitives.h>
+struct SKEIN256_STATE;
 
-/*! \brief Skein-256 hash parameters.
- *
- * A parameter structure for Skein-256. */
-typedef struct SKEIN256_PARAMS
-{
-    /*! The schema identifier, on four bytes. */
-    uint8_t schema[4];
-    /*! The version number, on two bytes. */
-    uint8_t version[2];
-    /*! Reserved - must be left zero. */
-    uint8_t reserved[2];
-    /*! Desired output length, in bits (note the actual output digest will be truncated to a byte boundary, so this should really always be a multiple of 8). */
-    uint64_t outputLength;
-    /*! Unused, must be left zero. */
-    uint8_t unused[16];
-} SKEIN256_PARAMS;
+struct SKEIN256_STATE* skein256_alloc();
 
-HASH_FUNCTION_CONTEXT* Skein256_Create();
+int skein256_init(struct SKEIN256_STATE *state, struct SKEIN256_PARAMS* params);
 
-int Skein256_Init(HASH_FUNCTION_CONTEXT* ctx, SKEIN256_PARAMS* params);
+void skein256_update(struct SKEIN256_STATE *state, void* buffer, size_t size);
 
-void Skein256_Update(HASH_FUNCTION_CONTEXT* ctx, void* buffer, size_t size);
+void skein256_final(struct SKEIN256_STATE *state, void* digest);
 
-void Skein256_Final(HASH_FUNCTION_CONTEXT* ctx, void* digest);
+void skein256_free(struct SKEIN256_STATE *state);
 
-void Skein256_Free(HASH_FUNCTION_CONTEXT* ctx);
+void skein256_copy(struct SKEIN256_STATE *dst, struct SKEIN256_STATE *src);
 
-void Skein256_Copy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src);
-
-void Skein256_SetPrimitive(HASH_FUNCTION* hash);
+void skein256_set_primitive(struct HASH_FUNCTION* hash);
 
 #ifdef __cplusplus
 }

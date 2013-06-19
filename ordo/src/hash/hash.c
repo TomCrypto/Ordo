@@ -1,44 +1,66 @@
 #include <hash/hash.h>
 
-/* This function returns an initialized hash function context using a specific hash function object. */
-HASH_FUNCTION_CONTEXT* hashFunctionCreate(HASH_FUNCTION* hash)
+#include <common/secure_mem.h>
+
+/******************************************************************************/
+
+/*! \brief hash function context.
+ *
+ * This structure describes a hash function primitive context. It is used by
+ * hash functions to maintain their state across function calls (such as
+ * current message block and total length, extra metadata, etc...). */
+struct HASH_CTX
 {
-    /* Allocate the context. */
-    HASH_FUNCTION_CONTEXT* ctx = hash->fCreate();
-    if (ctx) ctx->hash = hash;
-    return ctx;
+    /*! The hash function in use. */
+    struct HASH_FUNCTION* hash;
+    /*! The low-level hash function context. */
+    void* ctx;
+};
+
+struct HASH_CTX* hash_alloc(struct HASH_FUNCTION* hash)
+{
+    struct HASH_CTX* ctx = secure_alloc(sizeof(struct HASH_CTX));
+    if (ctx)
+    {
+        ctx->hash = hash;
+        ctx->ctx = hash_function_alloc(ctx->hash);
+        if (!ctx->ctx)
+        {
+            secure_free(ctx, sizeof(struct HASH_CTX));
+            return 0;
+        }
+
+        return ctx;
+    }
+
+    return 0;
 }
 
-/* This function returns an initialized hash function context with the provided parameters. */
-int hashFunctionInit(HASH_FUNCTION_CONTEXT* ctx, void* hashParams)
+int hash_init(struct HASH_CTX* ctx,
+              void* hashParams)
 {
-    /* Initialize the context. */
-    return ctx->hash->fInit(ctx, hashParams);
+    return hash_function_init(ctx->hash, ctx->ctx, hashParams);
 }
 
-/* This function updates a hash function context, feeding more data in it. */
-void hashFunctionUpdate(HASH_FUNCTION_CONTEXT* ctx, void* buffer, size_t size)
+void hash_update(struct HASH_CTX* ctx,
+                 void* buffer, size_t size)
 {
-    /* Update the hash function context. */
-    ctx->hash->fUpdate(ctx, buffer, size);
+    hash_function_update(ctx->hash, ctx->ctx, buffer, size);
 }
 
-/* This function finalizes a hash function context, returning the final digest. */
-void hashFunctionFinal(HASH_FUNCTION_CONTEXT* ctx, void* digest)
+void hash_final(struct HASH_CTX* ctx,
+                void* digest)
 {
-    /* Finalize the hash function context. */
-    ctx->hash->fFinal(ctx, digest);
+    hash_function_final(ctx->hash, ctx->ctx, digest);
 }
 
-/* This function frees an initialized hash function context. */
-void hashFunctionFree(HASH_FUNCTION_CONTEXT* ctx)
+void hash_free(struct HASH_CTX* ctx)
 {
-    /* Free the context. */
-    ctx->hash->fFree(ctx);
+    hash_function_free(ctx->hash, ctx->ctx);
+    secure_free(ctx, sizeof(struct HASH_CTX));
 }
 
-void hashFunctionCopy(HASH_FUNCTION_CONTEXT* dst, HASH_FUNCTION_CONTEXT* src)
+void hash_copy(struct HASH_CTX* dst, struct HASH_CTX* src)
 {
-    dst->hash = src->hash;
-    dst->hash->fCopy(dst, src);
+    hash_function_copy(dst->hash, dst->ctx, src->ctx);
 }

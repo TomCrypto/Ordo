@@ -1,5 +1,9 @@
-#ifndef CTR_H
-#define CTR_H
+#ifndef ORDO_CTR_H
+#define ORDO_CTR_H
+
+#include <enc/block_modes.h>
+
+/******************************************************************************/
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,27 +23,27 @@ extern "C" {
  * keystream) so care must be taken to avoid reusing the initialization vector in an insecure
  * way. This also means the block cipher's inverse permutation is never used.
  *
- * \c CTR_Final() accepts 0 as an argument for \c outlen, since by design the CTR mode of operation does not
+ * \c ctr_final() accepts 0 as an argument for \c outlen, since by design the CTR mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
  *
  * @see ctr.c
  */
 
-#include <enc/enc_block.h>
+struct CTR_STATE;
 
-BLOCK_CIPHER_MODE_CONTEXT* CTR_Create(BLOCK_CIPHER_CONTEXT* cipherCtx);
+struct CTR_STATE* ctr_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int CTR_Init(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, void* iv, void* params);
+int ctr_init(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params);
 
-void CTR_Update(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx,
+void ctr_update(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state,
                 unsigned char* in, size_t inlen,
                 unsigned char* out, size_t* outlen);
 
-int CTR_Final(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx, unsigned char* out, size_t* outlen);
+int ctr_final(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void CTR_Free(BLOCK_CIPHER_MODE_CONTEXT* mode, BLOCK_CIPHER_CONTEXT* cipherCtx);
+void ctr_free(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-void CTR_SetMode(BLOCK_CIPHER_MODE* mode);
+void ctr_set_mode(struct BLOCK_MODE* mode);
 
 #ifdef __cplusplus
 }

@@ -25,12 +25,12 @@
 #if (FEATURE_AES && ENVIRONMENT_64)
 
 /* Declarations. */
-.globl AES_Forward_ASM
-.globl AES_Inverse_ASM
+.globl aes_forward_ASM
+.globl aes_inverse_ASM
 
 /* This is assembly for 64-bit Linux. */
 #if (ABI_LINUX_64)
-AES_Forward_ASM:
+aes_forward_ASM:
     /* The key is passed in RSI, and the block in RDI. First, move the block in XMM0... */
     MOVDQA %XMM0, [%RDI]
 
@@ -63,7 +63,7 @@ AES_Forward_ASM:
     MOVDQA [%RDI], %XMM0
     ret
 
-AES_Inverse_ASM:
+aes_inverse_ASM:
     /* The last key is passed in RSI, and the block in RDI. First, move the block in XMM0... */
     MOVDQA %XMM0, [%RDI]
 
@@ -101,7 +101,7 @@ AES_Inverse_ASM:
 
 /* This is assembly for 64-bit Windows. */
 #elif (ABI_WINDOWS_64)
-AES_Forward_ASM:
+aes_forward_ASM:
     /* The key is passed in RDX, and the block in RCX. First, move the block in XMM0... */
     MOVDQA %XMM0, [%RCX]
 
@@ -134,7 +134,7 @@ AES_Forward_ASM:
     MOVDQA [%RCX], %XMM0
     ret
 
-AES_Inverse_ASM:
+aes_inverse_ASM:
     /* The last key is passed in RDX, and the block in RCX. First, move the block in XMM0... */
     MOVDQA %XMM0, [%RCX]
 
@@ -177,7 +177,7 @@ AES_Inverse_ASM:
  * CURRENTLY DEAD CODE *
  ***********************/
 
-AES_Forward_ASM:
+aes_forward_ASM:
     /* Stack:
      * -- top -- *
      *   round   *
@@ -220,7 +220,7 @@ AES_Forward_ASM:
     MOVDQA [%EDX], %XMM0
     ret
 
-AES_Inverse_ASM:
+aes_inverse_ASM:
     /* Stack:
      * -- top -- *
      *   round   *
