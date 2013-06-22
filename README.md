@@ -93,7 +93,7 @@ Where the `extra` argument is used to refine processor specification. For instan
 Finally, there are a few additional configuration options possible:
 
 * `make strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
-* `make debug=1` will enable the debug build functionality, which will disable optimizations, enable `gdb` symbols, and perform some library-specific modifications. By default, debug mode is not enabled.
+* `make debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable `gdb` symbols. By default, debug mode is not enabled.
 * `make shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
 
 If your operating system is supported by Ordo, it *will run* as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.

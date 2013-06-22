@@ -21,7 +21,7 @@ struct RC4_STATE
 };
 
 /* Swaps two bytes. */
-void swapByte(uint8_t* a, uint8_t* b)
+void swap_byte(uint8_t* a, uint8_t* b)
 {
     uint8_t c;
     c = *a;
@@ -82,19 +82,15 @@ void rc4_update(struct RC4_STATE *state, uint8_t* buffer, size_t len)
      * unsigned integer). */
     rc4_update_ASM(state, len, buffer, buffer);
     #elif defined (RC4_STANDARD)
-    struct RC4_STATE state = *state;
     size_t t = 0;
 
     /* Iterate over each byte and xor the keystream with the plaintext. */
     while (t != len)
     {
-        state.j += state.s[++state.i];
-        swapByte(&state.s[state.i], &state.s[state.j]);
-        buffer[t++] ^= state.s[(state.s[state.i] + state.s[state.j]) & 0xFF];
+        state->j += state->s[++state->i];
+        swap_byte(&state->s[state->i], &state->s[state->j]);
+        buffer[t++] ^= state->s[(uint8_t)(state->s[state->i] + state->s[state->j])];
     }
-
-    /* Copy the state back in. */
-    *state = state;
     #endif
 }
 

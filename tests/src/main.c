@@ -2,6 +2,14 @@
 #include <testing/testing.h>
 #include <common/version.h>
 
+/* Use a 256MB buffer size in performance tests to get decent resolution.
+ * In debug mode, though, use only 64MB since everything is slower. */
+#ifdef ORDO_DEBUG
+    #define BUFSIZE (1024 * 1024 * 64)
+#else
+	#define BUFSIZE (1024 * 1024 * 256)
+#endif
+
 void testVectors()
 {
     /* Open the test vector file. */
@@ -17,8 +25,6 @@ void testVectors()
 
 void performanceTest()
 {
-    /* Use a 256MB buffer size in performance tests to get decent resolution. */
-    #define BUFSIZE (1024 * 1024 * 256)
     unsigned char* buffer = malloc(BUFSIZE);
     if (buffer == 0)
     {
@@ -56,6 +62,9 @@ int main(int argc, char* argv[])
 {
     /* Display a little header with version information. */
     printf("[+] Ordo version %d.%d.%d.\n", ordo_version_major(), ordo_version_minor(), ordo_version_rev());
+	#ifdef ORDO_DEBUG
+	printf("[+] Debug mode.\n");
+	#endif
     printf("\n");
 
     /* Initialize Ordo. */

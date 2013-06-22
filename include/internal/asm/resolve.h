@@ -27,6 +27,9 @@ extern "C" {
  * - \c RC4_X86_64_WINDOWS: use the x86_64 code path for Windows.
  * - \c RC4_STANDARD: use the standard C code path.
  *
+ * Also, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
+ * mode), the standard C code path \b must unconditionally be selected.
+
  * The relevant code (rc4.c and rc4.S) can then include/exclude accordingly,
  * simplifying maintenance costs and improving overall readability.
  *
@@ -35,30 +38,42 @@ extern "C" {
 */
 
 /* RC4 */
-#if (PLATFORM_LINUX && __x86_64__)
-#define RC4_X86_64_LINUX
-#elif (PLATFORM_WINDOWS && __x86_64__)
-#define RC4_X86_64_WINDOWS
+#ifdef ORDO_DEBUG
+	#define RC4_STANDARD
 #else
-#define RC4_STANDARD
+	#if (PLATFORM_LINUX && __x86_64__)
+		#define RC4_X86_64_LINUX
+	#elif (PLATFORM_WINDOWS && __x86_64__)
+		#define RC4_X86_64_WINDOWS
+	#else
+		#define RC4_STANDARD
+	#endif
 #endif
 
 /* Threefish-256 */
-#if (PLATFORM_LINUX && __x86_64__)
-#define THREEFISH256_X86_64_LINUX
-#elif (PLATFORM_WINDOWS && __x86_64__)
-#define THREEFISH256_X86_64_WINDOWS
+#ifdef ORDO_DEBUG
+	#define THREEFISH256_STANDARD
 #else
-#define THREEFISH256_STANDARD
+	#if (PLATFORM_LINUX && __x86_64__)
+		#define THREEFISH256_X86_64_LINUX
+	#elif (PLATFORM_WINDOWS && __x86_64__)
+		#define THREEFISH256_X86_64_WINDOWS
+	#else
+		#define THREEFISH256_STANDARD
+	#endif
 #endif
 
 /* AES */
-#if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
-#define AES_X86_64_LINUX
-#elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
-#define AES_X86_64_WINDOWS
+#ifdef ORDO_DEBUG
+	#define AES_STANDARD
 #else
-#define AES_STANDARD
+	#if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
+		#define AES_X86_64_LINUX
+	#elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
+		#define AES_X86_64_WINDOWS
+	#else
+		#define AES_STANDARD
+	#endif
 #endif
 
 #ifdef __cplusplus
