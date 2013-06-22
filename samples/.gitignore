@@ -1,8 +1,6 @@
-lib
+bin
 obj
-doc
 
-*.S~
 *.c~
 *.h~
 *~
