@@ -159,6 +159,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr>
 <td>- </td><td>- </td><td>- </td><td>CTR </td><td>- </td><td>- </td><td>- </td></tr>
 </table>
+<h2>Documentation </h2>
+<p>Ordo is documented for Doxygen, and you can automatically generate all documentation via <code>make doc</code>. The HTML documentation will be generated in <code>doc/html</code> and the LaTeX documentation will be generated in <code>doc/latex</code> (note you need <code>pdflatex</code> and a working LaTeX environment for this to work). Symlinks will be automatically created in the <code>doc</code> directory for your convenience.</p>
+<p>Alternatively, you can consult the online documentation at the <a href="http://tomcrypto.github.com/Ordo/">project page</a>, though it may not be completely up to date.</p>
 <h2>How To Build &amp; Compatibility </h2>
 <p>As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and native word size for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile <em>requires</em> the <code>gcc</code> compiler. The makefile is <em>not</em> set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.</p>
 <p>In general, Ordo expects to be given the following information:</p>
@@ -170,15 +173,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>The makefile is used as follows: </p>
 <pre class="fragment">make extra=[arguments to gcc]
 </pre><p>Where the <code>extra</code> argument is used to refine processor specification. For instance, if your processor supports the AES-NI instructions, you will want to pass <code>extra="-maes"</code>. If you want full optimization for your own system, you will want to provide <code>extra="-march=native"</code>. Those are passed directly to <code>gcc</code> so you can provide extra architecture information if you have more information on your target processor, in order to optimize the library further.</p>
+<p>If your operating system is supported by Ordo, it <em>will run</em> as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.</p>
 <p>Finally, there are a few additional configuration options possible:</p>
 <ul>
 <li><code>make strip=1</code> will strip symbols from the the built libraries using the <code>strip</code> tool, generally making them a bit smaller.</li>
 <li><code>make debug=1</code> will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable <code>gdb</code> symbols. By default, debug mode is not enabled.</li>
 <li><code>make shared=1</code> will build a shared library (<code>libordo.so</code>) instead of a static one (<code>libordo.a</code>) by default. Note that you will need to <code>make clean</code> if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).</li>
 </ul>
-<p>If your operating system is supported by Ordo, it <em>will run</em> as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.</p>
-<p>The documentation requires <code>doxygen</code> (and <code>pdflatex</code> for the LaTeX documentation version). To generate it, use <code>make doc</code>. Symlinks will be automatically created in the <code>doc</code> directory for your convenience.</p>
-<p>To build and run the tests, use <code>make tests</code> and <code>make run_tests</code>. To build the samples, use <code>make samples</code>. The samples will be built into the <code>samples/bin</code> directory where you can try them out.</p>
+<p>To build and run the tests, use <code>make tests</code> and <code>make run_tests</code>. To build the samples, use <code>make samples</code>. The samples will be built into the <code>samples/bin</code> directory where you can try them out. Note the <code>shared</code>, <code>debug</code>, and <code>strip</code> arguments also apply to the tests and samples.</p>
 <p>For most uses, the build process should go like this: </p>
 <pre class="fragment">make
 make doc
@@ -191,7 +193,7 @@ make samples
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 22 2013 16:51:39 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jun 22 2013 17:00:55 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.4
 </small></address>
