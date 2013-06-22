@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include <common/ordo_utils.h> /* error_msg() */
-#include <hash/hash.h> /* Ordo hash. */
+#include <digest/digest.h> /* Ordo hash. */
 #include <ordo.h> /* init */
 
 #define BUF_SIZE 4096
@@ -23,17 +23,17 @@ int main(int argc, char *argv[])
     /* init Ordo */
     load_ordo();
 
-    struct HASH_CTX *ctx = hash_alloc(MD5());
+    struct DIGEST_CTX *ctx = digest_alloc(MD5());
     if (!ctx)
     {
         printf("Failed to allocate memory.\n");
         return EXIT_FAILURE;
     }
 
-    if (err = hash_init(ctx, 0)) /* no params */
+    if (err = digest_init(ctx, 0)) /* no params */
     {
         printf("An error occurred: %s.\n", error_msg(err));
-        hash_free(ctx);
+        digest_free(ctx);
         return -1;
     }
 
@@ -42,15 +42,15 @@ int main(int argc, char *argv[])
     while (!feof(f))
     {
         size_t len = fread(buffer, 1, BUF_SIZE, f);
-        hash_update(ctx, buffer, len);
+        digest_update(ctx, buffer, len);
     }
 
     free(buffer);
     fclose(f);
 
     digest = malloc(hash_digest_length(MD5()));
-    hash_final(ctx, digest);
-    hash_free(ctx);
+    digest_final(ctx, digest);
+    digest_free(ctx);
 
     for (t = 0; t < hash_digest_length(MD5()); ++t)
         printf("%.2x", digest[t]);

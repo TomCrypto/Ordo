@@ -1,5 +1,5 @@
-#ifndef ORDO_HASH_H
-#define ORDO_HASH_H
+#ifndef ORDO_DIGEST_H
+#define ORDO_DIGEST_H
 
 #include <primitives/primitives.h>
 
@@ -9,15 +9,14 @@
 extern "C" {
 #endif
 
-struct HASH_CTX;
+struct DIGEST_CTX;
 
 /**
- * @file hash.h
+ * @file digest.h
  *
- * \brief Hash function interface.
+ * \brief Cryptographic digest module.
  *
- * Interface to compute cryptographic digests, using hash functions. This is
- * a very thin generic wrapper around the low-level functions.
+ * Module to compute cryptographic digests, using hash functions.
 */
 
 /*! Returns an allocated hash function context using a given hash function.
@@ -25,7 +24,7 @@ struct HASH_CTX;
  \return Returns the allocated hash function context, or nil if an allocation
          error occurred.
 */
-struct HASH_CTX* hash_alloc(struct HASH_FUNCTION* hash);
+struct DIGEST_CTX* digest_alloc(struct HASH_FUNCTION* hash);
 
 /*! Initializes a hash function context, provided optional parameters.
  \param ctx An allocated hash function context.
@@ -35,8 +34,8 @@ struct HASH_CTX* hash_alloc(struct HASH_FUNCTION* hash);
  \remarks It is always valid to pass nil for \c hashParams if you do not wish
           to use more advanced features offered by a specific hash function.
 */
-int hash_init(struct HASH_CTX* ctx,
-              void* hashParams);
+int digest_init(struct DIGEST_CTX* ctx,
+                void* hashParams);
 
 /*! Feeds data into a hash function context, updating the final digest.
  \param ctx An allocated hash function context.
@@ -45,8 +44,8 @@ int hash_init(struct HASH_CTX* ctx,
  \remarks This function has the property that Update(A) followed by Update(B)
           is equivalent to Update(A || B) where || denotes concatenation.
  */
-void hash_update(struct HASH_CTX* ctx,
-                 void* buffer, size_t size);
+void digest_update(struct DIGEST_CTX* ctx,
+                   void* buffer, size_t size);
 
 /*! Finalizes a hash function context, returning the final digest.
  \param ctx An allocated hash function context.
@@ -55,8 +54,8 @@ void hash_update(struct HASH_CTX* ctx,
           You can query the hash function's digest size in bytes via the
           \c hashDigestSize() macro.
 */
-void hash_final(struct HASH_CTX* ctx,
-                void* digest);
+void digest_final(struct DIGEST_CTX* ctx,
+                  void* digest);
 
 /*! Deallocates an initialized hash function context.
  \param ctx The hash function context to be freed.
@@ -65,7 +64,7 @@ void hash_final(struct HASH_CTX* ctx,
  \remarks Once this function returns, the passed context may no longer be used
           anywhere, and any sensitive information will be wiped.
 */
-void hash_free(struct HASH_CTX* ctx);
+void digest_free(struct DIGEST_CTX* ctx);
 
 /*! Performs a deep copy of one context into another.
  \param dst The destination context.
@@ -73,7 +72,7 @@ void hash_free(struct HASH_CTX* ctx);
  \remarks Both contexts must have been allocated using the same hash function,
           else the function's behavior is undefined.
 */
-void hash_copy(struct HASH_CTX* dst, struct HASH_CTX* src);
+void digest_copy(struct DIGEST_CTX* dst, struct DIGEST_CTX* src);
 
 #ifdef __cplusplus
 }

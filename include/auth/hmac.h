@@ -1,7 +1,7 @@
 #ifndef ORDO_HMAC_H
 #define ORDO_HMAC_H
 
-#include <hash/hash.h>
+#include <digest/digest.h>
 
 /******************************************************************************/
 

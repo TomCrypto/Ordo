@@ -19,7 +19,7 @@ struct HMAC_CTX* hmac_alloc(struct HASH_FUNCTION *hash)
     struct HMAC_CTX *ctx = secure_alloc(sizeof(struct HMAC_CTX));
     if (!ctx) goto fail;
 
-    if (!(ctx->ctx = hash_alloc(hash))) goto fail;
+    if (!(ctx->ctx = digest_alloc(hash))) goto fail;
 
     {
         ctx->hash = hash;
@@ -53,22 +53,22 @@ int hmac_init(struct HMAC_CTX *ctx, void *key, size_t key_size, void *hash_param
      * be reduced. This is done by hashing it once, as per RFC 2104. */
     if (key_size > block_size)
     {
-        if ((err = hash_init(ctx->ctx, 0))) return err;
-        hash_update(ctx->ctx, key, key_size);
-        hash_final(ctx->ctx, ctx->key);
+        if ((err = digest_init(ctx->ctx, 0))) return err;
+        digest_update(ctx->ctx, key, key_size);
+        digest_final(ctx->ctx, ctx->key);
     }
     else memcpy(ctx->key, key, key_size);
 
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x36;
-    if ((err = hash_init(ctx->ctx, hash_params))) return err;
-    hash_update(ctx->ctx, ctx->key, block_size);
+    if ((err = digest_init(ctx->ctx, hash_params))) return err;
+    digest_update(ctx->ctx, ctx->key, block_size);
 
     return err;
 }
 
 void hmac_update(struct HMAC_CTX *ctx, void *buffer, size_t size)
 {
-    hash_update(ctx->ctx, buffer, size);
+    digest_update(ctx->ctx, buffer, size);
 }
 
 int hmac_final(struct HMAC_CTX *ctx, void *digest)
@@ -79,14 +79,14 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     int err = ORDO_SUCCESS;
     size_t t;
 
-    hash_final(ctx->ctx, ctx->digest);
+    digest_final(ctx->ctx, ctx->digest);
 
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    if ((err = hash_init(ctx->ctx, 0))) return err;
-    hash_update(ctx->ctx, ctx->key, block_size);
-    hash_update(ctx->ctx, ctx->digest, digest_length);
-    hash_final(ctx->ctx, digest);
+    if ((err = digest_init(ctx->ctx, 0))) return err;
+    digest_update(ctx->ctx, ctx->key, block_size);
+    digest_update(ctx->ctx, ctx->digest, digest_length);
+    digest_final(ctx->ctx, digest);
 
     return err;
 }
@@ -102,7 +102,7 @@ void hmac_free(struct HMAC_CTX *ctx)
 
             secure_free(ctx->digest, digest_length);
             secure_free(ctx->key, block_size);
-            hash_free(ctx->ctx);
+            digest_free(ctx->ctx);
         }
 
         secure_free(ctx, sizeof(struct HMAC_CTX));
@@ -113,5 +113,5 @@ void hmac_copy(struct HMAC_CTX *dst, struct HMAC_CTX *src)
 {
     memcpy(dst->digest, src->digest, hash_digest_length(dst->hash));
     memcpy(dst->key, src->key, hash_block_size(dst->hash));
-    hash_copy(dst->ctx, src->ctx);
+    digest_copy(dst->ctx, src->ctx);
 }

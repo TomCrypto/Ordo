@@ -94,22 +94,22 @@ int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* 
     int error;
 
     /* Create the context. */
-    struct HASH_CTX* ctx = hash_alloc(hash);
+    struct DIGEST_CTX* ctx = digest_alloc(hash);
     if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = hash_init(ctx, hashParams);
+    error = digest_init(ctx, hashParams);
     if (error == ORDO_SUCCESS)
     {
         /* Hash the buffer. */
-        hash_update(ctx, in, len);
+        digest_update(ctx, in, len);
 
         /* Finalize the context. */
-        hash_final(ctx, out);
+        digest_final(ctx, out);
     }
 
     /* Free the context and return success or failure. */
-    hash_free(ctx);
+    digest_free(ctx);
     return error;
 }
 

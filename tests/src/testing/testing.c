@@ -257,7 +257,7 @@ int runStreamCipherTest(char* line, int n)
 }
 
 /* Runs a hash function test vector. */
-int runHashTest(char* line, int n)
+int runDigestTest(char* line, int n)
 {
     /* Parse the test vector and initialize variables. */
     char* primitive_name = readToken(line, 1);
@@ -291,9 +291,9 @@ int runHashTest(char* line, int n)
         {
             /* Report success. */
             result = 1;
-            printf("[+] Test vector #%.3d (hash/%s) passed!\n", n, primitive_name);
-        } else printf("[!] Test vector #%.3d (hash/%s) failed: did not get expected digest.\n", n, primitive_name);
-    } else printf("[!] Test vector #%.3d (hash/%s) failed: @ordoHash, %s.\n", n, primitive_name, error_msg(error));
+            printf("[+] Test vector #%.3d (digest/%s) passed!\n", n, primitive_name);
+        } else printf("[!] Test vector #%.3d (digest/%s) failed: did not get expected digest.\n", n, primitive_name);
+    } else printf("[!] Test vector #%.3d (digest/%s) failed: @ordoHash, %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(computedDigest);
@@ -411,7 +411,7 @@ void runTestVectors(FILE* file)
     /* Different possible actions. */
     #define TOKEN_ENC_BLOCK "enc_block"
     #define TOKEN_ENC_STREAM "enc_stream"
-    #define TOKEN_HASH "hash"
+    #define TOKEN_DIGEST "digest"
     #define TOKEN_HMAC "hmac"
     #define TOKEN_PBKDF2 "pbkdf2"
 
@@ -433,7 +433,7 @@ void runTestVectors(FILE* file)
             /* Depending on the token, perform the appropriate test. */
             if (strcmp(token, TOKEN_ENC_BLOCK) == 0) success += runBlockCipherTest(line, n++);
             if (strcmp(token, TOKEN_ENC_STREAM) == 0) success += runStreamCipherTest(line, n++);
-            if (strcmp(token, TOKEN_HASH) == 0) success += runHashTest(line, n++);
+            if (strcmp(token, TOKEN_DIGEST) == 0) success += runDigestTest(line, n++);
             if (strcmp(token, TOKEN_HMAC) == 0) success += runHMACTest(line, n++);
             if (strcmp(token, TOKEN_PBKDF2) == 0) success += runPBKDF2Test(line, n++);
 

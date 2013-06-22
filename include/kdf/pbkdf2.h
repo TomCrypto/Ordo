@@ -1,7 +1,7 @@
 #ifndef ORDO_PBKDF2_H
 #define ORDO_PBKDF2_H
 
-#include <hash/hash.h>
+#include <digest/digest.h>
 
 /******************************************************************************/
 

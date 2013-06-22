@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
                      salt, SALT_LEN, key, KEY_LEN, 100000, 0); /* no params */
 
     /* key is encryption key - hash it once for fingerprint. */
-    struct HASH_CTX *hash = hash_alloc(Skein256());
-    hash_init(hash, 0);
-    hash_update(hash, key, KEY_LEN);
-    hash_final(hash, fingerprint);
-    hash_free(hash);
+    struct DIGEST_CTX *hash = digest_alloc(Skein256());
+    digest_init(hash, 0);
+    digest_update(hash, key, KEY_LEN);
+    digest_final(hash, fingerprint);
+    digest_free(hash);
 
     if (err)
     {
