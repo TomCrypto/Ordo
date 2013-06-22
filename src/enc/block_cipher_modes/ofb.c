@@ -47,7 +47,7 @@ int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     memcpy(state->iv, iv, block_size);
 
     /* Compute the initial keystream block. */
-	block_cipher_forward(cipher, cipher_state, state->iv);
+    block_cipher_forward(cipher, cipher_state, state->iv);
     state->remaining = block_size;
 
     /* Return success. */
@@ -70,7 +70,7 @@ void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* ciph
         if (state->remaining == 0)
         {
             /* OFB update (simply apply the permutation function again). */
-			block_cipher_forward(cipher, cipher_state, state->iv);
+            block_cipher_forward(cipher, cipher_state, state->iv);
             state->remaining = block_size;
         }
 

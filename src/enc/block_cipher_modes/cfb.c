@@ -19,7 +19,7 @@ struct CFB_STATE
 
 struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     /* Allocate the context and extra buffers in it. */
     struct CFB_STATE* state = secure_alloc(sizeof(struct CFB_STATE));
@@ -41,7 +41,7 @@ struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 
 int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     state->direction = dir;
 
@@ -49,7 +49,7 @@ int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     memcpy(state->iv, iv, block_size);
 
     /* Compute the initial keystream block. */
-	block_cipher_forward(cipher, cipher_state, state->iv);
+    block_cipher_forward(cipher, cipher_state, state->iv);
     state->remaining = block_size;
 
     /* Return success. */
@@ -72,7 +72,7 @@ void cfb_encrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, vo
         if (state->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-	        block_cipher_forward(cipher, cipher_state, state->iv);
+            block_cipher_forward(cipher, cipher_state, state->iv);
             state->remaining = block_size;
         }
 
@@ -107,7 +107,7 @@ void cfb_decrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, vo
         if (state->remaining == 0)
         {
             /* CFB update (simply apply the permutation function again). */
-	        block_cipher_forward(cipher, cipher_state, state->iv);
+            block_cipher_forward(cipher, cipher_state, state->iv);
             state->remaining = block_size;
         }
 

@@ -16,7 +16,7 @@ struct NULLCIPHER_STATE* nullcipher_alloc()
 {
     /* A block cipher always needs to allocate some state (returning nil means
        an allocation failed, so we can't use that even for this cipher). */
-	return secure_alloc(sizeof(struct NULLCIPHER_STATE));
+    return secure_alloc(sizeof(struct NULLCIPHER_STATE));
 }
 
 int nullcipher_init(struct NULLCIPHER_STATE *state,

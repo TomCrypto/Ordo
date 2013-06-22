@@ -23,7 +23,7 @@ struct CBC_STATE
 
 struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     /* Allocate the context and extra buffers in it. */
     struct CBC_STATE *state = secure_alloc(sizeof(struct CBC_STATE));

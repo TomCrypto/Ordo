@@ -58,7 +58,7 @@ int ctr_init(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     memcpy(state->counter, state->iv, block_size);
 
     /* Compute the initial keystream block. */
-	block_cipher_forward(cipher, cipher_state, state->iv);
+    block_cipher_forward(cipher, cipher_state, state->iv);
     state->remaining = block_size;
 
     /* Return success. */
@@ -83,7 +83,7 @@ void ctr_update(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* ciph
             /* CTR update (increment counter, copy counter into IV, encrypt IV). */
             inc_buffer(state->counter, block_size);
             memcpy(state->iv, state->counter, block_size);
-			block_cipher_forward(cipher, cipher_state, state->iv);
+            block_cipher_forward(cipher, cipher_state, state->iv);
             state->remaining = block_size;
         }
 

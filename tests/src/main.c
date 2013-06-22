@@ -7,7 +7,7 @@
 #ifdef ORDO_DEBUG
     #define BUFSIZE (1024 * 1024 * 64)
 #else
-	#define BUFSIZE (1024 * 1024 * 256)
+    #define BUFSIZE (1024 * 1024 * 256)
 #endif
 
 void testVectors()
@@ -62,9 +62,9 @@ int main(int argc, char* argv[])
 {
     /* Display a little header with version information. */
     printf("[+] Ordo version %d.%d.%d.\n", ordo_version_major(), ordo_version_minor(), ordo_version_rev());
-	#ifdef ORDO_DEBUG
-	printf("[+] Debug mode.\n");
-	#endif
+    #ifdef ORDO_DEBUG
+    printf("[+] Debug mode.\n");
+    #endif
     printf("\n");
 
     /* Initialize Ordo. */

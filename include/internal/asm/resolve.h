@@ -39,41 +39,41 @@ extern "C" {
 
 /* RC4 */
 #ifdef ORDO_DEBUG
-	#define RC4_STANDARD
+    #define RC4_STANDARD
 #else
-	#if (PLATFORM_LINUX && __x86_64__)
-		#define RC4_X86_64_LINUX
-	#elif (PLATFORM_WINDOWS && __x86_64__)
-		#define RC4_X86_64_WINDOWS
-	#else
-		#define RC4_STANDARD
-	#endif
+    #if (PLATFORM_LINUX && __x86_64__)
+        #define RC4_X86_64_LINUX
+    #elif (PLATFORM_WINDOWS && __x86_64__)
+        #define RC4_X86_64_WINDOWS
+    #else
+        #define RC4_STANDARD
+    #endif
 #endif
 
 /* Threefish-256 */
 #ifdef ORDO_DEBUG
-	#define THREEFISH256_STANDARD
+    #define THREEFISH256_STANDARD
 #else
-	#if (PLATFORM_LINUX && __x86_64__)
-		#define THREEFISH256_X86_64_LINUX
-	#elif (PLATFORM_WINDOWS && __x86_64__)
-		#define THREEFISH256_X86_64_WINDOWS
-	#else
-		#define THREEFISH256_STANDARD
-	#endif
+    #if (PLATFORM_LINUX && __x86_64__)
+        #define THREEFISH256_X86_64_LINUX
+    #elif (PLATFORM_WINDOWS && __x86_64__)
+        #define THREEFISH256_X86_64_WINDOWS
+    #else
+        #define THREEFISH256_STANDARD
+    #endif
 #endif
 
 /* AES */
 #ifdef ORDO_DEBUG
-	#define AES_STANDARD
+    #define AES_STANDARD
 #else
-	#if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
-		#define AES_X86_64_LINUX
-	#elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
-		#define AES_X86_64_WINDOWS
-	#else
-		#define AES_STANDARD
-	#endif
+    #if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
+        #define AES_X86_64_LINUX
+    #elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
+        #define AES_X86_64_WINDOWS
+    #else
+        #define AES_STANDARD
+    #endif
 #endif
 
 #ifdef __cplusplus

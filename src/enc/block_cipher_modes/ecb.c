@@ -21,7 +21,7 @@ struct ECB_STATE
 
 struct ECB_STATE* ecb_alloc(struct BLOCK_CIPHER *cipher, void* cipher_state)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     /* Allocate the context and extra buffers in it. */
     struct ECB_STATE* state = secure_alloc(sizeof(struct ECB_STATE));
@@ -56,7 +56,7 @@ int ecb_init(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_
 
 void ecb_encrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     /* Initialize output size. */
     *outlen = 0;
@@ -88,7 +88,7 @@ void ecb_encrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, vo
 
 void ecb_decrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
 
     /* Initialize output size. */
     *outlen = 0;
@@ -120,7 +120,7 @@ void ecb_decrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, vo
 
 int ecb_encrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
@@ -152,7 +152,7 @@ int ecb_encrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void
 
 int ecb_decrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
-	size_t block_size = cipher_block_size(cipher);
+    size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
 
     /* If padding is disabled, we need to handle things differently. */
