@@ -73,6 +73,13 @@ This doesn't include every single feature but gives a high level overview:
  -             | -              | -              | CFB   | -              | -              | -
  -             | -              | -              | CTR   | -              | -              | -
 
+Documentation
+-------------
+
+Ordo is documented for Doxygen, and you can automatically generate all documentation via `make doc`. The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working LaTeX environment for this to work). Symlinks will be automatically created in the `doc` directory for your convenience.
+
+Alternatively, you can consult the online documentation at the [project page](http://tomcrypto.github.com/Ordo/), though it may not be completely up to date.
+
 How To Build & Compatibility
 ----------------------------
 
@@ -90,17 +97,15 @@ The makefile is used as follows:
 
 Where the `extra` argument is used to refine processor specification. For instance, if your processor supports the AES-NI instructions, you will want to pass `extra="-maes"`. If you want full optimization for your own system, you will want to provide `extra="-march=native"`. Those are passed directly to `gcc` so you can provide extra architecture information if you have more information on your target processor, in order to optimize the library further.
 
+If your operating system is supported by Ordo, it *will run* as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.
+
 Finally, there are a few additional configuration options possible:
 
 * `make strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
 * `make debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable `gdb` symbols. By default, debug mode is not enabled.
 * `make shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
 
-If your operating system is supported by Ordo, it *will run* as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.
-
-The documentation requires `doxygen` (and `pdflatex` for the LaTeX documentation version). To generate it, use `make doc`. Symlinks will be automatically created in the `doc` directory for your convenience.
-
-To build and run the tests, use `make tests` and `make run_tests`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out.
+To build and run the tests, use `make tests` and `make run_tests`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared`, `debug`, and `strip` arguments also apply to the tests and samples.
 
 For most uses, the build process should go like this:
 
