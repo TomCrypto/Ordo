@@ -1,19 +1,34 @@
-LIBINCLUDE = ../ordo/include/
-LIBHEADERS = $(shell find $(LIBINCLUDE) -name '*.h')
-LIBPATH = ../ordo/lib/
+BINDIR = bin
+SRCDIR = src
+
 CC = gcc
+CFLAGS = -O2 -Wall -Wextra
 
-CFLAGS = -O2 -Wall -Wextra -pedantic -pedantic-errors -pipe
+# Decides whether to link to the Ordo shared library or not.
+ifeq ($(shared), 1)
+	ORDO_LIBNAME = libordo.so
+else
+	ORDO_LIBNAME = libordo.a
+endif
 
-# use libordo.so for shared library
+ORDO_LIBDIR = ../lib/
+ORDO_LIBPATH = $(addprefix $(ORDO_LIBDIR), $(ORDO_LIBNAME))
+ORDO_INCLUDE = ../include/
 
+.PHONY: all
+all: md5sum encrypt
+	
+
+.PHONY: md5sum
 md5sum:
-	mkdir -p bin/
-	$(CC) src/md5sum.c -o bin/md5sum -I$(LIBINCLUDE) $(addprefix $(LIBPATH), libordo.a)
+	mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) $(SRCDIR)/md5sum.c -o $(BINDIR)/md5sum -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
+.PHONY: encrypt
 encrypt:
-	mkdir -p bin/
-	$(CC) src/encrypt.c -o bin/encrypt -I$(LIBINCLUDE) $(addprefix $(LIBPATH), libordo.a)
+	mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) $(SRCDIR)/encrypt.c -o $(BINDIR)/encrypt -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
+.PHONY: clean
 clean:
-	@rm -f bin/ --recursive
+	rm -f $(BINDIR)/ --recursive

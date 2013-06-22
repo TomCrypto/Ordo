@@ -1,3 +1,0 @@
-This is a test unit for Ordo, including cryptographic test vectors and performance tests.
-
-Note the Makefile for this assumes a directory structure where the Ordo headers and shared library are in ../ordo/ so change this for your own needs. All you need to link against Ordo are the shared library itself (libordo.so) and all the header files.

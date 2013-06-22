@@ -1,6 +1,0 @@
-These are some code samples for Ordo. Each is contained in a single file, so just hit "make [name of sample]", e.g.:
-
-make md5sum
-make encrypt
-
-Run the executables from this directory, else the shared library won't be found.
