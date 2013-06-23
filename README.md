@@ -13,6 +13,7 @@ Ordo v2 is out! It's not completely finished but the library has just undergone 
 
 Planned features:
  - reformatting, some implementation rewrites and finishing the documentation
+ - more modules, for instance a DRBG implementation, etc..
 
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file (in the test program) and the test driver's code to know more about this.
 
@@ -83,7 +84,7 @@ Alternatively, you can consult the online documentation at the [project page](ht
 How To Build & Compatibility
 ----------------------------
 
-As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and native word size for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile *requires* the `gcc` compiler. The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
+As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and native word size for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile *requires* the `gcc` compiler (or a port of it, for instance `mingw` with a working shell environment such as `MSYS`). The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
 
 In general, Ordo expects to be given the following information:
 

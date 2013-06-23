@@ -1,5 +1,6 @@
 #include <kdf/pbkdf2.h>
 
+#include <internal/environment.h>
 #include <common/ordo_errors.h>
 #include <common/secure_mem.h>
 

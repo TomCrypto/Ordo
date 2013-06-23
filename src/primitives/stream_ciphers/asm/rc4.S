@@ -93,7 +93,7 @@ rc4_update_ASM:
     ret
 .L_RC4_end:
 
-#elif defined (RC4_X86_64_LINUX)
+#elif defined (RC4_X86_64_WINDOWS)
 
 .globl rc4_update_ASM
 
