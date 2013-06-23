@@ -161,14 +161,14 @@ int runBlockCipherTest(char* line, int n)
     result = 0;
 
     /* Perform the encryption test. */
-    error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, ivlen, 0, 0);
+    error = ordo_enc_block(primitive, 0, mode, 0, 1, key, keylen, iv, ivlen, plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
         if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0))
         {
             /* Perform the decryption test. */
-            error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, ivlen, 0, 0);
+            error = ordo_enc_block(primitive, 0, mode, 0, 0, key, keylen, iv, ivlen, computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen);
             if (error == ORDO_SUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
@@ -224,7 +224,7 @@ int runStreamCipherTest(char* line, int n)
 
     /* Perform the encryption test. */
     memcpy(computedCiphertext, plaintext, ciphertextlen);
-    error = ordoEncryptStream(computedCiphertext, plaintextlen, primitive, key, keylen, 0);
+    error = ordo_enc_stream(primitive, 0, key, keylen, computedCiphertext, plaintextlen);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
@@ -232,7 +232,7 @@ int runStreamCipherTest(char* line, int n)
         {
             /* Perform the decryption test. */
             memcpy(computedPlaintext, computedCiphertext, ciphertextlen);
-            error = ordoEncryptStream(computedPlaintext, ciphertextlen, primitive, key, keylen, 0);
+            error = ordo_enc_stream(primitive, 0, key, keylen, computedPlaintext, ciphertextlen);
             if (error == ORDO_SUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
@@ -283,7 +283,7 @@ int runDigestTest(char* line, int n)
     result = 0;
 
     /* Perform the hash test. */
-    error = ordoHash(message, messagelen, computedDigest, primitive, 0);
+    error = ordo_digest(primitive, 0, message, messagelen, computedDigest);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
@@ -331,7 +331,7 @@ int runHMACTest(char* line, int n)
     result = 0;
 
     /* Perform the hash test. */
-    error = ordoHMAC(message, messagelen, key, keylen, computedDigest, primitive, 0);
+    error = ordo_hmac(primitive, 0, key, keylen, message, messagelen, computedDigest);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
@@ -382,7 +382,7 @@ int runPBKDF2Test(char* line, int n)
     result = 0;
 
     /* Perform the hash test. */
-    error = pbkdf2(primitive, password, passwordLen, salt, saltLen, computedDigest, outputLen, iterations, 0);
+    error = pbkdf2(primitive, 0, password, passwordLen, salt, saltLen, iterations, computedDigest, outputLen);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed digest against the expected digest. */
@@ -511,7 +511,7 @@ void blockCipherPerformance(const struct BLOCK_CIPHER* primitive, const struct B
     modeParams.padding = 0;
 
     /* Encryption test. */
-    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, cipher_block_size(primitive), 0, &modeParams);
+    error = ordo_enc_block(primitive, 0, mode, &modeParams, 1, key, keySize, iv, cipher_block_size(primitive), buffer, bufferSize, buffer, &outlen);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", error_msg(error));
     else
     {
@@ -523,7 +523,7 @@ void blockCipherPerformance(const struct BLOCK_CIPHER* primitive, const struct B
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, cipher_block_size(primitive), 0, &modeParams);
+        error = ordo_enc_block(primitive, 0, mode, &modeParams, 0, key, keySize, iv, cipher_block_size(primitive), buffer, bufferSize, buffer, &outlen);
         if (error < 0) printf("[!] An error occurred during decryption [%s].\n", error_msg(error));
         else
         {
@@ -562,7 +562,7 @@ void streamCipherPerformance(const struct STREAM_CIPHER* primitive, size_t keySi
     start = clock();
 
     /* Encryption test. */
-    error = ordoEncryptStream(buffer, bufferSize, primitive, key, keySize, 0);
+    error = ordo_enc_stream(primitive, 0, key, keySize, buffer, bufferSize);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", error_msg(error));
     else
     {
@@ -595,7 +595,7 @@ void hashFunctionPerformance(const struct HASH_FUNCTION* primitive, unsigned cha
     start = clock();
 
     /* Hashing test. */
-    error = ordoHash(buffer, bufferSize, digest, primitive, 0);
+    error = ordo_digest(primitive, 0, buffer, bufferSize, digest);
     if (error < 0) printf("[!] An error occurred during hashing [%s].\n", error_msg(error));
     else
     {
@@ -622,7 +622,7 @@ void pbkdf2Performance(const struct HASH_FUNCTION* primitive, size_t iterations)
 
     start = clock();
 
-    error = pbkdf2(primitive, password, strlen(password), salt, strlen(salt), output, outputLen, iterations, 0);
+    error = pbkdf2(primitive, 0, password, strlen(password), salt, strlen(salt), iterations, output, outputLen);
     if (error < 0) printf("[!] An error occurred during pbkdf2 [%s].\n", error_msg(error));
     else
     {

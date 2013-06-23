@@ -21,13 +21,15 @@ extern "C" {
  *
  * This is the highest-level API for Ordo, which forgoes the use of
  * cryptographic contexts completely,resulting in more concise code
- * at the cost of reduced flexibility.
+ * at the cost of reduced flexibility. In other words, if you can
+ * afford to use them, you probably should.
 */
 
-/*! Loads Ordo - this calls all the \c load_* functions in the different
- * abstraction layers. After this function returns, all objects such as
- * \c RC4(), \c CBC(), and so on, may be used. */
-void load_ordo();
+/*! Initializes the library: calls all the \c load_* functions in each
+ * abstraction layer. After this function returns, all objects such as
+ * \c RC4(), \c CBC(), and so on, may be used.
+*/
+void init_ordo();
 
 /*! This function encrypts a buffer of a given length using a block cipher in a given mode of operation with the passed
  * parameters.
@@ -48,37 +50,15 @@ void load_ordo();
  interface, located one level of abstraction lower - see enc_block.h. \n\n
  The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a
  mode which uses padding (with padding enabled) is used. See remarks about padding in enc_block.h. */
-int ordoEncrypt(void* in, size_t inlen,
-                void* out, size_t* outlen,
-                const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode,
-                void* key, size_t keySize,
-                void* iv,
-                size_t iv_len,
-                void* cipherParams,
-                void* modeParams);
-
-/*! This function decrypts a buffer of a given length using a block cipher in a given mode of operation with the passed
- * parameters.
- \param in The ciphertext buffer.
- \param inlen Number of bytes to read from the \c in buffer.
- \param out The plaintext buffer, to which the plaintext should be written.
- \param outlen This points to a variable which will contain the number of bytes written to \c out.
- \param cipher A block cipher object, describing the block cipher to use for decryption.
- \param mode The block cipher mode of operation to be used for decryption.
- \param key A buffer containing the key material to use for decryption.
- \param keySize The length, in bytes, of the \c key buffer.
- \param iv A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV).
- \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
- \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
- \remark See ordoEncrypt for additional remarks. */
-int ordoDecrypt(void* in, size_t inlen,
-                void* out, size_t* outlen,
-                const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode,
-                void* key, size_t keySize,
-                void* iv,
-                size_t iv_len,
-                void* cipherParams, void* modeParams);
+int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
+                   const void *cipher_params,
+                   const struct BLOCK_MODE* mode,
+                   const void *mode_params,
+                   int direction,
+                   const void *key, size_t key_len,
+                   const void *iv,  size_t iv_len,
+                   const void *in,  size_t in_len,
+                         void* out, size_t *out_len);
 
 /*! This function encrypts or decrypts a buffer of a given length using a stream cipher.
  \param inout The plaintext or ciphertext buffer.
@@ -96,10 +76,9 @@ int ordoDecrypt(void* in, size_t inlen,
  and vice versa. \n
  - the encryption or decryption is done in-place directly in the \c inout buffer, since the ciphertext is always the
  same length as the plaintext. If you need two different buffers, make a copy of the plaintext before encrypting. */
-int ordoEncryptStream(void* inout, size_t len,
-                      const struct STREAM_CIPHER* cipher,
-                      void* key, size_t keySize,
-                      void* cipherParams);
+int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
+                    const void *key,    size_t key_len,
+                          void *buffer, size_t len);
 
 /*! This function hashes a buffer of a given length into a digest using a hash function.
  \param in The input buffer to hash.
@@ -108,7 +87,9 @@ int ordoEncryptStream(void* inout, size_t len,
  \param hash A hash function object, describing the hash function to use.
  \param hashParams This points to specific hash function parameters, set to zero for default behavior.
  \return Returns \c ORDO_SUCCESS on success, a negative error code on failure. */
-int ordoHash(void* in, size_t len, void* out, const struct HASH_FUNCTION* hash, void* hashParams);
+int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
+                const void *in, size_t len,
+                void *digest);
 
 /*! This function returns the HMAC of a buffer using a key with any hash function.
  \param in The input buffer to hash.
@@ -121,7 +102,10 @@ int ordoHash(void* in, size_t len, void* out, const struct HASH_FUNCTION* hash, 
  \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark Note the hash parameters only affect the inner hash (the one hashing the buffer),
  not the outer one or the potential key-processing one.*/
-int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, const struct HASH_FUNCTION* hash, void* hashParams);
+int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
+              const void *key, size_t key_len,
+              const void *in,  size_t len,
+              void* fingerprint);
 
 #ifdef __cplusplus
 }

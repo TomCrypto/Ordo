@@ -10,14 +10,14 @@
 /******************************************************************************/
 
 int pbkdf2(const struct HASH_FUNCTION *hash,
+           const void *params,
            const void *password,
            size_t password_len,
            const void *salt,
            size_t salt_len,
-           void *output,
-           size_t output_len,
            size_t iterations,
-           const void *hash_params)
+           void *output,
+           size_t output_len)
 {
     int err = ORDO_SUCCESS;
 
@@ -50,7 +50,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 
         if ((err = hmac_init(ctx,
                              password, password_len,
-                             hash_params))) goto pbkdf2_ret;
+                             params))) goto pbkdf2_ret;
 
         hmac_update(ctx, salt, salt_len);
         hmac_update(ctx, &counter, sizeof(uint32_t));
@@ -65,7 +65,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
          * the design of HMAC, most of the work can then be precomputed. */
         if ((err = hmac_init(cst,
                              password, password_len,
-                             hash_params))) goto pbkdf2_ret;
+                             params))) goto pbkdf2_ret;
 
         for (i = 1; i < iterations; ++i)
         {

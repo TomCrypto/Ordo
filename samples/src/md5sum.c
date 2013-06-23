@@ -19,9 +19,14 @@ int main(int argc, char *argv[])
 
     if (argc != 2) return -1;
     f = fopen(argv[1], "rb");
+    if (!f)
+    {
+        printf("Failed to open %s.\n", argv[1]);
+        return EXIT_FAILURE;
+    }
 
     /* init Ordo */
-    load_ordo();
+    init_ordo();
 
     struct DIGEST_CTX *ctx = digest_alloc(MD5());
     if (!ctx)
@@ -58,5 +63,5 @@ int main(int argc, char *argv[])
 
     free(digest);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 5) return -1;
 
-    load_ordo();
+    init_ordo();
 
     /* Open the files. */
     FILE *in = fopen(argv[3], "rb");
@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     unsigned char *key = malloc(KEY_LEN); /* arbitrary */
     unsigned char *fingerprint = malloc(digest_length(Skein256()));
 
-    int err = pbkdf2(Skein256(), argv[2], strlen(argv[2]),
-                     salt, SALT_LEN, key, KEY_LEN, 100000, 0); /* no params */
+    int err = pbkdf2(Skein256(), 0, argv[2], strlen(argv[2]),
+                     salt, SALT_LEN, 100000, key, KEY_LEN); /* no params */
 
     /* key is encryption key - hash it once for fingerprint. */
     struct DIGEST_CTX *hash = digest_alloc(Skein256());

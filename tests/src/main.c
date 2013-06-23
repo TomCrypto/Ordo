@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
     printf("\n");
 
     /* Initialize Ordo. */
-    load_ordo();
+    init_ordo();
 
     /* First of all, get the CSPRNG test out of the way. */
     printf("-------- CSPRNG Tests --------\n\n");

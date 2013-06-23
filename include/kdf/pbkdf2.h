@@ -27,16 +27,16 @@ extern "C" {
 /*! Derives a key using PBKDF2.
  @param hash The hash function to use (the PRF used will be generic HMAC
              instantiated with this hash function)
+ @param params A pointer to hash-specific parameters, or nil if not used.
  @param password A pointer to the password to use.
  @param password_len The length in bytes of the \c password buffer.
  @param salt A pointer to the salt to use.
  @param salt_len The length in bytes of the \c salt buffer.
+ @param iterations The number of PBKDF2 iterations to use.
  @param output A pointer to a buffer in which to write the derived key.
  @param output_len The desired length, in bytes, of the derived key. The
                    \c output buffer should be at least \c output_len bytes
                    long.
- @param iterations The number of PBKDF2 iterations to use.
- @param hash_params A pointer to hash-specific parameters, or nil if not used.
  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
  @remarks There is a maximum output length of 2^32 - 1 multiplied by the
           digest length of the chosen hash function, but it is unlikely
@@ -48,14 +48,14 @@ extern "C" {
           length, or this function's behavior is undefined.
 */
 int pbkdf2(const struct HASH_FUNCTION *hash,
+           const void *params,
            const void *password,
            size_t password_len,
            const void *salt,
            size_t salt_len,
-           void *output,
-           size_t output_len,
            size_t iterations,
-           const void *hash_params);
+           void *output,
+           size_t output_len);
 
 #ifdef __cplusplus
 }
