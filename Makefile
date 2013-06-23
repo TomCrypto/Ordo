@@ -40,7 +40,7 @@ endif
 # Add the extra arguments (if any)
 CFLAGS += $(extra)
 
-HEADERS = $(wildcard $(INCLUDE)/*.h)
+HEADERS = $(shell find $(INCLUDE)/ -name '*.h')
 SRC = $(shell find $(SRCDIR)/ -name '*.c')
 ASM = $(shell find $(SRCDIR)/ -name '*.S')
 SRCOBJ = $(subst .c,.c.o,$(subst $(SRCDIR)/,$(OBJDIR)/,$(SRC)))
