@@ -14,7 +14,7 @@ CFLAGS = -Wall -Wextra \
 ifeq ($(debug), 1)
 	CFLAGS += -O0 -ggdb -D ORDO_DEBUG
 else
-	CFLAGS += -O6
+	CFLAGS += -O3
 endif
 
 # Decides whether to build a shared or a static library.
@@ -23,7 +23,7 @@ ifeq ($(shared), 1)
 	LIBNAME = libordo.so
 	LDFLAGS = -shared
 	CFLAGS += -fpic
-	LD = gcc
+	LD = $(CC)
 else
 	LIBNAME = libordo.a
 	LDFLAGS = rcs

@@ -4,6 +4,8 @@
 #include <common/ordo_errors.h>
 #include <common/secure_mem.h>
 
+#include <string.h>
+
 #include <enc/block_cipher_modes/ecb.h>
 #include <enc/block_cipher_modes/cbc.h>
 #include <enc/block_cipher_modes/ctr.h>
