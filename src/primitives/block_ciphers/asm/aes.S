@@ -1,29 +1,9 @@
-/**
- * @file aes.S
- *
- * \brief AES assembly code [ABI: Windows x64, Linux x64].
- *
- * This file contains an implementation of AES (Advanced Encryption Standard) for AES-NI-capable processors.
- * This technically works for 32-bit processors too, but the x86 version doesn't seem to recognize the forward
- * function declarations and complains about undefined references...
- *
- * \todo Fix 32-bit "undefined reference" bug.
- * \todo Implement AES key schedule with AES-NI, to get rid of the substitution box.
- *
- * @see aes.c
- * @see aes.h
- *
- */
-
 #include <internal/asm/resolve.h>
 
-/* Intel syntax only! */
 .intel_syntax noprefix;
 
-/* This is assembly for 64-bit Linux. */
 #if defined (AES_X86_64_LINUX)
 
-/* Declarations. */
 .globl aes_forward_ASM
 .globl aes_inverse_ASM
 
@@ -98,7 +78,6 @@ aes_inverse_ASM:
 
 #elif defined (AES_X86_64_WINDOWS)
 
-/* Declarations. */
 .globl aes_forward_ASM
 .globl aes_inverse_ASM
 
@@ -171,10 +150,8 @@ aes_inverse_ASM:
     MOVDQA [%RCX], %XMM0
     ret
 
-/* This is assembly for x86 (DEAD CODE). */
 #elif (0)
 
-/* Declarations. */
 .globl aes_forward_ASM
 .globl aes_inverse_ASM
 

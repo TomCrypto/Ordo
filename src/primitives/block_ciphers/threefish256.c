@@ -4,6 +4,8 @@
 #include <common/ordo_errors.h>
 #include <common/secure_mem.h>
 
+#include <string.h>
+
 /******************************************************************************/
 
 #define THREEFISH256_BLOCK (32) /* 256-bit block */
@@ -30,7 +32,7 @@ struct THREEFISH256_STATE* threefish256_alloc()
                                           subkeys[n][3] = keyWords[s3] + n; \
 
 /* This is the Threefish-256 key schedule. */
-void threefish256_key_schedule(uint64_t key[4], uint64_t tweak[2], uint64_t subkeys[19][4])
+void threefish256_key_schedule(const uint64_t key[4], const uint64_t tweak[2], uint64_t subkeys[19][4])
 {
     /* Some variables. */
     uint64_t tweakWords[3];
@@ -70,7 +72,7 @@ void threefish256_key_schedule(uint64_t key[4], uint64_t tweak[2], uint64_t subk
     subkey(18, 3, 4, 0, 1, 0, 1);
 }
 
-int threefish256_init(struct THREEFISH256_STATE *state, uint64_t* key, size_t keySize, struct THREEFISH256_PARAMS* params)
+int threefish256_init(struct THREEFISH256_STATE *state, const uint64_t* key, size_t keySize, const struct THREEFISH256_PARAMS* params)
 {
     /* Only a 256-bit key is permitted. */
     if (keySize != 32) return ORDO_KEY_SIZE;
@@ -389,6 +391,12 @@ void threefish256_free(struct THREEFISH256_STATE *state)
     secure_free(state, sizeof(struct THREEFISH256_STATE));
 }
 
+void threefish256_copy(struct THREEFISH256_STATE *dst,
+                       const struct THREEFISH256_STATE *src)
+{
+    memcpy(dst->subkey, src->subkey, sizeof(struct THREEFISH256_STATE));
+}
+
 /* Fills a BLOCK_CIPHER struct with the correct information. */
 void threefish256_set_primitive(struct BLOCK_CIPHER* cipher)
 {
@@ -399,5 +407,6 @@ void threefish256_set_primitive(struct BLOCK_CIPHER* cipher)
                (BLOCK_UPDATE)threefish256_forward,
                (BLOCK_UPDATE)threefish256_inverse,
                (BLOCK_FREE)threefish256_free,
+               (BLOCK_COPY)threefish256_copy,
                "Threefish-256");
 }

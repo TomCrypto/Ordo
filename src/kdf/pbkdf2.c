@@ -2,22 +2,26 @@
 
 #include <common/ordo_errors.h>
 #include <common/secure_mem.h>
-#include <common/ordo_utils.h>
+
 #include <auth/hmac.h>
+
 #include <string.h>
 
 /******************************************************************************/
 
-int pbkdf2(struct HASH_FUNCTION *hash,
-           void *password, size_t password_len,
-           void *salt, size_t salt_len,
-           void *output, size_t output_len,
+int pbkdf2(const struct HASH_FUNCTION *hash,
+           const void *password,
+           size_t password_len,
+           const void *salt,
+           size_t salt_len,
+           void *output,
+           size_t output_len,
            size_t iterations,
-           void *hashParams)
+           const void *hash_params)
 {
     int err = ORDO_SUCCESS;
 
-    size_t digest_len = hash_digest_length(hash);
+    const size_t digest_len = digest_length(hash);
     size_t i, t, t_max = output_len / digest_len;
 
     struct HMAC_CTX *ctx = hmac_alloc(hash);
@@ -46,7 +50,7 @@ int pbkdf2(struct HASH_FUNCTION *hash,
 
         if ((err = hmac_init(ctx,
                              password, password_len,
-                             hashParams))) goto pbkdf2_ret;
+                             hash_params))) goto pbkdf2_ret;
 
         hmac_update(ctx, salt, salt_len);
         hmac_update(ctx, &counter, sizeof(uint32_t));
@@ -61,7 +65,7 @@ int pbkdf2(struct HASH_FUNCTION *hash,
          * the design of HMAC, most of the work can then be precomputed. */
         if ((err = hmac_init(cst,
                              password, password_len,
-                             hashParams))) goto pbkdf2_ret;
+                             hash_params))) goto pbkdf2_ret;
 
         for (i = 1; i < iterations; ++i)
         {
@@ -74,7 +78,10 @@ int pbkdf2(struct HASH_FUNCTION *hash,
             xor_buffer(buf, feedback, digest_len);
         }
 
-        /* Copy this block into the output buffer (handle truncation). */
+        /* Copy this block into the output buffer (handle truncation). Note
+         * this ensures that even if something goes wrong at any point, the
+         * user-provided buffer will only ever contain either indeterminate
+         * data or valid data, and no intermediate, sensitive information. */
         memcpy((unsigned char*)output + t * digest_len, buf,
                (t == t_max) ? output_len % digest_len : digest_len);
     }

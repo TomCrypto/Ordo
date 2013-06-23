@@ -39,8 +39,8 @@ struct AES_STATE* aes_alloc();
  @remarks The \c params parameter may be nil if no parameters are required.
 */
 int aes_init(struct AES_STATE *state,
-             void* key, size_t keySize,
-             struct AES_PARAMS* params);
+             const void* key, size_t keySize,
+             const struct AES_PARAMS* params);
 
 /*! Encrypts a 128-bit block (as an array of bytes).
  @param ctx An initialized AES context.
@@ -67,6 +67,9 @@ void aes_inverse(struct AES_STATE *state,
  @remarks Passing nil to this function is a no-op.
 */
 void aes_free(struct AES_STATE *state);
+
+void aes_copy(struct AES_STATE *dst,
+              const struct AES_STATE *src);
 
 /*! This function populates a block cipher object with the AES functions and
  *  attributes, and is meant for internal use.

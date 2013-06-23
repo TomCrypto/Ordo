@@ -20,8 +20,8 @@ struct NULLCIPHER_STATE* nullcipher_alloc()
 }
 
 int nullcipher_init(struct NULLCIPHER_STATE *state,
-                    void* key, size_t keySize,
-                    void* params)
+                    const void* key, size_t keySize,
+                    const void* params)
 {
     return ORDO_SUCCESS;
 }
@@ -41,6 +41,12 @@ void nullcipher_free(struct NULLCIPHER_STATE *state)
     secure_free(state, sizeof(struct NULLCIPHER_STATE));
 }
 
+void nullcipher_copy(struct NULLCIPHER_STATE *dst,
+                     const struct NULLCIPHER_STATE *src)
+{
+    dst->dummy = src->dummy; /* Example. */
+}
+
 void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)
 {
     make_block_cipher(cipher,
@@ -50,5 +56,6 @@ void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)
                       (BLOCK_UPDATE)nullcipher_forward,
                       (BLOCK_UPDATE)nullcipher_inverse,
                       (BLOCK_FREE)nullcipher_free,
+                      (BLOCK_COPY)nullcipher_copy,
                       "NullCipher");
 }

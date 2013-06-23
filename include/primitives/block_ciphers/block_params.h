@@ -7,14 +7,21 @@
 extern "C" {
 #endif
 
-/*! Threefish-256 cipher parameters. */
+/**
+ * @file block_params.h
+ * @brief Block cipher parameters.
+ *
+ * This header contains parameter structures for all block cipher primitives.
+*/
+
+/*! @brief Threefish-256 block cipher parameters. */
 struct THREEFISH256_PARAMS
 {
     /*! The tweak word, on a pair of 64-bit words. */
     uint64_t tweak[2];
 };
 
-/*! AES cipher parameters. */
+/*! @brief AES block cipher parameters. */
 struct AES_PARAMS
 {
     /*! The number of rounds to use.

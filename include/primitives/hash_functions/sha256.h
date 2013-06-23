@@ -29,7 +29,7 @@ struct SHA256_STATE* sha256_alloc();
  @param params Ignored.
  @returns Returns \c #ORDO_SUCCESS.
 */
-int sha256_init(struct SHA256_STATE *state, void* params);
+int sha256_init(struct SHA256_STATE *state, const void* params);
 
 /*! Feeds a buffer into the SHA-256 context, contributing to the final digest.
  @param ctx An initialized SHA-256 context.
@@ -38,7 +38,7 @@ int sha256_init(struct SHA256_STATE *state, void* params);
  @remarks This function has the property that Update(A) followed by Update(B)
           is equivalent to Update(A || B) where || denotes concatenation.
 */
-void sha256_update(struct SHA256_STATE *state, void* buffer, size_t size);
+void sha256_update(struct SHA256_STATE *state, const void* buffer, size_t size);
 
 /*! Retrieves the final digest from the SHA-256 context.
  @param ctx An initialized SHA-256 context.
@@ -64,7 +64,7 @@ void sha256_free(struct SHA256_STATE *state);
           generic interface working for any hash function is required, use
           \c hashFunctionCopy().
 */
-void sha256_copy(struct SHA256_STATE *dst, struct SHA256_STATE *src);
+void sha256_copy(struct SHA256_STATE *dst, const struct SHA256_STATE *src);
 
 /*! Populates a stream cipher object with the SHA-256 functions and
  *  attributes, and is meant for internal use.

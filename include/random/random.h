@@ -9,27 +9,28 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file random.h
+ * @brief OS-provided CSPRNG module.
  *
- * \brief Cryptographically secure pseudorandom number generation.
+ * Exposes the Ordo CSPRNG (Cryptographically Secure PseudoRandom Number
+ * Generator) interface, which is basically a cross-platform wrapper to
+ * the OS-provided entropy pool.
  *
- * Exposes the Ordo CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface, which is basically a
- * cross-platform wrapper to the OS-provided entropy pool.
+ * \b Linux: Reads from /dev/urandom \n
+ * \b Windows: Acquires a CSP token and calls CryptGenRandom. \n
  *
- * Linux: Reads from /dev/urandom \n
- * Windows: Acquires a CSP token and calls CryptGenRandom. \n
- *
- * \todo Implement ordo_random for other platforms and add proper error handling for Windows.
- *
- * @see random.c
- */
+ * @todo Implement ordo_random for other platforms and add proper error
+ *       handling for Windows.
+*/
 
-/*! Generates cryptographic-grade pseudorandom numbers.
-  \param buffer Points to the buffer in which to write the pseudorandom stream.
-  \param size The number of bytes to generate and to write to the buffer.
-  \return Returns \c ORDO_SUCCESS on success, and returns an error code on failure.
-  \remark This function uses the underlying CSPRNG provided by your operating system. */
+/*! Generates cryptographically secure pseudorandom numbers.
+ @param buffer Points to the buffer in which to write the pseudorandom bytes.
+ @param size The number of bytes to generate and to write to the buffer.
+ @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @remarks This function uses the underlying CSPRNG provided by your operating
+          system.
+*/
 int ordo_random(unsigned char* buffer, size_t size);
 
 #ifdef __cplusplus

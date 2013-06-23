@@ -21,12 +21,12 @@ all: md5sum encrypt
 
 .PHONY: md5sum
 md5sum:
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $(SRCDIR)/md5sum.c -o $(BINDIR)/md5sum -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
 .PHONY: encrypt
 encrypt:
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $(SRCDIR)/encrypt.c -o $(BINDIR)/encrypt -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
 .PHONY: clean

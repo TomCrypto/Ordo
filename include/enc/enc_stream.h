@@ -9,47 +9,66 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file enc_stream.h
- *
- * \brief Stream cipher symmetric encryption.
+ * @brief Stream cipher encryption module.
  *
  * Interface to encrypt plaintext and decrypt ciphertext with various stream ciphers.
- *
- * @see enc_stream.c
- */
+*/
 
-/*! \brief Stream cipher symmetric encryption context.
- *
- * This structure describes a high-level symmetric encryption context, for stream ciphers. It only contains the stream
- * cipher's context, and is used only for consistency purposes with the block cipher encryption interface. */
+/*! Stream encryption context.
+ *  @remarks This context must not be manipulated or operated on in any way
+ *           outside the \c enc_stream_* functions.
+*/    
 struct ENC_STREAM_CTX;
 
-/*! This function returns an allocated stream cipher encryption context using a specific stream cipher.
- \param cipher The stream cipher object to be used.
- \return Returns the allocated stream cipher encryption context, or 0 if an error occurred. */
-struct ENC_STREAM_CTX* enc_stream_alloc(struct STREAM_CIPHER* cipher);
+/*! Allocates a new stream encryption context.
+ @param cipher The stream cipher to use.
+ @return Returns the allocated stream encryption context, or nil if an
+         allocation error occurred.
+*/
+struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher);
 
-/*! This function initializes a stream cipher encryption context for encryption, provided a key and cipher parameters.
- \param ctx An allocated stream cipher encryption context.
- \param key A buffer containing the key to use for encryption.
- \param keySize The size, in bytes, of the encryption key.
- \param cipherParams This points to specific stream cipher parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, and a negative value on error. */
-int enc_stream_init(struct ENC_STREAM_CTX* ctx, void* key, size_t keySize, void* cipherParams);
+/*! Initializes a stream encryption context.
+ @param ctx An allocated stream encryption context.
+ @param key The cryptographic key to use for encryption.
+ @param key_size The size, in bytes, of the key.
+ @param params Stream cipher specific parameters.
+ @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+*/
+int enc_stream_init(struct ENC_STREAM_CTX *ctx,
+                    const void *key,
+                    size_t key_size,
+                    const void *params);
 
-/*! This function encrypts or decrypts a buffer of a given length using the provided stream cipher encryption context.
- \param ctx The block cipher encryption context to use. This context must have been allocated and initialized.
- \param inout The plaintext or ciphertext buffer.
- \param len Number of bytes to read from the \c inout buffer.
- \remark See \c ordoEncryptStream() for remarks about output buffer size. */
-void enc_stream_update(struct ENC_STREAM_CTX* ctx, void* inout, size_t len);
+/*! Encrypts or decrypts a data buffer.
+ @param ctx An initialized stream encryption context.
+ @param buffer The plaintext or ciphertext buffer.
+ @param len Number of bytes to read from the \c inout buffer.
+ @remarks By nature, stream ciphers encrypt and decrypt data the same way. In
+          other words, if you encrypt data twice, you will get back the
+          original data.
+ @remarks Stream encryption is always done in place by design.
+*/
+void enc_stream_update(struct ENC_STREAM_CTX *ctx,
+                       void *buffer,
+                       size_t len);
 
-/*! This function frees (deallocates) an initialized stream cipher encryption context.
- \param ctx The stream cipher encryption context to be freed. This context needs to at least have been allocated.
- \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
- be wiped. Do not call this function if \c enc_stream_alloc() failed. */
-void enc_stream_free(struct ENC_STREAM_CTX* ctx);
+/*! Frees a stream encryption context.
+ @param ctx A stream encryption context.
+ @remarks The context need not have been initialized.
+*/
+void enc_stream_free(struct ENC_STREAM_CTX *ctx);
+
+/*! Performs a deep copy of one context into another.
+ @param dst The destination context.
+ @param src The source context.
+ @remarks Both contexts must have been allocated with the same hash function,
+          and the exact same parameters (unless the parameter documentation
+          states otherwise) else the function's behavior is undefined.
+*/
+void enc_stream_copy(struct ENC_STREAM_CTX *dst,
+                     const struct ENC_STREAM_CTX *src);
 
 #ifdef __cplusplus
 }

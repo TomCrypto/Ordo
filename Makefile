@@ -52,10 +52,10 @@ LIBPATH_SO = $(addprefix $(LIBDIR)/, libordo.so)
 default: $(OBJDIR) $(LIBDIR) $(LIBPATH) $(STRIP)
 
 $(OBJDIR):
-	mkdir $@
+	@mkdir $@
 
 $(LIBDIR):
-	mkdir $@
+	@mkdir $@
 
 $(STRIP):
 	$(STRIP)
@@ -67,11 +67,11 @@ $(LIBPATH_SO): $(SRCOBJ) $(ASMOBJ)
 	$(LD) $(LDFLAGS) $(SRCOBJ) $(ASMOBJ) -o $(LIBPATH)
 
 $(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS)
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
 
 $(OBJDIR)/%.S.o: $(SRCDIR)/%.S $(HEADERS)
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
 
 # make tests :: Builds the test driver
@@ -115,8 +115,8 @@ doc:
 	doxygen
 	mkdir -p doc
 	cd doc/latex; make
-	cd doc; ln -s html/index.html doc.html
-	cd doc; ln -s latex/refman.pdf doc.pdf
+	cd doc; ln -s -f html/index.html doc.html
+	cd doc; ln -s -f latex/refman.pdf doc.pdf
 
 # make clean_doc :: Removes all documentation
 .PHONY: clean_doc

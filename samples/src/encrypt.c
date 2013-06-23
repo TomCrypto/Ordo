@@ -25,9 +25,6 @@ int main(int argc, char *argv[])
     /* "e" for encrypt, "d" (or anything else) for decrypt. */
     int direction = (strcmp(argv[1], "e") == 0) ? 1 : 0;
 
-    /* prepare key with PBKDF2/Skein256 (100000 iterations). */
-    unsigned char *kdf = malloc(hash_digest_length(Skein256()));
-
     /* If encrypting, generate random salt and IV. */
     unsigned char *iv = malloc(cipher_block_size(Threefish256()));
     unsigned char *salt = malloc(SALT_LEN); // arbitrary
@@ -36,7 +33,7 @@ int main(int argc, char *argv[])
     {
         /* random salt/IV */
         ordo_random(salt, SALT_LEN);
-        ordo_random(iv, hash_digest_length(Skein256()));
+        ordo_random(iv, digest_length(Skein256()));
     }
     else
     {
@@ -47,7 +44,7 @@ int main(int argc, char *argv[])
     }
 
     unsigned char *key = malloc(KEY_LEN); /* arbitrary */
-    unsigned char *fingerprint = malloc(hash_digest_length(Skein256()));
+    unsigned char *fingerprint = malloc(digest_length(Skein256()));
 
     int err = pbkdf2(Skein256(), argv[2], strlen(argv[2]),
                      salt, SALT_LEN, key, KEY_LEN, 100000, 0); /* no params */
@@ -70,15 +67,15 @@ int main(int argc, char *argv[])
     {
         fwrite(salt, 1, SALT_LEN, out);
         fwrite(iv, 1, cipher_block_size(Threefish256()), out);
-        fwrite(fingerprint, 1, hash_digest_length(Skein256()), out);
+        fwrite(fingerprint, 1, digest_length(Skein256()), out);
     }
     else
     {
         /* If we are decrypting, verify the key instead. */
-        unsigned char *file_fingerprint = malloc(hash_digest_length(Skein256()));
-        fread(file_fingerprint, 1, hash_digest_length(Skein256()), in);
+        unsigned char *file_fingerprint = malloc(digest_length(Skein256()));
+        fread(file_fingerprint, 1, digest_length(Skein256()), in);
 
-        if (memcmp(file_fingerprint, fingerprint, hash_digest_length(Skein256())) != 0)
+        if (memcmp(file_fingerprint, fingerprint, digest_length(Skein256())) != 0)
         {
             printf("Wrong key!\n");
             /* delete out file (it was created empty with fopen) */
@@ -89,8 +86,9 @@ int main(int argc, char *argv[])
     }
 
     /* Now we can just encrypt or decrypt the rest of the data. */
+    size_t iv_len = cipher_block_size(Threefish256());
     struct ENC_BLOCK_CTX *ctx = enc_block_alloc(Threefish256(), CTR());
-    enc_block_init(ctx, key, KEY_LEN, iv, direction, 0, 0); /* no params */
+    enc_block_init(ctx, key, KEY_LEN, iv, iv_len, direction, 0, 0); /* no params */
 
     unsigned char *buffer = malloc(BUF_SIZE);
 

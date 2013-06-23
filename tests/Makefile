@@ -36,16 +36,16 @@ BINPATH = $(addprefix $(BINDIR)/, $(TARGET))
 default: $(OBJDIR) $(BINDIR) $(BINPATH)
 
 $(OBJDIR):
-	mkdir $@
+	@mkdir $@
 
 $(BINDIR):
-	mkdir $@
+	@mkdir $@
 
 $(BINPATH): $(OBJ)
 	$(CC) $(LDFLAGS) $(OBJ) -o $(BINPATH) $(ORDO_LIBPATH)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -I$(ORDO_INCLUDE) -c $< -o $@
 
 # make cleanbin :: Removes all binary files

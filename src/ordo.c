@@ -11,11 +11,11 @@ void load_ordo()
     load_primitives();
 
     /* Load all encryption modes of operation. */
-    encryptLoad();
+    load_block_modes();
 }
 
 /* This convenience function encrypts a buffer with a given block cipher, key, IV, and parameters. */
-int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
+int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, const struct BLOCK_CIPHER* primitive, const struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, size_t iv_len, void* cipherParams, void* modeParams)
 {
     int error;
     size_t outPos = 0;
@@ -25,7 +25,7 @@ int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_
     if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = enc_block_init(ctx, key, keySize, iv, 1, cipherParams, modeParams);
+    error = enc_block_init(ctx, key, keySize, iv, iv_len, 1, cipherParams, modeParams);
     if (error == ORDO_SUCCESS)
     {
         /* Encrypt the buffer. */
@@ -43,7 +43,7 @@ int ordoEncrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_
 }
 
 /* This convenience function decrypts a buffer with a given block cipher, key, IV, and parameters. */
-int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, void* cipherParams, void* modeParams)
+int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, const struct BLOCK_CIPHER* primitive, const struct BLOCK_MODE* mode, void* key, size_t keySize, void* iv, size_t iv_len, void* cipherParams, void* modeParams)
 {
     int error;
     size_t outPos = 0;
@@ -53,7 +53,7 @@ int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_
     if (!ctx) return ORDO_ALLOC;
 
     /* Initialize it. */
-    error = enc_block_init(ctx, key, keySize, iv, 0, cipherParams, modeParams);
+    error = enc_block_init(ctx, key, keySize, iv, iv_len, 0, cipherParams, modeParams);
     if (error == ORDO_SUCCESS)
     {
         /* Encrypt the buffer. */
@@ -71,7 +71,7 @@ int ordoDecrypt(void* in, size_t inlen, void* out, size_t* outlen, struct BLOCK_
 }
 
 /* This convenience function encrypts or decrypts a buffer with a given stream cipher, key, IV, and parameters. */
-int ordoEncryptStream(void* inout, size_t len, struct STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
+int ordoEncryptStream(void* inout, size_t len, const struct STREAM_CIPHER* primitive, void* key, size_t keySize, void* cipherParams)
 {
     int error;
 
@@ -89,7 +89,7 @@ int ordoEncryptStream(void* inout, size_t len, struct STREAM_CIPHER* primitive, 
 }
 
 /* Hashes a message. */
-int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* hashParams)
+int ordoHash(void* in, size_t len, void* out, const struct HASH_FUNCTION* hash, void* hashParams)
 {
     int error;
 
@@ -114,7 +114,7 @@ int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* 
 }
 
 /* HMAC. */
-int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, struct HASH_FUNCTION* hash, void* hashParams)
+int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, const struct HASH_FUNCTION* hash, void* hashParams)
 {
     int error;
 

@@ -12,9 +12,6 @@
 
 /******************************************************************************/
 
-/*! \brief Block cipher mode of operation object.
- *
- * This represents a block cipher mode of operation object. */
 struct BLOCK_MODE
 {
     BLOCK_MODE_ALLOC alloc;
@@ -22,101 +19,152 @@ struct BLOCK_MODE
     BLOCK_MODE_UPDATE update;
     BLOCK_MODE_FINAL final;
     BLOCK_MODE_FREE free;
-    char* name;
+    BLOCK_MODE_COPY copy;
+    const char* name;
 };
 
-/* Block cipher mode of operation list. */
-struct BLOCK_MODE encryptModes[BLOCK_MODE_COUNT];
-
-/* Loads all block cipher modes. */
-void encryptLoad()
-{
-    /* Initialize each block cipher mode object. */
-    ecb_set_mode   (&encryptModes[BLOCK_MODE_ECB]);
-    cbc_set_mode   (&encryptModes[BLOCK_MODE_CBC]);
-    ctr_set_mode   (&encryptModes[BLOCK_MODE_CTR]);
-    cfb_set_mode   (&encryptModes[BLOCK_MODE_CFB]);
-    ofb_set_mode   (&encryptModes[BLOCK_MODE_OFB]);
-}
-
-/* Pass-through functions to acquire modes of operation. */
-struct BLOCK_MODE* ECB()    { return &encryptModes[BLOCK_MODE_ECB]; }
-struct BLOCK_MODE* CBC()    { return &encryptModes[BLOCK_MODE_CBC]; }
-struct BLOCK_MODE* CTR()    { return &encryptModes[BLOCK_MODE_CTR]; }
-struct BLOCK_MODE* CFB()    { return &encryptModes[BLOCK_MODE_CFB]; }
-struct BLOCK_MODE* OFB()    { return &encryptModes[BLOCK_MODE_OFB]; }
-
-/* Gets a mode of operation object from a name. */
-struct BLOCK_MODE* block_mode_by_name(char* name)
-{
-    int t;
-    for (t = 0; t < BLOCK_MODE_COUNT; t++)
-    {
-        /* Simply compare against the mode of operation list. */
-        if (strcmp(name, encryptModes[t].name) == 0) return &encryptModes[t];
-    }
-
-    /* No match found. */
-    return 0;
-}
-
-/* Returns a block cipher mode object from an ID. */
-struct BLOCK_MODE* block_mode_by_id(size_t id)
-{
-    return (id < BLOCK_MODE_COUNT) ? &encryptModes[id] : 0;
-}
-
-const char* block_mode_name(struct BLOCK_MODE *mode)
-{
-    return mode->name;
-}
-
 void make_block_mode(struct BLOCK_MODE *mode,
-                       BLOCK_MODE_ALLOC alloc, BLOCK_MODE_INIT init, BLOCK_MODE_UPDATE update,
-                       BLOCK_MODE_FINAL final, BLOCK_MODE_FREE free, char *name)
+                     BLOCK_MODE_ALLOC alloc,
+                     BLOCK_MODE_INIT init,
+                     BLOCK_MODE_UPDATE update,
+                     BLOCK_MODE_FINAL final,
+                     BLOCK_MODE_FREE free,
+                     BLOCK_MODE_COPY copy,
+                     const char *name)
 {
     mode->alloc = alloc;
     mode->init = init;
     mode->update = update;
     mode->final = final;
     mode->free = free;
+    mode->copy = copy;
     mode->name = name;
 }
 
+/******************************************************************************/
 
+struct BLOCK_MODE encryptModes[BLOCK_MODE_COUNT];
 
-/**********************************************************
-**********************************************************/
-
-
-
-/* BLOCK MODE ABSTRACTION LAYER. */
-
-void* block_mode_alloc(struct BLOCK_MODE* mode, struct BLOCK_CIPHER *cipher, void* cipher_ctx)
+void load_block_modes()
 {
-    return mode->alloc(cipher, cipher_ctx);
+    ecb_set_mode(&encryptModes[BLOCK_MODE_ECB]);
+    cbc_set_mode(&encryptModes[BLOCK_MODE_CBC]);
+    ctr_set_mode(&encryptModes[BLOCK_MODE_CTR]);
+    cfb_set_mode(&encryptModes[BLOCK_MODE_CFB]);
+    ofb_set_mode(&encryptModes[BLOCK_MODE_OFB]);
 }
 
-int block_mode_init(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                        void* iv, int dir, void* params)
+const struct BLOCK_MODE* ECB()
 {
-    return mode->init(ctx, cipher, cipher_ctx, iv, dir ,params);
+    return &encryptModes[BLOCK_MODE_ECB];
 }
 
-void block_mode_update(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                           void* in, size_t inlen,
-                           void* out, size_t* outlen)
+const struct BLOCK_MODE* CBC()
 {
-    mode->update(ctx, cipher, cipher_ctx, in, inlen, out, outlen);
+    return &encryptModes[BLOCK_MODE_CBC];
 }
 
-int block_mode_final(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                         void* out, size_t* outlen)
+const struct BLOCK_MODE* CTR()
 {
-    return mode->final(ctx, cipher, cipher_ctx, out, outlen);
+    return &encryptModes[BLOCK_MODE_CTR];
 }
 
-void block_mode_free(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx)
+const struct BLOCK_MODE* CFB()
 {
-    mode->free(ctx, cipher, cipher_ctx);
+    return &encryptModes[BLOCK_MODE_CFB];
 }
+
+const struct BLOCK_MODE* OFB()
+{
+    return &encryptModes[BLOCK_MODE_OFB];
+}
+
+/******************************************************************************/
+
+const char* block_mode_name(const struct BLOCK_MODE *mode)
+{
+    return mode->name;
+}
+
+/******************************************************************************/
+
+const struct BLOCK_MODE* block_mode_by_name(const char* name)
+{
+    ssize_t t;
+    for (t = 0; t < BLOCK_MODE_COUNT; t++)
+    {
+        if (strcmp(name, encryptModes[t].name) == 0)
+            return &encryptModes[t];
+    }
+
+    return 0;
+}
+
+const struct BLOCK_MODE* block_mode_by_id(size_t id)
+{
+    return (id < BLOCK_MODE_COUNT) ? &encryptModes[id] : 0;
+}
+
+/******************************************************************************/
+
+void* block_mode_alloc(const struct BLOCK_MODE* mode,
+                       const struct BLOCK_CIPHER *cipher,
+                       void* cipher_state)
+{
+    return mode->alloc(cipher, cipher_state);
+}
+
+int block_mode_init(const struct BLOCK_MODE *mode,
+                    void *state,
+                    const struct BLOCK_CIPHER *cipher,
+                    void* cipher_state,
+                    const void* iv,
+                    size_t iv_len,
+                    int direction,
+                    const void* params)
+{
+    return mode->init(state,
+                      cipher, cipher_state,
+                      iv, iv_len,
+                      direction,
+                      params);
+}
+
+void block_mode_update(const struct BLOCK_MODE *mode,
+                       void *state,
+                       const struct BLOCK_CIPHER *cipher,
+                       void* cipher_state,
+                       const void* in,
+                       size_t inlen,
+                       void* out,
+                       size_t* outlen)
+{
+    mode->update(state, cipher, cipher_state, in, inlen, out, outlen);
+}
+
+int block_mode_final(const struct BLOCK_MODE *mode,
+                     void *state,
+                     const struct BLOCK_CIPHER *cipher,
+                     void* cipher_state,
+                     void* out,
+                     size_t* outlen)
+{
+    return mode->final(state, cipher, cipher_state, out, outlen);
+}
+
+void block_mode_free(const struct BLOCK_MODE *mode,
+                     void *state,
+                     const struct BLOCK_CIPHER *cipher,
+                     void* cipher_state)
+{
+    mode->free(state, cipher, cipher_state);
+}
+
+void block_mode_copy(const struct BLOCK_MODE *mode,
+                     const struct BLOCK_CIPHER *cipher,
+                     void *dst,
+                     const void *src)
+{
+    mode->copy(dst, src, cipher);
+}
+

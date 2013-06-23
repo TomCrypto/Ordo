@@ -15,26 +15,8 @@
 ** a 1.8 GHz AMD Opteron (rev C0) processor.
 */
 
-/**
- * @file rc4.S
- *
- * \brief RC4 assembly code [ABI: Windows x64, Linux x64].
- *
- * This file contains an optimized, assembler version of RC4 for x86_64 processors (see original header for credits). It is considerably
- * faster than the standard C version, and the exported rc4_update_ASM function implemented below takes the following parameters:\n
- * Param #1 : pointer to an RC4_STATE structure (the correct one, with the index pointers i, j first and 64-bit aligned)\n
- * Param #2 : 64-bit unsigned integer to the length of the buffer to encrypt with RC4\n
- * Param #3 : pointer to the input buffer\n
- * Param #4 : pointer to the output buffer (may be identical to the input buffer)\n
- *
- * @see rc4.c
- * @see rc4.h
- *
- */
-
 #include <internal/asm/resolve.h>
 
-/* This is x64 assembler for Linux. */
 #if defined (RC4_X86_64_LINUX)
 
 .globl rc4_update_ASM
@@ -111,7 +93,6 @@ rc4_update_ASM:
     ret
 .L_RC4_end:
 
-/* This is x64 assembler for Windows. */
 #elif defined (RC4_X86_64_LINUX)
 
 .globl rc4_update_ASM

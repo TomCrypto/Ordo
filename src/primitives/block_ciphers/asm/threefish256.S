@@ -1,31 +1,12 @@
-/**
- * @file threefish256.S
- *
- * \brief Threefish-256 assembly code [ABI: Windows x64, Linux x64].
- *
- * This file contains an optimized, hand-written assembler version of the Threefish-256 cipher primitive, for x64 processors.
- * Only the forward and inverse permutations are included here, the key schedule and other functions remain in the standard
- * implementation (threefish256.c). Note conditional compilation has been added here _and_ in threefish.c to ensure that when
- * this optimized version is enabled, the standard version in threefish.c is disabled and vice versa.
- *
- * @see threefish256.c
- * @see threefish256.h
- *
- */
-
 #include <internal/asm/resolve.h>
 
-/* Intel syntax only! */
 .intel_syntax noprefix;
 
-/* This is x64 assembler for Linux. */
 #if defined (THREEFISH256_X86_64_LINUX)
 
-/* Declarations. */
 .globl threefish256_forward_ASM
 .globl threefish256_inverse_ASM
 
-/* Forward Threefish-256 permutation. */
 threefish256_forward_ASM:
     xor %RAX, %RAX
 
@@ -119,7 +100,6 @@ threefish256_forward_ASM:
 
     ret
 
-/* Inverse Threefish-256 permutation. */
 threefish256_inverse_ASM:
     xor %RAX, %RAX
 
@@ -215,14 +195,11 @@ threefish256_inverse_ASM:
 
     ret
 
-/* This is x64 assembler for Windows. */
 #elif defined (THREEFISH256_X86_64_WINDOWS)
 
-/* Declarations. */
 .globl threefish256_forward_ASM
 .globl threefish256_inverse_ASM
 
-/* Forward Threefish-256 permutation. */
 threefish256_forward_ASM:
     xor %RAX, %RAX
 
@@ -316,7 +293,6 @@ threefish256_forward_ASM:
 
     ret
 
-/* Inverse Threefish-256 permutation. */
 threefish256_inverse_ASM:
     xor %RAX, %RAX
 

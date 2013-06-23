@@ -42,7 +42,7 @@ struct SKEIN256_STATE* skein256_alloc()
 }
 
 /* This is the Skein-256 compression function. */
-void skein256Compress(uint64_t* block, uint64_t* state, uint64_t* tweak)
+void skein256Compress(const uint64_t* block, uint64_t* state, uint64_t* tweak)
 {
     /* Some variables. */
     uint64_t subkeys[19][4];
@@ -60,7 +60,7 @@ void skein256Compress(uint64_t* block, uint64_t* state, uint64_t* tweak)
     xor_buffer((unsigned char*)state, (unsigned char*)block, SKEIN256_INTERNAL);
 }
 
-int skein256_init(struct SKEIN256_STATE *state, struct SKEIN256_PARAMS* params)
+int skein256_init(struct SKEIN256_STATE *state, const struct SKEIN256_PARAMS* params)
 {
     /* Some variables. */
     uint64_t tweak[2];
@@ -92,7 +92,7 @@ int skein256_init(struct SKEIN256_STATE *state, struct SKEIN256_PARAMS* params)
     return ORDO_SUCCESS;
 }
 
-void skein256_update(struct SKEIN256_STATE *state, void* buffer, size_t size)
+void skein256_update(struct SKEIN256_STATE *state, const void* buffer, size_t size)
 {
     /* Some variables. */
     uint64_t tweak[2];
@@ -175,7 +175,7 @@ void skein256_free(struct SKEIN256_STATE *state)
     secure_free(state, sizeof(struct SKEIN256_STATE));
 }
 
-void skein256_copy(struct SKEIN256_STATE *dst, struct SKEIN256_STATE *src)
+void skein256_copy(struct SKEIN256_STATE *dst, const struct SKEIN256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SKEIN256_STATE));
 }

@@ -10,58 +10,130 @@
 extern "C" {
 #endif
 
-/* Block cipher mode of operation interface function prototypes. */
-typedef void* (* BLOCK_MODE_ALLOC)(struct BLOCK_CIPHER*, void*);
-typedef int (* BLOCK_MODE_INIT)(void*, struct BLOCK_CIPHER*, void*, void*, int, void*);
-typedef void (* BLOCK_MODE_UPDATE)(void*, struct BLOCK_CIPHER*, void*,
-                                          void*, size_t, void*, size_t*);
-typedef int (* BLOCK_MODE_FINAL)(void*, struct BLOCK_CIPHER*, void*, void*, size_t*);
-typedef void (* BLOCK_MODE_FREE)(void*, struct BLOCK_CIPHER*, void*);
+/**
+ * @file block_modes.h
+ * @brief Block mode of operation abstraction layer.
+ *
+ * This declares all the block modes of operation in the library, abstracting
+ * them through higher level interfaces.
+*/
+
+typedef void* (* BLOCK_MODE_ALLOC)(const struct BLOCK_CIPHER*,
+                                   void*);
+
+typedef int (* BLOCK_MODE_INIT)(void*, 
+                                const struct BLOCK_CIPHER*,
+                                void*,
+                                const void*,
+                                size_t,
+                                int,
+                                const void*);
+
+typedef void (* BLOCK_MODE_UPDATE)(void*,
+                                   const struct BLOCK_CIPHER*,
+                                   void*,
+                                   const void*,
+                                   size_t,
+                                   void*,
+                                   size_t*);
+
+typedef int (* BLOCK_MODE_FINAL)(void*,
+                                 const struct BLOCK_CIPHER*,
+                                 void*,
+                                 void*,
+                                 size_t*);
+
+typedef void (* BLOCK_MODE_FREE)(void*,
+                                 const struct BLOCK_CIPHER*,
+                                 void*);
+
+typedef void (* BLOCK_MODE_COPY)(void*,
+                                 const void*,
+                                 const struct BLOCK_CIPHER*);
 
 struct BLOCK_MODE;
 
-/*! Loads all encryption modes of operation. This must be called before you may use \c ECB(), \c CBC(), etc... or the
- * helper functions \c block_mode_by_name() and \c block_mode_by_id(). */
-void encryptLoad();
+void make_block_mode(struct BLOCK_MODE *mode,
+                     BLOCK_MODE_ALLOC alloc,
+                     BLOCK_MODE_INIT init,
+                     BLOCK_MODE_UPDATE update,
+                     BLOCK_MODE_FINAL final,
+                     BLOCK_MODE_FREE free,
+                     BLOCK_MODE_COPY copy,
+                     const char *name);
+
+/******************************************************************************/
+
+const char* block_mode_name(const struct BLOCK_MODE *mode);
+
+/******************************************************************************/
+
+/*! Loads all block modes of operation provided by the library.
+ @remarks This must be called before you may use \c ECB(), \c CBC(), etc...
+          or the helper functions \c block_mode_by_name() and
+          \c block_mode_by_id().
+*/
+void load_block_modes();
 
 /*! The ECB (Electronic CodeBook) mode of operation. */
-struct BLOCK_MODE* ECB();
+const struct BLOCK_MODE* ECB();
 /*! The CBC (Ciphertext Block Chaining) mode of operation. */
-struct BLOCK_MODE* CBC();
+const struct BLOCK_MODE* CBC();
 /*! The CTR (CounTeR) mode of operation. */
-struct BLOCK_MODE* CTR();
+const struct BLOCK_MODE* CTR();
 /*! The CFB (Cipher FeedBack) mode of operation. */
-struct BLOCK_MODE* CFB();
+const struct BLOCK_MODE* CFB();
 /*! The OFB (Output FeedBack) mode of operation. */
-struct BLOCK_MODE* OFB();
+const struct BLOCK_MODE* OFB();
 
-/*! Gets a block cipher mode of operation object from a name. */
-struct BLOCK_MODE* block_mode_by_name(char* name);
+/******************************************************************************/
 
-/*! Gets a block cipher mode of operation object from an ID. */
-struct BLOCK_MODE* block_mode_by_id(size_t id);
+/*! Gets a block cipher mode of operation from a name. */
+const struct BLOCK_MODE* block_mode_by_name(const char* name);
 
-const char* block_mode_name(struct BLOCK_MODE *mode);
+/*! Gets a block cipher mode of operation from an ID. */
+const struct BLOCK_MODE* block_mode_by_id(size_t id);
 
-void make_block_mode(struct BLOCK_MODE *mode,
-                       BLOCK_MODE_ALLOC alloc, BLOCK_MODE_INIT init, BLOCK_MODE_UPDATE update,
-                       BLOCK_MODE_FINAL final, BLOCK_MODE_FREE free, char *name);
+/******************************************************************************/
 
-/* BLOCK MODE ABSTRACTION LAYER. */
+void* block_mode_alloc(const struct BLOCK_MODE* mode,
+                       const struct BLOCK_CIPHER *cipher,
+                       void *cipher_state);
 
-void* block_mode_alloc(struct BLOCK_MODE* mode, struct BLOCK_CIPHER *cipher, void* cipher_ctx);
+int block_mode_init(const struct BLOCK_MODE *mode,
+                    void *state,
+                    const struct BLOCK_CIPHER *cipher,
+                    void *cipher_state,
+                    const void *iv,
+                    size_t iv_len,
+                    int direction,
+                    const void *params);
 
-int block_mode_init(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                        void* iv, int dir, void* params);
+void block_mode_update(const struct BLOCK_MODE *mode,
+                       void *state,
+                       const struct BLOCK_CIPHER *cipher,
+                       void *cipher_state,
+                       const void *in,
+                       size_t inlen,
+                       void *out,
+                       size_t *outlen);
 
-void block_mode_update(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                           void* in, size_t inlen,
-                           void* out, size_t* outlen);
+int block_mode_final(const struct BLOCK_MODE *mode,
+                     void *state,
+                     const struct BLOCK_CIPHER *cipher,
+                     void* cipher_state,
+                     void* out,
+                     size_t *outlen);
 
-int block_mode_final(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx,
-                         void* out, size_t* outlen);
+void block_mode_free(const struct BLOCK_MODE *mode,
+                     void *state,
+                     const struct BLOCK_CIPHER *cipher,
+                     void *cipher_state);
 
-void block_mode_free(struct BLOCK_MODE *mode, void *ctx, struct BLOCK_CIPHER *cipher, void* cipher_ctx);
+void block_mode_copy(const struct BLOCK_MODE *mode,
+                     const struct BLOCK_CIPHER *cipher,
+                     void *dst,
+                     const void *src);
 
 #ifdef __cplusplus
 }

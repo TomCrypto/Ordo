@@ -8,7 +8,7 @@
 /******************************************************************************/
 
 /* Checks whether the next padding bytes at buffer all have the correct padding value. */
-int pad_check(unsigned char* buffer, unsigned char padding)
+int pad_check(const unsigned char* buffer, unsigned char padding)
 {
     /* Iterate over all padding bytes at the end of the block. */
     size_t t;
@@ -21,7 +21,7 @@ int pad_check(unsigned char* buffer, unsigned char padding)
 }
 
 /* Xors two buffers together. */
-void xor_buffer(unsigned char* dst, unsigned char* src, size_t len)
+void xor_buffer(unsigned char* dst, const unsigned char* src, size_t len)
 {
     /* Optimization will do the rest. */
     while (len--) *(dst++) ^= *(src++);
@@ -40,7 +40,7 @@ void inc_buffer(unsigned char* buffer, size_t len)
 }
 
 /* Returns a readable error message. */
-char* error_msg(int code)
+const char* error_msg(int code)
 {
     /* Get a proper error message. */
     switch (code)

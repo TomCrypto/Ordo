@@ -38,8 +38,8 @@ struct THREEFISH256_STATE* threefish256_alloc();
  @remarks The \c params parameter may be nil if no parameters are required.
 */
 int threefish256_init(struct THREEFISH256_STATE *state,
-                      uint64_t* key, size_t keySize,
-                      struct THREEFISH256_PARAMS* params);
+                      const uint64_t* key, size_t keySize,
+                      const struct THREEFISH256_PARAMS* params);
 
 /*! Encrypts a 256-bit block (as a \c uint64_t[4] structure).
  @param ctx An initialized Threefish-256 context.
@@ -67,6 +67,9 @@ void threefish256_inverse(struct THREEFISH256_STATE *state,
 */
 void threefish256_free(struct THREEFISH256_STATE *state);
 
+void threefish256_copy(struct THREEFISH256_STATE *dst,
+                       const struct THREEFISH256_STATE *src);
+
 /*! This function populates a block cipher object with the Threefish-256
  *  functions and attributes, and is meant for internal use.
  @param cipher A pointer to a block cipher object to populate.
@@ -89,8 +92,8 @@ void threefish256_set_primitive(struct BLOCK_CIPHER* cipher);
  @remarks Performs the Threefish-256 key schedule.
  @internal
 */
-void threefish256_key_schedule(uint64_t key[4],
-                                     uint64_t tweak[2],
+void threefish256_key_schedule(const uint64_t key[4],
+                               const uint64_t tweak[2],
                                      uint64_t subkeys[19][4]);
 
 /*! See the \c threefish256_key_schedule() function.

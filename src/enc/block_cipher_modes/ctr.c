@@ -17,7 +17,7 @@ struct CTR_STATE
     size_t remaining;
 };
 
-struct CTR_STATE* ctr_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct CTR_STATE* ctr_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -47,12 +47,15 @@ struct CTR_STATE* ctr_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
     return 0;
 }
 
-int ctr_init(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
+int ctr_init(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
     size_t block_size = cipher_block_size(cipher);
 
+    if (iv_len > block_size) return ORDO_ARG;
+
     /* Copy the IV (required) into the context IV. */
-    memcpy(state->iv, iv, block_size);
+    memset(state->iv, 0x00, block_size);
+    memcpy(state->iv, iv, iv_len);
 
     /* Copy the IV into the counter. */
     memcpy(state->counter, state->iv, block_size);
@@ -65,7 +68,7 @@ int ctr_init(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     return ORDO_SUCCESS;
 }
 
-void ctr_update(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ctr_update(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
@@ -101,7 +104,7 @@ void ctr_update(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* ciph
     }
 }
 
-int ctr_final(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ctr_final(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
@@ -110,12 +113,19 @@ int ctr_final(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher
     return ORDO_SUCCESS;
 }
 
-void ctr_free(struct CTR_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
+void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Free context space. */
     secure_free(state->counter, cipher_block_size(cipher));
     secure_free(state->iv, cipher_block_size(cipher));
     secure_free(state, sizeof(struct CTR_STATE));
+}
+
+void ctr_copy(struct CTR_STATE *dst, const struct CTR_STATE *src, const struct BLOCK_CIPHER* cipher)
+{
+    memcpy(dst->counter, src->counter, cipher_block_size(cipher));
+    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    dst->remaining = src->remaining;
 }
 
 /* Fills a BLOCK_MODE struct with the correct information. */
@@ -127,5 +137,6 @@ void ctr_set_mode(struct BLOCK_MODE* mode)
                     (BLOCK_MODE_UPDATE)ctr_update,
                     (BLOCK_MODE_FINAL)ctr_final,
                     (BLOCK_MODE_FREE)ctr_free,
+                    (BLOCK_MODE_COPY)ctr_copy,
                     "CTR");
 }

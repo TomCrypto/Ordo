@@ -29,7 +29,7 @@ struct MD5_STATE* md5_alloc();
  @param params Ignored.
  @returns Returns \c #ORDO_SUCCESS.
 */
-int md5_init(struct MD5_STATE *state, void* params);
+int md5_init(struct MD5_STATE *state, const void* params);
 
 /*! Feeds a buffer into the MD5 context, contributing to the final digest.
  @param ctx An initialized MD5 context.
@@ -38,7 +38,7 @@ int md5_init(struct MD5_STATE *state, void* params);
  @remarks This function has the property that Update(A) followed by Update(B)
           is equivalent to Update(A || B) where || denotes concatenation.
 */
-void md5_update(struct MD5_STATE *state, void* buffer, size_t size);
+void md5_update(struct MD5_STATE *state, const void* buffer, size_t size);
 
 /*! Retrieves the final digest from the MD5 context.
  @param ctx An initialized MD5 context.
@@ -64,7 +64,7 @@ void md5_free(struct MD5_STATE *state);
           generic interface working for any hash function is required, use
           \c hashFunctionCopy().
 */
-void md5_copy(struct MD5_STATE *dst, struct MD5_STATE *src);
+void md5_copy(struct MD5_STATE *dst, const struct MD5_STATE *src);
 
 /*! Populates a stream cipher object with the MD5 functions and
  *  attributes, and is meant for internal use.

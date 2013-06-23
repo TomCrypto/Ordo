@@ -144,8 +144,8 @@ int runBlockCipherTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    struct BLOCK_CIPHER* primitive = block_cipher_by_name(primitive_name);
-    struct BLOCK_MODE* mode = block_mode_by_name(modeName);
+    const struct BLOCK_CIPHER* primitive = block_cipher_by_name(primitive_name);
+    const struct BLOCK_MODE* mode = block_mode_by_name(modeName);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if ((primitive == 0) || (mode == 0))
@@ -161,14 +161,14 @@ int runBlockCipherTest(char* line, int n)
     result = 0;
 
     /* Perform the encryption test. */
-    error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, 0, 0);
+    error = ordoEncrypt(plaintext, plaintextlen, computedCiphertext, &computedCiphertextLen, primitive, mode, key, keylen, iv, ivlen, 0, 0);
     if (error == ORDO_SUCCESS)
     {
         /* Check the computed ciphertext against the expected ciphertext. */
         if ((computedCiphertextLen != ciphertextlen) || (memcmp(computedCiphertext, ciphertext, ciphertextlen) == 0))
         {
             /* Perform the decryption test. */
-            error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, 0, 0);
+            error = ordoDecrypt(computedCiphertext, computedCiphertextLen, computedPlaintext, &computedPlaintextLen, primitive, mode, key, keylen, iv, ivlen, 0, 0);
             if (error == ORDO_SUCCESS)
             {
                 /* Check the computed plaintext against the expected plaintext. */
@@ -210,7 +210,7 @@ int runStreamCipherTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    struct STREAM_CIPHER* primitive = stream_cipher_by_name(primitive_name);
+    const struct STREAM_CIPHER* primitive = stream_cipher_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
@@ -270,7 +270,7 @@ int runDigestTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
+    const struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
@@ -318,7 +318,7 @@ int runHMACTest(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
+    const struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
@@ -369,7 +369,7 @@ int runPBKDF2Test(char* line, int n)
     int error, result;
 
     /* Get the proper primitive and mode. */
-    struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
+    const struct HASH_FUNCTION* primitive = hash_function_by_name(primitive_name);
 
     /* If the mode or primitive is not recognized, skip (don't error, it might be a test vector added for later). */
     if (primitive == 0)
@@ -478,7 +478,7 @@ void randomTest()
 }
 
 /* Rates the performance of a cipher primitive/encryption mode combination. Uses an existing buffer. */
-void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
+void blockCipherPerformance(const struct BLOCK_CIPHER* primitive, const struct BLOCK_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     struct ECB_PARAMS modeParams;
@@ -511,7 +511,7 @@ void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* m
     modeParams.padding = 0;
 
     /* Encryption test. */
-    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
+    error = ordoEncrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, cipher_block_size(primitive), 0, &modeParams);
     if (error < 0) printf("[!] An error occurred during encryption [%s].\n", error_msg(error));
     else
     {
@@ -523,7 +523,7 @@ void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* m
         start = clock();
 
         /* Decryption test. */
-        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, 0, &modeParams);
+        error = ordoDecrypt(buffer, bufferSize, buffer, &outlen, primitive, mode, key, keySize, iv, cipher_block_size(primitive), 0, &modeParams);
         if (error < 0) printf("[!] An error occurred during decryption [%s].\n", error_msg(error));
         else
         {
@@ -540,7 +540,7 @@ void blockCipherPerformance(struct BLOCK_CIPHER* primitive, struct BLOCK_MODE* m
     free(iv);
 }
 
-void streamCipherPerformance(struct STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize)
+void streamCipherPerformance(const struct STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     int error;
@@ -577,7 +577,7 @@ void streamCipherPerformance(struct STREAM_CIPHER* primitive, size_t keySize, un
     free(key);
 }
 
-void hashFunctionPerformance(struct HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize)
+void hashFunctionPerformance(const struct HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize)
 {
     /* Declare variables. */
     int error;
@@ -586,7 +586,7 @@ void hashFunctionPerformance(struct HASH_FUNCTION* primitive, unsigned char* buf
     float time;
 
     /* Allocate a buffer of the right size for the digest. */
-    digest = malloc(hash_digest_length(primitive));
+    digest = malloc(digest_length(primitive));
 
     /* Print primitive information. */
     printf("[+] Testing %s...\n", hash_function_name(primitive));
@@ -610,11 +610,11 @@ void hashFunctionPerformance(struct HASH_FUNCTION* primitive, unsigned char* buf
     free(digest);
 }
 
-void pbkdf2Performance(struct HASH_FUNCTION* primitive, size_t iterations)
+void pbkdf2Performance(const struct HASH_FUNCTION* primitive, size_t iterations)
 {
     char *password = "my password";
     char *salt = "a salt";
-    size_t outputLen = hash_digest_length(primitive); /* testing speed for a single iteration loop */
+    size_t outputLen = digest_length(primitive); /* testing speed for a single iteration loop */
     void *output = malloc(outputLen);
     clock_t start;
     float time;

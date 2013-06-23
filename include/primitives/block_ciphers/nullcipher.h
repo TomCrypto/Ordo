@@ -36,8 +36,8 @@ struct NULLCIPHER_STATE* nullcipher_alloc();
  @remarks This function does nothing.
 */
 int nullcipher_init(struct NULLCIPHER_STATE *state,
-                    void* key, size_t keySize,
-                    void* params);
+                    const void* key, size_t keySize,
+                    const void* params);
 
 /*! Encrypts a 128-bit block.
  @param ctx An initialized NullCipher context.
@@ -60,6 +60,9 @@ void nullcipher_inverse(struct NULLCIPHER_STATE *state,
  @remarks Passing nil to this function is a no-op.
 */
 void nullcipher_free(struct NULLCIPHER_STATE *state);
+
+void nullcipher_copy(struct NULLCIPHER_STATE *dst,
+                     const struct NULLCIPHER_STATE *src);
 
 /*! This function populates a block cipher object with the NullCipher
  *  functions and attributes, and is meant for internal use.

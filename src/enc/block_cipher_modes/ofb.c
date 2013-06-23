@@ -15,7 +15,7 @@ struct OFB_STATE
     size_t remaining;
 };
 
-struct OFB_STATE* ofb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct OFB_STATE* ofb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -39,12 +39,15 @@ struct OFB_STATE* ofb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
     return 0;
 }
 
-int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
+int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
     size_t block_size = cipher_block_size(cipher);
 
+    if (iv_len > block_size) return ORDO_ARG;
+
     /* Copy the IV (required) into the context IV. */
-    memcpy(state->iv, iv, block_size);
+    memset(state->iv, 0x00, block_size);
+    memcpy(state->iv, iv, iv_len);
 
     /* Compute the initial keystream block. */
     block_cipher_forward(cipher, cipher_state, state->iv);
@@ -54,7 +57,7 @@ int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     return ORDO_SUCCESS;
 }
 
-void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ofb_update(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
@@ -88,7 +91,7 @@ void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* ciph
     }
 }
 
-int ofb_final(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ofb_final(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
@@ -97,11 +100,17 @@ int ofb_final(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher
     return ORDO_SUCCESS;
 }
 
-void ofb_free(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
+void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Free context space. */
     secure_free(state->iv, cipher_block_size(cipher));
     secure_free(state, sizeof(struct OFB_STATE));
+}
+
+void ofb_copy(struct OFB_STATE *dst, const struct OFB_STATE *src, const struct BLOCK_CIPHER* cipher)
+{
+    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    dst->remaining = src->remaining;
 }
 
 /* Fills a BLOCK_MODE struct with the correct information. */
@@ -113,5 +122,6 @@ void ofb_set_mode(struct BLOCK_MODE* mode)
                     (BLOCK_MODE_UPDATE)ofb_update,
                     (BLOCK_MODE_FINAL)ofb_final,
                     (BLOCK_MODE_FREE)ofb_free,
+                    (BLOCK_MODE_COPY)ofb_copy,
                     "OFB");
 }

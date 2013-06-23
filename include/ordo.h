@@ -15,19 +15,18 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file ordo.h
+ * @brief High-level library API.
  *
- * \brief Ordo high-level API.
- *
- * This is the highest-level API for Ordo, which forgoes the use of cryptographic contexts completely,resulting in more
- * concise code at the cost of reduced flexibility.
- *
- * @see ordo.c
- */
+ * This is the highest-level API for Ordo, which forgoes the use of
+ * cryptographic contexts completely,resulting in more concise code
+ * at the cost of reduced flexibility.
+*/
 
-/*! Loads Ordo - this calls all the load functions in the different interfaces (primitives, encrypt, etc...). After
- * this function returns, all objects such as \c RC4(), \c CBC(), may be used. */
+/*! Loads Ordo - this calls all the \c load_* functions in the different
+ * abstraction layers. After this function returns, all objects such as
+ * \c RC4(), \c CBC(), and so on, may be used. */
 void load_ordo();
 
 /*! This function encrypts a buffer of a given length using a block cipher in a given mode of operation with the passed
@@ -51,9 +50,10 @@ void load_ordo();
  mode which uses padding (with padding enabled) is used. See remarks about padding in enc_block.h. */
 int ordoEncrypt(void* in, size_t inlen,
                 void* out, size_t* outlen,
-                struct BLOCK_CIPHER* cipher, struct BLOCK_MODE* mode,
+                const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode,
                 void* key, size_t keySize,
                 void* iv,
+                size_t iv_len,
                 void* cipherParams,
                 void* modeParams);
 
@@ -74,9 +74,10 @@ int ordoEncrypt(void* in, size_t inlen,
  \remark See ordoEncrypt for additional remarks. */
 int ordoDecrypt(void* in, size_t inlen,
                 void* out, size_t* outlen,
-                struct BLOCK_CIPHER* cipher, struct BLOCK_MODE* mode,
+                const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode,
                 void* key, size_t keySize,
                 void* iv,
+                size_t iv_len,
                 void* cipherParams, void* modeParams);
 
 /*! This function encrypts or decrypts a buffer of a given length using a stream cipher.
@@ -96,7 +97,7 @@ int ordoDecrypt(void* in, size_t inlen,
  - the encryption or decryption is done in-place directly in the \c inout buffer, since the ciphertext is always the
  same length as the plaintext. If you need two different buffers, make a copy of the plaintext before encrypting. */
 int ordoEncryptStream(void* inout, size_t len,
-                      struct STREAM_CIPHER* cipher,
+                      const struct STREAM_CIPHER* cipher,
                       void* key, size_t keySize,
                       void* cipherParams);
 
@@ -107,7 +108,7 @@ int ordoEncryptStream(void* inout, size_t len,
  \param hash A hash function object, describing the hash function to use.
  \param hashParams This points to specific hash function parameters, set to zero for default behavior.
  \return Returns \c ORDO_SUCCESS on success, a negative error code on failure. */
-int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* hashParams);
+int ordoHash(void* in, size_t len, void* out, const struct HASH_FUNCTION* hash, void* hashParams);
 
 /*! This function returns the HMAC of a buffer using a key with any hash function.
  \param in The input buffer to hash.
@@ -120,7 +121,7 @@ int ordoHash(void* in, size_t len, void* out, struct HASH_FUNCTION* hash, void* 
  \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
  \remark Note the hash parameters only affect the inner hash (the one hashing the buffer),
  not the outer one or the potential key-processing one.*/
-int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, struct HASH_FUNCTION* hash, void* hashParams);
+int ordoHMAC(void* in, size_t len, void* key, size_t keySize, void* out, const struct HASH_FUNCTION* hash, void* hashParams);
 
 #ifdef __cplusplus
 }

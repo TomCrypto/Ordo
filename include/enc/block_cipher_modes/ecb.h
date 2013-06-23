@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file ecb.h
- *
- * \brief ECB block cipher mode of operation.
+ * @brief ECB block mode of operation.
  *
  * The ECB mode divides the input message into blocks of the cipher's block size, and encrypts them individually.
  * If the input message's length is not a multiple of the cipher's block size, a padding mechanism is enabled by
@@ -30,21 +29,21 @@ extern "C" {
  * The ECB mode does not require an initialization vector.
  *
  * Note that the ECB mode is insecure in almost all situations and is not recommended for use.
- *
- * @see ecb.c
- */
+*/
 
 struct ECB_STATE;
 
-struct ECB_STATE* ecb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
+struct ECB_STATE* ecb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int ecb_init(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct ECB_PARAMS* params);
+int ecb_init(struct ECB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct ECB_PARAMS* params);
 
-void ecb_update(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+void ecb_update(struct ECB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-int ecb_final(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
+int ecb_final(struct ECB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void ecb_free(struct ECB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
+void ecb_free(struct ECB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state);
+
+void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct BLOCK_CIPHER* cipher);
 
 void ecb_set_mode(struct BLOCK_MODE* mode);
 

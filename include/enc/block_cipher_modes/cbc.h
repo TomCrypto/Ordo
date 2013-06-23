@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file cbc.h
- *
- * \brief CBC block cipher mode of operation.
+ * @brief CBC block mode of operation.
  *
  * The CBC mode divides the input message into blocks of the cipher's block size, and encrypts them in a sequential
  * fashion, where each block depends on the previous one (and the first block depends on the initialization vector).
@@ -26,21 +25,21 @@ extern "C" {
  *
  * If padding is disabled, \c outlen is also required, and will return the number of unprocessed plaintext bytes in the
  * context. If this is any value other than zero, the function will also fail with \c ORDO_LEFTOVER.
- *
- * @see cbc.c
- */
+*/
 
 struct CBC_STATE;
 
-struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
+struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int cbc_init(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct CBC_PARAMS* params);
+int cbc_init(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct CBC_PARAMS* params);
 
-void cbc_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+void cbc_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
 
-int cbc_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
+int cbc_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void cbc_free(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
+void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state);
+
+void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct BLOCK_CIPHER* cipher);
 
 void cbc_set_mode(struct BLOCK_MODE* mode);
 

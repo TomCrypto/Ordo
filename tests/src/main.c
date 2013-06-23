@@ -3,9 +3,9 @@
 #include <common/version.h>
 
 /* Use a 256MB buffer size in performance tests to get decent resolution.
- * In debug mode, though, use only 64MB since everything is slower. */
+ * In debug mode, though, use only 32MB since everything is slower. */
 #ifdef ORDO_DEBUG
-    #define BUFSIZE (1024 * 1024 * 64)
+    #define BUFSIZE (1024 * 1024 * 32)
 #else
     #define BUFSIZE (1024 * 1024 * 256)
 #endif

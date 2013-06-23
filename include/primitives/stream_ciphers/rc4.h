@@ -40,8 +40,8 @@ struct RC4_STATE* rc4_alloc();
  @remarks The \c params parameter may be nil if no parameters are required.
 */
 int rc4_init(struct RC4_STATE *state,
-             uint8_t* key, size_t keySize,
-             struct RC4_PARAMS* params);
+             const uint8_t* key, size_t keySize,
+             const struct RC4_PARAMS* params);
 
 /*! Encrypts or decrypts a buffer (as an array of bytes).
  @param ctx An initialized RC4 context.
@@ -63,6 +63,8 @@ void rc4_update(struct RC4_STATE *state,
  @remarks Passing nil to this function is a no-op.
 */
 void rc4_free(struct RC4_STATE *state);
+
+void rc4_copy(struct RC4_STATE *dst, const struct RC4_STATE *src);
 
 /*! This function populates a stream cipher object with the RC4 functions and
  *  attributes, and is meant for internal use.

@@ -19,7 +19,7 @@ struct ECB_STATE
     int direction;
 };
 
-struct ECB_STATE* ecb_alloc(struct BLOCK_CIPHER *cipher, void* cipher_state)
+struct ECB_STATE* ecb_alloc(const struct BLOCK_CIPHER *cipher, void* cipher_state)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -43,7 +43,7 @@ struct ECB_STATE* ecb_alloc(struct BLOCK_CIPHER *cipher, void* cipher_state)
     return 0;
 }
 
-int ecb_init(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, void* iv, int dir, struct ECB_PARAMS* params)
+int ecb_init(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct ECB_PARAMS* params)
 {
     state->direction = dir;
 
@@ -54,7 +54,7 @@ int ecb_init(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_
     return ORDO_SUCCESS;
 }
 
-void ecb_encrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ecb_encrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -86,7 +86,7 @@ void ecb_encrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, vo
     state->available += inlen;
 }
 
-void ecb_decrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ecb_decrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -118,7 +118,7 @@ void ecb_decrypt_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, vo
     state->available += inlen;
 }
 
-int ecb_encrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
@@ -150,7 +150,7 @@ int ecb_encrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void
     return ORDO_SUCCESS;
 }
 
-int ecb_decrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
@@ -188,25 +188,33 @@ int ecb_decrypt_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void
     return ORDO_SUCCESS;
 }
 
-void ecb_update(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ecb_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     (state->direction
      ? ecb_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
      : ecb_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
 }
 
-int ecb_final(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ecb_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     return (state->direction
             ? ecb_encrypt_final(state, cipher, cipher_state, out, outlen)
             : ecb_decrypt_final(state, cipher, cipher_state, out, outlen));
 }
 
-void ecb_free(struct ECB_STATE *state, struct BLOCK_CIPHER *cipher, void* cipher_state)
+void ecb_free(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state)
 {
     /* Dellocate context fields. */
     secure_free(state->block, cipher_block_size(cipher));
     secure_free(state, sizeof(struct ECB_STATE));
+}
+
+void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct BLOCK_CIPHER* cipher)
+{
+    memcpy(dst->block, src->block, cipher_block_size(cipher));
+    dst->available = src->available;
+    dst->direction = src->direction;
+    dst->padding = src->padding;
 }
 
 /* Fills a BLOCK_MODE struct with the correct information. */
@@ -218,5 +226,6 @@ void ecb_set_mode(struct BLOCK_MODE* mode)
                     (BLOCK_MODE_UPDATE)ecb_update,
                     (BLOCK_MODE_FINAL)ecb_final,
                     (BLOCK_MODE_FREE)ecb_free,
+                    (BLOCK_MODE_COPY)ecb_copy,
                     "ECB");
 }

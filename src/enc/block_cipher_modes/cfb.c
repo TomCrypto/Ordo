@@ -17,7 +17,7 @@ struct CFB_STATE
     int direction;
 };
 
-struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -39,14 +39,17 @@ struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
     return 0;
 }
 
-int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params)
+int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
     size_t block_size = cipher_block_size(cipher);
+
+    if (iv_len > block_size) return ORDO_ARG;
 
     state->direction = dir;
 
     /* Copy the IV (required) into the context IV. */
-    memcpy(state->iv, iv, block_size);
+    memset(state->iv, 0x00, block_size);
+    memcpy(state->iv, iv, iv_len);
 
     /* Compute the initial keystream block. */
     block_cipher_forward(cipher, cipher_state, state->iv);
@@ -56,7 +59,7 @@ int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     return ORDO_SUCCESS;
 }
 
-void cfb_encrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
@@ -91,7 +94,7 @@ void cfb_encrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, vo
     }
 }
 
-void cfb_decrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
@@ -126,14 +129,14 @@ void cfb_decrypt_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, vo
     }
 }
 
-void cfb_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cfb_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     (state->direction
      ? cfb_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
      : cfb_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
 }
 
-int cfb_final(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int cfb_final(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     /* Write output size if applicable. */
     if (outlen) *outlen = 0;
@@ -142,11 +145,18 @@ int cfb_final(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher
     return ORDO_SUCCESS;
 }
 
-void cfb_free(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
+void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Free context space. */
     secure_free(state->iv, cipher_block_size(cipher));
     secure_free(state, sizeof(struct CFB_STATE));
+}
+
+void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher)
+{
+    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    dst->remaining = src->remaining;
+    dst->direction = src->direction;
 }
 
 /* Fills a BLOCK_MODE struct with the correct information. */
@@ -158,5 +168,6 @@ void cfb_set_mode(struct BLOCK_MODE* mode)
                     (BLOCK_MODE_UPDATE)cfb_update,
                     (BLOCK_MODE_FINAL)cfb_final,
                     (BLOCK_MODE_FREE)cfb_free,
+                    (BLOCK_MODE_COPY)cfb_copy,
                     "CFB");
 }

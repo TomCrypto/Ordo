@@ -58,7 +58,7 @@ struct SHA256_STATE* sha256_alloc()
     return secure_alloc(sizeof(struct SHA256_STATE));
 }
 
-int sha256_init(struct SHA256_STATE *state, void* params)
+int sha256_init(struct SHA256_STATE *state, const void* params)
 {
     /* Set the digest to the initial state. */
     memcpy(state->digest, sha256_initialState, SHA256_DIGEST);
@@ -70,7 +70,7 @@ int sha256_init(struct SHA256_STATE *state, void* params)
 }
 
 /* This is the SHA-256 compression function. */
-void sha256Compress(uint32_t block[16], uint32_t digest[8])
+void sha256Compress(const uint32_t block[16], uint32_t digest[8])
 {
     /* Temporary variables. */
     uint32_t a, b, c, d, e, f, g, h;
@@ -121,7 +121,7 @@ void sha256Compress(uint32_t block[16], uint32_t digest[8])
     digest[7] += h;
 }
 
-void sha256_update(struct SHA256_STATE *state, void* buffer, size_t size)
+void sha256_update(struct SHA256_STATE *state, const void* buffer, size_t size)
 {
     /* Some variables. */
     size_t pad = 0;
@@ -195,7 +195,7 @@ void sha256_free(struct SHA256_STATE *state)
     secure_free(state, sizeof(struct SHA256_STATE));
 }
 
-void sha256_copy(struct SHA256_STATE *dst, struct SHA256_STATE *src)
+void sha256_copy(struct SHA256_STATE *dst, const struct SHA256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SHA256_STATE));
 }

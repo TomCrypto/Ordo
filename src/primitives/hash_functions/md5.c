@@ -29,7 +29,7 @@ struct MD5_STATE* md5_alloc()
     return secure_alloc(sizeof(struct MD5_STATE));
 }
 
-int md5_init(struct MD5_STATE *state, void* params)
+int md5_init(struct MD5_STATE *state, const void* params)
 {
     /* Set the digest to the initial state. */
     memcpy(state->digest, MD5_initialState, MD5_DIGEST);
@@ -41,7 +41,7 @@ int md5_init(struct MD5_STATE *state, void* params)
 }
 
 /* This is the MD5 compression function. */
-void md5Compress(uint32_t block[16], uint32_t digest[4])
+void md5Compress(const uint32_t block[16], uint32_t digest[4])
 {
     /* Temporary variables. */
     uint32_t a, b, c, d;
@@ -191,7 +191,7 @@ void md5Compress(uint32_t block[16], uint32_t digest[4])
     digest[3] += d;
 }
 
-void md5_update(struct MD5_STATE *state, void* buffer, size_t size)
+void md5_update(struct MD5_STATE *state, const void* buffer, size_t size)
 {
     /* Some variables. */
     size_t pad = 0;
@@ -262,9 +262,14 @@ void md5_free(struct MD5_STATE *state)
     secure_free(state, sizeof(struct MD5_STATE));
 }
 
-void md5_copy(struct MD5_STATE *dst, struct MD5_STATE *src)
+void md5_copy(struct MD5_STATE *dst, const struct MD5_STATE *src)
 {
     memcpy(dst, src, sizeof(struct MD5_STATE));
+}
+
+size_t md5_length(const void *params)
+{
+    return MD5_DIGEST;
 }
 
 void md5_set_primitive(struct HASH_FUNCTION* hash)

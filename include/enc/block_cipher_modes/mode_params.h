@@ -9,23 +9,30 @@
 extern "C" {
 #endif
 
-/*! \brief ECB mode of operation parameters.
+/**
+ * @file mode_params.h
+ * @brief Block mode of operation parameters.
  *
- * A parameter structure for ECB mode - this only contains whether padding should be enabled. */
+ * This header contains parameter structures for all block modes of operation.
+*/
+
+/*! @brief ECB parameters. */
 struct ECB_PARAMS
 {
-    /*! Set the least significant bit to 0 to disable padding, 1 to enable it. All other bits are ignored. The default
-    * behaviour is 1. */
+    /*! Whether padding should be used.
+     @remarks Set to 0 to disable padding, and 1 to enable it. Only the least
+              significant bit is used, all other bits are ignored.
+     @remarks Padding is enabled by default if parameters are not used. */
     size_t padding;
 };
 
-/*! \brief CBC mode of operation parameters.
- *
- * A parameter structure for CBC mode - this only contains whether padding should be enabled. */
+/*! @brief CBC parameters. */
 struct CBC_PARAMS
 {
-    /*! Set the least significant bit to 0 to disable padding, 1 to enable it. All other bits are ignored. The default
-    * behaviour is 1. */
+    /*! Whether padding should be used.
+     @remarks Set to 0 to disable padding, and 1 to enable it. Only the least
+              significant bit is used, all other bits are ignored.
+     @remarks Padding is enabled by default if parameters are not used. */
     size_t padding;
 };
 

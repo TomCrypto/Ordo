@@ -12,7 +12,7 @@ extern "C" {
 /**
  * @file enc_block.h
  *
- * \brief Block cipher symmetric encryption.
+ * \brief Block cipher encryption module.
  *
  * Interface to encrypt plaintext and decrypt ciphertext with different block ciphers and modes of operation.
  * Note it is always possible to skip this API and directly use the lower-level functions available in the individual
@@ -24,9 +24,7 @@ extern "C" {
  *
  * The padding algorithm for modes of operation which use padding is PKCS7 (RFC 5652), which appends N bytes of value
  * N, where N is the number of padding bytes required, in bytes (between 1 and the block cipher's block size).
- *
- * @see enc_block.c
- */
+*/
 
 struct ENC_BLOCK_CTX;
 
@@ -35,7 +33,7 @@ struct ENC_BLOCK_CTX;
  \param cipher The block cipher object to be used.
  \param mode The mode of operation object to be used.
  \return Returns the allocated block cipher encryption context, or 0 if an error occurred. */
-struct ENC_BLOCK_CTX* enc_block_alloc(struct BLOCK_CIPHER* cipher, struct BLOCK_MODE* mode);
+struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode);
 
 /*! This function initializes a block cipher encryption context for encryption, provided a key, initialization vector,
  * and cipher/mode-specific parameters.
@@ -48,8 +46,12 @@ struct ENC_BLOCK_CTX* enc_block_alloc(struct BLOCK_CIPHER* cipher, struct BLOCK_
  \param dir This represents the dir of encryption, set to 1 for encryption and 0 for decryption.
  \return Returns \c ORDO_SUCCESS on success, and a negative value on error.
  \remark The initialization vector may be zero, if the mode of operation does not require one. */
-int enc_block_init(struct ENC_BLOCK_CTX* ctx, void* key, size_t keySize, void* iv,
-                       int dir, void* cipherParams, void* modeParams);
+int enc_block_init(struct ENC_BLOCK_CTX* ctx,
+                   const void* key, size_t key_len,
+                   const void* iv, size_t iv_len,
+                   int direction,
+                   const void* cipher_params,
+                   const void* mode_params);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided block cipher encryption context.
  \param ctx The block cipher encryption context to use. This context must have been allocated and initialized.
@@ -59,7 +61,7 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx, void* key, size_t keySize, void* i
  \param outlen This points to a variable which will contain the number of bytes written to \c out.
  \remark See \c blockEncryptModeUpdate() for remarks about output buffer size. */
 void enc_block_update(struct ENC_BLOCK_CTX* ctx,
-                          void* in, size_t inlen,
+                          const void* in, size_t inlen,
                           void* out, size_t* outlen);
 
 /*! This function finalizes a block cipher encryption context, and will process and return any leftover plaintext or
@@ -78,6 +80,9 @@ int enc_block_final(struct ENC_BLOCK_CTX* ctx, void* out, size_t* outlen);
  be wiped. Do not call this function if \c enc_block_alloc() failed, as the latter correctly frees dangling context
  buffers in case of error. */
 void enc_block_free(struct ENC_BLOCK_CTX* ctx);
+
+void enc_block_copy(struct ENC_BLOCK_CTX *dst,
+                    const struct ENC_BLOCK_CTX *src);
 
 #ifdef __cplusplus
 }

@@ -4,6 +4,8 @@
 #include <common/ordo_errors.h>
 #include <common/secure_mem.h>
 
+#include <string.h>
+
 /******************************************************************************/
 
 /* A structure containing an RC4 state. */
@@ -34,8 +36,8 @@ struct RC4_STATE* rc4_alloc()
     return secure_alloc(sizeof(struct RC4_STATE));
 }
 
-int rc4_init(struct RC4_STATE *state, uint8_t* key, size_t keySize,
-             struct RC4_PARAMS* params)
+int rc4_init(struct RC4_STATE *state, const uint8_t* key, size_t keySize,
+             const struct RC4_PARAMS* params)
 {
     /* Loop variables. */
     size_t t, drop;
@@ -99,6 +101,11 @@ void rc4_free(struct RC4_STATE *state)
     secure_free(state, sizeof(struct RC4_STATE));
 }
 
+void rc4_copy(struct RC4_STATE *dst, const struct RC4_STATE *src)
+{
+    memcpy(dst, src, sizeof(struct RC4_STATE));
+}
+
 void rc4_set_primitive(struct STREAM_CIPHER* cipher)
 {
     make_stream_cipher(cipher,
@@ -106,5 +113,6 @@ void rc4_set_primitive(struct STREAM_CIPHER* cipher)
                        (STREAM_INIT)rc4_init,
                        (STREAM_UPDATE)rc4_update,
                        (STREAM_FREE)rc4_free,
+                       (STREAM_COPY)rc4_copy,
                        "RC4");
 }

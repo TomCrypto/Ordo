@@ -347,7 +347,7 @@ void AddRoundKey (uint8_t *state, uint8_t *key)
 uint8_t ks[11] = {0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36};
 
 /* Expands a variable-size key to a certain number of rounds. */
-void ExpandKey (uint8_t *key, uint8_t *ext, size_t keySize, size_t rounds)
+void ExpandKey(const uint8_t *key, uint8_t *ext, size_t keySize, size_t rounds)
 {
     /* Local variables. */
     uint8_t tmp[5];
@@ -409,7 +409,7 @@ struct AES_STATE* aes_alloc()
     return state;
 }
 
-int aes_init(struct AES_STATE *state, void* key, size_t keySize, struct AES_PARAMS* params)
+int aes_init(struct AES_STATE *state, const void* key, size_t keySize, const struct AES_PARAMS* params)
 {
     /* Validate the keysize. */
     if (!((keySize == 16) || (keySize == 24) || (keySize == 32))) return ORDO_KEY_SIZE;
@@ -499,6 +499,14 @@ void aes_free(struct AES_STATE *state)
     secure_free(state, sizeof(struct AES_STATE));
 }
 
+void aes_copy(struct AES_STATE *dst,
+              const struct AES_STATE *src)
+{
+    dst->rounds = src->rounds;
+    dst->keyBytes = src->keyBytes;
+    memcpy(dst->key, src->key, dst->keyBytes);
+}
+
 /* Fills a BLOCK_CIPHER struct with the correct information. */
 void aes_set_primitive(struct BLOCK_CIPHER* cipher)
 {
@@ -509,5 +517,6 @@ void aes_set_primitive(struct BLOCK_CIPHER* cipher)
                       (BLOCK_UPDATE)aes_forward,
                       (BLOCK_UPDATE)aes_inverse,
                       (BLOCK_FREE)aes_free,
+                      (BLOCK_COPY)aes_copy,
                       "AES");
 }

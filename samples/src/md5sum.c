@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (err = digest_init(ctx, 0)) /* no params */
+    if ((err = digest_init(ctx, 0))) /* no params */
     {
         printf("An error occurred: %s.\n", error_msg(err));
         digest_free(ctx);
@@ -48,11 +48,11 @@ int main(int argc, char *argv[])
     free(buffer);
     fclose(f);
 
-    digest = malloc(hash_digest_length(MD5()));
+    digest = malloc(digest_length(MD5()));
     digest_final(ctx, digest);
     digest_free(ctx);
 
-    for (t = 0; t < hash_digest_length(MD5()); ++t)
+    for (t = 0; t < digest_length(MD5()); ++t)
         printf("%.2x", digest[t]);
     printf("  %s\n", argv[1]);
 

@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file ofb.h
- *
- * \brief OFB block cipher mode of operation.
+ * @brief OFB block mode of operation.
  *
  * The OFB mode generates a keystream by repeatedly encrypting an initialization vector, effectively
  * turning a block cipher into a stream cipher. As such, OFB mode requires no padding, and outlen
@@ -24,23 +23,23 @@ extern "C" {
  *
  * \c ofb_final() accepts 0 as an argument for \c outlen, since by design the OFB mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
- *
- * @see ofb.c
- */
+*/
 
 struct OFB_STATE;
 
-struct OFB_STATE* ofb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
+struct OFB_STATE* ofb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int ofb_init(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params);
+int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params);
 
-void ofb_update(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state,
-                unsigned char* in, size_t inlen,
+void ofb_update(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state,
+                const unsigned char* in, size_t inlen,
                 unsigned char* out, size_t* outlen);
 
-int ofb_final(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
+int ofb_final(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void ofb_free(struct OFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
+void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state);
+
+void ofb_copy(struct OFB_STATE *dst, const struct OFB_STATE *src, const struct BLOCK_CIPHER* cipher);
 
 void ofb_set_mode(struct BLOCK_MODE* mode);
 

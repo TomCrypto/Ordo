@@ -37,17 +37,20 @@ extern "C" {
 
 struct SKEIN256_STATE;
 
+/*! Allocates and returns an uninitialized Skein-256 hash function context.
+ @returns The allocated context, or nil on allocation failure.
+*/
 struct SKEIN256_STATE* skein256_alloc();
 
-int skein256_init(struct SKEIN256_STATE *state, struct SKEIN256_PARAMS* params);
+int skein256_init(struct SKEIN256_STATE *state, const struct SKEIN256_PARAMS* params);
 
-void skein256_update(struct SKEIN256_STATE *state, void* buffer, size_t size);
+void skein256_update(struct SKEIN256_STATE *state, const void* buffer, size_t size);
 
 void skein256_final(struct SKEIN256_STATE *state, void* digest);
 
 void skein256_free(struct SKEIN256_STATE *state);
 
-void skein256_copy(struct SKEIN256_STATE *dst, struct SKEIN256_STATE *src);
+void skein256_copy(struct SKEIN256_STATE *dst, const struct SKEIN256_STATE *src);
 
 void skein256_set_primitive(struct HASH_FUNCTION* hash);
 

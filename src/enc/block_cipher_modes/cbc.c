@@ -21,7 +21,7 @@ struct CBC_STATE
     int direction;
 };
 
-struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -51,12 +51,15 @@ struct CBC_STATE* cbc_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state)
     return 0;
 }
 
-int cbc_init(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, struct CBC_PARAMS* params)
+int cbc_init(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct CBC_PARAMS* params)
 {
+    if (iv_len > cipher_block_size(cipher)) return ORDO_ARG;
+
     state->direction = dir;
 
     /* Copy the IV (required) into the context IV. */
-    memcpy(state->iv, iv, cipher_block_size(cipher));
+    memset(state->iv, 0x00, cipher_block_size(cipher));
+    memcpy(state->iv, iv, iv_len);
 
     /* Check and save the parameters. */
     state->padding = (params == 0) ? 1 : params->padding & 1;
@@ -65,7 +68,7 @@ int cbc_init(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_
     return ORDO_SUCCESS;
 }
 
-void cbc_encrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cbc_encrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -103,7 +106,7 @@ void cbc_encrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, vo
     state->available += inlen;
 }
 
-void cbc_decrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -144,7 +147,7 @@ void cbc_decrypt_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, vo
     state->available += inlen;
 }
 
-int cbc_encrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
@@ -179,7 +182,7 @@ int cbc_encrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void
     return ORDO_SUCCESS;
 }
 
-int cbc_decrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int cbc_decrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
     unsigned char padding;
@@ -220,26 +223,34 @@ int cbc_decrypt_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void
     return ORDO_SUCCESS;
 }
 
-void cbc_update(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void cbc_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     (state->direction
      ? cbc_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
      : cbc_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
 }
 
-int cbc_final(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int cbc_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     return (state->direction
             ? cbc_encrypt_final(state, cipher, cipher_state, out, outlen)
             : cbc_decrypt_final(state, cipher, cipher_state, out, outlen));
 }
 
-void cbc_free(struct CBC_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state)
+void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     /* Deallocate context fields. */
     secure_free(state->block, cipher_block_size(cipher));
     secure_free(state->iv, cipher_block_size(cipher));
     secure_free(state, sizeof(struct CBC_STATE));
+}
+
+void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct BLOCK_CIPHER* cipher)
+{
+    memcpy(dst->block, src->block, cipher_block_size(cipher));
+    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    dst->available = src->available;
+    dst->padding = src->padding;
 }
 
 /* Fills a BLOCK_MODE struct with the correct information. */
@@ -251,5 +262,6 @@ void cbc_set_mode(struct BLOCK_MODE* mode)
                     (BLOCK_MODE_UPDATE)cbc_update,
                     (BLOCK_MODE_FINAL)cbc_final,
                     (BLOCK_MODE_FREE)cbc_free,
+                    (BLOCK_MODE_COPY)cbc_copy,
                     "CBC");
 }

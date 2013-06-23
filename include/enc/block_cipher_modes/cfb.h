@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file cfb.h
- *
- * \brief CFB block cipher mode of operation.
+ * @brief CFB block mode of operation.
  *
  * The CFB mode generates a keystream by repeatedly encrypting an initialization vector and mixing in
  * the plaintext, effectively turning a block cipher into a stream cipher. As such, CFB mode requires no
@@ -23,23 +22,23 @@ extern "C" {
  *
  * \c cfb_final() accepts 0 as an argument for \c outlen, since by design the CFB mode of operation does not
  * produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected.
- *
- * @see cfb.c
- */
+*/
 
 struct CFB_STATE;
 
-struct CFB_STATE* cfb_alloc(struct BLOCK_CIPHER* cipher, void* cipher_state);
+struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state);
 
-int cfb_init(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, void* iv, int dir, void* params);
+int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params);
 
-void cfb_update(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state,
-                unsigned char* in, size_t inlen,
+void cfb_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state,
+                const unsigned char* in, size_t inlen,
                 unsigned char* out, size_t* outlen);
 
-int cfb_final(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
+int cfb_final(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
 
-void cfb_free(struct CFB_STATE *state, struct BLOCK_CIPHER* cipher, void* cipher_state);
+void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state);
+
+void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher);
 
 void cfb_set_mode(struct BLOCK_MODE* mode);
 
