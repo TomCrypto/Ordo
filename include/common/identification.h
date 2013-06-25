@@ -9,7 +9,7 @@ extern "C" {
 
 /**
  * @file identification.h
- * \brief Object ID manager.
+ * @brief Object ID manager.
  *
  * This header contains definitions associating unique identifiers to block &
  * stream ciphers, block cipher modes of operation, compression functions,

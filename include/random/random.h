@@ -25,13 +25,13 @@ extern "C" {
 */
 
 /*! Generates cryptographically secure pseudorandom numbers.
- @param buffer Points to the buffer in which to write the pseudorandom bytes.
- @param size The number of bytes to generate and to write to the buffer.
+ @param out Points to the buffer in which to write the pseudorandom bytes.
+ @param len The number of bytes to generate and to write to the buffer.
  @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
  @remarks This function uses the underlying CSPRNG provided by your operating
           system.
 */
-int ordo_random(unsigned char* buffer, size_t size);
+int ordo_random(unsigned char* out, size_t len);
 
 #ifdef __cplusplus
 }

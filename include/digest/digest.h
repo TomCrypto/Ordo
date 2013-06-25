@@ -42,18 +42,18 @@ int digest_init(struct DIGEST_CTX *ctx,
 
 /*! Feeds data into a digest context.
  @param ctx An initialized digest context.
- @param buffer A buffer containing data to feed into the context.
- @param size The size, in bytes, of the data to read from \c buffer.
+ @param in A buffer containing data to feed into the context.
+ @param in_len The length, in bytes, of the buffer.
  @remarks This function has the property that \c update(x) followed by
           \c update(y) is equivalent to \c update(\c x \c || \c y) where
           \c || denotes concatenation.
 */
 void digest_update(struct DIGEST_CTX *ctx,
-                   const void *buffer,
-                   size_t size);
+                   const void *in,
+                   size_t in_len);
 
 /*! Finalizes a digest context, returning the digest of all data fed into it by
- *  \c digest_update calls.
+ *  \c digest_update() calls.
  @param ctx An initialized digest context.
  @param digest A buffer into which the digest will be written.
  @remarks The \c digest buffer should be large enough to accomodate the digest.

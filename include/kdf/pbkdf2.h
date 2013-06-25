@@ -33,10 +33,9 @@ extern "C" {
  @param salt A pointer to the salt to use.
  @param salt_len The length in bytes of the \c salt buffer.
  @param iterations The number of PBKDF2 iterations to use.
- @param output A pointer to a buffer in which to write the derived key.
- @param output_len The desired length, in bytes, of the derived key. The
-                   \c output buffer should be at least \c output_len bytes
-                   long.
+ @param out A pointer to a buffer in which to write the derived key.
+ @param out_len The desired length, in bytes, of the derived key. The \c out
+                buffer should be at least \c out_len bytes long.
  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
  @remarks There is a maximum output length of 2^32 - 1 multiplied by the
           digest length of the chosen hash function, but it is unlikely
@@ -54,8 +53,8 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
            const void *salt,
            size_t salt_len,
            size_t iterations,
-           void *output,
-           size_t output_len);
+           void *out,
+           size_t out_len);
 
 #ifdef __cplusplus
 }

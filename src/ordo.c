@@ -4,7 +4,7 @@
 
 /******************************************************************************/
 
-void init_ordo()
+void ordo_init()
 {
     load_primitives();
     load_block_modes();

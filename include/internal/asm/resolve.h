@@ -11,7 +11,7 @@ extern "C" {
 
 /**
  * @file resolve.h
- * \brief Assembly code path resolution.
+ * @brief Assembly code path resolution.
  *
  * This header is designed to help library code switch between different code
  * paths, e.g. x86_64 code versus standard C, and so on, using environment.h.
@@ -34,7 +34,7 @@ extern "C" {
  * simplifying maintenance costs and improving overall readability.
  *
  * This header is meant for internal use only.
- * \internal
+ * @internal
 */
 
 /* RC4 */

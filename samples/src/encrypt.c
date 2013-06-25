@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 5) return -1;
 
-    init_ordo();
+    ordo_init();
 
     /* Open the files. */
     FILE *in = fopen(argv[3], "rb");

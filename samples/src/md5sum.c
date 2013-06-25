@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     }
 
     /* init Ordo */
-    init_ordo();
+    ordo_init();
 
     struct DIGEST_CTX *ctx = digest_alloc(MD5());
     if (!ctx)

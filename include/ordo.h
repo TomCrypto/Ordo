@@ -25,31 +25,35 @@ extern "C" {
  * afford to use them, you probably should.
 */
 
-/*! Initializes the library: calls all the \c load_* functions in each
- * abstraction layer. After this function returns, all objects such as
- * \c RC4(), \c CBC(), and so on, may be used.
+/*! Initializes the library, calling all the \c load_* functions in each
+ *  abstraction layer, allowing the use of functions such as \c RC4(),
+ *  \c CBC(), and so on.
+ @remarks This function should be called prior to using the library for most
+          purposes.
 */
-void init_ordo();
+void ordo_init();
 
-/*! This function encrypts a buffer of a given length using a block cipher in a given mode of operation with the passed
- * parameters.
- \param in The plaintext buffer.
- \param inlen Number of bytes to read from the \c in buffer.
- \param out The ciphertext buffer, to which the ciphertext should be written.
- \param outlen This points to a variable which will contain the number of bytes written to \c out.
- \param cipher A block cipher object, describing the block cipher to use for encryption.
- \param mode The block cipher mode of operation to be used for encryption.
- \param key A buffer containing the key material to use for encryption.
- \param keySize The length, in bytes, of the \c key buffer.
- \param iv A buffer containing the initialization vector (this may be 0 if the mode of operation does not use an IV).
- \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
- \param modeParams This points to specific mode of operation parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
- \remark One downside of this function is that it is not possible to encrypt data in chunks - the whole plaintext must
- be available before encryption can begin. If your requirements make this unacceptable, you should use the encryption
- interface, located one level of abstraction lower - see enc_block.h. \n\n
- The out buffer should have enough space to contain the entire ciphertext, which may be larger than the plaintext if a
- mode which uses padding (with padding enabled) is used. See remarks about padding in enc_block.h. */
+/*! Encrypts or decrypts a buffer using a block cipher in an encryption-only
+ *  mode of operation.
+ @param cipher The block cipher to use.
+ @param cipher_params The block cipher parameters.
+ @param mode The mode of operation to use.
+ @param mode_params The mode of operation parameters.
+ @param direction The encryption direction: 1 for encryption, 0 for decryption.
+ @param key The cryptographic key to use for encryption.
+ @param key_len The length in bytes of the key.
+ @param iv The initialization vector.
+ @param iv_len The length in bytes of the initialization vector.
+ @param in The input plaintext (or ciphertext) buffer.
+ @param in_len The length of the input buffer.
+ @param out The output ciphertext (or, respectively, plaintext) buffer.
+ @param out_len The length of the output buffer.
+ @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @remarks The \c out buffer should have enough space to contain the entire
+          ciphertext, which may be larger than the plaintext if a mode
+          which padding (with padding enabled) is used. See remarks
+          about padding in \c enc_block.h.
+*/
 int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
                    const void *cipher_params,
                    const struct BLOCK_MODE* mode,
@@ -60,51 +64,54 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
                    const void *in,  size_t in_len,
                          void* out, size_t *out_len);
 
-/*! This function encrypts or decrypts a buffer of a given length using a stream cipher.
- \param inout The plaintext or ciphertext buffer.
- \param len Number of bytes to read from the \c inout buffer.
- \param cipher A stream cipher object, describing the stream cipher to use for encryption.
- \param key A buffer containing the key material to use for encryption.
- \param keySize The length, in bytes, of the \c key buffer.
- \param cipherParams This points to specific block cipher parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
- \remark Stream ciphers are different from block ciphers in multiple ways: \n
- - they do not require an IV because there is no standard way to add initialization vectors to a stream cipher.
- - no mode of operation is required as stream ciphers work by generating a keystream and combining it with the
- plaintext or ciphertext (so they are a "mode" in themselves). \n
- - there is no difference between encryption and decryption: encrypting the ciphertext again will produce the plaintext
- and vice versa. \n
- - the encryption or decryption is done in-place directly in the \c inout buffer, since the ciphertext is always the
- same length as the plaintext. If you need two different buffers, make a copy of the plaintext before encrypting. */
+/*! Encrypts or decrypts a buffer using a stream cipher.
+ @param cipher The stream cipher to use.
+ @param params The stream cipher parameters.
+ @param inout The plaintext or ciphertext buffer.
+ @param inout_len The length in bytes of the buffer.
+ @param key The cryptographic key to use for encryption.
+ @param key_size The length, in bytes, of the key.
+ @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @remarks Stream ciphers do not, strictly speaking, require an initialization
+          vector. If such a feature is required, it is recommended to use a
+          key derivation function to derive a new encryption key from a
+          "master" key and a nonce.
+ @remarks Encryption is always done in place. If you need out-of-place
+          encryption, make a copy of the plaintext buffer prior to encryption.
+ @remarks By design, encryption and decryption are equivalent for stream
+          ciphers.
+*/
 int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
-                    const void *key,    size_t key_len,
-                          void *buffer, size_t len);
+                    const void *key, size_t key_len,
+                    void *inout, size_t len);
 
-/*! This function hashes a buffer of a given length into a digest using a hash function.
- \param in The input buffer to hash.
- \param len Number of bytes to read from the \c in buffer.
- \param out The buffer in which to put the digest.
- \param hash A hash function object, describing the hash function to use.
- \param hashParams This points to specific hash function parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, a negative error code on failure. */
+/*! Returns the digest of a buffer.
+ @param hash The hash function to use.
+ @param params The hash function parameters.
+ @param in The input buffer to hash.
+ @param in_len The length in bytes of the buffer.
+ @param digest The buffer in which to put the digest.
+ @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+*/
 int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
-                const void *in, size_t len,
+                const void *in, size_t in_len,
                 void *digest);
 
-/*! This function returns the HMAC of a buffer using a key with any hash function.
- \param in The input buffer to hash.
- \param len Number of bytes to read from the \c in buffer.
- \param key The key to use.
- \param keySize The length of the key to use, in bytes.
- \param out The buffer in which to put the digest.
- \param hash A hash function object, describing the hash function to use.
- \param hashParams This points to specific hash function parameters, set to zero for default behavior.
- \return Returns \c ORDO_SUCCESS on success, a negative error code on failure.
- \remark Note the hash parameters only affect the inner hash (the one hashing the buffer),
- not the outer one or the potential key-processing one.*/
+/*! Returns the HMAC fingerprint of a buffer.
+ @param hash The hash function to use.
+ @param params The hash function parameters.
+ @param key The key to use for authentication.
+ @param key_len The length in bytes of the key.
+ @param in The input buffer to authenticate.
+ @param in_len The length in bytes of the buffer.
+ @param fingerprint A pointer to where the fingerprint will be written.
+ @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @remarks Do not use hash parameters which modify the hash function's output
+          length, or this function's behavior is undefined.
+*/
 int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
               const void *key, size_t key_len,
-              const void *in,  size_t len,
+              const void *in, size_t len,
               void* fingerprint);
 
 #ifdef __cplusplus
