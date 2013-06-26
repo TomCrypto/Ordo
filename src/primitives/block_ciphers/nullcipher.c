@@ -47,6 +47,11 @@ void nullcipher_copy(struct NULLCIPHER_STATE *dst,
     dst->dummy = src->dummy; /* Example. */
 }
 
+size_t nullcipher_key_len(size_t key_len)
+{
+    return key_len;
+}
+
 void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)
 {
     make_block_cipher(cipher,
@@ -57,5 +62,6 @@ void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)
                       (BLOCK_UPDATE)nullcipher_inverse,
                       (BLOCK_FREE)nullcipher_free,
                       (BLOCK_COPY)nullcipher_copy,
+                      (BLOCK_KEYLEN)nullcipher_key_len,
                       "NullCipher");
 }

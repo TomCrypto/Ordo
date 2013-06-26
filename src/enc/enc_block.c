@@ -100,3 +100,9 @@ void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                       dst->cipher_state,
                       src->cipher_state);
 }
+
+size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+                         size_t key_len)
+{
+    return block_cipher_key_len(cipher, key_len);
+}

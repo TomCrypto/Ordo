@@ -507,6 +507,13 @@ void aes_copy(struct AES_STATE *dst,
     memcpy(dst->key, src->key, dst->keyBytes);
 }
 
+size_t aes_key_len(size_t key_len)
+{
+    if (key_len < 16) return 16;
+    if (key_len < 24) return 24;
+    return 32;
+}
+
 /* Fills a BLOCK_CIPHER struct with the correct information. */
 void aes_set_primitive(struct BLOCK_CIPHER* cipher)
 {
@@ -518,5 +525,6 @@ void aes_set_primitive(struct BLOCK_CIPHER* cipher)
                       (BLOCK_UPDATE)aes_inverse,
                       (BLOCK_FREE)aes_free,
                       (BLOCK_COPY)aes_copy,
+                      (BLOCK_KEYLEN)aes_key_len,
                       "AES");
 }

@@ -83,6 +83,8 @@ void threefish256_copy(struct THREEFISH256_STATE *dst,
 */
 void threefish256_set_primitive(struct BLOCK_CIPHER* cipher);
 
+size_t threefish256_key_len(size_t key_len);
+
 /*! This function is \b stateless and is meant to be used when a context-free
  *  access to the raw cryptographic block cipher is required (such as in the
  *  Skein hash function family which uses Threefish inside its compression

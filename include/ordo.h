@@ -60,9 +60,9 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
                    const void *mode_params,
                    int direction,
                    const void *key, size_t key_len,
-                   const void *iv,  size_t iv_len,
-                   const void *in,  size_t in_len,
-                         void* out, size_t *out_len);
+                   const void *iv, size_t iv_len,
+                   const void *in, size_t in_len,
+                   void* out, size_t *out_len);
 
 /*! Encrypts or decrypts a buffer using a stream cipher.
  @param cipher The stream cipher to use.

@@ -27,17 +27,19 @@ extern "C" {
  * other modules rely on it, it would be very inefficient to do so.
 */
 
-typedef void* (*BLOCK_ALLOC)  (                                       );
-typedef  int  (*BLOCK_INIT)   (void*, const void*, size_t, const void*);
-typedef void  (*BLOCK_UPDATE) (void*,       void*                     );
-typedef void  (*BLOCK_FREE)   (void*                                  );
-typedef void  (*BLOCK_COPY)   (void*, const void*                     );
+typedef void*  (*BLOCK_ALLOC)  (                                       );
+typedef  int   (*BLOCK_INIT)   (void*, const void*, size_t, const void*);
+typedef void   (*BLOCK_UPDATE) (void*,       void*                     );
+typedef void   (*BLOCK_FREE)   (void*                                  );
+typedef void   (*BLOCK_COPY)   (void*, const void*                     );
+typedef size_t (*BLOCK_KEYLEN) (size_t                                 );
 
-typedef void* (*STREAM_ALLOC)  (                                       );
-typedef  int  (*STREAM_INIT)   (void*, const void*, size_t, const void*);
-typedef void  (*STREAM_UPDATE) (void*,       void*, size_t             );
-typedef void  (*STREAM_FREE)   (void*                                  );
-typedef void  (*STREAM_COPY)   (void*, const void*                     );
+typedef void* (*STREAM_ALLOC)   (                                       );
+typedef  int  (*STREAM_INIT)    (void*, const void*, size_t, const void*);
+typedef void  (*STREAM_UPDATE)  (void*,       void*, size_t             );
+typedef void  (*STREAM_FREE)    (void*                                  );
+typedef void  (*STREAM_COPY)    (void*, const void*                     );
+typedef size_t (*STREAM_KEYLEN) (size_t                                 );
 
 typedef void* (*HASH_ALLOC)  (                          );
 typedef  int  (*HASH_INIT)   (void*, const void*        );
@@ -71,6 +73,7 @@ struct HASH_FUNCTION;
  @param inverse The inverse permutation.
  @param free The deallocation function.
  @param copy The state copy function.
+ @param keylen The key length probing function.
  @param name The block cipher's name.
  @remarks This is used internally, but can be used from outside the library. So
           one can theoretically implement a block cipher via this interface and
@@ -88,6 +91,7 @@ void make_block_cipher(struct BLOCK_CIPHER *primitive,
                        BLOCK_UPDATE inverse,
                        BLOCK_FREE free,
                        BLOCK_COPY copy,
+                       BLOCK_KEYLEN keylen,
                        const char *name);
 
 /*! Constructs a stream cipher primitive.
@@ -97,6 +101,7 @@ void make_block_cipher(struct BLOCK_CIPHER *primitive,
  @param update The update function (generates keystream and encrypts data).
  @param free The deallocation function.
  @param copy The state copy function.
+ @param keylen The key length probing function.
  @param name The stream cipher's name.
  @remarks Same remark as for \c make_block_cipher().
 */
@@ -106,6 +111,7 @@ void make_stream_cipher(struct STREAM_CIPHER *primitive,
                         STREAM_UPDATE update,
                         STREAM_FREE free,
                         STREAM_COPY copy,
+                        STREAM_KEYLEN keylen,
                         const char *name);
 
 /*! Constructs a hash function primitive.
@@ -234,6 +240,9 @@ void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
                        void *dst,
                        const void *src);
 
+size_t block_cipher_key_len(const struct BLOCK_CIPHER *primitive,
+                            size_t key_len);
+
 void* stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
 
 int stream_cipher_init(const struct STREAM_CIPHER *primitive,
@@ -253,6 +262,9 @@ void stream_cipher_free(const struct STREAM_CIPHER *primitive,
 void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
                         void *dst,
                         const void *src);
+
+size_t stream_cipher_key_len(const struct STREAM_CIPHER *primitive,
+                             size_t key_len);
 
 void* hash_function_alloc(const struct HASH_FUNCTION *primitive);
 

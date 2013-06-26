@@ -106,6 +106,13 @@ void rc4_copy(struct RC4_STATE *dst, const struct RC4_STATE *src)
     memcpy(dst, src, sizeof(struct RC4_STATE));
 }
 
+size_t rc4_key_len(size_t key_len)
+{
+    if (key_len < 5) return 5;
+    if (key_len > 256) return 256;
+    return key_len;
+}
+
 void rc4_set_primitive(struct STREAM_CIPHER* cipher)
 {
     make_stream_cipher(cipher,
@@ -114,5 +121,6 @@ void rc4_set_primitive(struct STREAM_CIPHER* cipher)
                        (STREAM_UPDATE)rc4_update,
                        (STREAM_FREE)rc4_free,
                        (STREAM_COPY)rc4_copy,
+                       (STREAM_KEYLEN)rc4_key_len,
                        "RC4");
 }

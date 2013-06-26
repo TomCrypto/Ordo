@@ -36,16 +36,4 @@ void unloadTestVectors(FILE* file);
 /*! Tests the random module by generating a few pseudorandom bytes. Outputs results to stdout. */
 void randomTest();
 
-/*! Rates the performance of a block cipher in a given mode of operation. */
-void blockCipherPerformance(const struct BLOCK_CIPHER* primitive, const struct BLOCK_MODE* mode, size_t keySize, unsigned char* buffer, size_t bufferSize);
-
-/*! Rates the performance of a stream cipher. */
-void streamCipherPerformance(const struct STREAM_CIPHER* primitive, size_t keySize, unsigned char* buffer, size_t bufferSize);
-
-/*! Rates the performance of a hash function. */
-void hashFunctionPerformance(const struct HASH_FUNCTION* primitive, unsigned char* buffer, size_t bufferSize);
-
-/*! Rates the performance of PBKDF2. */
-void pbkdf2Performance(const struct HASH_FUNCTION* primitive, size_t iterations);
-
 #endif

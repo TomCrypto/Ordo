@@ -84,6 +84,8 @@ void aes_copy(struct AES_STATE *dst,
 */
 void aes_set_primitive(struct BLOCK_CIPHER* cipher);
 
+size_t aes_key_len(size_t key_len);
+
 #ifdef __cplusplus
 }
 #endif

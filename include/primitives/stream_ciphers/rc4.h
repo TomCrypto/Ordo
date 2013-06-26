@@ -79,6 +79,8 @@ void rc4_copy(struct RC4_STATE *dst, const struct RC4_STATE *src);
 */
 void rc4_set_primitive(struct STREAM_CIPHER* cipher);
 
+size_t rc4_key_len(size_t key_len);
+
 #ifdef __cplusplus
 }
 #endif

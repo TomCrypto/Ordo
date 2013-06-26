@@ -77,6 +77,8 @@ void nullcipher_copy(struct NULLCIPHER_STATE *dst,
 */
 void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher);
 
+size_t nullcipher_key_len(size_t key_len);
+
 #ifdef __cplusplus
 }
 #endif

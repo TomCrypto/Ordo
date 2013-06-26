@@ -397,6 +397,11 @@ void threefish256_copy(struct THREEFISH256_STATE *dst,
     memcpy(dst->subkey, src->subkey, sizeof(struct THREEFISH256_STATE));
 }
 
+size_t threefish256_key_len(size_t key_len)
+{
+    return 32; /* 256-bit key only */
+}
+
 /* Fills a BLOCK_CIPHER struct with the correct information. */
 void threefish256_set_primitive(struct BLOCK_CIPHER* cipher)
 {
@@ -408,5 +413,6 @@ void threefish256_set_primitive(struct BLOCK_CIPHER* cipher)
                (BLOCK_UPDATE)threefish256_inverse,
                (BLOCK_FREE)threefish256_free,
                (BLOCK_COPY)threefish256_copy,
+               (BLOCK_KEYLEN)threefish256_key_len,
                "Threefish-256");
 }

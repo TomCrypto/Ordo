@@ -23,6 +23,7 @@ struct BLOCK_CIPHER
     BLOCK_UPDATE inverse;
     BLOCK_FREE free;
     BLOCK_COPY copy;
+    BLOCK_KEYLEN keylen;
     const char* name;
 };
 
@@ -33,6 +34,7 @@ struct STREAM_CIPHER
     STREAM_UPDATE update;
     STREAM_FREE free;
     STREAM_COPY copy;
+    STREAM_KEYLEN keylen;
     const char* name;
 };
 
@@ -57,6 +59,7 @@ void make_block_cipher(struct BLOCK_CIPHER *primitive,
                        BLOCK_UPDATE inverse,
                        BLOCK_FREE free,
                        BLOCK_COPY copy,
+                       BLOCK_KEYLEN keylen,
                        const char *name)
 {
     primitive->block_size = block_size;
@@ -66,6 +69,7 @@ void make_block_cipher(struct BLOCK_CIPHER *primitive,
     primitive->inverse = inverse;
     primitive->free    = free;
     primitive->copy    = copy;
+    primitive->keylen  = keylen;
     primitive->name    = name;
 }
 
@@ -75,6 +79,7 @@ void make_stream_cipher(struct STREAM_CIPHER *primitive,
                         STREAM_UPDATE update,
                         STREAM_FREE free,
                         STREAM_COPY copy,
+                        STREAM_KEYLEN keylen,
                         const char *name)
 {
     primitive->alloc   = alloc;
@@ -82,6 +87,7 @@ void make_stream_cipher(struct STREAM_CIPHER *primitive,
     primitive->update  = update;
     primitive->free    = free;
     primitive->copy    = copy;
+    primitive->keylen  = keylen;
     primitive->name    = name;
 }
 
@@ -292,6 +298,12 @@ void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
     primitive->copy(dst, src);
 }
 
+size_t block_cipher_key_len(const struct BLOCK_CIPHER *primitive,
+                            size_t key_len)
+{
+    return primitive->keylen(key_len);
+}
+
 void* stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
 {
     return primitive->alloc();
@@ -325,6 +337,12 @@ void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
                         const void *src)
 {
     primitive->copy(dst, src);
+}
+
+size_t stream_cipher_key_len(const struct STREAM_CIPHER *primitive,
+                             size_t key_len)
+{
+    return primitive->keylen(key_len);
 }
 
 void* hash_function_alloc(const struct HASH_FUNCTION *primitive)

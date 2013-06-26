@@ -70,6 +70,18 @@ void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 void enc_stream_copy(struct ENC_STREAM_CTX *dst,
                      const struct ENC_STREAM_CTX *src);
 
+/*! Probes a stream cipher for its key length.
+ @param cipher The stream cipher to probe.
+ @param key_len A suggested key length.
+ @returns Returns \c key_len if and only if \c key_len is a valid key length
+          for this stream cipher. Otherwise, returns the nearest valid key
+          length greater than \c key_len. However, if no such key length
+          exists, it will return the largest key length admitted by the
+          stream cipher.
+*/
+size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
+                          size_t key_len);
+
 #ifdef __cplusplus
 }
 #endif

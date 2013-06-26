@@ -84,6 +84,21 @@ void enc_block_free(struct ENC_BLOCK_CTX* ctx);
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                     const struct ENC_BLOCK_CTX *src);
 
+/*! Probes a block cipher for its key length.
+ @param cipher The block cipher to probe.
+ @param key_len A suggested key length.
+ @returns Returns \c key_len if and only if \c key_len is a valid key length
+          for this block cipher. Otherwise, returns the nearest valid key
+          length greater than \c key_len. However, if no such key length
+          exists, it will return the largest key length admitted by the
+          stream cipher.
+ @remarks For instance, if you pass a key length of 25 bytes (200 bits) to
+          the AES cipher, it will return the value 32 (corresponding to 32
+          bytes or 256 bits), \b not 24 (192 bits).
+*/
+size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+                         size_t key_len);
+
 #ifdef __cplusplus
 }
 #endif

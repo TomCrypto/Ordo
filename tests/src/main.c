@@ -2,14 +2,6 @@
 #include <testing/testing.h>
 #include <common/version.h>
 
-/* Use a 256MB buffer size in performance tests to get decent resolution.
- * In debug mode, though, use only 32MB since everything is slower. */
-#ifdef ORDO_DEBUG
-    #define BUFSIZE (1024 * 1024 * 32)
-#else
-    #define BUFSIZE (1024 * 1024 * 256)
-#endif
-
 void testVectors()
 {
     /* Open the test vector file. */
@@ -21,41 +13,6 @@ void testVectors()
         runTestVectors(vectors);
         unloadTestVectors(vectors);
     }
-}
-
-void performanceTest()
-{
-    unsigned char* buffer = malloc(BUFSIZE);
-    if (buffer == 0)
-    {
-        printf("[!] Could not allocate buffer memory.\n\n");
-        return;
-    }
-
-    /* Test some primitives performance-wise. */
-    blockCipherPerformance(Threefish256(), ECB(), 32, buffer, BUFSIZE);
-    blockCipherPerformance(Threefish256(), CBC(), 32, buffer, BUFSIZE);
-    blockCipherPerformance(Threefish256(), CTR(), 32, buffer, BUFSIZE);
-    blockCipherPerformance(Threefish256(), CFB(), 32, buffer, BUFSIZE);
-    blockCipherPerformance(Threefish256(), OFB(), 32, buffer, BUFSIZE);
-    blockCipherPerformance(AES(), ECB(), 16, buffer, BUFSIZE);
-    blockCipherPerformance(AES(), CBC(), 16, buffer, BUFSIZE);
-    blockCipherPerformance(AES(), CTR(), 16, buffer, BUFSIZE);
-    blockCipherPerformance(AES(), CFB(), 16, buffer, BUFSIZE);
-    blockCipherPerformance(AES(), OFB(), 16, buffer, BUFSIZE);
-    streamCipherPerformance(RC4(), 32, buffer, BUFSIZE);
-    hashFunctionPerformance(SHA256(), buffer, BUFSIZE);
-    hashFunctionPerformance(MD5(), buffer, BUFSIZE);
-    hashFunctionPerformance(Skein256(), buffer, BUFSIZE);
-    pbkdf2Performance(SHA256(), 1000);
-    pbkdf2Performance(SHA256(), 10000);
-    pbkdf2Performance(SHA256(), 100000);
-    pbkdf2Performance(Skein256(), 1000);
-    pbkdf2Performance(Skein256(), 10000);
-    pbkdf2Performance(Skein256(), 100000);
-
-    /* Free the buffer used for tests. */
-    free(buffer);
 }
 
 int main(int argc, char* argv[])
@@ -78,11 +35,7 @@ int main(int argc, char* argv[])
     printf("-------- Test Vectors --------\n\n");
     testVectors();
 
-    /* Evaluate performance of relevant ciphers and modes. */
-    printf("-------- Performance Tests --------\n\n");
-    performanceTest();
-
     /* All done! */
-    printf("\n[+] All operations completed.\n");
+    printf("[+] All operations completed.\n");
     return 0;
 }
