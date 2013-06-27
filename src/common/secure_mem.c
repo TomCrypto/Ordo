@@ -1,7 +1,6 @@
 #include <common/secure_mem.h>
 
 #include <internal/environment.h>
-#include <stdint.h>
 
 /******************************************************************************/
 
@@ -13,7 +12,7 @@ void secure_erase(void* ptr, size_t size)
         /* The "volatile" keyword forces the compiler to actually erase the
          * memory (otherwise it would optimize it out if it found that the
          * memory buffer would never be used after secure_erase is called). */
-        while (size--) *((uint8_t volatile*)ptr + size) = 0;
+        while (size--) *((unsigned char volatile*)ptr + size) = 0;
     }
 }
 
