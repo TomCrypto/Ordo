@@ -3,9 +3,7 @@
 
 #include <stdio.h>
 
-#include <common/ordo_utils.h> /* error_msg() */
-#include <digest/digest.h> /* Ordo hash. */
-#include <ordo.h> /* init */
+#include <ordo.h>
 
 #define BUF_SIZE 4096
 

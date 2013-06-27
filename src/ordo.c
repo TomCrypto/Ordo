@@ -37,8 +37,8 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
     end_pos += *out_len;
 
     if ((err = enc_block_final(ctx,
-                              (unsigned char*)out + end_pos,
-                              out_len))) goto fail;
+                               (unsigned char*)out + end_pos,
+                               out_len))) goto fail;
     *out_len += end_pos;
 
 fail:

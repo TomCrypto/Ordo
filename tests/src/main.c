@@ -1,6 +1,4 @@
-#include <ordo.h>
 #include <testing/testing.h>
-#include <common/version.h>
 
 void testVectors()
 {

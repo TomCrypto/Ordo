@@ -15,6 +15,13 @@ extern "C" {
  * incorrect usage of library functions.
 */
 
+/*! Returns a readable error message from an error code.
+ @param code The error code to interpret.
+ @returns A null-terminated string containing the message.
+ @remarks This is a placeholder convenience function used for testing only.
+*/
+const char* error_msg(int code);
+
 /*! The function succeeded.
  @remarks This is defined as zero and is returned if a function encountered no
           error, unless specified otherwise.

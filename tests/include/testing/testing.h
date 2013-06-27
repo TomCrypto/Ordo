@@ -13,8 +13,6 @@
 
 /* Ordo includes. */
 #include <ordo.h>
-#include <common/ordo_utils.h>
-#include <common/ordo_errors.h>
 
 /* Standard includes. */
 #include <stdio.h>

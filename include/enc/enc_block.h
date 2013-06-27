@@ -9,10 +9,9 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file enc_block.h
- *
- * \brief Block cipher encryption module.
+ * @brief Block cipher encryption module.
  *
  * Interface to encrypt plaintext and decrypt ciphertext with different block ciphers and modes of operation.
  * Note it is always possible to skip this API and directly use the lower-level functions available in the individual
@@ -33,7 +32,8 @@ struct ENC_BLOCK_CTX;
  \param cipher The block cipher object to be used.
  \param mode The mode of operation object to be used.
  \return Returns the allocated block cipher encryption context, or 0 if an error occurred. */
-struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER* cipher, const struct BLOCK_MODE* mode);
+struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER *cipher,
+                                      const struct BLOCK_MODE *mode);
 
 /*! This function initializes a block cipher encryption context for encryption, provided a key, initialization vector,
  * and cipher/mode-specific parameters.
@@ -47,11 +47,11 @@ struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER* cipher, const s
  \return Returns \c ORDO_SUCCESS on success, and a negative value on error.
  \remark The initialization vector may be zero, if the mode of operation does not require one. */
 int enc_block_init(struct ENC_BLOCK_CTX* ctx,
-                   const void* key, size_t key_len,
-                   const void* iv, size_t iv_len,
+                   const void *key, size_t key_len,
+                   const void *iv, size_t iv_len,
                    int direction,
-                   const void* cipher_params,
-                   const void* mode_params);
+                   const void *cipher_params,
+                   const void *mode_params);
 
 /*! This function encrypts or decrypts a buffer of a given length using the provided block cipher encryption context.
  \param ctx The block cipher encryption context to use. This context must have been allocated and initialized.
@@ -60,9 +60,9 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx,
  \param out This points to a buffer which will contain the plaintext (or ciphertext).
  \param outlen This points to a variable which will contain the number of bytes written to \c out.
  \remark See \c blockEncryptModeUpdate() for remarks about output buffer size. */
-void enc_block_update(struct ENC_BLOCK_CTX* ctx,
-                          const void* in, size_t inlen,
-                          void* out, size_t* outlen);
+void enc_block_update(struct ENC_BLOCK_CTX *ctx,
+                      const void *in, size_t in_len,
+                      void *out, size_t *out_len);
 
 /*! This function finalizes a block cipher encryption context, and will process and return any leftover plaintext or
  * ciphertext.
@@ -72,14 +72,15 @@ void enc_block_update(struct ENC_BLOCK_CTX* ctx,
  \return Returns \c ORDO_SUCCESS on success, and a negative value on error.
  \remark Once this function returns, the passed context can no longer be used for encryption or decryption.
  \remark See \c blockEncryptModeFinal() for remarks. */
-int enc_block_final(struct ENC_BLOCK_CTX* ctx, void* out, size_t* outlen);
+int enc_block_final(struct ENC_BLOCK_CTX *ctx,
+                    void *out, size_t *out_len);
 
 /*! This function frees (deallocates) an initialized block cipher encryption context.
  \param ctx The block cipher encryption context to be freed. This context needs to at least have been allocated.
  \remark Once this function returns, the passed context may no longer be used anywhere and sensitive information will
  be wiped. Do not call this function if \c enc_block_alloc() failed, as the latter correctly frees dangling context
  buffers in case of error. */
-void enc_block_free(struct ENC_BLOCK_CTX* ctx);
+void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                     const struct ENC_BLOCK_CTX *src);

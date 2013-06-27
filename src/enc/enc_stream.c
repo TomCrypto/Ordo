@@ -13,13 +13,13 @@ struct ENC_STREAM_CTX
 struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher)
 {
     struct ENC_STREAM_CTX *ctx = secure_alloc(sizeof(struct ENC_STREAM_CTX));
-    if (!ctx) goto failure;
+    if (!ctx) goto fail;
     ctx->cipher = cipher;
 
-    if (!(ctx->state = stream_cipher_alloc(ctx->cipher))) goto failure;
+    if (!(ctx->state = stream_cipher_alloc(ctx->cipher))) goto fail;
     return ctx;
 
-failure:
+fail:
     enc_stream_free(ctx);
     return 0;
 }

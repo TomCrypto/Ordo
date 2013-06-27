@@ -1,6 +1,11 @@
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
+#include <common/identification.h>
+#include <common/ordo_errors.h>
+#include <common/secure_mem.h>
+#include <common/version.h>
+
 #include <enc/enc_stream.h>
 #include <enc/enc_block.h>
 

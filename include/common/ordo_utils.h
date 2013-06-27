@@ -45,13 +45,6 @@ void xor_buffer(unsigned char* dst, const unsigned char* src, size_t len);
 */
 void inc_buffer(unsigned char* buffer, size_t len);
 
-/*! Returns a readable error message from an error code.
- @param code The error code to interpret.
- @returns A null-terminated string containing the message.
- @remarks This is a placeholder convenience function used for testing only.
-*/
-const char* error_msg(int code);
-
 #ifdef __cplusplus
 }
 #endif

@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file block_modes.h
  * @brief Block mode of operation abstraction layer.
  *

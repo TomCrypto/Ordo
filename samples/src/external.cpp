@@ -9,10 +9,6 @@
 
 #include <ordo.h>
 
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
-#include <common/version.h>
-
 int main(int argc, char *argv[])
 {
     ordo_init();

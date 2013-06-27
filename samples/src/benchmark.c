@@ -26,9 +26,6 @@
 #include <stdio.h>
 #include <time.h>
 
-/* This is the header which lets us enumerate the algorithms in the library. */
-#include <common/identification.h>
-
 #include <ordo.h>
 
 #define BUF_SIZE (128 * 1024 * 1024)
@@ -173,8 +170,7 @@ void benchmark_stream_ciphers(void *buffer, size_t buf_size)
         double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
         double speed = buf_size / (1024 * 1024 * time);
 
-        printf("%.0f MB/s (encryption/decryption) [%d-bit key].\n",
-               speed, (int)key_len * 8);
+        printf("%.0f MB/s [%d-bit key].\n", speed, (int)key_len * 8);
     }
 
     printf(" -\n\n");

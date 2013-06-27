@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <common/ordo_utils.h> /* error_msg() */
-#include <enc/enc_block.h> /* encrypt */
-#include <ordo.h> /* init */
-#include <kdf/pbkdf2.h>
-#include <random/random.h>
+#include <ordo.h>
 
 #define BUF_SIZE 4096
 #define KEY_LEN 32
