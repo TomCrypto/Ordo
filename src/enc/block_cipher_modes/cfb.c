@@ -1,7 +1,8 @@
 #include <enc/block_cipher_modes/cfb.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
@@ -21,21 +22,17 @@ struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_stat
 {
     size_t block_size = cipher_block_size(cipher);
 
-    /* Allocate the context and extra buffers in it. */
-    struct CFB_STATE* state = secure_alloc(sizeof(struct CFB_STATE));
+    struct CFB_STATE* state = mem_alloc(sizeof(struct CFB_STATE));
+    if (!state) goto fail;
 
-    if (state)
-    {
-        if ((state->iv = secure_alloc(block_size)))
-        {
-            state->remaining = 0;
-            return state;
-        }
+    state->iv = mem_alloc(block_size);
+    if (!state->iv) goto fail;
 
-        secure_free(state, sizeof(struct CFB_STATE));
-    }
+    state->remaining = 0;
+    return state;
 
-    /* Allocation failed, return zero. */
+fail:
+    cfb_free(state, cipher, cipher_state);
     return 0;
 }
 
@@ -55,7 +52,6 @@ int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     block_cipher_forward(cipher, cipher_state, state->iv);
     state->remaining = block_size;
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
@@ -138,18 +134,14 @@ void cfb_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void
 
 int cfb_final(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
-    /* Write output size if applicable. */
     if (outlen) *outlen = 0;
-
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
 void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    /* Free context space. */
-    secure_free(state->iv, cipher_block_size(cipher));
-    secure_free(state, sizeof(struct CFB_STATE));
+    mem_free(state->iv);
+    mem_free(state);
 }
 
 void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher)
@@ -159,7 +151,6 @@ void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct B
     dst->direction = src->direction;
 }
 
-/* Fills a BLOCK_MODE struct with the correct information. */
 void cfb_set_mode(struct BLOCK_MODE* mode)
 {
     make_block_mode(mode,

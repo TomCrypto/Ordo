@@ -30,7 +30,7 @@ else
 	LD = ar
 endif
 
-# If you use `make strip=1`, the library will be stripped.
+# If you use `make striplib=1`, the library will be stripped.
 ifeq ($(strip), 1)
 	STRIP = strip $(addprefix $(LIBDIR)/, $(LIBNAME))
 else

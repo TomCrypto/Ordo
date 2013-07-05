@@ -1,15 +1,18 @@
-#include <random/random.h>
+#include <misc/os_random.h>
 
 #include <internal/environment.h>
 #include <common/ordo_errors.h>
 
 /******************************************************************************/
 
-#if PLATFORM_LINUX
+/* Note: if for some reason your platform doesn't have an OS-provided CSPRNG,
+ *       please implement this as a function which always returns ORDO_FAIL. */
+
+#if PLATFORM_LINUX || PLATFORM_NETBSD || PLATFORM_OPENBSD || PLATFORM_FREEBSD
 
 #include <stdio.h>
 
-int ordo_random(unsigned char* buffer, size_t size)
+int os_random(void *buffer, size_t size)
 {
     FILE* f = fopen("/dev/urandom", "r");
     if (!f) return ORDO_FAIL;
@@ -19,7 +22,7 @@ int ordo_random(unsigned char* buffer, size_t size)
         size_t len = fread(buffer, 1, size, f);
         if (len == 0) return ORDO_FAIL;
 
-        buffer += len;
+        buffer = (unsigned char*)buffer + len;
         size -= len;
     }
 
@@ -33,7 +36,7 @@ int ordo_random(unsigned char* buffer, size_t size)
 #include <windows.h>
 #include <Wincrypt.h>
 
-int ordo_random(unsigned char* buffer, size_t size)
+int os_random(void *buffer, size_t size)
 {
     /* Acquire a CSP token. */
     HCRYPTPROV hProv;
@@ -45,5 +48,9 @@ int ordo_random(unsigned char* buffer, size_t size)
     CryptReleaseContext(hProv, 0);
     return ORDO_SUCCESS;
 }
+
+#else
+
+#error "No OS-provided CSPRNG interface implemented for this platform!"
 
 #endif

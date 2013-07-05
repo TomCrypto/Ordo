@@ -13,6 +13,11 @@ extern "C" {
  *
  * This header contains declarations for errors which can occur from
  * incorrect usage of library functions.
+ *
+ * External code should always use the explicit error codes instead
+ * of their values which are subject to change, with the exception of
+ * \c #ORDO_SUCCESS which will always be zero. All error codes except
+ * \c #ORDO_SUCCESS are negative.
 */
 
 /*! Returns a readable error message from an error code.
@@ -44,8 +49,8 @@ const char* error_msg(int code);
 */
 #define ORDO_LEFTOVER -2
 
-/*! The key size provided is invalid.
- @remarks This occurs if you provide an incorrect key size, such as feeding a
+/*! The key length provided is invalid.
+ @remarks This occurs if you provide an incorrect key length, such as feeding a
           128-bit key into a cipher which expects a 192-bit key. Primitives
           either have a range of possible key lengths (often characterized
           by a minimum and maximum key length, but this varies among
@@ -53,7 +58,7 @@ const char* error_msg(int code);
           arbitrary length keys, you should consider hashing your key in some
           fashion before using it for encryption.
 */
-#define ORDO_KEY_SIZE -3
+#define ORDO_KEY_LEN -3
 
 /*! The padding was not recognized and decryption could not be completed.
  @remarks This applies to block cipher modes for which padding is enabled: if

@@ -9,9 +9,10 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file resolve.h
  * @brief Assembly code path resolution.
+ * @internal
  *
  * This header is designed to help library code switch between different code
  * paths, e.g. x86_64 code versus standard C, and so on, using environment.h.
@@ -27,52 +28,65 @@ extern "C" {
  * - \c RC4_X86_64_WINDOWS: use the x86_64 code path for Windows.
  * - \c RC4_STANDARD: use the standard C code path.
  *
- * Also, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
- * mode), the standard C code path \b must unconditionally be selected.
-
  * The relevant code (rc4.c and rc4.S) can then include/exclude accordingly,
  * simplifying maintenance costs and improving overall readability.
  *
+ * Finally, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
+ * mode), the standard C code path \b must unconditionally be selected.
+ *
  * This header is meant for internal use only.
- * @internal
 */
 
-/* RC4 */
 #ifdef ORDO_DEBUG
+
     #define RC4_STANDARD
-#else
-    #if (PLATFORM_LINUX && __x86_64__)
-        #define RC4_X86_64_LINUX
-    #elif (PLATFORM_WINDOWS && __x86_64__)
-        #define RC4_X86_64_WINDOWS
-    #else
-        #define RC4_STANDARD
-    #endif
-#endif
 
-/* Threefish-256 */
-#ifdef ORDO_DEBUG
-    #define THREEFISH256_STANDARD
-#else
-    #if (PLATFORM_LINUX && __x86_64__)
-        #define THREEFISH256_X86_64_LINUX
-    #elif (PLATFORM_WINDOWS && __x86_64__)
-        #define THREEFISH256_X86_64_WINDOWS
-    #else
-        #define THREEFISH256_STANDARD
-    #endif
-#endif
-
-/* AES */
-#ifdef ORDO_DEBUG
     #define AES_STANDARD
+
+    #define THREEFISH256_STANDARD
+
 #else
-    #if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
-        #define AES_X86_64_LINUX
-    #elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
-        #define AES_X86_64_WINDOWS
+
+    #if (PLATFORM_LINUX && __x86_64__)
+
+        #define RC4_X86_64_LINUX
+
+    #elif (PLATFORM_WINDOWS && __x86_64__)
+
+        #define RC4_X86_64_WINDOWS
+
     #else
+
+        #define RC4_STANDARD
+
+    #endif
+
+    #if (PLATFORM_LINUX && __x86_64__)
+
+        #define THREEFISH256_X86_64_LINUX
+
+    #elif (PLATFORM_WINDOWS && __x86_64__)
+
+        #define THREEFISH256_X86_64_WINDOWS
+
+    #else
+
+        #define THREEFISH256_STANDARD
+
+    #endif
+
+    #if (PLATFORM_LINUX && __x86_64__ && FEATURE_AES)
+
+        #define AES_X86_64_LINUX
+
+    #elif (PLATFORM_WINDOWS && __x86_64__ && FEATURE_AES)
+
+        #define AES_X86_64_WINDOWS
+
+    #else
+
         #define AES_STANDARD
+
     #endif
 #endif
 

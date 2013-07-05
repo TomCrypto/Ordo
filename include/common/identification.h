@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-/**
+/*!
  * @file identification.h
  * @brief Object ID manager.
  *

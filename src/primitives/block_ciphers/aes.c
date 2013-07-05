@@ -18,13 +18,15 @@ REDISTRIBUTION OF THIS SOFTWARE.
 
 #include <internal/asm/resolve.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <common/ordo_utils.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
 
 /* The block size of AES. */
-#define AES_BLOCK (16)
+#define AES_BLOCK (bits(128))
 
 /* This is the substitution box for AES. */
 const uint8_t sbox[256] = {
@@ -404,7 +406,7 @@ struct AES_STATE
 
 struct AES_STATE* aes_alloc()
 {
-    struct AES_STATE *state = secure_alloc(sizeof(struct AES_STATE));
+    struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
     if (state) state->keyBytes = 0;
     return state;
 }
@@ -412,7 +414,7 @@ struct AES_STATE* aes_alloc()
 int aes_init(struct AES_STATE *state, const void* key, size_t keySize, const struct AES_PARAMS* params)
 {
     /* Validate the keysize. */
-    if (!((keySize == 16) || (keySize == 24) || (keySize == 32))) return ORDO_KEY_SIZE;
+    if (!((keySize == 16) || (keySize == 24) || (keySize == 32))) return ORDO_KEY_LEN;
 
     /* Read the parameters, if available. */
     if (params)
@@ -430,7 +432,7 @@ int aes_init(struct AES_STATE *state, const void* key, size_t keySize, const str
 
     /* Allocate the expanded key array. */
     state->keyBytes = 16 * (state->rounds + 1);
-    state->key = secure_alloc(state->keyBytes);
+    state->key = mem_alloc(state->keyBytes);
     if (!state->key) return ORDO_ALLOC;
 
     /* Perform the key schedule. */
@@ -495,8 +497,8 @@ void aes_inverse(struct AES_STATE *state, uint8_t* block)
 
 void aes_free(struct AES_STATE *state)
 {
-    if (state->keyBytes) secure_free(state->key, state->keyBytes);
-    secure_free(state, sizeof(struct AES_STATE));
+    if (state->keyBytes) mem_free(state->key);
+    mem_free(state);
 }
 
 void aes_copy(struct AES_STATE *dst,

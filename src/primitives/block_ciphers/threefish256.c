@@ -2,13 +2,14 @@
 
 #include <internal/asm/resolve.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <common/ordo_utils.h>
+#include <internal/mem.h>
 
 #include <string.h>
 
 /******************************************************************************/
 
-#define THREEFISH256_BLOCK (32) /* 256-bit block */
+#define THREEFISH256_BLOCK (bits(256)) /* 256-bit block */
 
 /* 64-bit left and right rotation. */
 #define ROL(n, r) (((n) << (r)) | ((n) >> (64 - (r))))
@@ -22,7 +23,7 @@ struct THREEFISH256_STATE
 
 struct THREEFISH256_STATE* threefish256_alloc()
 {
-    return secure_alloc(sizeof(struct THREEFISH256_STATE));
+    return mem_alloc(sizeof(struct THREEFISH256_STATE));
 }
 
 /* Macro for subkey generation. */
@@ -75,7 +76,7 @@ void threefish256_key_schedule(const uint64_t key[4], const uint64_t tweak[2], u
 int threefish256_init(struct THREEFISH256_STATE *state, const uint64_t* key, size_t keySize, const struct THREEFISH256_PARAMS* params)
 {
     /* Only a 256-bit key is permitted. */
-    if (keySize != 32) return ORDO_KEY_SIZE;
+    if (keySize != 32) return ORDO_KEY_LEN;
 
     /* Perform the key schedule (if no tweak is specified, assume zero). */
     threefish256_key_schedule(key, (params == 0) ? 0 : params->tweak, state->subkey);
@@ -388,7 +389,7 @@ void threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t* block)
 
 void threefish256_free(struct THREEFISH256_STATE *state)
 {
-    secure_free(state, sizeof(struct THREEFISH256_STATE));
+    mem_free(state);
 }
 
 void threefish256_copy(struct THREEFISH256_STATE *dst,

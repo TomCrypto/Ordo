@@ -1,6 +1,6 @@
 #include <digest/digest.h>
 
-#include <common/secure_mem.h>
+#include <internal/mem.h>
 
 /******************************************************************************/
 
@@ -12,14 +12,14 @@ struct DIGEST_CTX
 
 struct DIGEST_CTX* digest_alloc(const struct HASH_FUNCTION *hash)
 {
-    struct DIGEST_CTX *ctx = secure_alloc(sizeof(struct DIGEST_CTX));
-    if (!ctx) goto failure;
+    struct DIGEST_CTX *ctx = mem_alloc(sizeof(struct DIGEST_CTX));
+    if (!ctx) goto fail;
     ctx->hash = hash;
 
-    if (!(ctx->state = hash_function_alloc(ctx->hash))) goto failure;
+    if (!(ctx->state = hash_function_alloc(ctx->hash))) goto fail;
     return ctx;
 
-failure:
+fail:
     digest_free(ctx);
     return 0;
 }
@@ -46,7 +46,7 @@ void digest_final(struct DIGEST_CTX *ctx,
 void digest_free(struct DIGEST_CTX *ctx)
 {
     hash_function_free(ctx->hash, ctx->state);
-    secure_free(ctx, sizeof(struct DIGEST_CTX));
+    mem_free(ctx);
 }
 
 void digest_copy(struct DIGEST_CTX *dst,

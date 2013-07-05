@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     if (direction) // encrypting?
     {
         /* random salt/IV */
-        ordo_random(salt, SALT_LEN);
-        ordo_random(iv, digest_length(Skein256()));
+        os_random(salt, SALT_LEN);
+        os_random(iv, digest_length(Skein256()));
     }
     else
     {

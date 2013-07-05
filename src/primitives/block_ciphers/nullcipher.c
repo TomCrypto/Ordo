@@ -1,11 +1,12 @@
 #include <primitives/block_ciphers/nullcipher.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <common/ordo_utils.h>
+#include <internal/mem.h>
 
 /******************************************************************************/
 
-#define NULLCIPHER_BLOCK (16)
+#define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
 
 struct NULLCIPHER_STATE
 {
@@ -14,9 +15,9 @@ struct NULLCIPHER_STATE
 
 struct NULLCIPHER_STATE* nullcipher_alloc()
 {
-    /* A block cipher always needs to allocate some state (returning nil means
+    /* A block cipher always needs to allocate a state (returning nil means
        an allocation failed, so we can't use that even for this cipher). */
-    return secure_alloc(sizeof(struct NULLCIPHER_STATE));
+    return mem_alloc(sizeof(struct NULLCIPHER_STATE));
 }
 
 int nullcipher_init(struct NULLCIPHER_STATE *state,
@@ -38,7 +39,7 @@ void nullcipher_inverse(struct NULLCIPHER_STATE *state, void* block)
 
 void nullcipher_free(struct NULLCIPHER_STATE *state)
 {
-    secure_free(state, sizeof(struct NULLCIPHER_STATE));
+    mem_free(state);
 }
 
 void nullcipher_copy(struct NULLCIPHER_STATE *dst,

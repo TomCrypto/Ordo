@@ -18,10 +18,6 @@ extern "C" {
  * to provide both authentication and integrity, as per RFC 2104.
 */
 
-/*! HMAC context.
- *  @remarks This context must not be manipulated or operated on in any way
- *           outside the \c hmac_* functions. 
-*/
 struct HMAC_CTX;
 
 /*! Allocates a new HMAC context.

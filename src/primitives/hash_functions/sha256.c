@@ -1,16 +1,16 @@
 #include <primitives/hash_functions/sha256.h>
 
-#include <internal/environment.h>
+#include <internal/endianness.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <common/ordo_utils.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
 
-/* The SHA-256 digest size. */
-#define SHA256_DIGEST (32)
-/* The SHA-256 block size. */
-#define SHA256_BLOCK (64)
+#define SHA256_DIGEST (bits(256))
+#define SHA256_BLOCK (bits(512))
 
 /* The SHA-256 initial state vector. */
 const uint32_t sha256_initialState[8] =
@@ -55,7 +55,7 @@ struct SHA256_STATE
 
 struct SHA256_STATE* sha256_alloc()
 {
-    return secure_alloc(sizeof(struct SHA256_STATE));
+    return mem_alloc(sizeof(struct SHA256_STATE));
 }
 
 int sha256_init(struct SHA256_STATE *state, const void* params)
@@ -168,7 +168,7 @@ void sha256_final(struct SHA256_STATE *state, void* digest)
     uint64_t len;
 
     /* Save the message's length (in bits) before final processing. In BIG-ENDIAN! */
-    len = htobe64(state->messageLength * 8);
+    len = htobe64(bytes(state->messageLength));
 
     /* Append a '1' bit to the message. */
     sha256_update(state, &byte, sizeof(byte));
@@ -192,7 +192,7 @@ void sha256_final(struct SHA256_STATE *state, void* digest)
 
 void sha256_free(struct SHA256_STATE *state)
 {
-    secure_free(state, sizeof(struct SHA256_STATE));
+    mem_free(state);
 }
 
 void sha256_copy(struct SHA256_STATE *dst, const struct SHA256_STATE *src)

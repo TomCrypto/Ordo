@@ -48,20 +48,10 @@ typedef void  (*HASH_FINAL)  (void*, void*              );
 typedef void  (*HASH_FREE)   (void*                     );
 typedef void  (*HASH_COPY)   (void*, const void*        );
 
-/*! Block cipher primitive.
- @remarks This should be considered opaque, and should be used only through
-          the abstraction layer.
-*/ 
 struct BLOCK_CIPHER;
 
-/*! Stream cipher primitive.
- @remarks Same remark as for \c BLOCK_CIPHER.
-*/
 struct STREAM_CIPHER;
 
-/*! Hash function primitive.
- @remarks Same remark as for \c BLOCK_CIPHER.
-*/
 struct HASH_FUNCTION;
 
 /*! Constructs a block cipher primitive.
@@ -158,6 +148,21 @@ const char* hash_function_name(const struct HASH_FUNCTION *primitive);
 
 /*! Returns the block size of a block cipher primitive. */
 size_t cipher_block_size(const struct BLOCK_CIPHER *primitive);
+
+/*! Probes a block cipher for its key length.
+ @param primitive The block cipher to probe.
+ @param key_len A suggested key length.
+ @returns Returns \c key_len if and only if \c key_len is a valid key length
+          for this block cipher. Otherwise, returns the nearest valid key
+          length greater than \c key_len. However, if no such key length
+          exists, it will return the largest key length admitted by the
+          block cipher.
+ @remarks For instance, if you pass a key length of 25 bytes (200 bits) to
+          the AES cipher, it will return the value 32 (corresponding to 32
+          bytes or 256 bits), \b not 24 (192 bits).
+*/
+size_t block_key_len(const struct BLOCK_CIPHER *primitive,
+                     size_t key_len);
 
 /*! Returns the digest length of a hash function primitive. */
 size_t hash_digest_length(const struct HASH_FUNCTION *primitive);

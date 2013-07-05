@@ -1,7 +1,7 @@
 #include <auth/hmac.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <internal/mem.h>
 
 #include <string.h>
 
@@ -17,20 +17,20 @@ struct HMAC_CTX
 
 struct HMAC_CTX* hmac_alloc(const struct HASH_FUNCTION *hash)
 {
-    struct HMAC_CTX *ctx = secure_alloc(sizeof(struct HMAC_CTX));
+    struct HMAC_CTX *ctx = mem_alloc(sizeof(struct HMAC_CTX));
     const size_t block_size = hash_block_size(hash);
 
     /* We could just return nil here, but it is more consistent to just rely on
      * the hmac_free function (and it helps ensure they work well together). */
-    if (!ctx) goto failure;
+    if (!ctx) goto fail;
 
-    if (!(ctx->ctx = digest_alloc(hash))) goto failure;
+    if (!(ctx->ctx = digest_alloc(hash))) goto fail;
     ctx->hash = hash; /* Save the hash primitive. */
 
-    if (!(ctx->key = secure_alloc(block_size))) goto failure;
+    if (!(ctx->key = mem_alloc(block_size))) goto fail;
     return ctx;
 
-failure:
+fail:
     hmac_free(ctx);
     return 0;
 }
@@ -90,8 +90,8 @@ int hmac_final(struct HMAC_CTX *ctx,
     if ((err = digest_init(ctx->ctx, 0)))
     {
         /* Now "digest" (user-provided pointer) contains sensitive data.
-         * Fill it with zeroes before returning if a failure occurred. */
-        secure_erase(digest, digest_len);
+         * Fill it with zeroes before returning if a fail occurred. */
+        mem_erase(digest, digest_len);
         return err;
     }
 
@@ -103,7 +103,7 @@ int hmac_final(struct HMAC_CTX *ctx,
 }
 
 /* This deallocation function is designed to be able to cope with partially
- * allocated contexts resulting from failures in hmac_alloc, such that any
+ * allocated contexts resulting from fails in hmac_alloc, such that any
  * error in the latter can be gracefully handled by calling hmac_free.
  *
  * The only condition is that if ctx->ctx has been initialized, then ctx->hash
@@ -115,11 +115,11 @@ void hmac_free(struct HMAC_CTX *ctx)
 
     if (ctx->ctx)
     {
-        secure_free(ctx->key, hash_block_size(ctx->hash));
+        mem_free(ctx->key);
         digest_free(ctx->ctx);
     }
 
-    secure_free(ctx, sizeof(struct HMAC_CTX));
+    mem_free(ctx);
 }
 
 void hmac_copy(struct HMAC_CTX *dst,

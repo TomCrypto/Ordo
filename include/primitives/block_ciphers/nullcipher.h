@@ -28,7 +28,7 @@ struct NULLCIPHER_STATE;
 struct NULLCIPHER_STATE* nullcipher_alloc();
 
 /*! Initializes a NullCipher block cipher context.
- @param ctx An allocated NullCipher context.
+ @param state An allocated NullCipher context.
  @param key A pointer to a buffer containing the encryption key.
  @param keySize The key size, in bytes, to be read from \c key.
  @param params Ignored.
@@ -40,7 +40,7 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void* params);
 
 /*! Encrypts a 128-bit block.
- @param ctx An initialized NullCipher context.
+ @param state An initialized NullCipher context.
  @param block A pointer to the block to encrypt.
  @remarks This function does nothing.
 */
@@ -48,7 +48,7 @@ void nullcipher_forward(struct NULLCIPHER_STATE *state,
                         void* block);
 
 /*! Decrypts a 128-bit block.
- @param ctx An initialized NullCipher context.
+ @param state An initialized NullCipher context.
  @param block A pointer to the block to decrypt.
  @remarks This function does nothing.
 */
@@ -56,7 +56,7 @@ void nullcipher_inverse(struct NULLCIPHER_STATE *state,
                         void* block);
 
 /*! Frees the memory associated with a NullCipher cipher context.
- @param ctx An allocated NullCipher context.
+ @param state An allocated NullCipher context.
  @remarks Passing nil to this function is a no-op.
 */
 void nullcipher_free(struct NULLCIPHER_STATE *state);

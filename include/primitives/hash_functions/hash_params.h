@@ -31,7 +31,7 @@ struct SKEIN256_PARAMS
               will be truncated to a byte boundary, so this should be a
               multiple of 8.
     */
-    uint64_t outputLength;
+    uint64_t output_length;
     /*! Unused, should be left zero according to the Skein specification. */
     uint8_t unused[16];
 };

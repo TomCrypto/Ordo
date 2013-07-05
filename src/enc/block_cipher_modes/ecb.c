@@ -1,7 +1,8 @@
 #include <enc/block_cipher_modes/ecb.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
@@ -24,22 +25,17 @@ struct ECB_STATE* ecb_alloc(const struct BLOCK_CIPHER *cipher, void* cipher_stat
     size_t block_size = cipher_block_size(cipher);
 
     /* Allocate the context and extra buffers in it. */
-    struct ECB_STATE* state = secure_alloc(sizeof(struct ECB_STATE));
+    struct ECB_STATE* state = mem_alloc(sizeof(struct ECB_STATE));
+    if (!state) goto fail;
 
-    if (state)
-    {
-        /* Return if everything succeeded. */
-        if ((state->block = secure_alloc(block_size)))
-        {
-            state->available = 0;
-            return state;
-        }
+    state->block = mem_alloc(block_size);
+    if (!state->block) goto fail;
 
-        /* Clean up if an error occurred. */
-        secure_free(state, sizeof(struct ECB_STATE));
-    }
+    state->available = 0;
+    return state;
 
-    /* Allocation failed, return zero. */
+fail:
+    ecb_free(state, cipher, cipher_state);
     return 0;
 }
 
@@ -184,7 +180,6 @@ int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher
         }
     }
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
@@ -204,9 +199,8 @@ int ecb_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* 
 
 void ecb_free(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state)
 {
-    /* Dellocate context fields. */
-    secure_free(state->block, cipher_block_size(cipher));
-    secure_free(state, sizeof(struct ECB_STATE));
+    mem_free(state->block);
+    mem_free(state);
 }
 
 void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct BLOCK_CIPHER* cipher)
@@ -217,7 +211,6 @@ void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct B
     dst->padding = src->padding;
 }
 
-/* Fills a BLOCK_MODE struct with the correct information. */
 void ecb_set_mode(struct BLOCK_MODE* mode)
 {
     make_block_mode(mode,

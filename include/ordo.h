@@ -3,16 +3,15 @@
 
 #include <common/identification.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
 #include <common/version.h>
 
 #include <enc/enc_stream.h>
 #include <enc/enc_block.h>
 
-#include <random/random.h>
-
 #include <kdf/pbkdf2.h>
 #include <auth/hmac.h>
+
+#include <misc/os_random.h>
 
 /******************************************************************************/
 
@@ -73,9 +72,9 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
  @param cipher The stream cipher to use.
  @param params The stream cipher parameters.
  @param inout The plaintext or ciphertext buffer.
- @param inout_len The length in bytes of the buffer.
+ @param len The length, in bytes, of the buffer.
  @param key The cryptographic key to use for encryption.
- @param key_size The length, in bytes, of the key.
+ @param key_len The length, in bytes, of the key.
  @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
  @remarks Stream ciphers do not, strictly speaking, require an initialization
           vector. If such a feature is required, it is recommended to use a
@@ -84,7 +83,8 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
  @remarks Encryption is always done in place. If you need out-of-place
           encryption, make a copy of the plaintext buffer prior to encryption.
  @remarks By design, encryption and decryption are equivalent for stream
-          ciphers.
+          ciphers. An implication of this, is that encrypting a message
+          twice with the same key yields the original message.
 */
 int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
                     const void *key, size_t key_len,
@@ -108,7 +108,7 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
  @param key The key to use for authentication.
  @param key_len The length in bytes of the key.
  @param in The input buffer to authenticate.
- @param in_len The length in bytes of the buffer.
+ @param in_len The length, in bytes, of the input buffer.
  @param fingerprint A pointer to where the fingerprint will be written.
  @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
  @remarks Do not use hash parameters which modify the hash function's output
@@ -116,7 +116,7 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
 */
 int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
               const void *key, size_t key_len,
-              const void *in, size_t len,
+              const void *in, size_t in_len,
               void* fingerprint);
 
 #ifdef __cplusplus

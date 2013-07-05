@@ -19,7 +19,7 @@ void randomizeBuffer(unsigned char* buffer, size_t len)
 {
     /* Get a 256-bit pseudorandom bitstring. */
     unsigned char* data = malloc(32);
-    ordo_random(data, 32);
+    os_random(data, 32);
 
     /* Fill the buffer with this pattern. Assume the buffer length is a multiple of 32 bytes. */
     while (len != 0)
@@ -178,9 +178,9 @@ int runBlockCipherTest(char* line, int n)
                     result = 1;
                     printf("[+] Test vector #%.3d (enc/%s/%s) passed!\n", n, primitive_name, modeName);
                 } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected plaintext.\n", n, primitive_name, modeName);
-            } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoDecrypt, %s.\n", n, primitive_name, modeName, error_msg(error));
+            } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: %s.\n", n, primitive_name, modeName, error_msg(error));
         } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: did not get expected ciphertext.\n", n, primitive_name, modeName);
-    } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: @ordoEncrypt, %s.\n", n, primitive_name, modeName, error_msg(error));
+    } else printf("[!] Test vector #%.3d (enc/%s/%s) failed: %s.\n", n, primitive_name, modeName, error_msg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -242,9 +242,9 @@ int runStreamCipherTest(char* line, int n)
                     result = 1;
                     printf("[+] Test vector #%.3d (enc/%s) passed!\n", n, primitive_name);
                 } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected plaintext.\n", n, primitive_name);
-            } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoDecrypt, %s.\n", n, primitive_name, error_msg(error));
+            } else printf("[!] Test vector #%.3d (enc/%s) failed: %s.\n", n, primitive_name, error_msg(error));
         } else printf("[!] Test vector #%.3d (enc/%s) failed: did not get expected ciphertext.\n", n, primitive_name);
-    } else printf("[!] Test vector #%.3d (enc/%s) failed: @ordoEncrypt, %s.\n", n, primitive_name, error_msg(error));
+    } else printf("[!] Test vector #%.3d (enc/%s) failed: %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(computedPlaintext);
@@ -293,7 +293,7 @@ int runDigestTest(char* line, int n)
             result = 1;
             printf("[+] Test vector #%.3d (digest/%s) passed!\n", n, primitive_name);
         } else printf("[!] Test vector #%.3d (digest/%s) failed: did not get expected digest.\n", n, primitive_name);
-    } else printf("[!] Test vector #%.3d (digest/%s) failed: @ordoHash, %s.\n", n, primitive_name, error_msg(error));
+    } else printf("[!] Test vector #%.3d (digest/%s) failed: %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(computedDigest);
@@ -341,7 +341,7 @@ int runHMACTest(char* line, int n)
             result = 1;
             printf("[+] Test vector #%.3d (hmac/%s) passed!\n", n, primitive_name);
         } else printf("[!] Test vector #%.3d (hmac/%s) failed: did not get expected digest.\n", n, primitive_name);
-    } else printf("[!] Test vector #%.3d (hmac/%s) failed: @ordoHMAC, %s.\n", n, primitive_name, error_msg(error));
+    } else printf("[!] Test vector #%.3d (hmac/%s) failed: %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(key);
@@ -392,7 +392,7 @@ int runPBKDF2Test(char* line, int n)
             result = 1;
             printf("[+] Test vector #%.3d (pbkdf2/%s) passed!\n", n, primitive_name);
         } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: did not get expected digest.\n", n, primitive_name);
-    } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: @pbkdf2, %s.\n", n, primitive_name, error_msg(error));
+    } else printf("[!] Test vector #%.3d (pbkdf2/%s) failed: %s.\n", n, primitive_name, error_msg(error));
 
     /* Clean up. */
     free(password);
@@ -463,7 +463,7 @@ void randomTest()
     void* buffer = malloc(64);
 
     /* Fill it with pseudorandom data. */
-    int error = ordo_random(buffer, 64);
+    int error = os_random(buffer, 64);
 
     /* Convert it to readable hexadecimal. */
     char* hex = bufferToHex(buffer, 64);

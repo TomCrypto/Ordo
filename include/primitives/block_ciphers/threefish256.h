@@ -29,11 +29,11 @@ struct THREEFISH256_STATE;
 struct THREEFISH256_STATE* threefish256_alloc();
 
 /*! Initializes a Threefish-256 block cipher context.
- @param ctx An allocated Threefish-256 context.
+ @param state An allocated Threefish-256 context.
  @param key A pointer to a 256-bit key, as a \c uint64_t[4] structure.
  @param keySize The key size, in bytes. Must be 32 (256 bits).
  @param params A pointer to a Threefish-256 parameter structure.
- @returns Returns \c #ORDO_SUCCESS on success, or \c #ORDO_KEY_SIZE if the
+ @returns Returns \c #ORDO_SUCCESS on success, or \c #ORDO_KEY_LEN if the
           key size passed was invalid.
  @remarks The \c params parameter may be nil if no parameters are required.
 */
@@ -42,7 +42,7 @@ int threefish256_init(struct THREEFISH256_STATE *state,
                       const struct THREEFISH256_PARAMS* params);
 
 /*! Encrypts a 256-bit block (as a \c uint64_t[4] structure).
- @param ctx An initialized Threefish-256 context.
+ @param state An initialized Threefish-256 context.
  @param block A pointer to the block to encrypt.
  @remarks This function is deterministic, as are all of the block cipher
           \c Forward and \c Inverse functions, and will not modify the
@@ -52,7 +52,7 @@ void threefish256_forward(struct THREEFISH256_STATE *state,
                           uint64_t* block);
 
 /*! Decrypts a 256-bit block (as a \c uint64_t[4] structure).
- @param ctx An initialized Threefish-256 context.
+ @param state An initialized Threefish-256 context.
  @param block A pointer to the block to decrypt.
  @remarks See remarks for \c threefish256_forward().
 */
@@ -61,7 +61,7 @@ void threefish256_inverse(struct THREEFISH256_STATE *state,
 
 /*! Frees the memory associated with a Threefish-256 cipher context and
  *  securely erases sensitive context information such as key material.
- @param ctx An allocated Threefish-256 context.
+ @param state An allocated Threefish-256 context.
  @remarks The context need not have been initialized.
  @remarks Passing nil to this function is a no-op.
 */

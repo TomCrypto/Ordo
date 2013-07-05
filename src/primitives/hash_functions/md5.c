@@ -1,16 +1,16 @@
 #include <primitives/hash_functions/md5.h>
 
-#include <internal/environment.h>
+#include <internal/endianness.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <common/ordo_utils.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
 
-/* The Md5 digest size. */
-#define MD5_DIGEST (16)
-/* The MD5 block size. */
-#define MD5_BLOCK (64)
+#define MD5_DIGEST (bits(128))
+#define MD5_BLOCK (bits(512))
 
 /* The MD5 initial state vector. */
 const uint32_t MD5_initialState[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
@@ -26,7 +26,7 @@ struct MD5_STATE
 
 struct MD5_STATE* md5_alloc()
 {
-    return secure_alloc(sizeof(struct MD5_STATE));
+    return mem_alloc(sizeof(struct MD5_STATE));
 }
 
 int md5_init(struct MD5_STATE *state, const void* params)
@@ -238,7 +238,7 @@ void md5_final(struct MD5_STATE *state, void* digest)
     uint64_t len;
 
     /* Save the message's length (in bits) before final processing (little-endian for MD5). */
-    len = htole64(state->messageLength * 8);
+    len = htole64(bytes(state->messageLength));
 
     /* Append a '1' bit to the message. */
     md5_update(state, &byte, sizeof(byte));
@@ -259,7 +259,7 @@ void md5_final(struct MD5_STATE *state, void* digest)
 
 void md5_free(struct MD5_STATE *state)
 {
-    secure_free(state, sizeof(struct MD5_STATE));
+    mem_free(state);
 }
 
 void md5_copy(struct MD5_STATE *dst, const struct MD5_STATE *src)

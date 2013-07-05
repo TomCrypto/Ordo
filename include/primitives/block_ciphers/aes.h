@@ -28,11 +28,11 @@ struct AES_STATE;
 struct AES_STATE* aes_alloc();
 
 /*! Initializes an AES block cipher context.
- @param ctx An allocated AES context.
+ @param state An allocated AES context.
  @param key A pointer to a buffer containing the encryption key.
  @param keySize The key size, in bytes, to be read from \c key.
  @param params A pointer to an AES parameter structure.
- @returns Returns \c #ORDO_SUCCESS on success, \c #ORDO_KEY_SIZE if the
+ @returns Returns \c #ORDO_SUCCESS on success, \c #ORDO_KEY_LEN if the
           key size passed was invalid, \c #ORDO_ARG if the round
           number provided in the parameters is invalid, or \c #ORDO_ALLOC
           if an allocation error occurs.
@@ -43,7 +43,7 @@ int aes_init(struct AES_STATE *state,
              const struct AES_PARAMS* params);
 
 /*! Encrypts a 128-bit block (as an array of bytes).
- @param ctx An initialized AES context.
+ @param state An initialized AES context.
  @param block A pointer to the block to encrypt.
  @remarks This function is deterministic, as are all of the block cipher
           \c Forward and \c Inverse functions, and will not modify the
@@ -53,7 +53,7 @@ void aes_forward(struct AES_STATE *state,
                  uint8_t* block);
 
 /*! Decrypts a 128-bit block (as an array of bytes).
- @param ctx An initialized AES context.
+ @param state An initialized AES context.
  @param block A pointer to the block to decrypt.
  @remarks See remarks for \c aes_forward().
 */
@@ -62,7 +62,7 @@ void aes_inverse(struct AES_STATE *state,
 
 /*! Frees the memory associated with an AES cipher context and securely erases
  *  sensitive context information such as key material.
- @param ctx An allocated AES context.
+ @param state An allocated AES context.
  @remarks The context need not have been initialized.
  @remarks Passing nil to this function is a no-op.
 */

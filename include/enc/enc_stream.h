@@ -16,10 +16,6 @@ extern "C" {
  * Interface to encrypt plaintext and decrypt ciphertext with various stream ciphers.
 */
 
-/*! Stream encryption context.
- *  @remarks This context must not be manipulated or operated on in any way
- *           outside the \c enc_stream_* functions.
-*/    
 struct ENC_STREAM_CTX;
 
 /*! Allocates a new stream encryption context.
@@ -44,7 +40,7 @@ int enc_stream_init(struct ENC_STREAM_CTX *ctx,
 /*! Encrypts or decrypts a data buffer.
  @param ctx An initialized stream encryption context.
  @param buffer The plaintext or ciphertext buffer.
- @param len Number of bytes to read from the \c inout buffer.
+ @param len Number of bytes to read from the buffer.
  @remarks By nature, stream ciphers encrypt and decrypt data the same way. In
           other words, if you encrypt data twice, you will get back the
           original data.

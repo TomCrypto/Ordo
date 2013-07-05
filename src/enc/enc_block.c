@@ -1,7 +1,7 @@
 #include <enc/enc_block.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <internal/mem.h>
 
 #include <enc/block_cipher_modes/ecb.h>
 #include <enc/block_cipher_modes/cbc.h>
@@ -22,7 +22,7 @@ struct ENC_BLOCK_CTX
 struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER *cipher,
                                       const struct BLOCK_MODE *mode)
 {
-    struct ENC_BLOCK_CTX *ctx = secure_alloc(sizeof(struct ENC_BLOCK_CTX));
+    struct ENC_BLOCK_CTX *ctx = mem_alloc(sizeof(struct ENC_BLOCK_CTX));
     if (!ctx) goto fail;
 
     ctx->cipher = cipher;
@@ -85,7 +85,7 @@ void enc_block_free(struct ENC_BLOCK_CTX *ctx)
 
     block_cipher_free(ctx->cipher, ctx->cipher_state);
 
-    secure_free(ctx, sizeof(struct ENC_BLOCK_CTX));
+    mem_free(ctx);
 }
 
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
@@ -98,10 +98,4 @@ void enc_block_copy(struct ENC_BLOCK_CTX *dst,
     block_cipher_copy(dst->cipher,
                       dst->cipher_state,
                       src->cipher_state);
-}
-
-size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
-                         size_t key_len)
-{
-    return block_cipher_key_len(cipher, key_len);
 }

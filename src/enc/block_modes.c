@@ -2,7 +2,6 @@
 
 #include <common/identification.h>
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
 
 #include <string.h>
 

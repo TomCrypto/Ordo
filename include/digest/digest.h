@@ -17,10 +17,6 @@ extern "C" {
  * primitives.
 */
 
-/*! Digest context.
- *  @remarks This context must not be manipulated or operated on in any way
- *           outside the \c digest_* functions.
-*/
 struct DIGEST_CTX;
 
 /*! Allocates a new digest context.

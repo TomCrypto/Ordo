@@ -1,6 +1,6 @@
 #include <enc/enc_stream.h>
 
-#include <common/secure_mem.h>
+#include <internal/mem.h>
 
 /******************************************************************************/
 
@@ -12,7 +12,7 @@ struct ENC_STREAM_CTX
 
 struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher)
 {
-    struct ENC_STREAM_CTX *ctx = secure_alloc(sizeof(struct ENC_STREAM_CTX));
+    struct ENC_STREAM_CTX *ctx = mem_alloc(sizeof(struct ENC_STREAM_CTX));
     if (!ctx) goto fail;
     ctx->cipher = cipher;
 
@@ -42,7 +42,7 @@ void enc_stream_update(struct ENC_STREAM_CTX *ctx,
 void enc_stream_free(struct ENC_STREAM_CTX *ctx)
 {
     stream_cipher_free(ctx->cipher, ctx->state);
-    secure_free(ctx, sizeof(struct ENC_STREAM_CTX));
+    mem_free(ctx);
 }
 
 void enc_stream_copy(struct ENC_STREAM_CTX *dst,

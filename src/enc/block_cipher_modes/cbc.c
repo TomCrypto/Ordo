@@ -1,7 +1,8 @@
 #include <enc/block_cipher_modes/cbc.h>
 
 #include <common/ordo_errors.h>
-#include <common/secure_mem.h>
+#include <internal/mem.h>
+
 #include <string.h>
 
 /******************************************************************************/
@@ -25,29 +26,20 @@ struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_stat
 {
     size_t block_size = cipher_block_size(cipher);
 
-    /* Allocate the context and extra buffers in it. */
-    struct CBC_STATE *state = secure_alloc(sizeof(struct CBC_STATE));
+    struct CBC_STATE *state = mem_alloc(sizeof(struct CBC_STATE));
+    if (!state) goto fail;
 
-    if (state)
-    {
-        /* Allocate extra buffers for the running IV and temporary block. */
-        state->iv = secure_alloc(block_size);
-        state->block = secure_alloc(block_size);
+    state->iv = mem_alloc(block_size);
+    if (!state->iv) goto fail;
 
-        /* Return if every allocation succeeded. */
-        if ((state->iv) && (state->block))
-        {
-            state->available = 0;
-            return state;
-        }
+    state->block = mem_alloc(block_size);
+    if (!state->block) goto fail;
 
-        /* Clean up if an error occurred. */
-        secure_free(state->block, block_size);
-        secure_free(state->iv, block_size);
-        secure_free(state, sizeof(struct CBC_STATE));
-    }
+    state->available = 0;
+    return state;
 
-    /* Allocation failed, return zero. */
+fail:
+    cbc_free(state, cipher, cipher_state);
     return 0;
 }
 
@@ -64,7 +56,6 @@ int cbc_init(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     /* Check and save the parameters. */
     state->padding = (params == 0) ? 1 : params->padding & 1;
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
@@ -178,7 +169,6 @@ int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher
         *outlen = block_size;
     }
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
@@ -219,7 +209,6 @@ int cbc_decrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher
         }
     }
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
@@ -239,10 +228,9 @@ int cbc_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    /* Deallocate context fields. */
-    secure_free(state->block, cipher_block_size(cipher));
-    secure_free(state->iv, cipher_block_size(cipher));
-    secure_free(state, sizeof(struct CBC_STATE));
+    mem_free(state->block);
+    mem_free(state->iv);
+    mem_free(state);
 }
 
 void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct BLOCK_CIPHER* cipher)
@@ -253,7 +241,6 @@ void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct B
     dst->padding = src->padding;
 }
 
-/* Fills a BLOCK_MODE struct with the correct information. */
 void cbc_set_mode(struct BLOCK_MODE* mode)
 {
     make_block_mode(mode,

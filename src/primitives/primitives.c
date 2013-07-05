@@ -1,5 +1,7 @@
 #include <primitives/primitives.h>
+
 #include <common/identification.h>
+
 #include <string.h>
 
 #include <primitives/block_ciphers/nullcipher.h>

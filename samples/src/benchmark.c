@@ -38,7 +38,7 @@ void randomize(void *buffer, size_t buf_size)
     /* OK fine, this is really using RC4 with a random key >.< */
     size_t key_len = 32;
     void *key = malloc(key_len);
-    ordo_random(key, key_len);
+    os_random(key, key_len);
 
     ordo_enc_stream(RC4(), 0, key, key_len, buffer, buf_size);
     free(key);
@@ -76,7 +76,7 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
         const struct BLOCK_CIPHER *primitive = block_cipher_by_id(id);
 
         /* Probe cipher's largest key length. */
-        size_t key_len = enc_block_key_len(primitive, 0);
+        size_t key_len = block_cipher_key_len(primitive, 0);
         void *key = malloc(key_len);
 
         /* Assume IV length required is the cipher's block size. */
@@ -90,8 +90,8 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
                                            block_mode_name(mode));
             fflush(stdout);
 
-            ordo_random(iv, iv_len);
-            ordo_random(key, key_len);
+            os_random(iv, iv_len);
+            os_random(key, key_len);
             randomize(buffer, buf_size);
 
             clock_t start = clock();
@@ -113,8 +113,8 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
             printf("%.0f MB/s (enc) | ", speed);
             fflush(stdout);
 
-            ordo_random(iv, iv_len);
-            ordo_random(key, key_len);
+            os_random(iv, iv_len);
+            os_random(key, key_len);
             randomize(buffer, out_len);
 
             start = clock();
@@ -162,7 +162,7 @@ void benchmark_stream_ciphers(void *buffer, size_t buf_size)
          * independent from key size). */
         size_t key_len = enc_stream_key_len(primitive, 0);
         void *key = malloc(key_len);
-        ordo_random(key, key_len);
+        os_random(key, key_len);
 
         ordo_enc_stream(primitive, 0, key, key_len, buffer, buf_size);
         free(key);
