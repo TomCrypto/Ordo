@@ -44,4 +44,4 @@ external:
 
 .PHONY: clean
 clean:
-	rm -f $(BINDIR)/ --recursive
+	rm -rf $(BINDIR)

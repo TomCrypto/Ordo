@@ -109,12 +109,12 @@ clean_samples:
 # make clean_bin :: Removes all binary files
 .PHONY: clean_bin
 clean_bin:
-	rm -f $(LIBDIR)/ --recursive
+	rm -rf $(LIBDIR)
 
 # make clean_obj :: Removes all object files
 .PHONY: cleanobj
 clean_obj:
-	rm -f $(OBJDIR)/ --recursive
+	rm -rf $(OBJDIR)
 
 # make doc :: Builds documentation for Ordo
 .PHONY: doc
@@ -128,7 +128,7 @@ doc:
 # make clean_doc :: Removes all documentation
 .PHONY: clean_doc
 clean_doc:
-	rm -f doc/ --recursive
+	rm -rf doc
 
 # make clean :: Removes all generated files
 .PHONY: clean

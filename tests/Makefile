@@ -51,12 +51,12 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
 # make cleanbin :: Removes all binary files
 .PHONY: clean_bin
 clean_bin:
-	rm -f $(BINDIR)/ --recursive
+	rm -rf $(BINDIR)
 
 # make clean_obj :: Removes all object files
 .PHONY: clean_obj
 clean_obj:
-	rm -f $(OBJDIR)/ --recursive
+	rm -rf $(OBJDIR)
 
 # make clean :: Removes all generated files
 .PHONY: clean
