@@ -41,6 +41,8 @@ void enc_stream_update(struct ENC_STREAM_CTX *ctx,
 
 void enc_stream_free(struct ENC_STREAM_CTX *ctx)
 {
+    if (!ctx) return;
+
     stream_cipher_free(ctx->cipher, ctx->state);
     mem_free(ctx);
 }

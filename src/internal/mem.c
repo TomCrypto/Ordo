@@ -4,7 +4,7 @@
 
 /******************************************************************************/
 
-/* We use the same allocation strategy on all hardware for which efficiency is
+/* We use the same allocation strategy on all hardware for which memory is
  * not a concern, abstracting away any platform-specific system calls. */
 #if ((defined(PLATFORM_LINUX)) \
  ||  (defined(PLATFORM_NETBSD)) \
@@ -17,27 +17,33 @@
 
 #ifdef GENERIC_ALLOCATOR
 
-#include <stdlib.h>
-
 /* The generic allocator uses a high-performance, fixed-size minipool, which is
- * sufficient for most uses. It does *not* fall back to an alternative pool. */
-#define POOL_SIZE 1024
-#define POOL_WORD 32
-
-/* This pool does not actually honor aligned memory requests, instead assuming
+ * sufficient for most uses. It does *not* fall back to an alternative pool.
+ * This pool does not actually honor aligned memory requests, instead assuming
  * the library will never need stricter alignment than POOL_WORD bytes - which
  * should be the case for all the architectures using this implementation! */
-static unsigned char pool[(POOL_SIZE + 1) * POOL_WORD];
-static size_t distance[POOL_SIZE]; /* Range probing. */
-static size_t usage = (size_t)-1;
-static size_t offset;
 
-#ifdef ORDO_DEBUG
+/* Here ORDO_DEBUG implies ORDO_DEBUG_MEM, but the latter can be enabled
+ * separately to test release builds by doing minimal memory tracking. */
+
+/* Pool parameters. */
+#define POOL_SIZE 1024
+#define POOL_WORD 32
+#define POOL_LEN (POOL_SIZE * POOL_WORD)
+
+
+/* Make sure the pool starts on a correct boundary, for alignment. */
+static unsigned char pool[POOL_LEN] __attribute__ ((aligned(POOL_WORD)));
+static size_t distance[POOL_SIZE]; /* Used to mark blocks as used. */
+static size_t usage = (size_t)-1; /* This stores total pool usage. */
+
+/* In debug mode, the pool prints out some debug information to stdout. */
+#ifdef ORDO_DEBUG_MEM
 static size_t max_usage;
 static size_t hit, miss;
 #endif
 
-#if PLATFORM_LINUX || PLATFORM_NETBSD || PLATFORM_OPENBSD || PLATFORM_FREEBSD
+#if defined(PLATFORM_POSIX)
 
 #include <sys/mman.h>
 
@@ -46,7 +52,7 @@ static int mem_lock(void *ptr, size_t size)
     return mlock(ptr, size);
 }
 
-#elif PLATFORM_WINDOWS
+#elif defined(PLATFORM_WINDOWS)
 
 #include <Windows.h>
 
@@ -57,8 +63,9 @@ static int mem_lock(void *ptr, size_t size)
 
 #endif
 
-#ifdef ORDO_DEBUG
+#ifdef ORDO_DEBUG_MEM
 
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -83,7 +90,7 @@ static void report()
     printf("| Reported Memory Statistics  (collected during runtime) |\n");
     printf("| ****************************************************** |\n");
 
-    snprintf(buf, 64, "Highest pool usage: %04u/%04u blocks "
+    snprintf(buf, sizeof(buf) - 1, "Highest pool usage: %04u/%04u blocks "
                  "(%04.1f%% of %03u kB)",
            (int)max_usage, (int)POOL_SIZE,
            100 * (double)max_usage / POOL_SIZE,
@@ -92,15 +99,21 @@ static void report()
     strip_zeroes(buf);
     printf("| %s |\n", buf);
 
-    snprintf(buf, 64, "Total pool success: %05u blocks.", (int)hit);
+    snprintf(buf, sizeof(buf) - 1, "Total pool success: %05u blocks.",
+             (int)hit);
+
     strip_zeroes(buf);
     printf("| %s                      |\n", buf);
 
-    snprintf(buf, 64, "Total pool failure: %05u blocks.", (int)miss);
+    snprintf(buf, sizeof(buf) - 1, "Total pool failure: %05u blocks.",
+             (int)miss);
+
     strip_zeroes(buf);
     printf("| %s                      |\n", buf);
 
-    snprintf(buf, 64, "Usage upon exit   : %05u blocks.", (int)usage);
+    snprintf(buf, sizeof(buf) - 1, "Usage upon exit   : %05u blocks.",
+             (int)usage);
+
     strip_zeroes(buf);
     printf("| %s                      |\n", buf);
 
@@ -110,50 +123,61 @@ static void report()
 
 void *mem_alloc(size_t size)
 {
-    size_t blocks = size / POOL_WORD + 1, t = 0;
+    /* Here we calculate the number of blocks needed to store "size" bytes, and
+     * we consider a zero-byte allocation valid (it returns the very first pool
+     * block but is obviously read-only by definiion. */
+    size_t blocks = size / POOL_WORD + 1;
     if (!blocks) return pool;
 
     if (usage == (size_t)-1)
     {
-        /* Acquire a pool offset of the alignment boundary we require. */
-        while (((size_t)(pool + offset) & (POOL_WORD - 1)) != 0) ++offset;
-        
-        if (mem_lock(pool, sizeof(pool))) return 0;
-
+        if (mem_lock(pool, POOL_LEN)) return 0;
         usage = 0;
 
-        #ifdef ORDO_DEBUG
+        #ifdef ORDO_DEBUG_MEM
         atexit(report);
         #endif
     }
 
-    while ((usage + blocks <= POOL_SIZE) || (offset + t + blocks < POOL_SIZE))
+    if (usage + blocks < POOL_SIZE)
     {
-        if (distance[t]) t += distance[t];
-        else
+        size_t t = 0;
+
+        while (t + blocks < POOL_SIZE)
         {
-            size_t n;
+            if (distance[t])
+            {
+                /* This block (and possibly more ahead) is used. Skip to the
+                 * next block not belonging to this allocation. */
+                t += distance[t];
+            }
+            else
+            {
+                size_t n;
 
-            for (n = 1; n < blocks; ++n)
-                if (distance[t + n]) goto used;
+                for (n = 1; n < blocks; ++n)
+                    if (distance[t + n])
+                        goto used_block;
 
-            distance[t] = blocks;
-            usage += blocks;
+                distance[t] = blocks;
+                usage += blocks;
 
-            #if ORDO_DEBUG
-            if (usage > max_usage) max_usage = usage;
-            hit += blocks;
-            #endif
+                #if ORDO_DEBUG_MEM
+                /* In debug mode, record highest pool usage. */
+                if (usage > max_usage) max_usage = usage;
+                hit += blocks;
+                #endif
 
-            return &pool[offset + t * POOL_WORD];
+                return pool + t * POOL_WORD;
 
-used:
-            ++t;
-            continue;
+used_block:
+                ++t;
+                continue;
+            }
         }
     }
 
-    #if ORDO_DEBUG
+    #if ORDO_DEBUG_MEM
     miss += blocks;
     #endif
 
@@ -170,15 +194,14 @@ void *mem_aligned(size_t size, size_t alignment)
 
 void mem_free(void *ptr)
 {
-    unsigned char *cmp = pool + offset;
     if (!ptr) return;
 
-    /* This is technically unspecified behaviour, but it will
-     * work on the platforms on which this code is executed. */
-    if (((unsigned char*)ptr >= cmp)
-     && ((unsigned char*)ptr < cmp + POOL_WORD * POOL_SIZE))
+    /* Here we assert that ptr actually points into the pool. If not, this is
+     * unspecified behavior. This should never happen under normal usage. */
+    if ((ptr >= (void*)pool) && (ptr < (void*)(pool + POOL_LEN)))
     {
-        size_t t = (size_t)((unsigned char*)ptr - cmp) / POOL_WORD;
+        /* Recover the block's position using the two pointers. */
+        size_t t = (size_t)((unsigned char*)ptr - pool) / POOL_WORD;
         mem_erase(ptr, distance[t] * POOL_WORD);
         usage -= distance[t];
         distance[t] = 0;
@@ -187,7 +210,7 @@ void mem_free(void *ptr)
 
 #else
 
-#error "No Secure Memory implementation for this platform!"
+#error No Secure Memory implementation for this platform!
 
 #endif
 

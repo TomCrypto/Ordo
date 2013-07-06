@@ -45,6 +45,8 @@ void digest_final(struct DIGEST_CTX *ctx,
 
 void digest_free(struct DIGEST_CTX *ctx)
 {
+    if (!ctx) return;
+
     hash_function_free(ctx->hash, ctx->state);
     mem_free(ctx);
 }

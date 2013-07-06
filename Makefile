@@ -12,9 +12,14 @@ CFLAGS = -Wall -Wextra \
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
 ifeq ($(debug), 1)
-	CFLAGS += -O0 -ggdb -D ORDO_DEBUG
+	CFLAGS += -O0 -ggdb -D ORDO_DEBUG -D ORDO_DEBUG_MEM
 else
 	CFLAGS += -O3
+endif
+
+# This one is for memory debugging only
+ifeq ($(debugmem), 1)
+	CFLAGS += -D ORDO_DEBUG_MEM
 endif
 
 # Decides whether to build a shared or a static library.
@@ -30,9 +35,9 @@ else
 	LD = ar
 endif
 
-# If you use `make striplib=1`, the library will be stripped.
+# If you use `make strip=1`, the library will be stripped.
 ifeq ($(strip), 1)
-	STRIP = strip $(addprefix $(LIBDIR)/, $(LIBNAME))
+	STRIP = strip $(addprefix $(LIBDIR)/, $(LIBNAME)) --strip-unneeded
 else
 	STRIP = 
 endif
@@ -49,16 +54,13 @@ LIBPATH = $(addprefix $(LIBDIR)/, $(LIBNAME))
 LIBPATH_A = $(addprefix $(LIBDIR)/, libordo.a)
 LIBPATH_SO = $(addprefix $(LIBDIR)/, libordo.so)
 
-default: $(OBJDIR) $(LIBDIR) $(LIBPATH) $(STRIP)
+default: $(OBJDIR) $(LIBDIR) $(LIBPATH) striplib
 
 $(OBJDIR):
 	@mkdir $@
 
 $(LIBDIR):
 	@mkdir $@
-
-$(STRIP):
-	$(STRIP)
 
 $(LIBPATH_A): $(SRCOBJ) $(ASMOBJ)
 	$(LD) $(LDFLAGS) $(LIBPATH) $(SRCOBJ) $(ASMOBJ)
@@ -73,6 +75,11 @@ $(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS)
 $(OBJDIR)/%.S.o: $(SRCDIR)/%.S $(HEADERS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
+
+# this is a no-op if "strip=1" is not provided
+.PHONY: striplib
+striplib:
+	$(STRIP)
 
 # make tests :: Builds the test driver
 .PHONY: tests

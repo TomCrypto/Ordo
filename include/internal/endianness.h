@@ -22,10 +22,10 @@ extern "C" {
  * system library e.g. endian.h under most Unix distributions, however Ordo
  * will try to set up the necessary conversion functions on its own. */
 
-#if PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS)
     /* For Windows, assume little-endian. */
     #define ENDIANNESS 0
-#elif PLATFORM_LINUX
+#elif defined(PLATFORM_LINUX)
     /* For Linux, endian.h *must* provide the correct definitions. */
     #include <endian.h>
 
@@ -34,9 +34,9 @@ extern "C" {
     #elif __BYTE_ORDER == __BIG_ENDIAN
         #define ENDIANNESS 1
     #else
-        #error "Unknown endianness."
+        #error Unknown endianness.
     #endif
-#elif PLATFORM_NETBSD || PLATFORM_OPENBSD || PLATFORM_FREEBSD
+#elif defined(PLATFORM_BSD)
     /* *BSD variants use a different system header. */
     #include <sys/endian.h>
 
@@ -45,7 +45,7 @@ extern "C" {
     #elif __BYTE_ORDER == __BIG_ENDIAN
         #define ENDIANNESS 1
     #else
-        #error "Unknown endianness."
+        #error Unknown endianness.
     #endif
 #endif
 

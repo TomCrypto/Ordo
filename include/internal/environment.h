@@ -24,25 +24,25 @@ extern "C" {
  * invalid, or cannot be detected, or some other reason, fail. */
 
 #if _WIN32 || _WIN64
-    #define PLATFORM_WINDOWS 1
+    #define PLATFORM_WINDOWS
 #elif __linux__
-    #define PLATFORM_LINUX 1
+    #define PLATFORM_LINUX
 #elif __NetBSD__
-    #define PLATFORM_NETBSD 1
+    #define PLATFORM_NETBSD
 #elif __OpenBSD__
-    #define PLATFORM_OPENBSD 1
+    #define PLATFORM_OPENBSD
 #elif __FreeBSD__
-    #define PLATFORM_FREEBSD 1
+    #define PLATFORM_FREEBSD
 #else
-    #error "Platform not supported."
+    #error Platform not supported.
 #endif
 
 /* Detect if the system is 32-bit or 64-bit. */
 
 #if __LP64__
-    #define ENVIRONMENT_64 1
+    #define ENVIRONMENT_64
 #else
-    #define ENVIRONMENT_32 1
+    #define ENVIRONMENT_32
 #endif
 
 /* These are feature flags used to enable various optimizations. Note these
@@ -51,13 +51,26 @@ extern "C" {
 
 /* AES-NI instructions (hardware-accelerated AES) */
 #ifdef __AES__
-    #define FEATURE_AES 1
-#else
-    #define FEATURE_AES 0
+    #define FEATURE_AES
 #endif
 
 #ifdef __cplusplus
 }
+#endif
+
+/* The PLATFORM_BSD flag is defined for *BSD variants. */
+#if defined(PLATFORM_NETBSD) \
+ || defined(PLATFORM_OPENBSD) \
+ || defined(PLATFORM_FREEBSD)
+    #define PLATFORM_BSD
+#endif
+
+/* The PLATFORM_POSIX flag is defined for all platforms which behave in
+ * similar ways (e.g. follow the POSIX standard, have the same standard
+ * libraries, use the same ABI) and are in general basically the same. */
+#if defined(PLATFORM_LINUX) \
+ || defined(PLATFORM_BSD)
+    #define PLATFORM_POSIX
 #endif
 
 #endif

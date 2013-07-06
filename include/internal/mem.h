@@ -53,8 +53,8 @@ void* mem_aligned(size_t size, size_t alignment);
 /*! Deallocates a memory buffer.
  @param ptr A memory buffer to free.
  @remarks Passing nil to this function is valid and will do nothing.
- @remarks The memory buffer must have been allocated with either \c mem_alloc()
-          or \c mem_aligned().
+ @remarks The memory buffer must have been allocated with either
+          \c mem_alloc() or \c mem_aligned().
  @remarks The memory buffer will be overwritten with zeroes, ensuring no
           sensitive data lingers in memory.
 */

@@ -8,7 +8,7 @@
 /* Note: if for some reason your platform doesn't have an OS-provided CSPRNG,
  *       please implement this as a function which always returns ORDO_FAIL. */
 
-#if PLATFORM_LINUX || PLATFORM_NETBSD || PLATFORM_OPENBSD || PLATFORM_FREEBSD
+#if defined(PLATFORM_POSIX)
 
 #include <stdio.h>
 
@@ -31,7 +31,7 @@ int os_random(void *buffer, size_t size)
     return ORDO_SUCCESS;
 }
 
-#elif PLATFORM_WINDOWS
+#elif defined(PLATFORM_WINDOWS)
 
 #include <windows.h>
 #include <Wincrypt.h>
@@ -51,6 +51,6 @@ int os_random(void *buffer, size_t size)
 
 #else
 
-#error "No OS-provided CSPRNG interface implemented for this platform!"
+#error No OS-provided CSPRNG interface implemented for this platform!
 
 #endif
