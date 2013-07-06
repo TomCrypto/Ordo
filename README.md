@@ -12,7 +12,7 @@ Status
 Ordo v2 is out! It's not completely finished but the library has just undergone a major overhaul. Enjoy.
 
 What's new in 2.1:
- - much better memory allocation, zero reliance on mlock (fixed static buffer, very efficient and not very restrictive because of typical allocation patterns used by the library)
+ - much better memory allocation, zero reliance on malloc (fixed static buffer, very efficient and not very restrictive because of typical allocation patterns used by the library)
  - lots of various consistency and refactoring improvements
 
 A basic test driver has been implemented, which reads a test vector file (see vectors file) by parsing a simple script. It allows to see if Ordo is correctly running at a glance - if you fail a test vector or get a segfault, you have a problem. Read the vectors file (in the test program) and the test driver's code to know more about this.
