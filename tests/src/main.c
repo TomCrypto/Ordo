@@ -80,7 +80,12 @@ int main(int argc, char *argv[])
 {
     FILE *extended = 0;
     int color = 0;
-    ordo_init();
+    
+	if (ordo_init())
+	{
+		printf("Failed to initialize Ordo.\n");
+		return EXIT_FAILURE;
+	}
 
     if (parse_args(argc, argv, &color, &extended))
     {

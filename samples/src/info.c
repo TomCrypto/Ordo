@@ -13,7 +13,11 @@ int main()
 {
     size_t t;
 
-    ordo_init();
+	if (ordo_init())
+	{
+		printf("Failed to initialize Ordo.\n");
+		return EXIT_FAILURE;
+	}
 
     for (t = 0; t < BLOCK_COUNT; ++t)
     {
