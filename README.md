@@ -40,7 +40,7 @@ Ordo is documented for Doxygen, and you can automatically generate all documenta
 How To Build
 ------------
 
-As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and native word size for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
+As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and configuration for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
 
 In general, Ordo expects to be given the following information:
 
@@ -82,12 +82,11 @@ Compatibility
 
 The library has been tested against the following platforms:
 
-* Linux i686
-* Linux x64
-* OpenBSD x64
-* FreeBSD x64
-* NetBSD x64
-* Windows x64
+* Linux i386, x86_64
+* OpenBSD x86_64
+* FreeBSD x86_64
+* NetBSD i386
+* Windows i386, x86_64
 
 The following compilers are supported:
 
