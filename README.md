@@ -62,7 +62,7 @@ Finally, there are a few additional configuration options possible:
 * `make debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable debugging symbols. By default, debug mode is not enabled.
 * `make shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
 
-To build and run the tests, use `make tests` and `make run_tests`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` makefile parameter also applies to the tests and samples, and is needed to ensure they build for the right thing.
+To build and run the tests, use `make tests` and run the executable in `tests/bin`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` makefile parameter also applies to the tests and samples, and is needed to ensure they build for the right thing.
 
 If you want to have both a static and a shared library, first do `make` to build the static library, then `make clean_obj` to remove the object files (but not the newly created library) and finally `make shared=1`. You should probably then do another `make clean_obj` to remove the object files for consistency.
 
