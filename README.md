@@ -1,4 +1,4 @@
-Ordo v2.1.0
+Ordo v2.2.0
 ===========
 
 Symmetric Cryptography Library
