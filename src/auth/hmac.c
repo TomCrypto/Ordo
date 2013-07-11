@@ -1,6 +1,6 @@
 #include <auth/hmac.h>
 
-#include <common/ordo_errors.h>
+#include <common/errors.h>
 #include <internal/mem.h>
 
 #include <string.h>

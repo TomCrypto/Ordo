@@ -1,7 +1,7 @@
 #include <misc/os_random.h>
 
 #include <internal/environment.h>
-#include <common/ordo_errors.h>
+#include <common/errors.h>
 
 /******************************************************************************/
 

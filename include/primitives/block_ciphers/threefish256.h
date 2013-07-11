@@ -26,7 +26,7 @@ struct THREEFISH256_STATE;
 /*! Allocates and returns an uninitialized Threefish-256 block cipher context.
  @returns The allocated context, or nil on allocation failure.
 */
-struct THREEFISH256_STATE* threefish256_alloc();
+struct THREEFISH256_STATE* threefish256_alloc(void);
 
 /*! Initializes a Threefish-256 block cipher context.
  @param state An allocated Threefish-256 context.

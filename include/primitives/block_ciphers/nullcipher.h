@@ -15,9 +15,9 @@ extern "C" {
  * \brief Null Cipher block cipher.
  *
  * This cipher is only used to debug the library and does absolutely nothing,
- * in other words, it is the identity permutation. It accepts any key size but
- * does not even attempt to read the key, and has no parameters. Its block size
- * is 128 bits and is arbitrarily chosen.
+ * in other words, it is the identity permutation. It accepts no key, that is
+ * it only accepts a key length of zero bytes. Its block size is 128 bits and
+ * is arbitrarily chosen.
  */
 
 struct NULLCIPHER_STATE;
@@ -25,7 +25,7 @@ struct NULLCIPHER_STATE;
 /*! Allocates and returns an uninitialized AES block cipher context.
  @returns The allocated context, or nil on allocation failure.
 */
-struct NULLCIPHER_STATE* nullcipher_alloc();
+struct NULLCIPHER_STATE* nullcipher_alloc(void);
 
 /*! Initializes a NullCipher block cipher context.
  @param state An allocated NullCipher context.

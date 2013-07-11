@@ -114,8 +114,9 @@ For most uses, the build process should go like this:
     make
     make doc
     make tests
-    make run_tests # here, check it works properly
     make samples
+    cd tests
+    ./bin/tests # add "color" if your terminal supports it
 
 Finally, `make clean` will remove all generated files in the repository, leaving behind only original content.
 

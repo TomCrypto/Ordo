@@ -37,7 +37,7 @@ struct SKEIN256_STATE;
 /*! Allocates a Skein-256 state.
  @returns The allocated state, or nil on allocation failure.
 */
-struct SKEIN256_STATE* skein256_alloc();
+struct SKEIN256_STATE* skein256_alloc(void);
 
 /*! Initializes a Skein-256 state.
  @param state An allocated SHA-256 state.

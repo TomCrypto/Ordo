@@ -1,8 +1,8 @@
 #include <primitives/hash_functions/md5.h>
 
 #include <internal/endianness.h>
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -24,7 +24,7 @@ struct MD5_STATE
     uint64_t messageLength;
 };
 
-struct MD5_STATE* md5_alloc()
+struct MD5_STATE* md5_alloc(void)
 {
     return mem_alloc(sizeof(struct MD5_STATE));
 }

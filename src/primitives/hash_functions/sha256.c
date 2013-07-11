@@ -1,8 +1,8 @@
 #include <primitives/hash_functions/sha256.h>
 
 #include <internal/endianness.h>
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -53,7 +53,7 @@ struct SHA256_STATE
     uint64_t messageLength;
 };
 
-struct SHA256_STATE* sha256_alloc()
+struct SHA256_STATE* sha256_alloc(void)
 {
     return mem_alloc(sizeof(struct SHA256_STATE));
 }

@@ -73,18 +73,18 @@ const char* block_mode_name(const struct BLOCK_MODE *mode);
           or the helper functions \c block_mode_by_name() and
           \c block_mode_by_id().
 */
-void load_block_modes();
+void load_block_modes(void);
 
 /*! The ECB (Electronic CodeBook) mode of operation. */
-const struct BLOCK_MODE* ECB();
+const struct BLOCK_MODE* ECB(void);
 /*! The CBC (Ciphertext Block Chaining) mode of operation. */
-const struct BLOCK_MODE* CBC();
+const struct BLOCK_MODE* CBC(void);
 /*! The CTR (CounTeR) mode of operation. */
-const struct BLOCK_MODE* CTR();
+const struct BLOCK_MODE* CTR(void);
 /*! The CFB (Cipher FeedBack) mode of operation. */
-const struct BLOCK_MODE* CFB();
+const struct BLOCK_MODE* CFB(void);
 /*! The OFB (Output FeedBack) mode of operation. */
-const struct BLOCK_MODE* OFB();
+const struct BLOCK_MODE* OFB(void);
 
 /******************************************************************************/
 

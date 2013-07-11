@@ -1,6 +1,7 @@
 #include <enc/block_cipher_modes/cfb.h>
 
-#include <common/ordo_errors.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -12,6 +13,7 @@ struct CFB_STATE
 {
     /* A buffer for the IV. */
     void* iv;
+    void *tmp;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
 
@@ -27,6 +29,9 @@ struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_stat
 
     state->iv = mem_alloc(block_size);
     if (!state->iv) goto fail;
+
+    state->tmp = mem_alloc(block_size);
+    if (!state->tmp) goto fail;
 
     state->remaining = 0;
     return state;
@@ -115,8 +120,9 @@ void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* ciph
 
         /* Process this amount of data. */
         if (out != in) memcpy(out, in, process);
+        memcpy(state->tmp, in, process);
         xor_buffer(out, (unsigned char*)state->iv + block_size - state->remaining, process);
-        memcpy((unsigned char*)state->iv + block_size - state->remaining, in, process);
+        memcpy((unsigned char*)state->iv + block_size - state->remaining, state->tmp, process);
         state->remaining -= process;
         (*outlen) += process;
         inlen -= process;
@@ -140,12 +146,16 @@ int cfb_final(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
+    if (!state) return;
+
+    mem_free(state->tmp);
     mem_free(state->iv);
     mem_free(state);
 }
 
 void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher)
 {
+    memcpy(dst->tmp, src->tmp, cipher_block_size(cipher));
     memcpy(dst->iv, src->iv, cipher_block_size(cipher));
     dst->remaining = src->remaining;
     dst->direction = src->direction;

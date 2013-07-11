@@ -1,7 +1,9 @@
 #include <primitives/hash_functions/skein256.h>
 
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <primitives/block_ciphers/threefish256.h>
+
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -35,7 +37,7 @@ struct SKEIN256_STATE
     uint64_t output_length;
 };
 
-struct SKEIN256_STATE* skein256_alloc()
+struct SKEIN256_STATE* skein256_alloc(void)
 {
     return mem_alloc(sizeof(struct SKEIN256_STATE));
 }

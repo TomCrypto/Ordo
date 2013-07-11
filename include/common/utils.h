@@ -1,5 +1,5 @@
-#ifndef ORDO_UTIL_H
-#define ORDO_UTIL_H
+#ifndef ORDO_UTILS_H
+#define ORDO_UTILS_H
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 /*!
- * @file ordo_utils.h
+ * @file utils.h
  * @brief Library utility functions.
  *
  * This header provides various utility functions used internally, but which

@@ -1,13 +1,25 @@
 #include <ordo.h>
 
-#include <common/ordo_errors.h>
+#include <internal/mem.h>
 
 /******************************************************************************/
 
-void ordo_init()
+static int initialized;
+
+int ordo_init()
 {
-    load_primitives();
-    load_block_modes();
+    if (!initialized)
+    {
+        int err = mem_init();
+        if (err) return err;
+
+        load_primitives();
+        load_block_modes();
+
+        initialized = 1;
+    }
+
+    return 0;
 }
 
 int ordo_enc_block(const struct BLOCK_CIPHER* cipher,

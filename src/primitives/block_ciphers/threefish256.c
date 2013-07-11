@@ -1,13 +1,18 @@
 #include <primitives/block_ciphers/threefish256.h>
 
 #include <internal/asm/resolve.h>
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
 
 /******************************************************************************/
+
+#if !defined(THREEFISH256_STANDARD)
+void threefish256_forward_ASM(void *block, void *subkeys);
+void threefish256_inverse_ASM(void *block, void *subkeys);
+#endif
 
 #define THREEFISH256_BLOCK (bits(256)) /* 256-bit block */
 
@@ -21,7 +26,7 @@ struct THREEFISH256_STATE
     uint64_t subkey[19][4];
 };
 
-struct THREEFISH256_STATE* threefish256_alloc()
+struct THREEFISH256_STATE* threefish256_alloc(void)
 {
     return mem_alloc(sizeof(struct THREEFISH256_STATE));
 }

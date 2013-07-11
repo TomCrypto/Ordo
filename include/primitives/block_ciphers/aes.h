@@ -25,7 +25,7 @@ struct AES_STATE;
 /*! Allocates and returns an uninitialized AES block cipher context.
  @returns The allocated context, or nil on allocation failure.
 */
-struct AES_STATE* aes_alloc();
+struct AES_STATE* aes_alloc(void);
 
 /*! Initializes an AES block cipher context.
  @param state An allocated AES context.

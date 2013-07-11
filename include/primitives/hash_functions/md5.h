@@ -21,7 +21,7 @@ struct MD5_STATE;
 /*! Allocates an MD5 state.
  @returns The allocated state, or nil on allocation failure.
 */
-struct MD5_STATE* md5_alloc();
+struct MD5_STATE* md5_alloc(void);
 
 /*! Initializes an MD5 state.
  @param state An allocated MD5 state.

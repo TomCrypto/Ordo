@@ -153,7 +153,7 @@ struct BLOCK_CIPHER block[BLOCK_COUNT];
 struct STREAM_CIPHER stream[STREAM_COUNT];
 struct HASH_FUNCTION hash[HASH_COUNT];
 
-void load_primitives()
+void load_primitives(void)
 {
     nullcipher_set_primitive(&block[BLOCK_NULLCIPHER]);
     threefish256_set_primitive(&block[BLOCK_THREEFISH256]);
@@ -166,37 +166,37 @@ void load_primitives()
     skein256_set_primitive(&hash[HASH_SKEIN256]);
 }
 
-const struct BLOCK_CIPHER* NullCipher()
+const struct BLOCK_CIPHER* NullCipher(void)
 {
     return &block[BLOCK_NULLCIPHER];
 }
 
-const struct BLOCK_CIPHER* Threefish256()
+const struct BLOCK_CIPHER* Threefish256(void)
 {
     return &block[BLOCK_THREEFISH256];
 }
 
-const struct BLOCK_CIPHER* AES()
+const struct BLOCK_CIPHER* AES(void)
 {
     return &block[BLOCK_AES];
 }
 
-const struct STREAM_CIPHER* RC4()
+const struct STREAM_CIPHER* RC4(void)
 {
     return &stream[STREAM_RC4];
 }
 
-const struct HASH_FUNCTION* SHA256()
+const struct HASH_FUNCTION* SHA256(void)
 {
     return &hash[HASH_SHA256];
 }
 
-const struct HASH_FUNCTION* MD5()
+const struct HASH_FUNCTION* MD5(void)
 {
     return &hash[HASH_MD5];
 }
 
-const struct HASH_FUNCTION* Skein256()
+const struct HASH_FUNCTION* Skein256(void)
 {
     return &hash[HASH_SKEIN256];
 }
@@ -205,7 +205,7 @@ const struct HASH_FUNCTION* Skein256()
 
 const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
 {
-    ssize_t t;
+    size_t t;
 
     for (t = 0; t < BLOCK_COUNT; t++)
     {
@@ -218,7 +218,7 @@ const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
 
 const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
 {
-    ssize_t t;
+    size_t t;
 
     for (t = 0; t < STREAM_COUNT; t++)
     {
@@ -231,7 +231,7 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
 
 const struct HASH_FUNCTION* hash_function_by_name(const char *name)
 {
-    ssize_t t;
+    size_t t;
 
     for (t = 0; t < HASH_COUNT; t++)
     {

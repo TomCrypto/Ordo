@@ -17,7 +17,8 @@ extern "C" {
  * Contains the library's memory allocator/manager. The library relies solely
  * on this interface to allocate cryptographic contexts. Memory allocated by
  * this module is locked in physical memory and will be automatically erased
- * upon deallocation. This module also provides memory alignment facilities.
+ * upon deallocation. This module also provides memory alignment facilities,
+ * and guarantees thread safety of allocation and deallocation functions.
  *
  * This module is for internal use only and must not be used outside the
  * library.
@@ -33,22 +34,9 @@ extern "C" {
           allocate a lot of data) or if the process's memory locking quota
           is reached (should not happen under normal operation).
  @remarks Memory may be left uninitialized upon allocation.
+ @remarks This function is thread-safe.
 */
 void* mem_alloc(size_t size);
-
-/*! Allocates an aligned memory buffer.
- @param size The amount of memory to allocate, in bytes.
- @param alignment The alignment boundary required, in bytes.
- @returns Returns a pointer to the allocated aligned memory buffer on success,
-          or nil if the function fails.
- @remarks This function behaves the same as the \c mem_alloc() function, except
-          the memory buffer is guaranteed to be aligned to the requested
-          alignment boundary on success.
- @remarks The \c alignment argument should be a power of two.
- @remarks If \c 0 is passed for \c alignment, this function is equivalent to
-          \c mem_alloc().
-*/ 
-void* mem_aligned(size_t size, size_t alignment);
 
 /*! Deallocates a memory buffer.
  @param ptr A memory buffer to free.
@@ -57,6 +45,7 @@ void* mem_aligned(size_t size, size_t alignment);
           \c mem_alloc() or \c mem_aligned().
  @remarks The memory buffer will be overwritten with zeroes, ensuring no
           sensitive data lingers in memory.
+ @remarks This function is thread-safe.
 */
 void mem_free(void *ptr);
 
@@ -65,6 +54,16 @@ void mem_free(void *ptr);
  @param size The number of bytes to overwrite.
 */
 void mem_erase(void *ptr, size_t size);
+
+/*! Initializes the memory allocator.
+ @return Returns 0 on success, and any other value on error.
+ @remarks This is called by \c ordo_init().
+ @remarks Must be called before any other \c mem_* function is called.
+ @remarks Once the function has succeeded, it becomes idempotent.
+ @remarks The memory allocator will be automatically destroyed when
+          the host program terminates.
+*/
+int mem_init(void);
 
 #ifdef __cplusplus
 }

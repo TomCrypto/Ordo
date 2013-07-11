@@ -3,11 +3,9 @@ OBJDIR = obj
 SRCDIR = src
 INCLUDE = include
 
-CC = gcc
-CFLAGS = -Wall -Wextra \
-         -Wno-implicit-function-declaration -Wno-long-long \
-         -Wno-unused-parameter -Wno-unused-label \
-         -pedantic -pedantic-errors -pipe
+CC ?= gcc
+CFLAGS = -Wall -Wextra -Wno-unused-parameter \
+         -std=c99 -pedantic -pedantic-errors
 
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
@@ -15,11 +13,6 @@ ifeq ($(debug), 1)
 	CFLAGS += -O0 -ggdb -D ORDO_DEBUG -D ORDO_DEBUG_MEM
 else
 	CFLAGS += -O3
-endif
-
-# This one is for memory debugging only
-ifeq ($(debugmem), 1)
-	CFLAGS += -D ORDO_DEBUG_MEM
 endif
 
 # Decides whether to build a shared or a static library.
@@ -85,11 +78,6 @@ striplib:
 .PHONY: tests
 tests:
 	cd tests; make
-
-# make runtests :: Runs the test driver
-.PHONY: run_tests
-run_tests:
-	cd tests; ./bin/tests
 
 # make clean_tests :: Cleans the test driver
 .PHONY: clean_tests

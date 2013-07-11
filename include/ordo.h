@@ -2,8 +2,8 @@
 #define ORDO_ORDO_H
 
 #include <common/identification.h>
-#include <common/ordo_errors.h>
 #include <common/version.h>
+#include <common/errors.h>
 
 #include <enc/enc_stream.h>
 #include <enc/enc_block.h>
@@ -32,10 +32,11 @@ extern "C" {
 /*! Initializes the library, calling all the \c load_* functions in each
  *  abstraction layer, allowing the use of functions such as \c RC4(),
  *  \c CBC(), and so on.
+ @returns Returns 0 on success, and any other value on error.
  @remarks This function should be called prior to using the library for most
           purposes.
 */
-void ordo_init();
+int ordo_init(void);
 
 /*! Encrypts or decrypts a buffer using a block cipher in an encryption-only
  *  mode of operation.

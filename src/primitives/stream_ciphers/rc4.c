@@ -1,13 +1,17 @@
 #include <primitives/stream_ciphers/rc4.h>
 
 #include <internal/asm/resolve.h>
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
 
 /******************************************************************************/
+
+#if !defined(RC4_STANDARD)
+void rc4_update_ASM(void *state, size_t len, void *in, void *out);
+#endif
 
 /* A structure containing an RC4 state. */
 struct RC4_STATE
@@ -32,7 +36,7 @@ void swap_byte(uint8_t* a, uint8_t* b)
     *b = c;
 }
 
-struct RC4_STATE* rc4_alloc()
+struct RC4_STATE* rc4_alloc(void)
 {
     return mem_alloc(sizeof(struct RC4_STATE));
 }

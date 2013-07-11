@@ -4,17 +4,18 @@ BINDIR = bin
 OBJDIR = obj
 SRCDIR = src
 INCLUDE = include
+LDFLAGS = -pthread
 
-CC = gcc
-CFLAGS = -Wall -Wextra \
-         -pedantic -pedantic-errors -pipe
+CC ?= gcc
+CFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable \
+         -pedantic -pedantic-errors
 
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
 ifeq ($(debug), 1)
 	CFLAGS += -O0 -ggdb -D ORDO_DEBUG
 else
-	CFLAGS += -O6
+	CFLAGS += -O3
 endif
 
 # Decides whether to link to the Ordo shared library or not.

@@ -1,10 +1,10 @@
 BINDIR = bin
 SRCDIR = src
 
-CC = gcc
+CC ?= gcc
 CFLAGS = -O2 -Wall -Wextra -std=c99
 
-CXX = g++
+CXX ?= g++
 CXXFLAGS = -O2 -Wall -Wextra
 
 # Decides whether to link to the Ordo shared library or not.
@@ -19,7 +19,7 @@ ORDO_LIBPATH = $(addprefix $(ORDO_LIBDIR), $(ORDO_LIBNAME))
 ORDO_INCLUDE = ../include/
 
 .PHONY: all
-all: md5sum encrypt benchmark external
+all: md5sum encrypt benchmark external info
 	
 
 .PHONY: md5sum
@@ -42,6 +42,12 @@ external:
 	@mkdir -p $(BINDIR)
 	$(CXX) $(CXXFLAGS) $(SRCDIR)/external.cpp -o $(BINDIR)/external -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
+.PHONY: info
+info:
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) $(SRCDIR)/info.c -o $(BINDIR)/info -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
+
 .PHONY: clean
 clean:
 	rm -rf $(BINDIR)
+

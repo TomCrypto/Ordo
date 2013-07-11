@@ -1,6 +1,7 @@
 #include <enc/block_cipher_modes/cbc.h>
 
-#include <common/ordo_errors.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -228,6 +229,8 @@ int cbc_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
+    if (!state) return;
+
     mem_free(state->block);
     mem_free(state->iv);
     mem_free(state);

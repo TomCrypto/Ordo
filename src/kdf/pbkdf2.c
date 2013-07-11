@@ -1,7 +1,8 @@
 #include <kdf/pbkdf2.h>
 
 #include <internal/endianness.h>
-#include <common/ordo_errors.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <auth/hmac.h>

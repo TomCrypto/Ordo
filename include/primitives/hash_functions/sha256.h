@@ -21,7 +21,7 @@ struct SHA256_STATE;
 /*! Allocates a SHA-256 state.
  @returns The allocated state, or nil on allocation failure.
 */
-struct SHA256_STATE* sha256_alloc();
+struct SHA256_STATE* sha256_alloc(void);
 
 /*! Initializes a SHA-256 state.
  @param state An allocated SHA-256 state.

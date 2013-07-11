@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 /*!
- * @file ordo_errors.h
+ * @file errors.h
  * @brief Library error codes.
  *
  * This header contains declarations for errors which can occur from

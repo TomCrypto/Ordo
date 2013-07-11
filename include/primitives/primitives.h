@@ -27,21 +27,21 @@ extern "C" {
  * other modules rely on it, it would be very inefficient to do so.
 */
 
-typedef void*  (*BLOCK_ALLOC)  (                                       );
+typedef void*  (*BLOCK_ALLOC)  (void                                   );
 typedef  int   (*BLOCK_INIT)   (void*, const void*, size_t, const void*);
 typedef void   (*BLOCK_UPDATE) (void*,       void*                     );
 typedef void   (*BLOCK_FREE)   (void*                                  );
 typedef void   (*BLOCK_COPY)   (void*, const void*                     );
 typedef size_t (*BLOCK_KEYLEN) (size_t                                 );
 
-typedef void* (*STREAM_ALLOC)   (                                       );
+typedef void* (*STREAM_ALLOC)   (void                                   );
 typedef  int  (*STREAM_INIT)    (void*, const void*, size_t, const void*);
 typedef void  (*STREAM_UPDATE)  (void*,       void*, size_t             );
 typedef void  (*STREAM_FREE)    (void*                                  );
 typedef void  (*STREAM_COPY)    (void*, const void*                     );
 typedef size_t (*STREAM_KEYLEN) (size_t                                 );
 
-typedef void* (*HASH_ALLOC)  (                          );
+typedef void* (*HASH_ALLOC)  (void                      );
 typedef  int  (*HASH_INIT)   (void*, const void*        );
 typedef void  (*HASH_UPDATE) (void*, const void*, size_t);
 typedef void  (*HASH_FINAL)  (void*, void*              );
@@ -149,21 +149,6 @@ const char* hash_function_name(const struct HASH_FUNCTION *primitive);
 /*! Returns the block size of a block cipher primitive. */
 size_t cipher_block_size(const struct BLOCK_CIPHER *primitive);
 
-/*! Probes a block cipher for its key length.
- @param primitive The block cipher to probe.
- @param key_len A suggested key length.
- @returns Returns \c key_len if and only if \c key_len is a valid key length
-          for this block cipher. Otherwise, returns the nearest valid key
-          length greater than \c key_len. However, if no such key length
-          exists, it will return the largest key length admitted by the
-          block cipher.
- @remarks For instance, if you pass a key length of 25 bytes (200 bits) to
-          the AES cipher, it will return the value 32 (corresponding to 32
-          bytes or 256 bits), \b not 24 (192 bits).
-*/
-size_t block_key_len(const struct BLOCK_CIPHER *primitive,
-                     size_t key_len);
-
 /*! Returns the digest length of a hash function primitive. */
 size_t hash_digest_length(const struct HASH_FUNCTION *primitive);
 
@@ -177,28 +162,28 @@ size_t hash_block_size(const struct HASH_FUNCTION *primitive);
           or the helper functions \c block_cipher_by_name(),
           \c stream_cipher_by_id(), and so on.
 */
-void load_primitives();
+void load_primitives(void);
 
 /*! The NullCipher block cipher. */
-const struct BLOCK_CIPHER* NullCipher();
+const struct BLOCK_CIPHER* NullCipher(void);
 
 /*! The Threefish-256 block cipher. */
-const struct BLOCK_CIPHER* Threefish256();
+const struct BLOCK_CIPHER* Threefish256(void);
 
 /*! The AES block cipher. */
-const struct BLOCK_CIPHER* AES();
+const struct BLOCK_CIPHER* AES(void);
 
 /*! The RC4 stream cipher. */
-const struct STREAM_CIPHER* RC4();
+const struct STREAM_CIPHER* RC4(void);
 
 /*! The SHA256 hash function. */
-const struct HASH_FUNCTION* SHA256();
+const struct HASH_FUNCTION* SHA256(void);
 
 /*! The MD5 hash function. */
-const struct HASH_FUNCTION* MD5();
+const struct HASH_FUNCTION* MD5(void);
 
 /*! The Skein-256 hash function. */
-const struct HASH_FUNCTION* Skein256();
+const struct HASH_FUNCTION* Skein256(void);
 
 /******************************************************************************/
 
@@ -245,6 +230,18 @@ void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
                        void *dst,
                        const void *src);
 
+/*! Probes a block cipher for its key length.
+ @param primitive The block cipher to probe.
+ @param key_len A suggested key length.
+ @returns Returns \c key_len if and only if \c key_len is a valid key length
+          for this block cipher. Otherwise, returns the nearest valid key
+          length greater than \c key_len. However, if no such key length
+          exists, it will return the largest key length admitted by the
+          block cipher.
+ @remarks For instance, if you pass a key length of 25 bytes (200 bits) to
+          the AES cipher, it will return the value 32 (corresponding to 32
+          bytes or 256 bits), \b not 24 (192 bits).
+*/
 size_t block_cipher_key_len(const struct BLOCK_CIPHER *primitive,
                             size_t key_len);
 

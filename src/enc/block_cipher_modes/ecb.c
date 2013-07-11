@@ -1,6 +1,7 @@
 #include <enc/block_cipher_modes/ecb.h>
 
-#include <common/ordo_errors.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -199,6 +200,8 @@ int ecb_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* 
 
 void ecb_free(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state)
 {
+    if (!state) return;
+
     mem_free(state->block);
     mem_free(state);
 }

@@ -1,7 +1,6 @@
 #include <enc/block_modes.h>
 
 #include <common/identification.h>
-#include <common/ordo_errors.h>
 
 #include <string.h>
 
@@ -46,7 +45,7 @@ void make_block_mode(struct BLOCK_MODE *mode,
 
 struct BLOCK_MODE encryptModes[BLOCK_MODE_COUNT];
 
-void load_block_modes()
+void load_block_modes(void)
 {
     ecb_set_mode(&encryptModes[BLOCK_MODE_ECB]);
     cbc_set_mode(&encryptModes[BLOCK_MODE_CBC]);
@@ -55,27 +54,27 @@ void load_block_modes()
     ofb_set_mode(&encryptModes[BLOCK_MODE_OFB]);
 }
 
-const struct BLOCK_MODE* ECB()
+const struct BLOCK_MODE* ECB(void)
 {
     return &encryptModes[BLOCK_MODE_ECB];
 }
 
-const struct BLOCK_MODE* CBC()
+const struct BLOCK_MODE* CBC(void)
 {
     return &encryptModes[BLOCK_MODE_CBC];
 }
 
-const struct BLOCK_MODE* CTR()
+const struct BLOCK_MODE* CTR(void)
 {
     return &encryptModes[BLOCK_MODE_CTR];
 }
 
-const struct BLOCK_MODE* CFB()
+const struct BLOCK_MODE* CFB(void)
 {
     return &encryptModes[BLOCK_MODE_CFB];
 }
 
-const struct BLOCK_MODE* OFB()
+const struct BLOCK_MODE* OFB(void)
 {
     return &encryptModes[BLOCK_MODE_OFB];
 }
@@ -91,7 +90,7 @@ const char* block_mode_name(const struct BLOCK_MODE *mode)
 
 const struct BLOCK_MODE* block_mode_by_name(const char* name)
 {
-    ssize_t t;
+    size_t t;
     for (t = 0; t < BLOCK_MODE_COUNT; t++)
     {
         if (strcmp(name, encryptModes[t].name) == 0)

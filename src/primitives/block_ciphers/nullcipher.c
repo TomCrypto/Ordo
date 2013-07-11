@@ -1,7 +1,7 @@
 #include <primitives/block_ciphers/nullcipher.h>
 
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 /******************************************************************************/
@@ -13,7 +13,7 @@ struct NULLCIPHER_STATE
     size_t dummy;
 };
 
-struct NULLCIPHER_STATE* nullcipher_alloc()
+struct NULLCIPHER_STATE* nullcipher_alloc(void)
 {
     /* A block cipher always needs to allocate a state (returning nil means
        an allocation failed, so we can't use that even for this cipher). */
@@ -50,7 +50,7 @@ void nullcipher_copy(struct NULLCIPHER_STATE *dst,
 
 size_t nullcipher_key_len(size_t key_len)
 {
-    return key_len;
+    return 0;
 }
 
 void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher)

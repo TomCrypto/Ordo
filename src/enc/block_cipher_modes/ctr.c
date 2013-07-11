@@ -1,6 +1,7 @@
 #include <enc/block_cipher_modes/ctr.h>
 
-#include <common/ordo_errors.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
@@ -103,6 +104,8 @@ int ctr_final(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
+    if (!state) return;
+
     mem_free(state->counter);
     mem_free(state->iv);
     mem_free(state);

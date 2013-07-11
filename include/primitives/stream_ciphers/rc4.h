@@ -28,7 +28,7 @@ struct RC4_STATE;
 /*! Allocates an RC4 state.
  @returns The allocated state, or nil on allocation failure.
 */
-struct RC4_STATE* rc4_alloc();
+struct RC4_STATE* rc4_alloc(void);
 
 /*! Initializes an RC4 state.
  @param state An allocated RC4 state.

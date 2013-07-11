@@ -17,13 +17,18 @@ REDISTRIBUTION OF THIS SOFTWARE.
 #include <primitives/block_ciphers/aes.h>
 
 #include <internal/asm/resolve.h>
-#include <common/ordo_errors.h>
-#include <common/ordo_utils.h>
+#include <common/errors.h>
+#include <common/utils.h>
 #include <internal/mem.h>
 
 #include <string.h>
 
 /******************************************************************************/
+
+#if !defined(AES_STANDARD)
+void aes_forward_ASM(void *block, void *key, size_t rounds);
+void aes_inverse_ASM(void *block, void *key, size_t rounds);
+#endif
 
 /* The block size of AES. */
 #define AES_BLOCK (bits(128))
@@ -404,7 +409,7 @@ struct AES_STATE
     size_t rounds;
 };
 
-struct AES_STATE* aes_alloc()
+struct AES_STATE* aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
     if (state) state->keyBytes = 0;
