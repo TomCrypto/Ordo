@@ -32,9 +32,11 @@ extern "C" {
 /*! Initializes the library, calling all the \c load_* functions in each
  *  abstraction layer, allowing the use of functions such as \c RC4(),
  *  \c CBC(), and so on.
- @returns Returns 0 on success, and any other value on error.
+ @returns Returns #ORDO_SUCCESS on success, or a negative value on failure.
  @remarks This function should be called prior to using the library for most
           purposes.
+ @remarks If this function fails, one should probably abort as it means
+          something has gone very wrong.
 */
 int ordo_init(void);
 

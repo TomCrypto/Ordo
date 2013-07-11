@@ -15,8 +15,8 @@ What's new in 2.2:
  - fixed a bug in all modes of operation where attempting to free a null pointer would lead to a segmentation fault
  - fixed a small memory leak
  - correctly rewrote functions which take no parameters as `(void)`
- - dedicated memory manager is now thread-safe, using `pthreads` for both Windows and Linux/BSD (but perhaps faster, system-specific mutexes could be used)
- - as a result of the previous bullet point, Ordo currently depends on `pthreads`, hopefully this will change soon as system-specific mutexes are implemented
+ - dedicated memory manager is now thread-safe, using `pthreads` for Linux/BSD and critical sections for Windows
+ - as a consequence of the above bullet point, Ordo now depends on `pthreads` for Linux/BSD compilation. Note the makefile will still link to `pthread` even under Windows, so one should remove that manually as needed
  - finally put the problem of OpenBSD's `sys/endian.h` header to rest: nowhere is it said one needs to include `sys/types.h` before! Yay for self-contained headers (and bad error messages)
 
 Feature Map
@@ -84,6 +84,7 @@ The library has been tested against the following platforms:
 * Linux i686
 * Linux x64
 * OpenBSD x64
+* FreeBSD x64
 * NetBSD x64
 * Windows x64
 

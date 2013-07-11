@@ -44,8 +44,7 @@ void* mem_alloc(size_t size);
 /*! Deallocates a memory buffer.
  @param ptr A memory buffer to free.
  @remarks Passing nil to this function is valid and will do nothing.
- @remarks The memory buffer must have been allocated with either
-          \c mem_alloc() or \c mem_aligned().
+ @remarks The memory buffer must have been allocated with \c mem_alloc().
  @remarks The memory buffer will be overwritten with zeroes, ensuring no
           sensitive data lingers in memory.
  @remarks This function is thread-safe.
@@ -62,7 +61,7 @@ void mem_erase(void *ptr, size_t size);
  @return Returns 0 on success, and any other value on error.
  @remarks This is called by \c ordo_init().
  @remarks Must be called before any other \c mem_* function is called.
- @remarks Once the function has succeeded, it becomes idempotent.
+ @remarks Will do nothing if it is called after it succeeds.
  @remarks The memory allocator will be automatically destroyed when
           the host program terminates.
 */

@@ -39,7 +39,7 @@ extern "C" {
 
 /* Detect if the system is 32-bit or 64-bit. */
 
-#if __LP64__
+#if __LP64__ || _WIN64
     #define ENVIRONMENT_64
 #else
     #define ENVIRONMENT_32
@@ -59,7 +59,7 @@ extern "C" {
 #endif
 
 /* The PLATFORM_BSD flag is defined for *BSD variants. */
-#if defined(PLATFORM_NETBSD) \
+#if defined(PLATFORM_NETBSD)  \
  || defined(PLATFORM_OPENBSD) \
  || defined(PLATFORM_FREEBSD)
     #define PLATFORM_BSD
