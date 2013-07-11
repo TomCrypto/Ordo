@@ -7,7 +7,12 @@ CFLAGS = -O2 -Wall -Wextra -std=c99
 CXX ?= g++
 CXXFLAGS = -O2 -Wall -Wextra
 
-LDFLAGS = -pthread
+ifeq ($(nopthread), 1)
+	LDFLAGS = 
+else
+	CFLAGS += -pthread
+	LDFLAGS = -pthread
+endif
 
 # Decides whether to link to the Ordo shared library or not.
 ifeq ($(shared), 1)

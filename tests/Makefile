@@ -9,12 +9,17 @@ CC ?= gcc
 CFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable \
          -pedantic -pedantic-errors
 
-LDFLAGS = -pthread
+ifeq ($(nopthread), 1)
+	LDFLAGS = 
+else
+    CFLAGS += -pthread
+	LDFLAGS = -pthread
+endif
 
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
 ifeq ($(debug), 1)
-	CFLAGS += -O0 -ggdb -D ORDO_DEBUG
+	CFLAGS += -O0 -ggdb
 else
 	CFLAGS += -O3
 endif

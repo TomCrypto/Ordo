@@ -16,7 +16,7 @@ What's new in 2.2:
  - fixed a small memory leak
  - correctly rewrote functions which take no parameters as `(void)`
  - dedicated memory manager is now thread-safe, using `pthreads` for Linux/BSD and critical sections for Windows
- - as a consequence of the above bullet point, Ordo now depends on `pthreads` for Linux/BSD compilation. Note the makefile will still link to `pthread` even under Windows, so one should remove that manually as needed
+ - as a consequence of the above bullet point, Ordo now depends on `pthreads` for Linux/BSD compilation. Use `make nopthread=1` under Windows.
  - finally put the problem of OpenBSD's `sys/endian.h` header to rest: nowhere is it said one needs to include `sys/types.h` before! Yay for self-contained headers (and bad error messages)
 
 Feature Map
@@ -61,8 +61,9 @@ Finally, there are a few additional configuration options possible:
 * `make strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
 * `make debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable debugging symbols. By default, debug mode is not enabled.
 * `make shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
+* `make nopthread=1` will build the library without linking to `pthread`. Use this when you do not actually need the `pthread` mutex implementation, e.g. under Windows.
 
-To build and run the tests, use `make tests` and run the executable in `tests/bin`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` makefile parameter also applies to the tests and samples, and is needed to ensure they build for the right thing.
+To build and run the tests, use `make tests` and run the executable in `tests/bin`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` and `nopthread` makefile parameters also apply to the tests and samples, and they must be the same for the library and the tests/samples.
 
 If you want to have both a static and a shared library, first do `make` to build the static library, then `make clean_obj` to remove the object files (but not the newly created library) and finally `make shared=1`. You should probably then do another `make clean_obj` to remove the object files for consistency.
 

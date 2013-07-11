@@ -7,7 +7,12 @@ CC ?= gcc
 CFLAGS = -Wall -Wextra -Wno-unused-parameter \
          -std=c99 -pedantic -pedantic-errors
 
-LDFLAGS = -pthread
+ifeq ($(nopthread), 1)
+	LDFLAGS = 
+else
+	CFLAGS += -pthread
+	LDFLAGS = -pthread
+endif
 
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
@@ -49,7 +54,8 @@ LIBPATH = $(addprefix $(LIBDIR)/, $(LIBNAME))
 LIBPATH_A = $(addprefix $(LIBDIR)/, libordo.a)
 LIBPATH_SO = $(addprefix $(LIBDIR)/, libordo.so)
 
-default: $(OBJDIR) $(LIBDIR) $(LIBPATH) striplib
+default: $(OBJDIR) $(LIBDIR) $(LIBPATH)
+	$(STRIP)
 
 $(OBJDIR):
 	@mkdir $@
@@ -70,11 +76,6 @@ $(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS)
 $(OBJDIR)/%.S.o: $(SRCDIR)/%.S $(HEADERS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
-
-# this is a no-op if "strip=1" is not provided
-.PHONY: striplib
-striplib:
-	$(STRIP)
 
 # make tests :: Builds the test driver
 .PHONY: tests
