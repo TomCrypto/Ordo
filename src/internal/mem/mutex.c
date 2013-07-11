@@ -11,57 +11,32 @@
 
 #include <windows.h>
 
-static HANDLE mutex;
+/* We use a critical section because it's faster than a mutex under Windows
+ * as it doesn't incur a kernel call (we don't care about inter-process). */
+static CRITICAL_SECTION mutex;
 
 int mutex_init(void)
 {
-    return ((mutex = CreateMutex(0, 0, 0)) == 0);
+    InitializeCriticalSection(&mutex);
+    return 0;
 }
 
 void mutex_acquire(void)
 {
-    WaitForSingleObject(mutex, INFINITE);
+    EnterCriticalSection(&mutex);
 }
 
 void mutex_release(void)
 {
-    ReleaseMutex(mutex);
+    LeaveCriticalSection(&mutex);
 }
 
 void mutex_free(void)
 {
-    CloseHandle(mutex);
+    DeleteCriticalSection(&mutex);
 }
 
-#elif defined(PLATFORM_BSD)
-
-#include <sys/param.h>
-#include <sys/lock.h>
-#include <sys/mutex.h>
-
-static struct mtx mutex;
-
-int mutex_init(void)
-{
-    mtx_init(&mutex, "ordo_mem", 0, MTX_DEF);
-}
-
-void mutex_acquire(void)
-{
-    mtx_lock(&mutex);
-}
-
-void mutex_release(void)
-{
-    mtx_unlock(&mutex);
-}
-
-void mutex_free(void)
-{
-    mtx_destroy(&mutex);
-}
-
-#elif defined(PLATFORM_LINUX)
+#elif defined(PLATFORM_POSIX)
 
 #include <pthread.h>
 
