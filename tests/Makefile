@@ -4,11 +4,12 @@ BINDIR = bin
 OBJDIR = obj
 SRCDIR = src
 INCLUDE = include
-LDFLAGS = -pthread
 
 CC ?= gcc
 CFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable \
          -pedantic -pedantic-errors
+
+LDFLAGS = -pthread
 
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.

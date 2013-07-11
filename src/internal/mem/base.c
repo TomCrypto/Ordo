@@ -4,6 +4,9 @@
 
 /******************************************************************************/
 
+/* Note - if your platform does not support memory locking, or if it somehow
+ * doesn't make sense to do so, you can implement dummy functions for these. */
+
 #if defined(PLATFORM_POSIX)
 
 #include <sys/mman.h>
@@ -29,7 +32,7 @@ int mem_lock(void *ptr, size_t len)
 
 void mem_unlock(void *ptr, size_t len)
 {
-    return !VirtualUnlock(ptr, len);
+    VirtualUnlock(ptr, len);
 }
 
 #else

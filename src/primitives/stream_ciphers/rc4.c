@@ -28,13 +28,15 @@ struct RC4_STATE
 };
 
 /* Swaps two bytes. */
-void swap_byte(uint8_t* a, uint8_t* b)
+#if defined(RC4_STANDARD)
+static void swap_byte(uint8_t* a, uint8_t* b)
 {
     uint8_t c;
     c = *a;
     *a = *b;
     *b = c;
 }
+#endif
 
 struct RC4_STATE* rc4_alloc(void)
 {
@@ -47,7 +49,8 @@ int rc4_init(struct RC4_STATE *state,
              const struct RC4_PARAMS *params)
 {
     size_t t, drop;
-    uint8_t tmp;
+    
+	uint8_t tmp;
 
     if ((key_len < bits(40)) || (key_len > bits(2048))) return ORDO_KEY_LEN;
 
@@ -59,7 +62,7 @@ int rc4_init(struct RC4_STATE *state,
         state->j = (state->j + state->s[t] + key[t % key_len]);
         state->j &= 0xFF; /* For the 64-bit version. */
 
-        tmp = state->s[t];
+        tmp = (uint8_t)state->s[t];
         state->s[t] = state->s[state->j];
         state->s[state->j] = tmp;
     }

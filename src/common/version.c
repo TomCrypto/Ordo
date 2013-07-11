@@ -6,7 +6,7 @@
 /******************************************************************************/
 
 #define VERSION_MAJOR 2
-#define VERSION_MINOR 1
+#define VERSION_MINOR 2
 #define VERSION_REV   0
 
 int ordo_version_major()
@@ -25,15 +25,15 @@ int ordo_version_rev()
 }
 
 #if defined(PLATFORM_WINDOWS)
-const char *platform = "Windows";
+static const char *platform = "Windows";
 #elif defined(PLATFORM_LINUX)
-const char *platform = "Linux";
+static const char *platform = "Linux";
 #elif defined(PLATFORM_OPENBSD)
-const char *platform = "OpenBSD";
+static const char *platform = "OpenBSD";
 #elif defined(PLATFORM_FREEBSD)
-const char *platform = "FreeBSD";
+static const char *platform = "FreeBSD";
 #elif defined(PLATFORM_NETBSD)
-const char *platform = "NetBSD";
+static const char *platform = "NetBSD";
 #endif
 
 const char* ordo_platform()

@@ -13,7 +13,7 @@
 #define MD5_BLOCK (bits(512))
 
 /* The MD5 initial state vector. */
-const uint32_t MD5_initialState[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
+static const uint32_t MD5_initialState[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
 /* A MD5 state. */
 struct MD5_STATE
@@ -41,7 +41,7 @@ int md5_init(struct MD5_STATE *state, const void* params)
 }
 
 /* This is the MD5 compression function. */
-void md5Compress(const uint32_t block[16], uint32_t digest[4])
+static void md5Compress(const uint32_t block[16], uint32_t digest[4])
 {
     /* Temporary variables. */
     uint32_t a, b, c, d;
@@ -265,11 +265,6 @@ void md5_free(struct MD5_STATE *state)
 void md5_copy(struct MD5_STATE *dst, const struct MD5_STATE *src)
 {
     memcpy(dst, src, sizeof(struct MD5_STATE));
-}
-
-size_t md5_length(const void *params)
-{
-    return MD5_DIGEST;
 }
 
 void md5_set_primitive(struct HASH_FUNCTION* hash)

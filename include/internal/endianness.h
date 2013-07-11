@@ -27,6 +27,7 @@ extern "C" {
     #define ENDIANNESS 0
 #elif defined(PLATFORM_LINUX)
     /* For Linux, endian.h *must* provide the correct definitions. */
+    #include <sys/types.h>
     #include <endian.h>
 
     #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -37,7 +38,8 @@ extern "C" {
         #error Unknown endianness.
     #endif
 #elif defined(PLATFORM_BSD)
-    /* *BSD variants use a different system header. */
+    /* BSD variants use a different system header. */
+    #include <sys/types.h>
     #include <sys/endian.h>
 
     #if __BYTE_ORDER == __LITTLE_ENDIAN

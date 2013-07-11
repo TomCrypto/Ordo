@@ -25,7 +25,7 @@
                                                                 | ((uint64_t)(type)  << 56);
 
 /* The Skein-256 initial state vector for the default configuration block. */
-const uint64_t Skein256_initialState[4] = {0xFC9DA860D048B449, 0x2FCA66479FA7D833, 0xB33BC3896656840F, 0x6A54E920FDE8DA69};
+static const uint64_t Skein256_initialState[4] = {0xFC9DA860D048B449, 0x2FCA66479FA7D833, 0xB33BC3896656840F, 0x6A54E920FDE8DA69};
 
 /* A Skein-256 state. */
 struct SKEIN256_STATE
@@ -43,7 +43,7 @@ struct SKEIN256_STATE* skein256_alloc(void)
 }
 
 /* This is the Skein-256 compression function. */
-void skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
+static void skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
 {
     /* Some variables. */
     uint64_t subkeys[19][4];

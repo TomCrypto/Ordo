@@ -149,56 +149,56 @@ size_t hash_block_size(const struct HASH_FUNCTION *primitive)
 
 /******************************************************************************/
 
-struct BLOCK_CIPHER block[BLOCK_COUNT];
-struct STREAM_CIPHER stream[STREAM_COUNT];
-struct HASH_FUNCTION hash[HASH_COUNT];
+static struct BLOCK_CIPHER block_ciphers[BLOCK_COUNT];
+static struct STREAM_CIPHER stream_ciphers[STREAM_COUNT];
+static struct HASH_FUNCTION hash_functions[HASH_COUNT];
 
 void load_primitives(void)
 {
-    nullcipher_set_primitive(&block[BLOCK_NULLCIPHER]);
-    threefish256_set_primitive(&block[BLOCK_THREEFISH256]);
-    aes_set_primitive(&block[BLOCK_AES]);
+    nullcipher_set_primitive(&block_ciphers[BLOCK_NULLCIPHER]);
+    threefish256_set_primitive(&block_ciphers[BLOCK_THREEFISH256]);
+    aes_set_primitive(&block_ciphers[BLOCK_AES]);
 
-    rc4_set_primitive(&stream[STREAM_RC4]);
+    rc4_set_primitive(&stream_ciphers[STREAM_RC4]);
 
-    sha256_set_primitive(&hash[HASH_SHA256]);
-    md5_set_primitive(&hash[HASH_MD5]);
-    skein256_set_primitive(&hash[HASH_SKEIN256]);
+    sha256_set_primitive(&hash_functions[HASH_SHA256]);
+    md5_set_primitive(&hash_functions[HASH_MD5]);
+    skein256_set_primitive(&hash_functions[HASH_SKEIN256]);
 }
 
 const struct BLOCK_CIPHER* NullCipher(void)
 {
-    return &block[BLOCK_NULLCIPHER];
+    return &block_ciphers[BLOCK_NULLCIPHER];
 }
 
 const struct BLOCK_CIPHER* Threefish256(void)
 {
-    return &block[BLOCK_THREEFISH256];
+    return &block_ciphers[BLOCK_THREEFISH256];
 }
 
 const struct BLOCK_CIPHER* AES(void)
 {
-    return &block[BLOCK_AES];
+    return &block_ciphers[BLOCK_AES];
 }
 
 const struct STREAM_CIPHER* RC4(void)
 {
-    return &stream[STREAM_RC4];
+    return &stream_ciphers[STREAM_RC4];
 }
 
 const struct HASH_FUNCTION* SHA256(void)
 {
-    return &hash[HASH_SHA256];
+    return &hash_functions[HASH_SHA256];
 }
 
 const struct HASH_FUNCTION* MD5(void)
 {
-    return &hash[HASH_MD5];
+    return &hash_functions[HASH_MD5];
 }
 
 const struct HASH_FUNCTION* Skein256(void)
 {
-    return &hash[HASH_SKEIN256];
+    return &hash_functions[HASH_SKEIN256];
 }
 
 /******************************************************************************/
@@ -209,8 +209,9 @@ const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
 
     for (t = 0; t < BLOCK_COUNT; t++)
     {
-        if (!strncmp(name, block[t].name, strlen(block[t].name)))
-            return &block[t];
+		size_t len = strlen(block_ciphers[t].name);
+        if (!strncmp(name, block_ciphers[t].name, len))
+            return &block_ciphers[t];
     }
 
     return 0;
@@ -222,8 +223,9 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
 
     for (t = 0; t < STREAM_COUNT; t++)
     {
-        if (!strncmp(name, stream[t].name, strlen(stream[t].name)))
-            return &stream[t];
+		size_t len = strlen(stream_ciphers[t].name);
+        if (!strncmp(name, stream_ciphers[t].name, len))
+            return &stream_ciphers[t];
     }
 
     return 0;
@@ -235,8 +237,9 @@ const struct HASH_FUNCTION* hash_function_by_name(const char *name)
 
     for (t = 0; t < HASH_COUNT; t++)
     {
-        if (!strncmp(name, hash[t].name, strlen(hash[t].name)))
-            return &hash[t];
+		size_t len = strlen(hash_functions[t].name);
+        if (!strncmp(name, hash_functions[t].name, len))
+            return &hash_functions[t];
     }
 
     return 0;
@@ -244,17 +247,17 @@ const struct HASH_FUNCTION* hash_function_by_name(const char *name)
 
 const struct BLOCK_CIPHER* block_cipher_by_id(size_t id)
 {
-    return (id < BLOCK_COUNT) ? &block[id] : 0;
+    return (id < BLOCK_COUNT) ? &block_ciphers[id] : 0;
 }
 
 const struct STREAM_CIPHER* stream_cipher_by_id(size_t id)
 {
-    return (id < STREAM_COUNT) ? &stream[id] : 0;
+    return (id < STREAM_COUNT) ? &stream_ciphers[id] : 0;
 }
 
 const struct HASH_FUNCTION* hash_function_by_id(size_t id)
 {
-    return (id < HASH_COUNT) ? &hash[id] : 0;
+    return (id < HASH_COUNT) ? &hash_functions[id] : 0;
 }
 
 /******************************************************************************/

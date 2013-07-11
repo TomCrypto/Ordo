@@ -43,40 +43,40 @@ void make_block_mode(struct BLOCK_MODE *mode,
 
 /******************************************************************************/
 
-struct BLOCK_MODE encryptModes[BLOCK_MODE_COUNT];
+static struct BLOCK_MODE block_modes[BLOCK_MODE_COUNT];
 
 void load_block_modes(void)
 {
-    ecb_set_mode(&encryptModes[BLOCK_MODE_ECB]);
-    cbc_set_mode(&encryptModes[BLOCK_MODE_CBC]);
-    ctr_set_mode(&encryptModes[BLOCK_MODE_CTR]);
-    cfb_set_mode(&encryptModes[BLOCK_MODE_CFB]);
-    ofb_set_mode(&encryptModes[BLOCK_MODE_OFB]);
+    ecb_set_mode(&block_modes[BLOCK_MODE_ECB]);
+    cbc_set_mode(&block_modes[BLOCK_MODE_CBC]);
+    ctr_set_mode(&block_modes[BLOCK_MODE_CTR]);
+    cfb_set_mode(&block_modes[BLOCK_MODE_CFB]);
+    ofb_set_mode(&block_modes[BLOCK_MODE_OFB]);
 }
 
 const struct BLOCK_MODE* ECB(void)
 {
-    return &encryptModes[BLOCK_MODE_ECB];
+    return &block_modes[BLOCK_MODE_ECB];
 }
 
 const struct BLOCK_MODE* CBC(void)
 {
-    return &encryptModes[BLOCK_MODE_CBC];
+    return &block_modes[BLOCK_MODE_CBC];
 }
 
 const struct BLOCK_MODE* CTR(void)
 {
-    return &encryptModes[BLOCK_MODE_CTR];
+    return &block_modes[BLOCK_MODE_CTR];
 }
 
 const struct BLOCK_MODE* CFB(void)
 {
-    return &encryptModes[BLOCK_MODE_CFB];
+    return &block_modes[BLOCK_MODE_CFB];
 }
 
 const struct BLOCK_MODE* OFB(void)
 {
-    return &encryptModes[BLOCK_MODE_OFB];
+    return &block_modes[BLOCK_MODE_OFB];
 }
 
 /******************************************************************************/
@@ -93,8 +93,9 @@ const struct BLOCK_MODE* block_mode_by_name(const char* name)
     size_t t;
     for (t = 0; t < BLOCK_MODE_COUNT; t++)
     {
-        if (strcmp(name, encryptModes[t].name) == 0)
-            return &encryptModes[t];
+		size_t len = strlen(block_modes[t].name);
+        if (!strncmp(name, block_modes[t].name, len))
+            return &block_modes[t];
     }
 
     return 0;
@@ -102,7 +103,7 @@ const struct BLOCK_MODE* block_mode_by_name(const char* name)
 
 const struct BLOCK_MODE* block_mode_by_id(size_t id)
 {
-    return (id < BLOCK_MODE_COUNT) ? &encryptModes[id] : 0;
+    return (id < BLOCK_MODE_COUNT) ? &block_modes[id] : 0;
 }
 
 /******************************************************************************/

@@ -7,10 +7,12 @@ CC ?= gcc
 CFLAGS = -Wall -Wextra -Wno-unused-parameter \
          -std=c99 -pedantic -pedantic-errors
 
+LDFLAGS = -pthread
+
 # Chooses the proper compiler flags to use based on debug
 # or release. By default release, use `make debug=1 ...`.
 ifeq ($(debug), 1)
-	CFLAGS += -O0 -ggdb -D ORDO_DEBUG -D ORDO_DEBUG_MEM
+	CFLAGS += -O0 -ggdb -D ORDO_DEBUG
 else
 	CFLAGS += -O3
 endif
@@ -19,12 +21,12 @@ endif
 # Use `make shared=1 ...` to build Ordo as a shared lib.
 ifeq ($(shared), 1)
 	LIBNAME = libordo.so
-	LDFLAGS = -shared
+	LDFLAGS += -shared
 	CFLAGS += -fpic
 	LD = $(CC)
 else
 	LIBNAME = libordo.a
-	LDFLAGS = rcs
+	LDFLAGS = rcs # do not link -pthread!
 	LD = ar
 endif
 
@@ -56,10 +58,10 @@ $(LIBDIR):
 	@mkdir $@
 
 $(LIBPATH_A): $(SRCOBJ) $(ASMOBJ)
-	$(LD) $(LDFLAGS) $(LIBPATH) $(SRCOBJ) $(ASMOBJ)
+	$(LD) $(LDFLAGS) $(LIBPATH_A) $(SRCOBJ) $(ASMOBJ)
 
 $(LIBPATH_SO): $(SRCOBJ) $(ASMOBJ)
-	$(LD) $(LDFLAGS) $(SRCOBJ) $(ASMOBJ) -o $(LIBPATH)
+	$(LD) $(LDFLAGS) $(SRCOBJ) $(ASMOBJ) -o $(LIBPATH_SO)
 
 $(OBJDIR)/%.c.o: $(SRCDIR)/%.c $(HEADERS)
 	@mkdir -p $(@D)
@@ -77,22 +79,22 @@ striplib:
 # make tests :: Builds the test driver
 .PHONY: tests
 tests:
-	cd tests; make
+	cd tests; $(MAKE)
 
 # make clean_tests :: Cleans the test driver
 .PHONY: clean_tests
 clean_tests:
-	cd tests; make clean
+	cd tests; $(MAKE) clean
 
 # make samples :: Builds all samples
 .PHONY: samples
 samples:
-	cd samples; make all
+	cd samples; $(MAKE) all
 
 # make clean_samples :: Cleans the samples
 .PHONY: clean_samples
 clean_samples:
-	cd samples; make clean
+	cd samples; $(MAKE) clean
 
 # make clean_bin :: Removes all binary files
 .PHONY: clean_bin
@@ -109,7 +111,7 @@ clean_obj:
 doc:
 	doxygen
 	mkdir -p doc
-	cd doc/latex; make
+	cd doc/latex; $(MAKE)
 	cd doc; ln -s -f html/index.html doc.html
 	cd doc; ln -s -f latex/refman.pdf doc.pdf
 

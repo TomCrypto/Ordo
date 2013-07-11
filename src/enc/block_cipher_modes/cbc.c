@@ -60,7 +60,7 @@ int cbc_init(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     return ORDO_SUCCESS;
 }
 
-void cbc_encrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void cbc_encrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -98,7 +98,7 @@ void cbc_encrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* ciph
     state->available += inlen;
 }
 
-void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -139,10 +139,10 @@ void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* ciph
     state->available += inlen;
 }
 
-int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+static int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
-    unsigned char padding;
+    uint8_t padding;
 
     /* If padding is disabled, we need to handle things differently. */
     if (state->padding == 0)
@@ -154,7 +154,7 @@ int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher
     else
     {
         /* Compute the amount of padding required. */
-        padding = block_size - state->available % block_size;
+        padding = (uint8_t)(block_size - state->available % block_size);
 
         /* Write padding to the last block. */
         memset(state->block + state->available, padding, padding);
@@ -173,10 +173,10 @@ int cbc_encrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher
     return ORDO_SUCCESS;
 }
 
-int cbc_decrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+static int cbc_decrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
-    unsigned char padding;
+    uint8_t padding;
 
     /* If padding is disabled, we need to handle things differently. */
     if (!state->padding)
@@ -194,7 +194,7 @@ int cbc_decrypt_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher
         xor_buffer(state->block, state->iv, block_size);
 
         /* Read the amount of padding. */
-        padding = *(state->block + block_size - 1);
+        padding = (uint8_t)(*(state->block + block_size - 1));
 
         /* Check the padding. */
         if ((padding != 0) && (padding <= block_size) && (pad_check(state->block + block_size - padding, padding)))

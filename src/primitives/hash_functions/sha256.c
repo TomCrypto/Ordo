@@ -13,14 +13,14 @@
 #define SHA256_BLOCK (bits(512))
 
 /* The SHA-256 initial state vector. */
-const uint32_t sha256_initialState[8] =
+static const uint32_t sha256_initialState[8] =
 {
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
 /* The SHA-256 constant table. */
-const uint32_t SHA256_constants[64] =
+static const uint32_t SHA256_constants[64] =
 {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -70,7 +70,7 @@ int sha256_init(struct SHA256_STATE *state, const void* params)
 }
 
 /* This is the SHA-256 compression function. */
-void sha256Compress(const uint32_t block[16], uint32_t digest[8])
+static void sha256Compress(const uint32_t block[16], uint32_t digest[8])
 {
     /* Temporary variables. */
     uint32_t a, b, c, d, e, f, g, h;

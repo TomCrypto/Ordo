@@ -51,7 +51,7 @@ int ecb_init(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* c
     return ORDO_SUCCESS;
 }
 
-void ecb_encrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void ecb_encrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -83,7 +83,7 @@ void ecb_encrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *ciph
     state->available += inlen;
 }
 
-void ecb_decrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void ecb_decrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
 
@@ -115,10 +115,10 @@ void ecb_decrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *ciph
     state->available += inlen;
 }
 
-int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+static int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
-    unsigned char padding;
+    uint8_t padding;
 
     /* If padding is disabled, we need to handle things differently. */
     if (state->padding == 0)
@@ -130,7 +130,7 @@ int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher
     else
     {
         /* Compute the amount of padding required. */
-        padding = block_size - state->available % block_size;
+        padding = (uint8_t)(block_size - state->available % block_size); /* Guaranteed to fit in a uint8_t. */
 
         /* Write padding to the last block. */
         memset(state->block + state->available, padding, padding);
@@ -147,7 +147,7 @@ int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher
     return ORDO_SUCCESS;
 }
 
-int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+static int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
 {
     size_t block_size = cipher_block_size(cipher);
     unsigned char padding;

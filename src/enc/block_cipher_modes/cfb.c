@@ -60,7 +60,7 @@ int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     return ORDO_SUCCESS;
 }
 
-void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
@@ -95,7 +95,7 @@ void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* ciph
     }
 }
 
-void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = cipher_block_size(cipher);
