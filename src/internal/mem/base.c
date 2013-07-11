@@ -23,7 +23,7 @@ void mem_unlock(void *ptr, size_t len)
 
 #elif defined(PLATFORM_WINDOWS)
 
-#include <Windows.h>
+#include <windows.h>
 
 int mem_lock(void *ptr, size_t len)
 {
