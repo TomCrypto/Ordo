@@ -11,11 +11,11 @@
 
 int main()
 {
-	if (ordo_init())
-	{
-		std::cout << "Failed to initialize Ordo." << std::endl;
-		return EXIT_FAILURE;
-	}
+    if (ordo_init())
+    {
+        std::cout << "Failed to initialize Ordo." << std::endl;
+        return EXIT_FAILURE;
+    }
 
     std::cout << "Ordo version: " << ordo_version_major() << "."
                                   << ordo_version_minor() << "."
@@ -47,5 +47,5 @@ int main()
         std::cout << std::endl;
     }
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

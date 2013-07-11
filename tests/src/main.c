@@ -10,11 +10,9 @@ void display_header(void)
 {
     char header[MAX_LEN + 1];
 
-    const char *endianness = (ordo_endianness() == 0) ? "little" : "big";
-
-    snprintf(header, MAX_LEN, "Ordo v%d.%d.%d for %s (%d-bit, %s-endian)",
+    snprintf(header, MAX_LEN, "Ordo v%d.%d.%d (compiled for %d-bit %s)",
              ordo_version_major(), ordo_version_minor(), ordo_version_rev(),
-             ordo_platform(), ordo_word_size(), endianness);
+             ordo_word_size(), ordo_platform());
 
     printf("%s\n", line);
     printf("| %s%-*s%s | %sTest%s |\n",
@@ -58,10 +56,21 @@ int parse_args(int argc, char *argv[], int *color, FILE **extended)
     if (argc > 3) return 1;
     if (argc == 1) return 0;
 
+    *color = 0;
+    *extended = 0;
+
     for (t = 1; t < argc; ++t)
     {
-        if (!strcmp(argv[t], "-color")) *color = 1;
-        else if (!strcmp(argv[t], "-extended")) *extended = stderr;
+        if (!strcmp(argv[t], "-color"))
+        {
+            if (*color == 1) return 1;
+            *color = 1;
+        }
+        else if (!strcmp(argv[t], "-extended"))
+        {
+            if (*extended != 0) return 1;
+            *extended = stderr;
+        }
         else return 1;
     }
 
@@ -81,11 +90,11 @@ int main(int argc, char *argv[])
     FILE *extended = 0;
     int color = 0;
     
-	if (ordo_init())
-	{
-		printf("Failed to initialize Ordo.\n");
-		return EXIT_FAILURE;
-	}
+    if (ordo_init())
+    {
+        printf("Failed to initialize Ordo.\n");
+        return EXIT_FAILURE;
+    }
 
     if (parse_args(argc, argv, &color, &extended))
     {

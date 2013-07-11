@@ -23,11 +23,11 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-	if (ordo_init())
-	{
-		printf("Failed to initialize Ordo.\n");
-		return EXIT_FAILURE;
-	}
+    if (ordo_init())
+    {
+        printf("Failed to initialize Ordo.\n");
+        return EXIT_FAILURE;
+    }
 
     struct DIGEST_CTX *ctx = digest_alloc(MD5());
     if (!ctx)

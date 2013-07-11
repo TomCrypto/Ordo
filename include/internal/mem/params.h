@@ -23,7 +23,7 @@ extern "C" {
 */
 
 /* For all x86 and x86_64 processors, assume general-purpose usage. */
-#if defined(__x86_64__) || defined(__i686__)
+#if defined(__x86_64__) || defined(__i386__)
 
     #define POOL_SIZE 1024
     #define POOL_WORD 32
@@ -36,7 +36,7 @@ extern "C" {
 
 #else
 
-    #error No Secure Memory parameters defined for this platform!
+    #error No memory pool parameters defined for this platform!
 
 #endif
 

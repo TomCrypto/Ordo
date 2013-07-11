@@ -23,32 +23,18 @@ extern "C" {
  * will try to set up the necessary conversion functions on its own. */
 
 #if defined(PLATFORM_WINDOWS)
-    /* For Windows, assume little-endian. */
-    #define ENDIANNESS 0
+    /* For Windows, assume little-endian. Also don't expect Windows to
+     * provide endianness functions, you gotta do it all yourself. */
+    #define __LITTLE_ENDIAN 1234
+    #define __BYTE_ORDER __LITTLE_ENDIAN
 #elif defined(PLATFORM_LINUX)
     /* For Linux, endian.h *must* provide the correct definitions. */
     #include <sys/types.h>
     #include <endian.h>
-
-    #if __BYTE_ORDER == __LITTLE_ENDIAN
-        #define ENDIANNESS 0
-    #elif __BYTE_ORDER == __BIG_ENDIAN
-        #define ENDIANNESS 1
-    #else
-        #error Unknown endianness.
-    #endif
 #elif defined(PLATFORM_BSD)
     /* BSD variants use a different system header. */
     #include <sys/types.h>
     #include <sys/endian.h>
-
-    #if __BYTE_ORDER == __LITTLE_ENDIAN
-        #define ENDIANNESS 0
-    #elif __BYTE_ORDER == __BIG_ENDIAN
-        #define ENDIANNESS 1
-    #else
-        #error Unknown endianness.
-    #endif
 #endif
 
 /* Define generic byte swapping macros if they are not already provided. */
@@ -78,7 +64,7 @@ extern "C" {
 /* Endianness helpers: HOST -> BIG-ENDIAN. */
 
 #ifndef htobe16
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe16(x) (__bswap_16(x))
     #else
         #define htobe16(x) (x)
@@ -86,7 +72,7 @@ extern "C" {
 #endif
 
 #ifndef htobe32
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe32(x) (__bswap_32(x))
     #else
         #define htobe32(x) (x)
@@ -94,7 +80,7 @@ extern "C" {
 #endif
 
 #ifndef htobe64
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe64(x) (__bswap_64(x))
     #else
         #define htobe64(x) (x)
@@ -104,7 +90,7 @@ extern "C" {
 /* Endianness helpers: HOST -> LITTLE-ENDIAN. */
 
 #ifndef htole16
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htole16(x) (x)
     #else
         #define htole16(x) (__bswap_16(x))
@@ -112,7 +98,7 @@ extern "C" {
 #endif
 
 #ifndef htole32
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htole32(x) (x)
     #else
         #define htole32(x) (__bswap_32(x))
@@ -120,7 +106,7 @@ extern "C" {
 #endif
 
 #ifndef htole64
-    #if (ENDIANNESS == 0)
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htole64(x) (x)
     #else
         #define htole64(x) (__bswap_64(x))

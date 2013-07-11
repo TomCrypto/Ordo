@@ -93,7 +93,7 @@ const struct BLOCK_MODE* block_mode_by_name(const char* name)
     size_t t;
     for (t = 0; t < BLOCK_MODE_COUNT; t++)
     {
-		size_t len = strlen(block_modes[t].name);
+        size_t len = strlen(block_modes[t].name);
         if (!strncmp(name, block_modes[t].name, len))
             return &block_modes[t];
     }

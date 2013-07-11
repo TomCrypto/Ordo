@@ -209,7 +209,7 @@ const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
 
     for (t = 0; t < BLOCK_COUNT; t++)
     {
-		size_t len = strlen(block_ciphers[t].name);
+        size_t len = strlen(block_ciphers[t].name);
         if (!strncmp(name, block_ciphers[t].name, len))
             return &block_ciphers[t];
     }
@@ -223,7 +223,7 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
 
     for (t = 0; t < STREAM_COUNT; t++)
     {
-		size_t len = strlen(stream_ciphers[t].name);
+        size_t len = strlen(stream_ciphers[t].name);
         if (!strncmp(name, stream_ciphers[t].name, len))
             return &stream_ciphers[t];
     }
@@ -237,7 +237,7 @@ const struct HASH_FUNCTION* hash_function_by_name(const char *name)
 
     for (t = 0; t < HASH_COUNT; t++)
     {
-		size_t len = strlen(hash_functions[t].name);
+        size_t len = strlen(hash_functions[t].name);
         if (!strncmp(name, hash_functions[t].name, len))
             return &hash_functions[t];
     }

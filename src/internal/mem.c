@@ -68,42 +68,42 @@ void *mem_alloc(size_t size)
 
         mutex_acquire();
 
-		if (usage + blocks < POOL_SIZE)
-		{
-		    size_t t = 0;
+        if (usage + blocks < POOL_SIZE)
+        {
+            size_t t = 0;
 
-		    while (t + blocks < POOL_SIZE)
-		    {
-		        if (allocated[t])
-		        {
-		            /* This block, and possibly more ahead, is used so skip to *
-		             * the next block which doesn't belong to this allocation. */
-		            t += allocated[t];
-		        }
-		        else
-		        {
-		            size_t n;
+            while (t + blocks < POOL_SIZE)
+            {
+                if (allocated[t])
+                {
+                    /* This block, and possibly more ahead, is used so skip to *
+                     * the next block which doesn't belong to this allocation. */
+                    t += allocated[t];
+                }
+                else
+                {
+                    size_t n;
 
-		            for (n = 1; n < blocks; ++n)
-		                if (allocated[t + n])
-		                {
-		                    t += n + allocated[t + n];
-		                    goto retry;
-		                }
+                    for (n = 1; n < blocks; ++n)
+                        if (allocated[t + n])
+                        {
+                            t += n + allocated[t + n];
+                            goto retry;
+                        }
 
-		            allocated[t] = blocks;
-		            usage += blocks;
+                    allocated[t] = blocks;
+                    usage += blocks;
 
-		            mutex_release();
-		            return pool + t * POOL_WORD;
-		        }
+                    mutex_release();
+                    return pool + t * POOL_WORD;
+                }
 retry:
-		        continue;
-		    }
-    	}
+                continue;
+            }
+        }
 
-    	mutex_release();
-	}
+        mutex_release();
+    }
 
     return 0;
 }

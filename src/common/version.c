@@ -49,8 +49,3 @@ int ordo_word_size()
     return 64;
     #endif
 }
-
-int ordo_endianness()
-{
-    return ENDIANNESS;
-}

@@ -29,11 +29,6 @@ const char* ordo_platform(void);
 /*! The word size of the architecture the library was built for. */
 int ordo_word_size(void);
 
-/*! The endianness of the architecture the library was built for.
- @remarks Returns 0 for little-endian, and 1 for big-endian.
-*/
-int ordo_endianness(void);
-
 #ifdef __cplusplus
 }
 #endif

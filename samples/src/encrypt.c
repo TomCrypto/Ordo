@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
     if (argc != 5) return -1;
 
     if (ordo_init())
-	{
-		printf("Failed to initialize Ordo.\n");
-		return EXIT_FAILURE;
-	}
+    {
+        printf("Failed to initialize Ordo.\n");
+        return EXIT_FAILURE;
+    }
 
     /* Open the files. */
     FILE *in = fopen(argv[3], "rb");

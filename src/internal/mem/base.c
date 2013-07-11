@@ -37,6 +37,6 @@ void mem_unlock(void *ptr, size_t len)
 
 #else
 
-#error No Secure Memory base implementation for this platform!
+#error No memory allocator implementation for this platform!
 
 #endif

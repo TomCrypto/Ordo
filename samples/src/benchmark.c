@@ -214,10 +214,10 @@ int main(int argc, char *argv[])
     }
 
     if (ordo_init())
-	{
-		printf("Failed to initialize Ordo.\n");
-		return EXIT_FAILURE;
-	}
+    {
+        printf("Failed to initialize Ordo.\n");
+        return EXIT_FAILURE;
+    }
 
     size_t buf_size = (argc == 2 ? atoi(argv[1]) : 128);
     buf_size *= 1024 * 1024; /* To MB */

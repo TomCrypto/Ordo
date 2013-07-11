@@ -34,6 +34,9 @@ extern "C" {
           allocate a lot of data) or if the process's memory locking quota
           is reached (should not happen under normal operation).
  @remarks Memory may be left uninitialized upon allocation.
+ @remarks Memory returned by this function is guaranteed to be aligned for
+          all possible uses by the library (e.g. on a generic x86 processor,
+          it will be aligned to a 32-byte boundary).
  @remarks This function is thread-safe.
 */
 void* mem_alloc(size_t size);

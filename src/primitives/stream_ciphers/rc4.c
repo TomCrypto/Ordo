@@ -50,7 +50,7 @@ int rc4_init(struct RC4_STATE *state,
 {
     size_t t, drop;
     
-	uint8_t tmp;
+    uint8_t tmp;
 
     if ((key_len < bits(40)) || (key_len > bits(2048))) return ORDO_KEY_LEN;
 
