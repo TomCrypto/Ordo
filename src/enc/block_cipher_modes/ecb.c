@@ -8,31 +8,25 @@
 
 /******************************************************************************/
 
-/* This is extra context space required by the ECB mode to store temporary incomplete data buffers.*/
 struct ECB_STATE
 {
-    /* ,The temporary block, the size of the primitive's block size. */
-    unsigned char* block;
-    /* The amount of bytes of plaintext or ciphertext currently in the temporary block. */
+    /* Stores pending, incomplete plaintext/ciphertext blocks. */
+    unsigned char *block;
     size_t available;
-    /* Whether to pad the ciphertext. */
-    size_t padding;
 
+    size_t padding;
     int direction;
 };
 
-struct ECB_STATE* ecb_alloc(const struct BLOCK_CIPHER *cipher, void* cipher_state)
+struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
+                            void *cipher_state)
 {
-    size_t block_size = cipher_block_size(cipher);
-
-    /* Allocate the context and extra buffers in it. */
-    struct ECB_STATE* state = mem_alloc(sizeof(struct ECB_STATE));
+    struct ECB_STATE* state = mem_alloc(sizeof(*state));
     if (!state) goto fail;
 
-    state->block = mem_alloc(block_size);
+    state->block = mem_alloc(cipher_block_size(cipher));
     if (!state->block) goto fail;
 
-    state->available = 0;
     return state;
 
 fail:
@@ -40,143 +34,136 @@ fail:
     return 0;
 }
 
-int ecb_init(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct ECB_PARAMS* params)
+int ecb_init(struct ECB_STATE *state,
+             const struct BLOCK_CIPHER *cipher,
+             void *cipher_state,
+             const void *iv,
+             size_t iv_len,
+             int direction,
+             const struct ECB_PARAMS *params)
 {
-    state->direction = dir;
+    /* ECB accepts no IV - it is an error to pass it one. Note for consistency
+     * only the iv_len parameter is checked - iv itself is in fact ignored. */
+    if (iv_len != 0) return ORDO_ARG;
 
-    /* Check and save the parameters. */
+    state->available = 0;
+    state->direction = direction;
     state->padding = (params == 0) ? 1 : params->padding & 1;
 
-    /* Return success. */
     return ORDO_SUCCESS;
 }
 
-static void ecb_encrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ecb_update(struct ECB_STATE *state,
+                const struct BLOCK_CIPHER *cipher,
+                void *cipher_state,
+                const unsigned char *in,
+                size_t in_len,
+                unsigned char *out,
+                size_t *out_len)
 {
     size_t block_size = cipher_block_size(cipher);
 
-    /* Initialize output size. */
-    *outlen = 0;
+    /* If decrypting, skip the last block if using padding. */
+    size_t skip = (state->direction ? 0 : state->padding);
 
-    /* Process all full blocks. */
-    while (state->available + inlen >= block_size)
+    *out_len = 0;
+
+    while (state->available + in_len >= block_size + skip)
     {
-        /* Copy it in, and process it. */
-        memcpy(state->block + state->available, in, block_size - state->available);
+        size_t process = block_size - state->available;
 
-        /* Encrypt the block. */
-        block_cipher_forward(cipher, cipher_state, state->block);
+        memcpy(state->block + state->available, in, process);
 
-        /* Write back the block to the output. */
-        memcpy(out, state->block, block_size);
-        *outlen += block_size;
-        out += block_size;
-
-        /* Go forward in the input buffer. */
-        inlen -= block_size - state->available;
-        in += block_size - state->available;
-        state->available = 0;
-    }
-
-    /* Add whatever is left in the temporary buffer. */
-    memcpy(state->block + state->available, in, inlen);
-    state->available += inlen;
-}
-
-static void ecb_decrypt_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
-{
-    size_t block_size = cipher_block_size(cipher);
-
-    /* Initialize output size. */
-    *outlen = 0;
-
-    /* Process all full blocks except the last potential block (if padding is disabled, also process the last block). */
-    while (state->available + inlen > block_size - (1 - state->padding))
-    {
-        /* Copy it in, and process it. */
-        memcpy(state->block + state->available, in, block_size - state->available);
-
-        /* Decrypt the block. */
-        block_cipher_inverse(cipher, cipher_state, state->block);
-
-        /* Write back the block to the output. */
-        memcpy(out, state->block, block_size);
-        *outlen += block_size;
-        out += block_size;
-
-        /* Go forward in the input buffer. */
-        inlen -= block_size - state->available;
-        in += block_size - state->available;
-        state->available = 0;
-    }
-
-    /* Save the final block. */
-    memcpy(state->block + state->available, in, inlen);
-    state->available += inlen;
-}
-
-static int ecb_encrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
-{
-    size_t block_size = cipher_block_size(cipher);
-    uint8_t padding;
-
-    /* If padding is disabled, we need to handle things differently. */
-    if (state->padding == 0)
-    {
-        /* If there is data left, return an error and the number of plaintext left in outlen. */
-        *outlen = state->available;
-        if (*outlen != 0) return ORDO_LEFTOVER;
-    }
-    else
-    {
-        /* Compute the amount of padding required. */
-        padding = (uint8_t)(block_size - state->available % block_size); /* Guaranteed to fit in a uint8_t. */
-
-        /* Write padding to the last block. */
-        memset(state->block + state->available, padding, padding);
-
-        /* Encrypt the last block. */
-        block_cipher_forward(cipher, cipher_state, state->block);
-
-        /* Write it out to the buffer. */
-        memcpy(out, state->block, block_size);
-        *outlen = block_size;
-    }
-
-    /* Return success. */
-    return ORDO_SUCCESS;
-}
-
-static int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
-{
-    size_t block_size = cipher_block_size(cipher);
-    unsigned char padding;
-
-    /* If padding is disabled, we need to handle things differently. */
-    if (!state->padding)
-    {
-        /* If there is data left, return an error and the number of plaintext left in outlen. */
-        *outlen = state->available;
-        if (*outlen != 0) return ORDO_LEFTOVER;
-    }
-    else
-    {
-        /* Otherwise, decrypt the last block. */
-        block_cipher_inverse(cipher, cipher_state, state->block);
-
-        /* Read the amount of padding. */
-        padding = *(state->block + block_size - 1);
-
-        /* Check the padding. */
-        if ((padding != 0) && (padding <= block_size) && (pad_check(state->block + block_size - padding, padding)))
+        if (state->direction)
         {
-            /* Remove the padding data and output the plaintext. */
-            *outlen = block_size - padding;
-            memcpy(out, state->block, *outlen);
+            block_cipher_forward(cipher, cipher_state, state->block);
         }
         else
         {
-            *outlen = 0;
+            block_cipher_inverse(cipher, cipher_state, state->block);
+        }
+
+        memcpy(out, state->block, block_size);
+        *out_len += block_size;
+        out += block_size;
+
+        state->available = 0;
+        in_len -= process;
+        in += process;
+    }
+
+    memcpy(state->block + state->available, in, in_len);
+    state->available += in_len;
+}
+
+static int ecb_encrypt_final(struct ECB_STATE *state,
+                             const struct BLOCK_CIPHER *cipher,
+                             void *cipher_state,
+                             unsigned char *out,
+                             size_t *out_len)
+{
+    if (state->padding == 0)
+    {
+        /* Return the number of leftover bytes for the user's consideration. */
+        *out_len = state->available;
+        if (*out_len != 0) return ORDO_LEFTOVER;
+    }
+    else
+    {
+        size_t block_size = cipher_block_size(cipher);
+        uint8_t padding;
+
+        /* Calculate how many padding bytes are required. We assert here
+         * that 0 < block_size < 256, as per standard PKCS padding... */
+        padding = (uint8_t)(block_size - state->available % block_size);
+
+        memset(state->block + state->available, padding, padding);
+        block_cipher_forward(cipher, cipher_state, state->block);
+
+        memcpy(out, state->block, block_size);
+        *out_len = block_size;
+    }
+
+    return ORDO_SUCCESS;
+}
+
+static int ecb_decrypt_final(struct ECB_STATE *state,
+                             const struct BLOCK_CIPHER *cipher,
+                             void *cipher_state,
+                             unsigned char *out,
+                             size_t *out_len)
+{
+    if (!state->padding)
+    {
+        *out_len = state->available;
+        if (*out_len != 0) return ORDO_LEFTOVER;
+    }
+    else
+    {
+        size_t block_size = cipher_block_size(cipher);
+        uint8_t padding;
+
+        block_cipher_inverse(cipher, cipher_state, state->block);
+
+        /* Fetch the padding byte at the end of the block, and verify. */
+        padding = (uint8_t)(*(state->block + block_size - 1));
+
+        /* Padding is clearly invalid - reject it immediately. */
+        if ((padding == 0) || (padding > block_size))
+        {
+            *out_len = 0;
+            return ORDO_PADDING;
+        }
+
+        if (pad_check(state->block + block_size - padding, padding))
+        {
+            /* Strip off the padding. */
+            *out_len = block_size - padding;
+            memcpy(out, state->block, *out_len);
+        }
+        else
+        {
+            *out_len = 0;
             return ORDO_PADDING;
         }
     }
@@ -184,29 +171,31 @@ static int ecb_decrypt_final(struct ECB_STATE *state, const struct BLOCK_CIPHER 
     return ORDO_SUCCESS;
 }
 
-void ecb_update(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
-{
-    (state->direction
-     ? ecb_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
-     : ecb_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
-}
-
-int ecb_final(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ecb_final(struct ECB_STATE *state,
+              const struct BLOCK_CIPHER *cipher,
+              void *cipher_state,
+              unsigned char *out,
+              size_t *out_len)
 {
     return (state->direction
-            ? ecb_encrypt_final(state, cipher, cipher_state, out, outlen)
-            : ecb_decrypt_final(state, cipher, cipher_state, out, outlen));
+            ? ecb_encrypt_final(state, cipher, cipher_state, out, out_len)
+            : ecb_decrypt_final(state, cipher, cipher_state, out, out_len));
 }
 
-void ecb_free(struct ECB_STATE *state, const struct BLOCK_CIPHER *cipher, void* cipher_state)
+void ecb_free(struct ECB_STATE *state,
+              const struct BLOCK_CIPHER *cipher,
+              void *cipher_state)
 {
-    if (!state) return;
-
-    mem_free(state->block);
-    mem_free(state);
+    if (state)
+    {
+        mem_free(state->block);
+        mem_free(state);
+    }
 }
 
-void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct BLOCK_CIPHER* cipher)
+void ecb_copy(struct ECB_STATE *dst,
+              const struct ECB_STATE *src,
+              const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->block, src->block, cipher_block_size(cipher));
     dst->available = src->available;
@@ -214,7 +203,7 @@ void ecb_copy(struct ECB_STATE *dst, const struct ECB_STATE *src, const struct B
     dst->padding = src->padding;
 }
 
-void ecb_set_mode(struct BLOCK_MODE* mode)
+void ecb_set_mode(struct BLOCK_MODE *mode)
 {
     make_block_mode(mode,
                     (BLOCK_MODE_ALLOC)ecb_alloc,
