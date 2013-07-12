@@ -10,15 +10,14 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file mutex.h
  * @brief Memory allocator mutex module.
- * @internal
  *
  * This module provides the memory allocator with a single mutex to use
  * for thread safety.
  *
- * This module is for internal use only and must not be used outside the
- * library.
+ * This module is not to be used from outside the library.
 */
 
 /*! Initializes the mutex.

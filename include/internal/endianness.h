@@ -10,12 +10,14 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file endianness.h
  * @brief Compile-time endianness detection.
- * @internal
  *
  * This header will provide definitions relating to endianness. It cannot be
  * included in assembly files as it may or may not contain declarations.
+ *
+ * This header is internal to the library.
 */
 
 /* Detect the endianness of the system - normally this is defined by the

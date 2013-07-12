@@ -8,9 +8,9 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file environment.h
  * @brief Compile-time environment detection.
- * @internal
  *
  * This header will provide definitions for the environment details under
  * which Ordo is being built, trying to unify various compiler-specific
@@ -18,6 +18,8 @@ extern "C" {
  *
  * This file may only contain preprocessor macros as it is included in
  * assembly files - it cannot contain declarations.
+ *
+ * This header is internal to the library.
 */
 
 /* Detect the platform we are going to be building on. If the platform is

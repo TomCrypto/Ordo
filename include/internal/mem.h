@@ -10,9 +10,9 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file mem.h
  * @brief Memory allocator module.
- * @internal
  *
  * Contains the library's memory allocator/manager. The library relies solely
  * on this interface to allocate cryptographic contexts. Memory allocated by
@@ -20,8 +20,7 @@ extern "C" {
  * upon deallocation. This module also provides memory alignment facilities,
  * and guarantees thread safety of allocation and deallocation functions.
  *
- * This module is for internal use only and must not be used outside the
- * library.
+ * This module is not to be used from outside the library.
 */
 
 /*! Allocates a memory buffer.

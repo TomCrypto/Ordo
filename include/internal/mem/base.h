@@ -10,15 +10,14 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file base.h
  * @brief Memory allocator base module.
- * @internal
  *
  * This is an interface which abstracts away platform-dependent details in
  * order to provide standard functions for the memory allocator to use.
  *
- * This module is for internal use only and must not be used outside the
- * library.
+ * This module is not to be used from outside the library.
 */
 
 /*! Locks a memory buffer into physical memory, ensuring it will not be

@@ -10,16 +10,15 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file params.h
  * @brief Memory allocator parameters.
- * @internal
  *
  * Defines sensible pool parameters for a given platform and architecture.
  * Generally this depends only on the architecture, since it represents
  * how much memory the pool will use.
  *
- * This module is for internal use only and must not be used outside the
- * library.
+ * This module is not to be used from outside the library.
 */
 
 /* For all x86 and x86_64 processors, assume general-purpose usage. */

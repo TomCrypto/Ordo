@@ -37,6 +37,8 @@ Documentation
 
 Ordo is documented for Doxygen, and you can automatically generate all documentation via `make doc`. The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working LaTeX environment for this to work). Symlinks will be automatically created in the `doc` directory for your convenience.
 
+Note that by default, internal headers and functions (which should never be used from outside the library except in very specific cases) *are* documented. To disable them, set `INTERNAL_DOCS` to `NO` in the `Doxyfile`. This will remove all internal code from the documentation.
+
 How To Build
 ------------
 

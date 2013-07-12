@@ -10,9 +10,9 @@ extern "C" {
 #endif
 
 /*!
+ * @internal
  * @file resolve.h
  * @brief Assembly code path resolution.
- * @internal
  *
  * This header is designed to help library code switch between different code
  * paths, e.g. x86_64 code versus standard C, and so on, using environment.h.
@@ -34,7 +34,7 @@ extern "C" {
  * Finally, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
  * mode), the standard C code path \b must unconditionally be selected.
  *
- * This header is meant for internal use only.
+ * This module is not to be used from outside the library.
 */
 
 #ifdef ORDO_DEBUG
