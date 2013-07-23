@@ -3,12 +3,12 @@
 struct TEST_VECTOR
 {
     const char *name;
-    int pwd_len;
+    size_t pwd_len;
     const char *pwd;
-    int salt_len;
+    size_t salt_len;
     const char *salt;
-    int iterations;
-    int out_len;
+    size_t iterations;
+    size_t out_len;
     const char *expected;
 };
 
@@ -120,7 +120,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_pbkdf2(char *output, int maxlen, FILE *ext)
+int test_pbkdf2(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 

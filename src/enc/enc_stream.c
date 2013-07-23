@@ -1,6 +1,8 @@
-#include <enc/enc_stream.h>
+#include "enc/enc_stream.h"
 
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/query.h"
 
 /******************************************************************************/
 
@@ -56,5 +58,5 @@ void enc_stream_copy(struct ENC_STREAM_CTX *dst,
 size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
                           size_t key_len)
 {
-    return stream_cipher_key_len(cipher, key_len);
+    return stream_cipher_query(cipher, KEY_LEN, key_len);
 }

@@ -3,6 +3,6 @@
 
 #include <testenv.h>
 
-int test_os_random(char *output, int maxlen, FILE *ext);
+int test_os_random(char *output, size_t maxlen, FILE *ext);
 
 #endif

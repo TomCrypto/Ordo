@@ -1,13 +1,9 @@
-#include <enc/enc_block.h>
+#include "enc/enc_block.h"
 
-#include <common/errors.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
 
-#include <enc/block_cipher_modes/ecb.h>
-#include <enc/block_cipher_modes/cbc.h>
-#include <enc/block_cipher_modes/ctr.h>
-#include <enc/block_cipher_modes/cfb.h>
-#include <enc/block_cipher_modes/ofb.h>
+#include "common/errors.h"
+#include "common/query.h"
 
 /******************************************************************************/
 
@@ -98,4 +94,17 @@ void enc_block_copy(struct ENC_BLOCK_CTX *dst,
     block_cipher_copy(dst->cipher,
                       dst->cipher_state,
                       src->cipher_state);
+}
+
+size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+                         size_t key_len)
+{
+    return block_cipher_query(cipher, KEY_LEN, key_len);
+}
+
+size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
+                        const struct BLOCK_MODE *mode,
+                        size_t iv_len)
+{
+    return block_mode_query(mode, cipher, IV_LEN, iv_len);
 }

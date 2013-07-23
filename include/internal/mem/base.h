@@ -5,10 +5,6 @@
 
 /******************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*!
  * @internal
  * @file base.h
@@ -17,13 +13,18 @@ extern "C" {
  * This is an interface which abstracts away platform-dependent details in
  * order to provide standard functions for the memory allocator to use.
  *
- * This module is not to be used from outside the library.
+ * This module is not to be used from outside the library, and is only
+ * meaningful at compile-time.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*! Locks a memory buffer into physical memory, ensuring it will not be
  *  paged out to less volatile storage.
- @params ptr The memory buffer to lock.
- @params len The length, in bytes, of the memory buffer.
+ @param ptr The memory buffer to lock.
+ @param len The length, in bytes, of the memory buffer.
  @return Returns \c 0 on success, and any other value on error.
  @remarks This function need not guarantee that the memory is locked (indeed,
           most operating systems do not guarantee such behavior), it just
@@ -33,8 +34,8 @@ extern "C" {
 int mem_lock(void *ptr, size_t len);
 
 /*! Unlocks a memory buffer, reversing the effect of \c mem_lock().
- @params ptr The memory buffer to unlock.
- @params len The length, in bytes, of the memory buffer.
+ @param ptr The memory buffer to unlock.
+ @param len The length, in bytes, of the memory buffer.
  @remarks This function need not report an error even if it fails internally,
           as the host program will terminate shortly after either way.
 */

@@ -1,8 +1,10 @@
-#include <enc/block_cipher_modes/ctr.h>
+#include "enc/block_modes/ctr.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -17,19 +19,21 @@ struct CTR_STATE
     unsigned char* counter;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
+    
+    size_t block_size;
 };
 
 struct CTR_STATE* ctr_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    size_t block_size = cipher_block_size(cipher);
-
     struct CTR_STATE *state = mem_alloc(sizeof(struct CTR_STATE));
     if (!state) goto fail;
+    
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
 
-    state->iv = mem_alloc(block_size);
+    state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
 
-    state->counter = mem_alloc(block_size);
+    state->counter = mem_alloc(state->block_size);
     if (!state->counter) goto fail;
 
     state->remaining = 0;
@@ -42,9 +46,9 @@ fail:
 
 int ctr_init(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
-    if (iv_len > block_size) return ORDO_ARG;
+    if (ctr_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
     /* Copy the IV (required) into the context IV. */
     memset(state->iv, 0x00, block_size);
@@ -63,7 +67,7 @@ int ctr_init(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
 void ctr_update(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -113,19 +117,17 @@ void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void ctr_copy(struct CTR_STATE *dst, const struct CTR_STATE *src, const struct BLOCK_CIPHER* cipher)
 {
-    memcpy(dst->counter, src->counter, cipher_block_size(cipher));
-    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    memcpy(dst->counter, src->counter, dst->block_size);
+    memcpy(dst->iv, src->iv, dst->block_size);
     dst->remaining = src->remaining;
 }
 
-void ctr_set_mode(struct BLOCK_MODE* mode)
+size_t ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
-    make_block_mode(mode,
-                    (BLOCK_MODE_ALLOC)ctr_alloc,
-                    (BLOCK_MODE_INIT)ctr_init,
-                    (BLOCK_MODE_UPDATE)ctr_update,
-                    (BLOCK_MODE_FINAL)ctr_final,
-                    (BLOCK_MODE_FREE)ctr_free,
-                    (BLOCK_MODE_COPY)ctr_copy,
-                    "CTR");
+    switch(query)
+    {
+        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
+        
+        default: return 0;
+    }
 }

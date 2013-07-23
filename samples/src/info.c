@@ -19,19 +19,19 @@ int main()
         return EXIT_FAILURE;
     }
 
-    for (t = 0; t < BLOCK_COUNT; ++t)
+    for (t = 0; t < block_cipher_count(); ++t)
     {
         const struct BLOCK_CIPHER *cipher = block_cipher_by_id(t);
-        size_t key_len = block_cipher_key_len(cipher, 0);
+        size_t key_len = block_cipher_query(cipher, KEY_LEN, 0);
 
         printf("Key lengths for %s:\n", block_cipher_name(cipher));
 
         while (1)
         {
-            size_t next_len = block_cipher_key_len(cipher, key_len + 1);
+            size_t next = block_cipher_query(cipher, KEY_LEN, key_len + 1);
             printf("* %d bits.\n", (int)key_len * 8);
-            if (next_len == key_len) break;
-            key_len = next_len;
+            if (next == key_len) break;
+            key_len = next;
         }
 
         printf("\n");

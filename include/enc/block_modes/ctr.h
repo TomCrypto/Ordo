@@ -1,7 +1,8 @@
 #ifndef ORDO_CTR_H
 #define ORDO_CTR_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes/mode_params.h"
+#include "primitives/block_ciphers.h"
 
 /******************************************************************************/
 
@@ -42,7 +43,7 @@ void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void ctr_copy(struct CTR_STATE *dst, const struct CTR_STATE *src, const struct BLOCK_CIPHER* cipher);
 
-void ctr_set_mode(struct BLOCK_MODE* mode);
+size_t ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
 
 #ifdef __cplusplus
 }

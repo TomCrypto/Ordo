@@ -5,7 +5,7 @@
  * testing those functions. */
 #include <internal/mem.h>
 
-int test_mem(char *output, int maxlen, FILE *ext)
+int test_mem(char *output, size_t maxlen, FILE *ext)
 {
     void *ptr;
 

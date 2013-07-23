@@ -1,8 +1,10 @@
-#include <enc/block_cipher_modes/ecb.h>
+#include "enc/block_modes/ecb.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -13,6 +15,8 @@ struct ECB_STATE
     /* Stores pending, incomplete plaintext/ciphertext blocks. */
     unsigned char *block;
     size_t available;
+    
+    size_t block_size;
 
     size_t padding;
     int direction;
@@ -24,7 +28,9 @@ struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
     struct ECB_STATE* state = mem_alloc(sizeof(*state));
     if (!state) goto fail;
 
-    state->block = mem_alloc(cipher_block_size(cipher));
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
+
+    state->block = mem_alloc(state->block_size);
     if (!state->block) goto fail;
 
     return state;
@@ -44,7 +50,7 @@ int ecb_init(struct ECB_STATE *state,
 {
     /* ECB accepts no IV - it is an error to pass it one. Note for consistency
      * only the iv_len parameter is checked - iv itself is in fact ignored. */
-    if (iv_len != 0) return ORDO_ARG;
+    if (ecb_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
     state->direction = direction;
@@ -61,7 +67,7 @@ void ecb_update(struct ECB_STATE *state,
                 unsigned char *out,
                 size_t *out_len)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
     /* If decrypting, skip the last block if using padding. */
     size_t skip = (state->direction ? 0 : state->padding);
@@ -110,7 +116,7 @@ static int ecb_encrypt_final(struct ECB_STATE *state,
     }
     else
     {
-        size_t block_size = cipher_block_size(cipher);
+        size_t block_size = state->block_size;
         uint8_t padding;
 
         /* Calculate how many padding bytes are required. We assert here
@@ -140,7 +146,7 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
     }
     else
     {
-        size_t block_size = cipher_block_size(cipher);
+        size_t block_size = state->block_size;
         uint8_t padding;
 
         block_cipher_inverse(cipher, cipher_state, state->block);
@@ -197,20 +203,18 @@ void ecb_copy(struct ECB_STATE *dst,
               const struct ECB_STATE *src,
               const struct BLOCK_CIPHER *cipher)
 {
-    memcpy(dst->block, src->block, cipher_block_size(cipher));
+    memcpy(dst->block, src->block, dst->block_size);
     dst->available = src->available;
     dst->direction = src->direction;
     dst->padding = src->padding;
 }
 
-void ecb_set_mode(struct BLOCK_MODE *mode)
+size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
-    make_block_mode(mode,
-                    (BLOCK_MODE_ALLOC)ecb_alloc,
-                    (BLOCK_MODE_INIT)ecb_init,
-                    (BLOCK_MODE_UPDATE)ecb_update,
-                    (BLOCK_MODE_FINAL)ecb_final,
-                    (BLOCK_MODE_FREE)ecb_free,
-                    (BLOCK_MODE_COPY)ecb_copy,
-                    "ECB");
+    switch(query)
+    {
+        case IV_LEN: return 0;
+        
+        default: return 0;
+    }
 }

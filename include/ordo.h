@@ -1,23 +1,20 @@
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
-#include <common/identification.h>
-#include <common/version.h>
-#include <common/errors.h>
+#include "common/version.h"
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
-#include <enc/enc_stream.h>
-#include <enc/enc_block.h>
+#include "enc/enc_stream.h"
+#include "enc/enc_block.h"
 
-#include <kdf/pbkdf2.h>
-#include <auth/hmac.h>
+#include "kdf/pbkdf2.h"
+#include "auth/hmac.h"
 
-#include <misc/os_random.h>
+#include "misc/os_random.h"
 
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @file ordo.h
@@ -29,9 +26,11 @@ extern "C" {
  * afford to use them, you probably should.
 */
 
-/*! Initializes the library, calling all the \c load_* functions in each
- *  abstraction layer, allowing the use of functions such as \c RC4(),
- *  \c CBC(), and so on.
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*! Initializes the library.
  @returns Returns #ORDO_SUCCESS on success, or a negative value on failure.
  @remarks This function should be called prior to using the library for most
           purposes.

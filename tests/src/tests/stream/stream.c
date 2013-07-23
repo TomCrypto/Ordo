@@ -3,9 +3,9 @@
 struct TEST_VECTOR
 {
     const char *name;
-    int key_len;
+    size_t key_len;
     const char *key;
-    int input_len;
+    size_t input_len;
     const char *input;
     const char *expected;
 };
@@ -137,7 +137,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_stream(char *output, int maxlen, FILE *ext)
+int test_stream(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 
@@ -156,18 +156,18 @@ int test_stream(char *output, int maxlen, FILE *ext)
     pass("Generic stream cipher test vectors.");
 }
 
-int test_stream_utilities(char *output, int maxlen, FILE *ext)
+int test_stream_utilities(char *output, size_t maxlen, FILE *ext)
 {
-    int t, count = STREAM_COUNT;
+    size_t t, count = stream_cipher_count();
 
-    if (ext) fprintf(ext, "[*] Detected %d stream ciphers.\n", count);
+    if (ext) fprintf(ext, "[*] Detected %d stream ciphers.\n", (int)count);
 
     for (t = 0; t < count; ++t)
     {
         const struct STREAM_CIPHER *cipher = stream_cipher_by_id(t);
         if (!cipher)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", t);
+            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
             fail("Supposedly valid stream cipher ID is invalid.");
         }
     }

@@ -1,7 +1,8 @@
 #ifndef ORDO_CFB_H
 #define ORDO_CFB_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes/mode_params.h"
+#include "primitives/block_ciphers.h"
 
 /******************************************************************************/
 
@@ -40,7 +41,7 @@ void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher);
 
-void cfb_set_mode(struct BLOCK_MODE* mode);
+size_t cfb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
 
 #ifdef __cplusplus
 }

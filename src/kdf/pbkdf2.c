@@ -1,11 +1,12 @@
-#include <kdf/pbkdf2.h>
+#include "kdf/pbkdf2.h"
 
-#include <internal/endianness.h>
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/endianness.h"
+#include "internal/mem.h"
 
-#include <auth/hmac.h>
+#include "common/errors.h"
+#include "common/utils.h"
+
+#include "auth/hmac.h"
 
 #include <string.h>
 
@@ -18,13 +19,13 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
            const void *salt,
            size_t salt_len,
            size_t iterations,
-           void *output,
-           size_t output_len)
+           void *out,
+           size_t out_len)
 {
     int err = ORDO_SUCCESS;
 
     const size_t digest_len = digest_length(hash);
-    size_t i, t, t_max = output_len / digest_len;
+    size_t i, t, t_max = out_len / digest_len;
 
     struct HMAC_CTX *ctx = hmac_alloc(hash);
     struct HMAC_CTX *cst = hmac_alloc(hash);
@@ -34,7 +35,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 
     /* The output counter is a 32-bit counter which for some reason starts at
      * 1 which puts an upper bound on the maximum output length allowed. */
-    if ((!output_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
+    if ((!out_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
     {
         err = ORDO_ARG;
         goto ret;
@@ -84,8 +85,9 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
          * this ensures that even if something goes wrong at any point, the
          * user-provided buffer will only ever contain either indeterminate
          * data or valid data, and no intermediate, sensitive information. */
-        memcpy((unsigned char*)output + t * digest_len, buf,
-               (t == t_max) ? output_len % digest_len : digest_len);
+        memcpy(offset(out, t * digest_len),
+               buf,
+               (t == t_max) ? out_len % digest_len : digest_len);
     }
 
 ret:

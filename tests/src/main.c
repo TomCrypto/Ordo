@@ -6,7 +6,7 @@
 static char *info_start = "", *info_end = "";
 static char *pass = "PASS", *fail = "FAIL";
 
-void display_header(void)
+static void display_header(void)
 {
     char header[MAX_LEN + 1];
 
@@ -21,12 +21,12 @@ void display_header(void)
     printf("%s\n", line);
 }
 
-void display_test(int index, int *passed, FILE *extended)
+static void display_test(size_t index, size_t *passed, FILE *extended)
 {
     char output[MAX_LEN + 1];
     const char *result;
 
-    snprintf(output, MAX_LEN, "Test #%d.", index + 1);
+    snprintf(output, MAX_LEN, "Test #%d.", (int)(index + 1));
 
     result = test(index)(output, MAX_LEN, extended) ? pass : fail;
     if (result == pass) ++(*passed);
@@ -34,13 +34,14 @@ void display_test(int index, int *passed, FILE *extended)
     printf("| %-*s | %s |\n", MAX_LEN - 1, output, result);
 }
 
-void display_total(int total, int passed)
+static void display_total(size_t total, size_t passed)
 {
     char header[MAX_LEN + 1];
 
     const char *result = (total == passed) ? pass : fail;
 
-    snprintf(header, MAX_LEN, "Total: %d/%d tests passed.", passed, total);
+    snprintf(header, MAX_LEN, "Total: %d/%d tests passed.",
+             (int)passed, (int)total);
 
     printf("%s\n", line);
     printf("| %s%-*s%s | %s%s%s |\n",
@@ -49,7 +50,7 @@ void display_total(int total, int passed)
     printf("%s\n", line);
 }
 
-int parse_args(int argc, char *argv[], int *color, FILE **extended)
+static int parse_args(int argc, char *argv[], int *color, FILE **extended)
 {
     int t;
 
@@ -77,7 +78,7 @@ int parse_args(int argc, char *argv[], int *color, FILE **extended)
     return 0;
 }
 
-void print_usage(int argc, char *argv[])
+static void print_usage(int argc, char *argv[])
 {
     printf("Usage:\n");
     printf("\t%s          \truns the test driver (plain mode).\n", argv[0]);
@@ -116,8 +117,8 @@ int main(int argc, char *argv[])
 
     if (!register_all_tests())
     {
-        int total = test_count(), passed = 0, t;
-        if (extended) fprintf(extended, "Running %d tests.\n", total);
+        size_t total = test_count(), passed = 0, t;
+        if (extended) fprintf(extended, "Running %d tests.\n", (int)total);
 
         display_header();
 

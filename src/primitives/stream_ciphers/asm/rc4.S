@@ -15,7 +15,7 @@
 ** a 1.8 GHz AMD Opteron (rev C0) processor.
 */
 
-#include <internal/asm/resolve.h>
+#include "internal/asm/resolve.h"
 
 #if defined (RC4_X86_64_LINUX)
 

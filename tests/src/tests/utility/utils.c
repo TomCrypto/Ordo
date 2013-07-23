@@ -3,7 +3,7 @@
 #include <common/utils.h>
 
 /* Tests a bunch of macros used by the library. */
-int test_macros(char *output, int maxlen, FILE *ext)
+int test_macros(char *output, size_t maxlen, FILE *ext)
 {
     if (bits(256) != 32)  fail("The 'bits' macro has failed.");
     if (bytes(32) != 256) fail("The 'bytes' macro has failed.");
@@ -14,7 +14,7 @@ int test_macros(char *output, int maxlen, FILE *ext)
     pass("Utility macros are working.");
 }
 
-int test_pad_check(char *output, int maxlen, FILE *ext)
+int test_pad_check(char *output, size_t maxlen, FILE *ext)
 {
     unsigned char buffer[256];
     uint8_t val, r;
@@ -37,7 +37,7 @@ int test_pad_check(char *output, int maxlen, FILE *ext)
     pass("'pad_check' is working.");
 }
 
-int test_xor_buffer(char *output, int maxlen, FILE *ext)
+int test_xor_buffer(char *output, size_t maxlen, FILE *ext)
 {
     /* We will test the function on small integers only. If it works there,
      * it probably always works, given it is a very generic function. */
@@ -67,7 +67,7 @@ int test_xor_buffer(char *output, int maxlen, FILE *ext)
     pass("'xor_buffer' is working.");
 }
 
-int test_inc_buffer(char *output, int maxlen, FILE *ext)
+int test_inc_buffer(char *output, size_t maxlen, FILE *ext)
 {
     /* First check that a zero-byte buffer does nothing. */
     unsigned char buffer[3] = { 0, 0, 0 };

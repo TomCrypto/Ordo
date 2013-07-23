@@ -1,6 +1,9 @@
 #ifndef ORDO_HASH_PARAMS_H
 #define ORDO_HASH_PARAMS_H
 
+#include <stdlib.h>
+#include <stdint.h>
+
 /******************************************************************************/
 
 #ifdef __cplusplus
@@ -31,7 +34,7 @@ struct SKEIN256_PARAMS
               will be truncated to a byte boundary, so this should be a
               multiple of 8.
     */
-    uint64_t output_length;
+    uint64_t out_len;
     /*! Unused, should be left zero according to the Skein specification. */
     uint8_t unused[16];
 };

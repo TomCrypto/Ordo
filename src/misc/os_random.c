@@ -1,11 +1,13 @@
-#include <misc/os_random.h>
+#include "misc/os_random.h"
 
-#include <internal/environment.h>
-#include <common/errors.h>
+#include "internal/environment.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
 
 /******************************************************************************/
 
-/* Note: if for some reason your platform doesn't have an OS-provided CSPRNG,
+/* Note: if for any reason your platform doesn't have an OS-provided CSPRNG, *
  *       please implement this as a function which always returns ORDO_FAIL. */
 
 #if defined(PLATFORM_POSIX)
@@ -20,9 +22,13 @@ int os_random(void *buffer, size_t size)
     while (size != 0)
     {
         size_t len = fread(buffer, 1, size, f);
-        if (len == 0) return ORDO_FAIL;
+        if (len == 0)
+        {
+            fclose(f);
+            return ORDO_FAIL;
+        }
 
-        buffer = (unsigned char*)buffer + len;
+        buffer = offset(buffer, len);
         size -= len;
     }
 

@@ -1,13 +1,9 @@
 #ifndef ORDO_ENC_STREAM_H
 #define ORDO_ENC_STREAM_H
 
-#include <primitives/primitives.h>
+#include "primitives/stream_ciphers.h"
 
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @file enc_stream.h
@@ -15,6 +11,10 @@ extern "C" {
  *
  * Interface to encrypt plaintext and decrypt ciphertext with various stream ciphers.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct ENC_STREAM_CTX;
 

@@ -3,7 +3,7 @@
 struct TEST_VECTOR
 {
     const char *name; 
-    int input_len; 
+    size_t input_len; 
     const char *input;
     const char *expected;
 };
@@ -221,7 +221,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_digest(char *output, int maxlen, FILE *ext)
+int test_digest(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 
@@ -240,18 +240,18 @@ int test_digest(char *output, int maxlen, FILE *ext)
     pass("Generic hash function test vectors.");
 }
 
-int test_digest_utilities(char *output, int maxlen, FILE *ext)
+int test_digest_utilities(char *output, size_t maxlen, FILE *ext)
 {
-    int t, count = HASH_COUNT;
+    size_t t, count = hash_function_count();
 
-    if (ext) fprintf(ext, "[*] Detected %d hash functions.\n", count);
+    if (ext) fprintf(ext, "[*] Detected %d hash functions.\n", (int)count);
 
     for (t = 0; t < count; ++t)
     {
         const struct HASH_FUNCTION *hash = hash_function_by_id(t);
         if (!hash)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", t);
+            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
             fail("Supposedly valid hash function ID is invalid.");
         }
     }

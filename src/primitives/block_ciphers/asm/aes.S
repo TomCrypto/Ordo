@@ -1,4 +1,4 @@
-#include <internal/asm/resolve.h>
+#include "internal/asm/resolve.h"
 
 .intel_syntax noprefix;
 

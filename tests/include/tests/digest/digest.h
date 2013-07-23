@@ -3,7 +3,7 @@
 
 #include <testenv.h>
 
-int test_digest(char *output, int maxlen, FILE *ext);
-int test_digest_utilities(char *output, int maxlen, FILE *ext);
+int test_digest(char *output, size_t maxlen, FILE *ext);
+int test_digest_utilities(char *output, size_t maxlen, FILE *ext);
 
 #endif

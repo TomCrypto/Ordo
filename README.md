@@ -1,4 +1,4 @@
-Ordo v2.2.0
+Ordo v2.3.0
 ===========
 
 Symmetric Cryptography Library
@@ -9,15 +9,11 @@ This is the github repository for Ordo, a minimalist cryptography library with a
 Status
 ------
 
-What's new in 2.2:
- - new test driver, now enhanced with colored output and (more importantly) more flexible debugging features, no longer needs a file and awkward parsing code
- - fixed a bug in the CFB block mode where using the same buffer for plaintext and ciphertext would lead to loss of information
- - fixed a bug in all modes of operation where attempting to free a null pointer would lead to a segmentation fault
- - fixed a small memory leak
- - correctly rewrote functions which take no parameters as `(void)`
- - dedicated memory manager is now thread-safe, using `pthreads` for Linux/BSD and critical sections for Windows
- - as a consequence of the above bullet point, Ordo now depends on `pthreads` for Linux/BSD compilation. Use `make nopthread=1` under Windows.
- - finally put the problem of OpenBSD's `sys/endian.h` header to rest: nowhere is it said one needs to include `sys/types.h` before! Yay for self-contained headers (and bad error messages)
+What's new in 2.3:
+ - fully implemented new unified query interface for gathering information from primitives and other modules such as key lengths, IV lengths, cipher block sizes (if needed), and so on, while avoiding having dozens of trivial functions scattered everywhere, and improving code consistency
+
+Todo:
+ - wrap stdint.h in a cross-platform header (for future portability concerns)
 
 Feature Map
 -----------
@@ -44,12 +40,6 @@ How To Build
 
 As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and configuration for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
 
-In general, Ordo expects to be given the following information:
-
-* Operating system, along with various system functions. This is provided by the compiler and Ordo will automatically select the right codepath based on the operating system the compiler is reportedly targeting.
-* Endianness. This is provided by the system libraries, or inferred from the operating system (e.g. Windows is always little-endian). Byte-swapping functions need not be available as Ordo has its own fallback functions, but are recommended for efficiency.
-* Processor architecture. This is, again, provided by the compiler based on compilation flags restricting or enabling instruction sets and other features.
-
 The makefile is used as follows:
 
     make extra=[arguments to the compiler]
@@ -73,7 +63,6 @@ For most uses, the build process should go like this:
 
     make
     make tests
-    make samples
     cd tests
     ./bin/tests # add "-color" if your terminal supports it
 

@@ -1,13 +1,9 @@
 #ifndef ORDO_ENDIANNESS_H
 #define ORDO_ENDIANNESS_H
 
-#include <internal/environment.h>
+#include "internal/environment.h"
 
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @internal
@@ -17,8 +13,13 @@ extern "C" {
  * This header will provide definitions relating to endianness. It cannot be
  * included in assembly files as it may or may not contain declarations.
  *
- * This header is internal to the library.
+ * This module is not to be used from outside the library, and is only
+ * meaningful at compile-time.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Detect the endianness of the system - normally this is defined by the
  * system library e.g. endian.h under most Unix distributions, however Ordo

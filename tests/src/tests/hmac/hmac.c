@@ -3,9 +3,9 @@
 struct TEST_VECTOR
 {
     const char *name;
-    int key_len;
+    size_t key_len;
     const char *key;
-    int input_len;
+    size_t input_len;
     const char *input;
     const char *expected;
 };
@@ -172,7 +172,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_hmac(char *output, int maxlen, FILE *ext)
+int test_hmac(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 

@@ -1,7 +1,7 @@
 #ifndef ORDO_NULLCIPHER_H
 #define ORDO_NULLCIPHER_H
 
-#include <primitives/primitives.h>
+#include "primitives/block_ciphers/block_params.h"
 
 /******************************************************************************/
 
@@ -22,62 +22,33 @@ extern "C" {
 
 struct NULLCIPHER_STATE;
 
-/*! Allocates and returns an uninitialized AES block cipher context.
- @returns The allocated context, or nil on allocation failure.
-*/
-struct NULLCIPHER_STATE* nullcipher_alloc(void);
+/*! @see \c block_cipher_alloc() */
+struct NULLCIPHER_STATE *nullcipher_alloc(void);
 
-/*! Initializes a NullCipher block cipher context.
- @param state An allocated NullCipher context.
- @param key A pointer to a buffer containing the encryption key.
- @param keySize The key size, in bytes, to be read from \c key.
- @param params Ignored.
- @returns Cannot fail and returns \c #ORDO_SUCCESS.
- @remarks This function does nothing.
+/*! @see \c block_cipher_init()
+ *  @retval #ORDO_KEY_LEN if the key length is not zero.
 */
 int nullcipher_init(struct NULLCIPHER_STATE *state,
-                    const void* key, size_t keySize,
-                    const void* params);
+                    const void *key, size_t key_len,
+                    const void *params);
 
-/*! Encrypts a 128-bit block.
- @param state An initialized NullCipher context.
- @param block A pointer to the block to encrypt.
- @remarks This function does nothing.
-*/
+/*! @see \c block_cipher_forward() */
 void nullcipher_forward(struct NULLCIPHER_STATE *state,
                         void* block);
 
-/*! Decrypts a 128-bit block.
- @param state An initialized NullCipher context.
- @param block A pointer to the block to decrypt.
- @remarks This function does nothing.
-*/
+/*! @see \c block_cipher_inverse() */
 void nullcipher_inverse(struct NULLCIPHER_STATE *state,
                         void* block);
 
-/*! Frees the memory associated with a NullCipher cipher context.
- @param state An allocated NullCipher context.
- @remarks Passing nil to this function is a no-op.
-*/
+/*! @see \c block_cipher_free() */
 void nullcipher_free(struct NULLCIPHER_STATE *state);
 
+/*! @see \c block_cipher_copy() */
 void nullcipher_copy(struct NULLCIPHER_STATE *dst,
                      const struct NULLCIPHER_STATE *src);
 
-/*! This function populates a block cipher object with the NullCipher
- *  functions and attributes, and is meant for internal use.
- @param cipher A pointer to a block cipher object to populate.
- @remarks Once populated, the \c BLOCK_CIPHER struct can be freely used in the
-          higher level \c enc_block interface.
- @remarks If you have issued a call to \c load_primitives(), this function has
-          already been called and you may use the \c NullCipher() function to
-          access the underlying NullCipher block cipher object.
- @see enc_block.h
- @internal
-*/
-void nullcipher_set_primitive(struct BLOCK_CIPHER* cipher);
-
-size_t nullcipher_key_len(size_t key_len);
+/*! @see \c block_cipher_query() */
+size_t nullcipher_query(int query, size_t value);
 
 #ifdef __cplusplus
 }

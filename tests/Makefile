@@ -6,8 +6,9 @@ SRCDIR = src
 INCLUDE = include
 
 CC ?= gcc
-CFLAGS = -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable \
-         -pedantic -pedantic-errors
+CFLAGS = -Wall -Wextra \
+         -Wno-unused-parameter -Wno-unused-variable \
+         -std=c99 -pedantic -pedantic-errors
 
 ifeq ($(nopthread), 1)
 	LDFLAGS = 
@@ -35,6 +36,8 @@ ORDO_LIBDIR = ../lib/
 ORDO_LIBPATH = $(addprefix $(ORDO_LIBDIR), $(ORDO_LIBNAME))
 ORDO_INCLUDE = ../include/
 
+CFLAGS += $(extra)
+
 HEADERS = $(wildcard $(INCLUDE)/*.h)
 SRC = $(shell find $(SRCDIR)/ -name '*.c')
 OBJ = $(subst .c,.o,$(subst $(SRCDIR)/,$(OBJDIR)/,$(SRC)))
@@ -48,24 +51,21 @@ $(OBJDIR):
 $(BINDIR):
 	@mkdir $@
 
-$(BINPATH): $(OBJ)
+$(BINPATH): $(OBJ) $(ORDO_LIBPATH)
 	$(CC) $(LDFLAGS) $(OBJ) -o $(BINPATH) $(ORDO_LIBPATH)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -I$(ORDO_INCLUDE) -c $< -o $@
 
-# make cleanbin :: Removes all binary files
 .PHONY: clean_bin
 clean_bin:
 	rm -rf $(BINDIR)
 
-# make clean_obj :: Removes all object files
 .PHONY: clean_obj
 clean_obj:
 	rm -rf $(OBJDIR)
 
-# make clean :: Removes all generated files
 .PHONY: clean
 clean: clean_bin clean_obj
 	

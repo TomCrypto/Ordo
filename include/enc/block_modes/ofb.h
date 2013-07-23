@@ -1,7 +1,8 @@
 #ifndef ORDO_OFB_H
 #define ORDO_OFB_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes/mode_params.h"
+#include "primitives/block_ciphers.h"
 
 /******************************************************************************/
 
@@ -41,7 +42,7 @@ void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void ofb_copy(struct OFB_STATE *dst, const struct OFB_STATE *src, const struct BLOCK_CIPHER* cipher);
 
-void ofb_set_mode(struct BLOCK_MODE* mode);
+size_t ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
 
 #ifdef __cplusplus
 }

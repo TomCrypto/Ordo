@@ -1,26 +1,26 @@
-#include <primitives/hash_functions/sha256.h>
+#include "primitives/hash_functions/sha256.h"
 
-#include <internal/endianness.h>
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/endianness.h"
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
 /******************************************************************************/
 
 #define SHA256_DIGEST (bits(256))
-#define SHA256_BLOCK (bits(512))
+#define SHA256_BLOCK  (bits(512))
 
-/* The SHA-256 initial state vector. */
-static const uint32_t sha256_initialState[8] =
+static const uint32_t sha256_iv[8] =
 {
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
-/* The SHA-256 constant table. */
-static const uint32_t SHA256_constants[64] =
+static const uint32_t sha256_table[64] =
 {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -40,65 +40,47 @@ static const uint32_t SHA256_constants[64] =
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-/* 32-bit left and right rotation. */
-#define ROL(n, r) (((n) << (r)) | ((n) >> (32 - (r))))
-#define ROR(n, r) (((n) >> (r)) | ((n) << (32 - (r))))
+#define ma(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
+#define ch(x, y, z) ((x & y) ^ (~x & z))
 
-/* A SHA-256 state. */
-struct SHA256_STATE
+static void sha256_compress(const uint32_t block[16], uint32_t digest[8])
+__attribute__((hot));
+
+void sha256_compress(const uint32_t block[16], uint32_t digest[8])
 {
-    uint32_t digest[8];
-    uint32_t block[16];
-    uint64_t blockLength;
-    uint64_t messageLength;
-};
-
-struct SHA256_STATE* sha256_alloc(void)
-{
-    return mem_alloc(sizeof(struct SHA256_STATE));
-}
-
-int sha256_init(struct SHA256_STATE *state, const void* params)
-{
-    /* Set the digest to the initial state. */
-    memcpy(state->digest, sha256_initialState, SHA256_DIGEST);
-    state->messageLength = 0;
-    state->blockLength = 0;
-
-    /* Ignore the parameters, since SHA-256 has none. */
-    return ORDO_SUCCESS;
-}
-
-/* This is the SHA-256 compression function. */
-static void sha256Compress(const uint32_t block[16], uint32_t digest[8])
-{
-    /* Temporary variables. */
-    uint32_t a, b, c, d, e, f, g, h;
-    uint32_t t1, t2;
-    uint32_t w[64];
     size_t t;
 
-    /* Perform the block extension. */
-    for (t = 0; t < 16; t++) w[t] = htobe32(block[t]);
-    for (t = 16; t < 64; t++) w[t] = w[t - 16] + w[t - 7]
-                                   + (ROR(w[t -  2], 17) ^ ROR(w[t -  2], 19) ^ (w[t -  2] >> 10))
-                                   + (ROR(w[t - 15],  7) ^ ROR(w[t - 15], 18) ^ (w[t - 15] >>  3));
+    uint32_t a = digest[0];
+    uint32_t b = digest[1];
+    uint32_t c = digest[2];
+    uint32_t d = digest[3];
+    uint32_t e = digest[4];
+    uint32_t f = digest[5];
+    uint32_t g = digest[6];
+    uint32_t h = digest[7];
 
-    /* Save the current state. */
-    a = digest[0];
-    b = digest[1];
-    c = digest[2];
-    d = digest[3];
-    e = digest[4];
-    f = digest[5];
-    g = digest[6];
-    h = digest[7];
+    uint32_t w[64]; /* The "message schedule" array. */
 
-    /* Perform the 64 SHA-256 rounds. */
-    for (t = 0; t < 64; t++)
+    for (t = 0; t < 16; ++t) w[t] = htobe32(block[t]);
+
+    for (t = 16; t < 64; ++t)
     {
-        t2 = (ROR(a, 2) ^ ROR(a, 13) ^ ROR(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
-        t1 = h + (ROR(e, 6) ^ ROR(e, 11) ^ ROR(e, 25)) + ((e & f) ^ ((~e) & g)) + SHA256_constants[t] + w[t];
+        uint32_t r1 = ror32(w[t -  2], 17) ^ ror32(w[t -  2], 19);
+        uint32_t r2 = ror32(w[t - 15],  7) ^ ror32(w[t - 15], 18);
+
+        r1 ^= w[t -  2] >> 10;
+        r2 ^= w[t - 15] >>  3;
+
+        w[t] = w[t - 16] + w[t - 7] + r1 + r2;
+    }
+                
+    for (t = 0; t < 64; ++t)
+    {
+        uint32_t t2 = (ror32(a, 2) ^ ror32(a, 13) ^ ror32(a, 22));
+        uint32_t t1 = (ror32(e, 6) ^ ror32(e, 11) ^ ror32(e, 25));
+
+        t1 += ch(e, f, g) + h + w[t] + sha256_table[t];
+        t2 += ma(a, b, c);
 
         h = g;
         g = f;
@@ -110,7 +92,6 @@ static void sha256Compress(const uint32_t block[16], uint32_t digest[8])
         a = t1 + t2;
     }
 
-    /* Feed-forward the hash state. */
     digest[0] += a;
     digest[1] += b;
     digest[2] += c;
@@ -121,72 +102,83 @@ static void sha256Compress(const uint32_t block[16], uint32_t digest[8])
     digest[7] += h;
 }
 
-void sha256_update(struct SHA256_STATE *state, const void* buffer, size_t size)
+/******************************************************************************/
+
+struct SHA256_STATE
 {
-    /* Some variables. */
-    size_t pad = 0;
+    uint32_t digest[8];
+    uint32_t block[16];
+    uint64_t block_len;
+    uint64_t msg_len;
+};
 
-    /* Increment the message length. */
-    state->messageLength += size;
+struct SHA256_STATE *sha256_alloc(void)
+{
+    return mem_alloc(sizeof(struct SHA256_STATE));
+}
 
-    /* Is the message provided long enough to complete a block? */
-    if (state->blockLength + size >= SHA256_BLOCK)
+int sha256_init(struct SHA256_STATE *state,
+                const void *params)
+{
+    memcpy(state->digest, sha256_iv, SHA256_DIGEST);
+    state->block_len = 0;
+    state->msg_len = 0;
+
+    return ORDO_SUCCESS;
+}
+
+void sha256_update(struct SHA256_STATE *state,
+                   const void *buffer,
+                   size_t size)
+{
+    state->msg_len += size;
+
+    if (state->block_len + size >= SHA256_BLOCK)
     {
-        /* Compute how much of the message is needed to complete the block. */
-        pad = SHA256_BLOCK - state->blockLength;
-        memcpy(((unsigned char*)state->block) + state->blockLength, buffer, pad);
+        size_t pad = SHA256_BLOCK - state->block_len;
 
-        /* We now have a complete block which we can process. */
-        sha256Compress(state->block, state->digest);
-        state->blockLength = 0;
+        memcpy(offset(state->block, state->block_len), buffer, pad);
+        sha256_compress(state->block, state->digest);
+        state->block_len = 0;
 
-        /* Offset the message accordingly. */
-        buffer = (unsigned char*)buffer + pad;
+        buffer = offset(buffer, pad);
         size -= pad;
 
-        /* At this point, the block is empty, so process complete blocks directly. */
         while (size >= SHA256_BLOCK)
         {
-            /* Just process this block. */
             memcpy(state->block, buffer, SHA256_BLOCK);
-            sha256Compress(state->block, state->digest);
-            buffer = (unsigned char*)buffer + SHA256_BLOCK;
+            sha256_compress(state->block, state->digest);
+
+            buffer = offset(buffer, SHA256_BLOCK);
             size -= SHA256_BLOCK;
         }
     }
 
-    /* If we have anything left over, just append it to the context's block field. */
-    memcpy(((unsigned char*)state->block) + state->blockLength, buffer, size);
-    state->blockLength += size;
+    memcpy(offset(state->block, state->block_len), buffer, size);
+    state->block_len += size;
 }
 
-void sha256_final(struct SHA256_STATE *state, void* digest)
+void sha256_final(struct SHA256_STATE *state,
+                  void *digest)
 {
-    /* Some variables. */
-    uint8_t byte = 0x80;
-    size_t zeroBytes;
-    uint64_t len;
+    /* See the MD5 code for a description of Merkle padding. */
+    uint64_t len = htobe64(bytes(state->msg_len));
+    uint8_t one = 0x80, zero = 0x00;
+    size_t t;
 
-    /* Save the message's length (in bits) before final processing. In BIG-ENDIAN! */
-    len = htobe64(bytes(state->messageLength));
+    sha256_update(state, &one, sizeof(one));
 
-    /* Append a '1' bit to the message. */
-    sha256_update(state, &byte, sizeof(byte));
+    while (state->block_len != SHA256_BLOCK - sizeof(uint64_t))
+    {
+        sha256_update(state, &zero, sizeof(zero));
+    }
 
-    /* Calculate the number of '0' bits to append. */
-    zeroBytes = (SHA256_BLOCK - sizeof(uint64_t) - state->blockLength) % SHA256_BLOCK;
-
-    /* Append that many '0' bits. */
-    byte = 0x00;
-    while (zeroBytes--) sha256_update(state, &byte, sizeof(byte));
-
-    /* Append the message length (on 64 bits). */
     sha256_update(state, &len, sizeof(len));
 
-    /* Convert the final digest to proper endianness. */
-    for (len = 0; len < 8; len++) state->digest[len] = be32toh(state->digest[len]);
+    /* SHA-256 takes big-endian input, convert it back. */
+    for (t = 0; t < SHA256_DIGEST / sizeof(uint32_t); ++t)
+        state->digest[t] = be32toh(state->digest[t]);
 
-    /* Copy the final digest. */
     memcpy(digest, state->digest, SHA256_DIGEST);
 }
 
@@ -195,21 +187,19 @@ void sha256_free(struct SHA256_STATE *state)
     mem_free(state);
 }
 
-void sha256_copy(struct SHA256_STATE *dst, const struct SHA256_STATE *src)
+void sha256_copy(struct SHA256_STATE *dst,
+                 const struct SHA256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SHA256_STATE));
 }
 
-void sha256_set_primitive(struct HASH_FUNCTION* hash)
+size_t sha256_query(int query, size_t value)
 {
-    make_hash_function(hash,
-                       SHA256_DIGEST,
-                       SHA256_BLOCK,
-                       (HASH_ALLOC)sha256_alloc,
-                       (HASH_INIT)sha256_init,
-                       (HASH_UPDATE)sha256_update,
-                       (HASH_FINAL)sha256_final,
-                       (HASH_FREE)sha256_free,
-                       (HASH_COPY)sha256_copy,
-                       "SHA-256");
+    switch(query)
+    {
+        case BLOCK_SIZE: return SHA256_BLOCK;
+        case DIGEST_LEN: return SHA256_DIGEST;
+        
+        default: return 0;
+    }
 }

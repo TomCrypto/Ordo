@@ -1,13 +1,7 @@
 #ifndef ORDO_MEM_MUTEX_H
 #define ORDO_MEM_MUTEX_H
 
-#include <stdlib.h>
-
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @internal
@@ -17,8 +11,13 @@ extern "C" {
  * This module provides the memory allocator with a single mutex to use
  * for thread safety.
  *
- * This module is not to be used from outside the library.
+ * This module is not to be used from outside the library, and is only
+ * meaningful at compile-time.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*! Initializes the mutex.
  @return Returns \c 0 on success, and any other value on error.

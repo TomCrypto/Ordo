@@ -1,10 +1,8 @@
-#include <internal/mem.h>
+#include "internal/mem.h"
 
-#include <internal/mem/base.h>
-#include <internal/mem/mutex.h>
-#include <internal/mem/params.h>
-
-#include <internal/environment.h>
+#include "internal/mem/base.h"
+#include "internal/mem/mutex.h"
+#include "internal/mem/params.h"
 
 /******************************************************************************/
 
@@ -59,7 +57,7 @@ int mem_init(void)
     return 0;
 }
 
-void *mem_alloc(size_t size)
+static void *ordo_mem_alloc(size_t size)
 {
     if (state == M_READY)
     {
@@ -108,7 +106,7 @@ retry:
     return 0;
 }
 
-void mem_free(void *ptr)
+static void ordo_mem_free(void *ptr)
 {
     if ((!ptr) || (state != M_READY)) return;
 
@@ -127,6 +125,29 @@ void mem_free(void *ptr)
         allocated[t] = 0;
         mutex_release();
     }
+}
+
+/******************************************************************************/
+
+static MEM_ALLOC mem_alloc_f = ordo_mem_alloc;
+static MEM_FREE mem_free_f   = ordo_mem_free;
+
+void *mem_alloc(size_t size)
+{
+    return mem_alloc_f(size);
+}
+
+void mem_free(void *ptr)
+{
+    mem_free_f(ptr);
+}
+
+void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
+{
+    int revert = ((alloc == 0) && (free == 0));
+    
+    mem_alloc_f = (revert ? ordo_mem_alloc : alloc);
+    mem_free_f  = (revert ? ordo_mem_free  : free);
 }
 
 void mem_erase(void *ptr, size_t size)

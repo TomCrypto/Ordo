@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include <ordo.h>
+#include "ordo.h"
 
 #define BUF_SIZE (128 * 1024 * 1024)
 
@@ -46,7 +46,7 @@ void randomize(void *buffer, size_t buf_size)
 
 void benchmark_hash_functions(void *buffer, size_t buf_size)
 {
-    for (size_t id = 0; id < HASH_COUNT; ++id)
+    for (size_t id = 0; id < hash_function_count(); ++id)
     {
         const struct HASH_FUNCTION *primitive = hash_function_by_id(id);
         printf(" * %.20s: \t", hash_function_name(primitive));
@@ -71,21 +71,20 @@ void benchmark_hash_functions(void *buffer, size_t buf_size)
 
 void benchmark_block_ciphers(void *buffer, size_t buf_size)
 {
-    for (size_t id = 0; id < BLOCK_COUNT; ++id)
+    for (size_t id = 0; id < block_cipher_count(); ++id)
     {
         const struct BLOCK_CIPHER *primitive = block_cipher_by_id(id);
 
-        /* Probe cipher's largest key length. */
-        size_t key_len = block_cipher_key_len(primitive, 0);
+        /* Probe cipher's smallest key length. */
+        size_t key_len = enc_block_key_len(primitive, 0);
         void *key = malloc(key_len);
 
-        /* Assume IV length required is the cipher's block size. */
-        size_t iv_len = cipher_block_size(primitive);
-        void *iv = malloc(iv_len);
-
-        for (size_t mode_id = 0; mode_id < BLOCK_MODE_COUNT; ++mode_id)
+        for (size_t mode_id = 0; mode_id < block_mode_count(); ++mode_id)
         {
             const struct BLOCK_MODE *mode = block_mode_by_id(mode_id);
+            size_t iv_len = enc_block_iv_len(primitive, mode, -1);
+            void *iv = malloc(iv_len);
+            
             printf(" * %.20s [%.10s]: \t", block_cipher_name(primitive),
                                            block_mode_name(mode));
             fflush(stdout);
@@ -110,7 +109,7 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
             double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
             double speed = buf_size / (1024 * 1024 * time);
 
-            printf("%.0f MB/s (enc) | ", speed);
+            printf("%.0f MB/s (enc)\t|\t", speed);
             fflush(stdout);
 
             os_random(iv, iv_len);
@@ -133,12 +132,12 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
             speed = buf_size / (1024 * 1024 * time);
 
             printf("%.0f MB/s (dec) ", speed);
-            printf("[%d-bit key]\n", (int)key_len * 8);
+            printf("\t[%d-bit key]\n", (int)key_len * 8);
+            free(iv);
         }
 
         free(key);
-        free(iv);
-        if (id != BLOCK_COUNT - 1) printf(" &\n");
+        if (id != block_cipher_count() - 1) printf(" &\n");
     }
 
     printf(" -\n\n");
@@ -147,7 +146,7 @@ void benchmark_block_ciphers(void *buffer, size_t buf_size)
 
 void benchmark_stream_ciphers(void *buffer, size_t buf_size)
 {
-    for (size_t id = 0; id < STREAM_COUNT; ++id)
+    for (size_t id = 0; id < stream_cipher_count(); ++id)
     {
         const struct STREAM_CIPHER *primitive = stream_cipher_by_id(id);
         printf(" * %.20s: \t", stream_cipher_name(primitive));
@@ -170,7 +169,7 @@ void benchmark_stream_ciphers(void *buffer, size_t buf_size)
         double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
         double speed = buf_size / (1024 * 1024 * time);
 
-        printf("%.0f MB/s [%d-bit key].\n", speed, (int)key_len * 8);
+        printf("%.0f MB/s\t[%d-bit key].\n", speed, (int)key_len * 8);
     }
 
     printf(" -\n\n");
@@ -178,7 +177,7 @@ void benchmark_stream_ciphers(void *buffer, size_t buf_size)
 
 void benchmark_pbkdf2(void *buffer, size_t buf_size, size_t iterations)
 {
-    for (size_t id = 0; id < HASH_COUNT; ++id)
+    for (size_t id = 0; id < hash_function_count(); ++id)
     {
         const struct HASH_FUNCTION *primitive = hash_function_by_id(id);
         printf(" * PBKDF2 [%.10s]: \t", hash_function_name(primitive));
@@ -203,7 +202,6 @@ void benchmark_pbkdf2(void *buffer, size_t buf_size, size_t iterations)
 
     printf(" -\n\n");
 }
-
 
 int main(int argc, char *argv[])
 {

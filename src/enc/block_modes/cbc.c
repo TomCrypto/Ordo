@@ -1,8 +1,10 @@
-#include <enc/block_cipher_modes/cbc.h>
+#include "enc/block_modes/cbc.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -14,6 +16,8 @@ struct CBC_STATE
     unsigned char *block;
     size_t available;
     
+    size_t block_size;
+    
     size_t padding;
     int direction;
 };
@@ -21,15 +25,17 @@ struct CBC_STATE
 struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER *cipher,
                             void *cipher_state)
 {
-    size_t block_size = cipher_block_size(cipher);
+    
 
     struct CBC_STATE *state = mem_alloc(sizeof(struct CBC_STATE));
     if (!state) goto fail;
+    
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
 
-    state->iv = mem_alloc(block_size);
+    state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
 
-    state->block = mem_alloc(block_size);
+    state->block = mem_alloc(state->block_size);
     if (!state->block) goto fail;
 
     return state;
@@ -47,12 +53,12 @@ int cbc_init(struct CBC_STATE *state,
              int dir,
              const struct CBC_PARAMS *params)
 {
-    if (iv_len > cipher_block_size(cipher)) return ORDO_ARG;
+    if (cbc_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
     state->direction = dir;
 
-    memset(state->iv, 0x00, cipher_block_size(cipher));
+    memset(state->iv, 0x00, state->block_size);
     memcpy(state->iv, iv, iv_len);
 
     state->padding = (params == 0) ? 1 : params->padding & 1;
@@ -68,7 +74,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
                                unsigned char *out,
                                size_t *out_len)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
     *out_len = 0;
 
@@ -99,7 +105,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
 
 static void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t in_len, unsigned char* out, size_t* out_len)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
     *out_len = 0;
 
@@ -146,7 +152,7 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
     }
     else
     {
-        size_t block_size = cipher_block_size(cipher);
+        size_t block_size = state->block_size;
         uint8_t padding;
         
         padding = (uint8_t)(block_size - state->available % block_size);
@@ -175,7 +181,7 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
     }
     else
     {
-        size_t block_size = cipher_block_size(cipher);
+        size_t block_size = state->block_size;
         uint8_t padding;
 
         block_cipher_inverse(cipher, cipher_state, state->block);
@@ -246,21 +252,19 @@ void cbc_copy(struct CBC_STATE *dst,
               const struct CBC_STATE *src,
               const struct BLOCK_CIPHER *cipher)
 {
-    memcpy(dst->block, src->block, cipher_block_size(cipher));
-    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    memcpy(dst->block, src->block, dst->block_size);
+    memcpy(dst->iv, src->iv, dst->block_size);
     dst->direction = src->direction;
     dst->available = src->available;
     dst->padding = src->padding;
 }
 
-void cbc_set_mode(struct BLOCK_MODE* mode)
+size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
-    make_block_mode(mode,
-                    (BLOCK_MODE_ALLOC)cbc_alloc,
-                    (BLOCK_MODE_INIT)cbc_init,
-                    (BLOCK_MODE_UPDATE)cbc_update,
-                    (BLOCK_MODE_FINAL)cbc_final,
-                    (BLOCK_MODE_FREE)cbc_free,
-                    (BLOCK_MODE_COPY)cbc_copy,
-                    "CBC");
+    switch(query)
+    {
+        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
+        
+        default: return 0;
+    }
 }

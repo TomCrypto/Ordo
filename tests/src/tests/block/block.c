@@ -3,7 +3,7 @@
 struct TEST_VECTOR
 {
     const char *name;
-    int key_len;
+    size_t key_len;
     const char *key;
     const char *input;
     const char *expected;
@@ -160,7 +160,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
     else
     {
-        size_t check_len = cipher_block_size(cipher);
+        size_t check_len = block_cipher_query(cipher, BLOCK_SIZE, 0);
         void *state;
         int err;
 
@@ -228,7 +228,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_block(char *output, int maxlen, FILE *ext)
+int test_block(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 
@@ -247,18 +247,18 @@ int test_block(char *output, int maxlen, FILE *ext)
     pass("Generic block cipher test vectors.");
 }
 
-int test_block_utilities(char *output, int maxlen, FILE *ext)
+int test_block_utilities(char *output, size_t maxlen, FILE *ext)
 {
-    int t, count = BLOCK_COUNT;
+    size_t t, count = block_cipher_count();
 
-    if (ext) fprintf(ext, "[*] Detected %d block ciphers.\n", count);
+    if (ext) fprintf(ext, "[*] Detected %d block ciphers.\n", (int)count);
 
     for (t = 0; t < count; ++t)
     {
         const struct BLOCK_CIPHER *cipher = block_cipher_by_id(t);
         if (!cipher)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", t);
+            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
             fail("Supposedly valid block cipher ID is invalid.");
         }
     }

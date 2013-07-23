@@ -1,173 +1,199 @@
-#include <primitives/hash_functions/skein256.h>
+#include "primitives/hash_functions/skein256.h"
 
-#include <primitives/block_ciphers/threefish256.h>
+#include "primitives/block_ciphers/threefish256.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
 /******************************************************************************/
 
 #define SKEIN256_INTERNAL (bits(256))
-#define SKEIN256_BLOCK (bits(256))
+#define SKEIN256_BLOCK    (bits(256))
 
 /* Some UBI block type constants. */
 #define SKEIN_UBI_CFG 4
 #define SKEIN_UBI_MSG 48
 #define SKEIN_UBI_OUT 63
 
-/* This creates a UBI-compliant tweak value. */
-#define MAKETWEAK(tweak, type, position, first, final) tweak[0] = position; \
-                                                       tweak[1] = ((uint64_t)(final) << 63) \
-                                                                | ((uint64_t)(first) << 62) \
-                                                                | ((uint64_t)(type)  << 56);
+/* This also represents the default configuration block, to avoid recreating it
+ * in case the parameters do not specify a different configuration block. */
+static const uint64_t skein256_iv[4] = {
+    0xFC9DA860D048B449, 0x2FCA66479FA7D833,
+    0xB33BC3896656840F, 0x6A54E920FDE8DA69
+};
 
-/* The Skein-256 initial state vector for the default configuration block. */
-static const uint64_t Skein256_initialState[4] = {0xFC9DA860D048B449, 0x2FCA66479FA7D833, 0xB33BC3896656840F, 0x6A54E920FDE8DA69};
+/* Note this assumes "first" and "final" are boolean (0 or 1). The result is a
+ * UBI-compliant tweak, however with a message length only up to 2^64 bits. */
+static void make_tweak(uint64_t tweak[2],
+                       uint64_t type,
+                       uint64_t position,
+                       uint64_t first,
+                       uint64_t final)
+{
+    tweak[0] = position;
+    tweak[1] = (final << 63) | (first << 62) | (type  << 56);
+}
 
-/* A Skein-256 state. */
+static void skein256_compress(const uint64_t *block,
+                              uint64_t *state,
+                              uint64_t *tweak)
+__attribute__((hot));
+
+void skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
+{
+    uint64_t subkeys[19][4];
+
+    threefish256_key_schedule(state, tweak, subkeys);
+
+    memcpy(state, block, SKEIN256_INTERNAL);
+
+    threefish256_forward_raw(state, subkeys);
+
+    xor_buffer(state, block, SKEIN256_INTERNAL);
+}
+
+/******************************************************************************/
+
 struct SKEIN256_STATE
 {
     uint64_t state[4];
     uint64_t block[4];
-    uint64_t blockLength;
-    uint64_t messageLength;
-    uint64_t output_length;
+    uint64_t block_len;
+    uint64_t msg_len;
+    uint64_t out_len;
 };
 
-struct SKEIN256_STATE* skein256_alloc(void)
+struct SKEIN256_STATE *skein256_alloc(void)
 {
     return mem_alloc(sizeof(struct SKEIN256_STATE));
 }
 
-/* This is the Skein-256 compression function. */
-static void skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
+int skein256_init(struct SKEIN256_STATE *state,
+                  const struct SKEIN256_PARAMS *params)
 {
-    /* Some variables. */
-    uint64_t subkeys[19][4];
+    state->block_len = 0;
+    state->msg_len = 0;
 
-    /* Perform the key schedule with the tweak. */
-    threefish256_key_schedule(state, tweak, subkeys);
-
-    /* Save the input block. */
-    memcpy(state, block, SKEIN256_INTERNAL);
-
-    /* Encrypt the block with this key. */
-    threefish256_forward_raw(state, subkeys);
-
-    /* Feed-forward to create the new state. */
-    xor_buffer((unsigned char*)state, (unsigned char*)block, SKEIN256_INTERNAL);
-}
-
-int skein256_init(struct SKEIN256_STATE *state, const struct SKEIN256_PARAMS *params)
-{
-    /* Some variables. */
-    uint64_t tweak[2];
-
-    /* Initialize context fields. */
-    state->blockLength = 0;
-    state->messageLength = 0;
-
-    /* If parameters have been passed, process them into a configuration block. */
     if (params)
     {
-        /* Save the desired digest's output length (in bytes). */
-        state->output_length = bits(params->output_length);
+        uint64_t tweak[2];
+
+        if (bits(params->out_len) == 0) return ORDO_ARG;
+
+        /* Save the output length, in bytes. */
+        state->out_len = bits(params->out_len);
 
         /* Generate the initial state from the configuration block. */
         memset(state->state, 0, SKEIN256_BLOCK);
         memcpy(state->block, params, SKEIN256_BLOCK);
-        MAKETWEAK(tweak, SKEIN_UBI_CFG, SKEIN256_BLOCK, 1, 1);
+        make_tweak(tweak, SKEIN_UBI_CFG, SKEIN256_BLOCK, 1, 1);
         skein256_compress(state->block, state->state, tweak);
     }
     else
     {
-        /* Otherwise, assume default parameters and implicitly process the default configuration block. */
-        memcpy(state->state, Skein256_initialState, SKEIN256_INTERNAL);
-        state->output_length = SKEIN256_INTERNAL;
+        /* No parameters, use default configuration block. */
+        memcpy(state->state, skein256_iv, SKEIN256_INTERNAL);
+        state->out_len = SKEIN256_INTERNAL;
     }
 
-    /* We're done! */
     return ORDO_SUCCESS;
 }
 
-void skein256_update(struct SKEIN256_STATE *state, const void* buffer, size_t size)
+void skein256_update(struct SKEIN256_STATE *state,
+                     const void *buffer,
+                     size_t size)
 {
-    /* Some variables. */
-    uint64_t tweak[2];
-    size_t pad = 0;
-
-    /* Is the message provided long enough to complete a block? */
-    if (state->blockLength + size > SKEIN256_BLOCK)
+    if (state->block_len + size > SKEIN256_BLOCK)
     {
-        /* Compute how much of the message is needed to complete the block. */
-        pad = SKEIN256_BLOCK - state->blockLength;
-        memcpy(((unsigned char*)state->block) + state->blockLength, buffer, pad);
-        state->messageLength += pad;
+        size_t pad = SKEIN256_BLOCK - state->block_len;
+        uint64_t tweak[2];
 
-        /* Generate the tweak for this block. */
-        MAKETWEAK(tweak, SKEIN_UBI_MSG, state->messageLength, state->messageLength <= SKEIN256_BLOCK, 0);
+        memcpy(offset(state->block, state->block_len), buffer, pad);
+        state->msg_len += pad;
 
-        /* We now have a complete block which we can process. */
+        make_tweak(tweak,
+                   SKEIN_UBI_MSG,
+                   state->msg_len,
+                   state->msg_len <= SKEIN256_BLOCK,
+                   0 /* can't be the last block */);
+
         skein256_compress(state->block, state->state, tweak);
-        state->blockLength = 0;
+        state->block_len = 0;
 
         /* Offset the message accordingly. */
-        buffer = (unsigned char*)buffer + pad;
+        buffer = offset(buffer, pad);
         size -= pad;
 
-        /* At this point, the block is empty, so process complete blocks directly except the last one. */
+        /* Do NOT process the final block. */
         while (size > SKEIN256_BLOCK)
         {
-            /* Just process this block. */
-            state->messageLength += SKEIN256_BLOCK;
             memcpy(state->block, buffer, SKEIN256_BLOCK);
-            MAKETWEAK(tweak, SKEIN_UBI_MSG, state->messageLength, state->messageLength <= SKEIN256_BLOCK, 0);
+            state->msg_len += SKEIN256_BLOCK;
+
+            make_tweak(tweak,
+                       SKEIN_UBI_MSG,
+                       state->msg_len,
+                       state->msg_len <= SKEIN256_BLOCK,
+                       0);
+
             skein256_compress(state->block, state->state, tweak);
-            buffer = (unsigned char*)buffer + SKEIN256_BLOCK;
+
+            buffer = offset(buffer, SKEIN256_BLOCK);
             size -= SKEIN256_BLOCK;
         }
     }
 
-    /* If we have anything left over, just append it to the context's block field. */
-    memcpy(((unsigned char*)state->block) + state->blockLength, buffer, size);
-    state->blockLength += size;
+    memcpy(offset(state->block, state->block_len), buffer, size);
+    state->block_len += size;
 }
 
-void skein256_final(struct SKEIN256_STATE *state, void* digest)
+void skein256_final(struct SKEIN256_STATE *state,
+                    void *digest)
 {
-    /* Some variables. */
     uint64_t tweak[2];
     uint64_t ctr = 0;
-    uint64_t lst[4];
+    uint64_t out[4];
 
-    /* At this point, we must have data left (possibly a full block), process it. First wipe any residual old data. */
-    memset(((unsigned char*)state->block) + state->blockLength, 0, SKEIN256_BLOCK - state->blockLength);
+    /* Here, we need to process one complete block - the Skein specification
+     * mandates zero-fill, so erase any residual input data in the state. */
+    memset(offset(state->block, state->block_len),
+           0x00,
+           SKEIN256_BLOCK - state->block_len);
 
-    /* Then, just process this final message block. */
-    state->messageLength += state->blockLength;
-    MAKETWEAK(tweak, SKEIN_UBI_MSG, state->messageLength, state->messageLength <= SKEIN256_BLOCK, 1);
+    /* However, only the actual input data counts towards the length. */
+    state->msg_len += state->block_len;
+
+    make_tweak(tweak,
+               SKEIN_UBI_MSG,
+               state->msg_len,
+               state->msg_len <= SKEIN256_BLOCK,
+               1 /* this'll be the last block */);
+
     skein256_compress(state->block, state->state, tweak);
 
-    /* Wipe the context's data block for output. */
-    memset(state->block, 0, SKEIN256_BLOCK);
+    /* We'll use the state block as scratch storage now. All words should be
+     * zero, but the first one will be modified while creating the output. */
+    memset(state->block, 0x00, SKEIN256_BLOCK);
 
-    /* We're done, output the final state as the digest, iterated as needed to match the desired output length. */
-    while (state->output_length != 0)
+    /* This is to implement the arbitrary output length feature. This is done
+     * by (loosely stated) running the Threefish-256 cipher in counter mode. */
+    while (state->out_len != 0)
     {
-        /* Copy the current internal state since it is reused for all output iterations. */
-        memcpy(lst, state->state, SKEIN256_INTERNAL);
+        size_t cpy = min(state->out_len, SKEIN256_BLOCK);
 
-        /* Process this output block. */
         state->block[0] = ctr++;
-        MAKETWEAK(tweak, SKEIN_UBI_OUT, sizeof(uint64_t), 1, 1);
-        skein256_compress(state->block, lst, tweak);
+        memcpy(out, state->state, SKEIN256_INTERNAL);
 
-        /* Copy it into the user digest. */
-        memcpy((unsigned char*)digest + (ctr - 1) * SKEIN256_BLOCK, lst, min(state->output_length, SKEIN256_BLOCK));
-        state->output_length -= min(state->output_length, SKEIN256_BLOCK);
+        make_tweak(tweak, SKEIN_UBI_OUT, sizeof(uint64_t), 1, 1);
+        skein256_compress(state->block, out, tweak);
+
+        memcpy(offset(digest, (ctr - 1) * SKEIN256_BLOCK), out, cpy);
+        state->out_len -= cpy; /* Will always reach zero, see cpy. */
     }
 }
 
@@ -176,23 +202,19 @@ void skein256_free(struct SKEIN256_STATE *state)
     mem_free(state);
 }
 
-void skein256_copy(struct SKEIN256_STATE *dst, const struct SKEIN256_STATE *src)
+void skein256_copy(struct SKEIN256_STATE *dst,
+                   const struct SKEIN256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SKEIN256_STATE));
 }
 
-/* Fills a HASH_FUNCTION struct with the correct information. */
-void skein256_set_primitive(struct HASH_FUNCTION *hash)
+size_t skein256_query(int query, size_t value)
 {
-    make_hash_function(hash,
-                       SKEIN256_INTERNAL,
-                       SKEIN256_BLOCK,
-                       (HASH_ALLOC)skein256_alloc,
-                       (HASH_INIT)skein256_init,
-                       (HASH_UPDATE)skein256_update,
-                       (HASH_FINAL)skein256_final,
-                       (HASH_FREE)skein256_free,
-                       (HASH_COPY)skein256_copy,
-                       "Skein-256");
+    switch(query)
+    {
+        case BLOCK_SIZE: return SKEIN256_BLOCK;
+        case DIGEST_LEN: return SKEIN256_INTERNAL;
+        
+        default: return 0;
+    }
 }
-

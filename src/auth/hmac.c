@@ -1,7 +1,9 @@
-#include <auth/hmac.h>
+#include "auth/hmac.h"
 
-#include <common/errors.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -11,17 +13,17 @@ struct HMAC_CTX
 {
     const struct HASH_FUNCTION *hash;
     struct DIGEST_CTX *ctx;
+    unsigned char *key;
     size_t digest_len;
-    uint8_t *key;
 };
 
-struct HMAC_CTX* hmac_alloc(const struct HASH_FUNCTION *hash)
+struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash)
 {
     struct HMAC_CTX *ctx = mem_alloc(sizeof(struct HMAC_CTX));
-    const size_t block_size = hash_block_size(hash);
+    size_t block_size = hash_function_query(hash, BLOCK_SIZE, 0);
 
-    /* We could just return nil here, but it is more consistent to just rely on
-     * the hmac_free function (and it helps ensure they work well together). */
+    /* We could just return nil here, but it is more consistent to rely on
+     * the hmac_free function (and helps ensure they work well together). */
     if (!ctx) goto fail;
 
     if (!(ctx->ctx = digest_alloc(hash))) goto fail;
@@ -36,11 +38,10 @@ fail:
 }
 
 int hmac_init(struct HMAC_CTX *ctx,
-              const void *key,
-              size_t key_size,
+              const void *key, size_t key_len,
               const void *hash_params)
 {
-    const size_t block_size = hash_block_size(ctx->hash);
+    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE, 0);
 
     int err = ORDO_SUCCESS;
     size_t t;
@@ -50,13 +51,13 @@ int hmac_init(struct HMAC_CTX *ctx,
 
     /* If the key is larger than the hash function's block size, it needs to
      * be reduced. This is done by hashing it once, as per RFC 2104. */
-    if (key_size > block_size)
+    if (key_len > block_size)
     {
         if ((err = digest_init(ctx->ctx, 0))) return err;
-        digest_update(ctx->ctx, key, key_size);
+        digest_update(ctx->ctx, key, key_len);
         digest_final(ctx->ctx, ctx->key);
     }
-    else memcpy(ctx->key, key, key_size);
+    else memcpy(ctx->key, key, key_len);
 
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x36;
     if ((err = digest_init(ctx->ctx, hash_params))) return err;
@@ -65,20 +66,17 @@ int hmac_init(struct HMAC_CTX *ctx,
     return err;
 }
 
-void hmac_update(struct HMAC_CTX *ctx,
-                 const void *buffer,
-                 size_t size)
+void hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len)
 {
-    digest_update(ctx->ctx, buffer, size);
+    digest_update(ctx->ctx, in, in_len);
 }
 
-int hmac_final(struct HMAC_CTX *ctx,
-               void *digest)
+int hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
     int err = ORDO_SUCCESS;
 
-    const size_t digest_len = digest_length(ctx->hash);
-    const size_t block_size = hash_block_size(ctx->hash);
+    size_t digest_len = digest_length(ctx->hash);
+    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE, 0);
     size_t t;
 
     /* Finalize inner hash. */
@@ -90,7 +88,7 @@ int hmac_final(struct HMAC_CTX *ctx,
     if ((err = digest_init(ctx->ctx, 0)))
     {
         /* Now "digest" (user-provided pointer) contains sensitive data.
-         * Fill it with zeroes before returning if a fail occurred. */
+         * Fill it with zeroes before returning if a failure occurred. */
         mem_erase(digest, digest_len);
         return err;
     }
@@ -102,13 +100,6 @@ int hmac_final(struct HMAC_CTX *ctx,
     return err;
 }
 
-/* This deallocation function is designed to be able to cope with partially
- * allocated contexts resulting from fails in hmac_alloc, such that any
- * error in the latter can be gracefully handled by calling hmac_free.
- *
- * The only condition is that if ctx->ctx has been initialized, then ctx->hash
- * must have been set to the proper hash function object. If this is not the
- * case, this function will fail. */
 void hmac_free(struct HMAC_CTX *ctx)
 {
     if (!ctx) return;
@@ -122,9 +113,9 @@ void hmac_free(struct HMAC_CTX *ctx)
     mem_free(ctx);
 }
 
-void hmac_copy(struct HMAC_CTX *dst,
-               const struct HMAC_CTX *src)
+void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
 {
-    memcpy(dst->key, src->key, hash_block_size(dst->hash));
+    size_t block_size = hash_function_query(dst->hash, BLOCK_SIZE, 0);
+    memcpy(dst->key, src->key, block_size);
     digest_copy(dst->ctx, src->ctx);
 }

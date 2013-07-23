@@ -3,7 +3,7 @@
 
 #include <testenv.h>
 
-int test_block_modes(char *output, int maxlen, FILE *ext);
-int test_block_modes_utilities(char *output, int maxlen, FILE *ext);
+int test_block_modes(char *output, size_t maxlen, FILE *ext);
+int test_block_modes_utilities(char *output, size_t maxlen, FILE *ext);
 
 #endif

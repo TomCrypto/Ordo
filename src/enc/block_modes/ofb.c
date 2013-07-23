@@ -1,8 +1,10 @@
-#include <enc/block_cipher_modes/ofb.h>
+#include "enc/block_modes/ofb.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -15,16 +17,18 @@ struct OFB_STATE
     void* iv;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
+    
+    size_t block_size;
 };
 
 struct OFB_STATE* ofb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    size_t block_size = cipher_block_size(cipher);
-
     struct OFB_STATE* state = mem_alloc(sizeof(struct OFB_STATE));
     if (!state) goto fail;
+    
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
 
-    state->iv = mem_alloc(block_size);
+    state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
 
     state->remaining = 0;
@@ -37,9 +41,9 @@ fail:
 
 int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
-    if (iv_len > block_size) return ORDO_ARG;
+    if (ofb_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
     /* Copy the IV (required) into the context IV. */
     memset(state->iv, 0x00, block_size);
@@ -55,7 +59,7 @@ int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
 void ofb_update(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -102,18 +106,16 @@ void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void ofb_copy(struct OFB_STATE *dst, const struct OFB_STATE *src, const struct BLOCK_CIPHER* cipher)
 {
-    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    memcpy(dst->iv, src->iv, dst->block_size);
     dst->remaining = src->remaining;
 }
 
-void ofb_set_mode(struct BLOCK_MODE* mode)
+size_t ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
-    make_block_mode(mode,
-                    (BLOCK_MODE_ALLOC)ofb_alloc,
-                    (BLOCK_MODE_INIT)ofb_init,
-                    (BLOCK_MODE_UPDATE)ofb_update,
-                    (BLOCK_MODE_FINAL)ofb_final,
-                    (BLOCK_MODE_FREE)ofb_free,
-                    (BLOCK_MODE_COPY)ofb_copy,
-                    "OFB");
+    switch(query)
+    {
+        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
+        
+        default: return 0;
+    }
 }

@@ -2,7 +2,7 @@
 
 #define MAX_TESTS 1024
 
-static int test_index;
+static size_t test_index;
 static TEST tests[MAX_TESTS];
 
 void register_test(TEST test)
@@ -10,12 +10,12 @@ void register_test(TEST test)
     tests[test_index++] = test;
 }
 
-int test_count(void)
+size_t test_count(void)
 {
     return test_index;
 }
 
-TEST test(int index)
+TEST test(size_t index)
 {
     return tests[index];
 }
@@ -42,7 +42,7 @@ TEST test(int index)
 
 int register_all_tests(void)
 {
-    srand(time(0)); /* For tests which need to use randomness. */
+    srand((unsigned)time(0)); /* For tests which need to use randomness. */
 
     register_test(test_mem);
     register_test(test_os_random);

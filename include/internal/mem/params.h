@@ -1,13 +1,9 @@
 #ifndef ORDO_MEM_PARAMS_H
 #define ORDO_MEM_PARAMS_H
 
-#include <internal/environment.h>
+#include "internal/environment.h"
 
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @internal
@@ -18,8 +14,13 @@ extern "C" {
  * Generally this depends only on the architecture, since it represents
  * how much memory the pool will use.
  *
- * This module is not to be used from outside the library.
+ * This module is not to be used from outside the library, and is only
+ * meaningful at compile-time.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* For all x86 and x86_64 processors, assume general-purpose usage. */
 #if defined(__x86_64__) || defined(__i386__)

@@ -21,16 +21,16 @@
  * 2. if the library reports any error (including allocation errors), the
  *    test shall fail and the error be reported in the extended log file.
  * 3. a test shall terminate at the first error encountered. */
-typedef int (*TEST)(char *output, int maxlen, FILE *ext);
+typedef int (*TEST)(char *output, size_t maxlen, FILE *ext);
 
 /* Registers a particular test given a test function. */
 void register_test(TEST test);
 
 /* Returns the test function corresponding to a given test number. */
-TEST test(int index);
+TEST test(size_t index);
 
 /* Returns the number of tests registered so far. */
-int test_count(void);
+size_t test_count(void);
 
 /* Registers all tests known to the test framework. */
 int register_all_tests(void);

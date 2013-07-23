@@ -1,12 +1,11 @@
-#include <common/version.h>
+#include "common/version.h"
 
-#include <internal/environment.h>
-#include <internal/endianness.h>
+#include "internal/environment.h"
 
 /******************************************************************************/
 
 #define VERSION_MAJOR 2
-#define VERSION_MINOR 2
+#define VERSION_MINOR 3
 #define VERSION_REV   0
 
 int ordo_version_major()
@@ -36,7 +35,7 @@ static const char *platform = "FreeBSD";
 static const char *platform = "NetBSD";
 #endif
 
-const char* ordo_platform()
+const char *ordo_platform()
 {
     return platform;
 }

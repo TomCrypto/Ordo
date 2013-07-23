@@ -1,13 +1,9 @@
 #ifndef ORDO_ENC_BLOCK_H
 #define ORDO_ENC_BLOCK_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes.h"
 
 /******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*!
  * @file enc_block.h
@@ -28,6 +24,10 @@ extern "C" {
  * of padding bytes required, in bytes (between 1 and the block cipher's
  * block size).
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct ENC_BLOCK_CTX;
 
@@ -116,6 +116,13 @@ void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 */
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                     const struct ENC_BLOCK_CTX *src);
+                    
+size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+                         size_t key_len);
+
+size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
+                        const struct BLOCK_MODE *mode,
+                        size_t iv_len);
 
 #ifdef __cplusplus
 }

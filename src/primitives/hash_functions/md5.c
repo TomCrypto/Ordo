@@ -1,56 +1,33 @@
-#include <primitives/hash_functions/md5.h>
+#include "primitives/hash_functions/md5.h"
 
-#include <internal/endianness.h>
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/endianness.h"
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
 /******************************************************************************/
 
 #define MD5_DIGEST (bits(128))
-#define MD5_BLOCK (bits(512))
+#define MD5_BLOCK  (bits(512))
 
-/* The MD5 initial state vector. */
-static const uint32_t MD5_initialState[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
-
-/* A MD5 state. */
-struct MD5_STATE
+static const uint32_t md5_iv[4] =
 {
-    uint32_t digest[4];
-    uint32_t block[16];
-    uint64_t blockLength;
-    uint64_t messageLength;
+    0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 };
 
-struct MD5_STATE* md5_alloc(void)
+static void md5_compress(const uint32_t block[16], uint32_t digest[4])
+__attribute__((hot));
+
+static void md5_compress(const uint32_t block[16], uint32_t digest[4])
 {
-    return mem_alloc(sizeof(struct MD5_STATE));
-}
-
-int md5_init(struct MD5_STATE *state, const void* params)
-{
-    /* Set the digest to the initial state. */
-    memcpy(state->digest, MD5_initialState, MD5_DIGEST);
-    state->messageLength = 0;
-    state->blockLength = 0;
-
-    /* Ignore the parameters, since MD5 has none. */
-    return ORDO_SUCCESS;
-}
-
-/* This is the MD5 compression function. */
-static void md5Compress(const uint32_t block[16], uint32_t digest[4])
-{
-    /* Temporary variables. */
-    uint32_t a, b, c, d;
-
-    /* Save the current state. */
-    a = digest[0];
-    b = digest[1];
-    c = digest[2];
-    d = digest[3];
+    uint32_t a = digest[0];
+    uint32_t b = digest[1];
+    uint32_t c = digest[2];
+    uint32_t d = digest[3];
 
     a += block[ 0] + 0xD76AA478 + (d ^ (b & (c ^ d)));
     a = ((a <<  7) | (a >> 25)) + b;
@@ -151,109 +128,128 @@ static void md5Compress(const uint32_t block[16], uint32_t digest[4])
     b += block[ 2] + 0xC4AC5665 + (c ^ d ^ a);
     b = ((b << 23) | (b >>  9)) + c;
 
-    a += block[ 0] + 0xF4292244 + (c ^ (b | (~d)));
+    a += block[ 0] + 0xF4292244 + (c ^ (b | ~d));
     a = ((a <<  6) | (a >> 26)) + b;
-    d += block[ 7] + 0x432AFF97 + (b ^ (a | (~c)));
+    d += block[ 7] + 0x432AFF97 + (b ^ (a | ~c));
     d = ((d << 10) | (d >> 22)) + a;
-    c += block[14] + 0xAB9423A7 + (a ^ (d | (~b)));
+    c += block[14] + 0xAB9423A7 + (a ^ (d | ~b));
     c = ((c << 15) | (c >> 17)) + d;
-    b += block[ 5] + 0xFC93A039 + (d ^ (c | (~a)));
+    b += block[ 5] + 0xFC93A039 + (d ^ (c | ~a));
     b = ((b << 21) | (b >> 11)) + c;
-    a += block[12] + 0x655B59C3 + (c ^ (b | (~d)));
+    a += block[12] + 0x655B59C3 + (c ^ (b | ~d));
     a = ((a <<  6) | (a >> 26)) + b;
-    d += block[ 3] + 0x8F0CCC92 + (b ^ (a | (~c)));
+    d += block[ 3] + 0x8F0CCC92 + (b ^ (a | ~c));
     d = ((d << 10) | (d >> 22)) + a;
-    c += block[10] + 0xFFEFF47D + (a ^ (d | (~b)));
+    c += block[10] + 0xFFEFF47D + (a ^ (d | ~b));
     c = ((c << 15) | (c >> 17)) + d;
-    b += block[ 1] + 0x85845DD1 + (d ^ (c | (~a)));
+    b += block[ 1] + 0x85845DD1 + (d ^ (c | ~a));
     b = ((b << 21) | (b >> 11)) + c;
-    a += block[ 8] + 0x6FA87E4F + (c ^ (b | (~d)));
+    a += block[ 8] + 0x6FA87E4F + (c ^ (b | ~d));
     a = ((a <<  6) | (a >> 26)) + b;
-    d += block[15] + 0xFE2CE6E0 + (b ^ (a | (~c)));
+    d += block[15] + 0xFE2CE6E0 + (b ^ (a | ~c));
     d = ((d << 10) | (d >> 22)) + a;
-    c += block[ 6] + 0xA3014314 + (a ^ (d | (~b)));
+    c += block[ 6] + 0xA3014314 + (a ^ (d | ~b));
     c = ((c << 15) | (c >> 17)) + d;
-    b += block[13] + 0x4E0811A1 + (d ^ (c | (~a)));
+    b += block[13] + 0x4E0811A1 + (d ^ (c | ~a));
     b = ((b << 21) | (b >> 11)) + c;
-    a += block[ 4] + 0xF7537E82 + (c ^ (b | (~d)));
+    a += block[ 4] + 0xF7537E82 + (c ^ (b | ~d));
     a = ((a <<  6) | (a >> 26)) + b;
-    d += block[11] + 0xBD3AF235 + (b ^ (a | (~c)));
+    d += block[11] + 0xBD3AF235 + (b ^ (a | ~c));
     d = ((d << 10) | (d >> 22)) + a;
-    c += block[ 2] + 0x2AD7D2BB + (a ^ (d | (~b)));
+    c += block[ 2] + 0x2AD7D2BB + (a ^ (d | ~b));
     c = ((c << 15) | (c >> 17)) + d;
-    b += block[ 9] + 0xEB86D391 + (d ^ (c | (~a)));
+    b += block[ 9] + 0xEB86D391 + (d ^ (c | ~a));
     b = ((b << 21) | (b >> 11)) + c;
 
-    /* Feed-forward the hash state. */
     digest[0] += a;
     digest[1] += b;
     digest[2] += c;
     digest[3] += d;
 }
 
-void md5_update(struct MD5_STATE *state, const void* buffer, size_t size)
+/******************************************************************************/
+
+struct MD5_STATE
 {
-    /* Some variables. */
-    size_t pad = 0;
+    /* Here block_len is used to track incomplete input blocks, whereas
+     * msg_len stores the total message length so far (for padding). */
+    uint32_t digest[4];
+    uint32_t block[16];
+    uint64_t block_len;
+    uint64_t msg_len;
+};
 
-    /* Increment the message length. */
-    state->messageLength += size;
+struct MD5_STATE *md5_alloc(void)
+{
+    return mem_alloc(sizeof(struct MD5_STATE));
+}
 
-    /* Is the message provided long enough to complete a block? */
-    if (state->blockLength + size >= MD5_BLOCK)
+int md5_init(struct MD5_STATE *state,
+             const void *params)
+{
+    memcpy(state->digest, md5_iv, MD5_DIGEST);
+    state->block_len = 0;
+    state->msg_len = 0;
+
+    return ORDO_SUCCESS;
+}
+
+void md5_update(struct MD5_STATE *state,
+                const void *buffer,
+                size_t size)
+{
+    state->msg_len += size;
+
+    /* Do we have enough to complete a message block? */
+    if (state->block_len + size >= MD5_BLOCK)
     {
-        /* Compute how much of the message is needed to complete the block. */
-        pad = MD5_BLOCK - state->blockLength;
-        memcpy(((unsigned char*)state->block) + state->blockLength, buffer, pad);
+        size_t pad = MD5_BLOCK - state->block_len;
 
-        /* We now have a complete block which we can process. */
-        md5Compress(state->block, state->digest);
-        state->blockLength = 0;
+        memcpy(offset(state->block, state->block_len), buffer, pad);
+        md5_compress(state->block, state->digest);
+        state->block_len = 0;
 
-        /* Offset the message accordingly. */
-        buffer = (unsigned char*)buffer + pad;
+        buffer = offset(buffer, pad);
         size -= pad;
 
-        /* At this point, the block is empty, so process complete blocks directly. */
+        /* Now the state is empty - process all full blocks. */
         while (size >= MD5_BLOCK)
         {
-            /* Just process this block. */
             memcpy(state->block, buffer, MD5_BLOCK);
-            md5Compress(state->block, state->digest);
-            buffer = (unsigned char*)buffer + MD5_BLOCK;
+            md5_compress(state->block, state->digest);
+
+            buffer = offset(buffer, MD5_BLOCK);
             size -= MD5_BLOCK;
         }
     }
 
-    /* If we have anything left over, just append it to the context's block field. */
-    memcpy(((unsigned char*)state->block) + state->blockLength, buffer, size);
-    state->blockLength += size;
+    /* Leftover input data goes into the state for later processing. */
+    memcpy(offset(state->block, state->block_len), buffer, size);
+    state->block_len += size;
 }
 
-void md5_final(struct MD5_STATE *state, void* digest)
+void md5_final(struct MD5_STATE *state,
+               void *digest)
 {
-    /* Some variables. */
-    uint8_t byte = 0x80;
-    size_t zeroBytes;
-    uint64_t len;
+    uint64_t len = htole64(bytes(state->msg_len));
+    uint8_t one = 0x80, zero = 0x00;
 
-    /* Save the message's length (in bits) before final processing (little-endian for MD5). */
-    len = htole64(bytes(state->messageLength));
+    /* Merkle padding consists of:
+     * - adding a single '1' bit.
+     * - adding as many '0' bits as necessary.
+     * - appending the length, as a 64-bit little endian integer, IN BITS, of
+     *   the total message fed into the hash function compression function. */
+    md5_update(state, &one, sizeof(one));
 
-    /* Append a '1' bit to the message. */
-    md5_update(state, &byte, sizeof(byte));
+    while (state->block_len != MD5_BLOCK - sizeof(uint64_t))
+    {
+        md5_update(state, &zero, sizeof(zero));
+    }
 
-    /* Calculate the number of '0' bits to append. */
-    zeroBytes = (MD5_BLOCK - sizeof(uint64_t) - state->blockLength) % MD5_BLOCK;
-
-    /* Append that many '0' bits. */
-    byte = 0x00;
-    while (zeroBytes--) md5_update(state, &byte, sizeof(byte));
-
-    /* Append the message length (on 64 bits). */
     md5_update(state, &len, sizeof(len));
 
-    /* Copy the final digest. */
+    /* At this point there is no input data left in the state, everything *
+     * has been processed into the digest, which we will now copy over... */
     memcpy(digest, state->digest, MD5_DIGEST);
 }
 
@@ -262,21 +258,19 @@ void md5_free(struct MD5_STATE *state)
     mem_free(state);
 }
 
-void md5_copy(struct MD5_STATE *dst, const struct MD5_STATE *src)
+void md5_copy(struct MD5_STATE *dst,
+              const struct MD5_STATE *src)
 {
     memcpy(dst, src, sizeof(struct MD5_STATE));
 }
 
-void md5_set_primitive(struct HASH_FUNCTION* hash)
+size_t md5_query(int query, size_t value)
 {
-    make_hash_function(hash,
-                       MD5_DIGEST,
-                       MD5_BLOCK,
-                       (HASH_ALLOC)md5_alloc,
-                       (HASH_INIT)md5_init,
-                       (HASH_UPDATE)md5_update,
-                       (HASH_FINAL)md5_final,
-                       (HASH_FREE)md5_free,
-                       (HASH_COPY)md5_copy,
-                       "MD5");
+    switch(query)
+    {
+        case BLOCK_SIZE: return MD5_BLOCK;
+        case DIGEST_LEN: return MD5_DIGEST;
+        
+        default: return 0;
+    }
 }

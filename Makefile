@@ -4,7 +4,8 @@ SRCDIR = src
 INCLUDE = include
 
 CC ?= gcc
-CFLAGS = -Wall -Wextra -Wno-unused-parameter \
+CFLAGS = -Wall -Wextra \
+         -Wno-unused-parameter \
          -std=c99 -pedantic -pedantic-errors
 
 ifeq ($(nopthread), 1)
@@ -42,7 +43,6 @@ else
 	STRIP = 
 endif
 
-# Add the extra arguments (if any)
 CFLAGS += $(extra)
 
 HEADERS = $(shell find $(INCLUDE)/ -name '*.h')
@@ -77,37 +77,30 @@ $(OBJDIR)/%.S.o: $(SRCDIR)/%.S $(HEADERS)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o $@
 
-# make tests :: Builds the test driver
 .PHONY: tests
 tests:
 	cd tests; $(MAKE)
 
-# make clean_tests :: Cleans the test driver
 .PHONY: clean_tests
 clean_tests:
 	cd tests; $(MAKE) clean
 
-# make samples :: Builds all samples
 .PHONY: samples
 samples:
 	cd samples; $(MAKE) all
 
-# make clean_samples :: Cleans the samples
 .PHONY: clean_samples
 clean_samples:
 	cd samples; $(MAKE) clean
 
-# make clean_bin :: Removes all binary files
 .PHONY: clean_bin
 clean_bin:
 	rm -rf $(LIBDIR)
 
-# make clean_obj :: Removes all object files
 .PHONY: cleanobj
 clean_obj:
 	rm -rf $(OBJDIR)
 
-# make doc :: Builds documentation for Ordo
 .PHONY: doc
 doc:
 	doxygen
@@ -116,12 +109,10 @@ doc:
 	cd doc; ln -s -f html/index.html doc.html
 	cd doc; ln -s -f latex/refman.pdf doc.pdf
 
-# make clean_doc :: Removes all documentation
 .PHONY: clean_doc
 clean_doc:
 	rm -rf doc
 
-# make clean :: Removes all generated files
 .PHONY: clean
 clean: clean_doc clean_bin clean_obj clean_tests clean_samples
 	

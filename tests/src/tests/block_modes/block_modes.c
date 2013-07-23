@@ -1,6 +1,5 @@
-#include <tests/block/block.h>
+#include <tests/block_modes/block_modes.h>
 
-#include <common/identification.h>
 #include <enc/enc_block.h>
 
 /* Note the block mode tests are always run against the NullCipher.
@@ -9,11 +8,11 @@
 struct TEST_VECTOR
 {
     const char *name;
-    int iv_len;
+    size_t iv_len;
     const char *iv;
-    int in_len;
+    size_t in_len;
     const char *input;
-    int out_len;
+    size_t out_len;
     const char *expected;
 };
 
@@ -118,7 +117,8 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
         {
             if (ext)
             {
-                fprintf(ext, "[!] FAILED, expected %d bytes", test.out_len);
+                fprintf(ext, "[!] FAILED, expected %d bytes",
+                        (int)test.out_len);
                 fprintf(ext, ", got %d bytes.\n", (int)check_len);
                 fprintf(ext, "[!] Test suite failed, aborting.\n\n");
             }
@@ -158,7 +158,8 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
         {
             if (ext)
             {
-                fprintf(ext, "[!] FAILED, expected %d bytes", test.in_len);
+                fprintf(ext, "[!] FAILED, expected %d bytes",
+                        (int)test.in_len);
                 fprintf(ext, ", got %d bytes.\n", (int)check_len);
                 fprintf(ext, "[!] Test suite failed, aborting.\n\n");
             }
@@ -186,7 +187,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
 }
 
-int test_block_modes(char *output, int maxlen, FILE *ext)
+int test_block_modes(char *output, size_t maxlen, FILE *ext)
 {
     int t;
 
@@ -205,18 +206,18 @@ int test_block_modes(char *output, int maxlen, FILE *ext)
     pass("Generic block mode test vectors.");
 }
 
-int test_block_modes_utilities(char *output, int maxlen, FILE *ext)
+int test_block_modes_utilities(char *output, size_t maxlen, FILE *ext)
 {
-    int t, count = BLOCK_MODE_COUNT;
+    size_t t, count = block_mode_count();
 
-    if (ext) fprintf(ext, "[*] Detected %d block modes.\n", count);
+    if (ext) fprintf(ext, "[*] Detected %d block modes.\n", (int)count);
 
     for (t = 0; t < count; ++t)
     {
         const struct BLOCK_MODE *mode = block_mode_by_id(t);
         if (!mode)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", t);
+            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
             fail("Supposedly valid block mode ID is invalid.");
         }
     }

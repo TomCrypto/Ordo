@@ -1,7 +1,8 @@
 #ifndef ORDO_ECB_MODE_H
 #define ORDO_ECB_MODE_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes/mode_params.h"
+#include "primitives/block_ciphers.h"
 
 /******************************************************************************/
 
@@ -103,7 +104,7 @@ void ecb_copy(struct ECB_STATE *dst,
               const struct ECB_STATE *src,
               const struct BLOCK_CIPHER *cipher);
 
-void ecb_set_mode(struct BLOCK_MODE *mode);
+size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
 
 #ifdef __cplusplus
 }

@@ -1,8 +1,10 @@
-#include <enc/block_cipher_modes/cfb.h>
+#include "enc/block_modes/cfb.h"
 
-#include <common/errors.h>
-#include <common/utils.h>
-#include <internal/mem.h>
+#include "internal/mem.h"
+
+#include "common/errors.h"
+#include "common/utils.h"
+#include "common/query.h"
 
 #include <string.h>
 
@@ -16,21 +18,23 @@ struct CFB_STATE
     void *tmp;
     /* The amount of bytes of unused state remaining before the state is to be renewed. */
     size_t remaining;
+    
+    size_t block_size;
 
     int direction;
 };
 
 struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
-    size_t block_size = cipher_block_size(cipher);
-
     struct CFB_STATE* state = mem_alloc(sizeof(struct CFB_STATE));
     if (!state) goto fail;
+    
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
 
-    state->iv = mem_alloc(block_size);
+    state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
 
-    state->tmp = mem_alloc(block_size);
+    state->tmp = mem_alloc(state->block_size);
     if (!state->tmp) goto fail;
 
     state->remaining = 0;
@@ -43,9 +47,9 @@ fail:
 
 int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
 {
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
 
-    if (iv_len > block_size) return ORDO_ARG;
+    if (cfb_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
     state->direction = dir;
 
@@ -63,7 +67,7 @@ int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
 static void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -98,7 +102,7 @@ static void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHE
 static void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
-    size_t block_size = cipher_block_size(cipher);
+    size_t block_size = state->block_size;
     size_t process = 0;
 
     /* Initialize the output size. */
@@ -155,20 +159,18 @@ void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher)
 {
-    memcpy(dst->tmp, src->tmp, cipher_block_size(cipher));
-    memcpy(dst->iv, src->iv, cipher_block_size(cipher));
+    memcpy(dst->tmp, src->tmp, dst->block_size);
+    memcpy(dst->iv, src->iv, dst->block_size);
     dst->remaining = src->remaining;
     dst->direction = src->direction;
 }
 
-void cfb_set_mode(struct BLOCK_MODE* mode)
+size_t cfb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
-    make_block_mode(mode,
-                    (BLOCK_MODE_ALLOC)cfb_alloc,
-                    (BLOCK_MODE_INIT)cfb_init,
-                    (BLOCK_MODE_UPDATE)cfb_update,
-                    (BLOCK_MODE_FINAL)cfb_final,
-                    (BLOCK_MODE_FREE)cfb_free,
-                    (BLOCK_MODE_COPY)cfb_copy,
-                    "CFB");
+    switch(query)
+    {
+        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
+        
+        default: return 0;
+    }
 }

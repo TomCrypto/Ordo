@@ -1,7 +1,8 @@
 #ifndef ORDO_CBC_H
 #define ORDO_CBC_H
 
-#include <enc/block_modes.h>
+#include "enc/block_modes/mode_params.h"
+#include "primitives/block_ciphers.h"
 
 /******************************************************************************/
 
@@ -41,7 +42,7 @@ void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
 
 void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct BLOCK_CIPHER* cipher);
 
-void cbc_set_mode(struct BLOCK_MODE* mode);
+size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
 
 #ifdef __cplusplus
 }

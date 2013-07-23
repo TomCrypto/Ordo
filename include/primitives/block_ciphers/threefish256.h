@@ -1,7 +1,7 @@
 #ifndef ORDO_THREEFISH256_H
 #define ORDO_THREEFISH256_H
 
-#include <primitives/primitives.h>
+#include "primitives/block_ciphers/block_params.h"
 
 /******************************************************************************/
 
@@ -23,9 +23,7 @@ extern "C" {
 
 struct THREEFISH256_STATE;
 
-/*! Allocates and returns an uninitialized Threefish-256 block cipher context.
- @returns The allocated context, or nil on allocation failure.
-*/
+/*! @see \c block_cipher_alloc() */
 struct THREEFISH256_STATE* threefish256_alloc(void);
 
 /*! Initializes a Threefish-256 block cipher context.
@@ -41,49 +39,23 @@ int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t* key, size_t keySize,
                       const struct THREEFISH256_PARAMS* params);
 
-/*! Encrypts a 256-bit block (as a \c uint64_t[4] structure).
- @param state An initialized Threefish-256 context.
- @param block A pointer to the block to encrypt.
- @remarks This function is deterministic, as are all of the block cipher
-          \c Forward and \c Inverse functions, and will not modify the
-          state of the provided context.
-*/
+/*! @see \c block_cipher_forward() */
 void threefish256_forward(struct THREEFISH256_STATE *state,
                           uint64_t* block);
 
-/*! Decrypts a 256-bit block (as a \c uint64_t[4] structure).
- @param state An initialized Threefish-256 context.
- @param block A pointer to the block to decrypt.
- @remarks See remarks for \c threefish256_forward().
-*/
+/*! @see \c block_cipher_inverse() */
 void threefish256_inverse(struct THREEFISH256_STATE *state,
                           uint64_t* block);
 
-/*! Frees the memory associated with a Threefish-256 cipher context and
- *  securely erases sensitive context information such as key material.
- @param state An allocated Threefish-256 context.
- @remarks The context need not have been initialized.
- @remarks Passing nil to this function is a no-op.
-*/
+/*! @see \c block_cipher_free() */
 void threefish256_free(struct THREEFISH256_STATE *state);
 
+/*! @see \c block_cipher_copy() */
 void threefish256_copy(struct THREEFISH256_STATE *dst,
                        const struct THREEFISH256_STATE *src);
 
-/*! This function populates a block cipher object with the Threefish-256
- *  functions and attributes, and is meant for internal use.
- @param cipher A pointer to a block cipher object to populate.
- @remarks Once populated, the \c BLOCK_CIPHER struct can be freely used in the
-          higher level \c enc_block interface.
- @remarks If you have issued a call to \c load_primitives(), this function has
-          already been called and you may use the \c Threefish256() function to
-          access the underlying Threefish-256 block cipher object.
- @see enc_block.h
- @internal
-*/
-void threefish256_set_primitive(struct BLOCK_CIPHER* cipher);
-
-size_t threefish256_key_len(size_t key_len);
+/*! @see \c block_cipher_query() */
+size_t threefish256_query(int query, size_t value);
 
 /*! This function is \b stateless and is meant to be used when a context-free
  *  access to the raw cryptographic block cipher is required (such as in the

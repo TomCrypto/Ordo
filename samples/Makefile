@@ -26,18 +26,13 @@ ORDO_LIBPATH = $(addprefix $(ORDO_LIBDIR), $(ORDO_LIBNAME))
 ORDO_INCLUDE = ../include/
 
 .PHONY: all
-all: md5sum encrypt benchmark external info
+all: md5sum benchmark external info query
 	
 
 .PHONY: md5sum
 md5sum:
 	@mkdir -p $(BINDIR)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/md5sum.c -o $(BINDIR)/md5sum -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
-
-.PHONY: encrypt
-encrypt:
-	@mkdir -p $(BINDIR)
-	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/encrypt.c -o $(BINDIR)/encrypt -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
 .PHONY: benchmark
 benchmark:
@@ -53,6 +48,11 @@ external:
 info:
 	@mkdir -p $(BINDIR)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/info.c -o $(BINDIR)/info -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
+	
+.PHONY: query
+query:
+	@mkdir -p $(BINDIR)
+	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/query.c -o $(BINDIR)/query -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
 .PHONY: clean
 clean:

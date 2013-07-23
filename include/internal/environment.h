@@ -3,10 +3,6 @@
 
 /******************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*!
  * @internal
  * @file environment.h
@@ -19,8 +15,13 @@ extern "C" {
  * This file may only contain preprocessor macros as it is included in
  * assembly files - it cannot contain declarations.
  *
- * This header is internal to the library.
+ * This module is not to be used from outside the library, and is only
+ * meaningful at compile-time.
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Detect the platform we are going to be building on. If the platform is
  * invalid, or cannot be detected, or some other reason, fail. */

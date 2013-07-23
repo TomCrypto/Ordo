@@ -1,6 +1,9 @@
 #ifndef ORDO_BLOCK_PARAMS_H
 #define ORDO_BLOCK_PARAMS_H
 
+#include <stdlib.h>
+#include <stdint.h>
+
 /******************************************************************************/
 
 #ifdef __cplusplus

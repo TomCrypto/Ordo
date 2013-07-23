@@ -2,6 +2,7 @@
 #define ORDO_MODE_PARAMS_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 /******************************************************************************/
 
