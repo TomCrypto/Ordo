@@ -40,7 +40,7 @@ void randomize(void *buffer, size_t buf_size)
     void *key = malloc(key_len);
     os_random(key, key_len);
 
-    ordo_enc_stream(RC4(), 0, key, key_len, buffer, buf_size);
+    ordo_enc_stream(rc4(), 0, key, key_len, buffer, buf_size);
     free(key);
 }
 

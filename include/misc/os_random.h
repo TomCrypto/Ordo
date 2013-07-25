@@ -28,7 +28,7 @@ extern "C" {
 /*! Generates cryptographically secure pseudorandom numbers.
  *  @param out The buffer in which to write the pseudorandom bytes.
  *  @param len The number of bytes to generate and to write to the buffer.
- *  @return Returns \c #ORDO_SUCCESS on success, or a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks This function uses the CSPRNG provided by your operating system.
  *  @remarks If the platform does not provide this feature, this function will
  *           always fail with \c #ORDO_FAIL.

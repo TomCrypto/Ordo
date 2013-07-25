@@ -53,6 +53,10 @@
 extern "C" {
 #endif
 
+/*! @enum ORDO_QUERY
+ *
+ *  Query codes used by the library.
+*/
 enum ORDO_QUERY
 {
     /*! Query code to retrieve a key length. Applicable to:

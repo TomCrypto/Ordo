@@ -5,7 +5,7 @@
 /******************************************************************************/
 
 /* Note - if your platform does not support memory locking, or if it somehow
- * doesn't make sense to do so, you can implement dummy functions for these. */
+ * doesn't make sense to do so, you can implement dummy functions here. */
 
 #if defined(PLATFORM_POSIX)
 

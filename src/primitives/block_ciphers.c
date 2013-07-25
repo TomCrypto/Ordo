@@ -25,7 +25,7 @@ struct BLOCK_CIPHER
 
 /******************************************************************************/
 
-const char* block_cipher_name(const struct BLOCK_CIPHER *primitive)
+const char *block_cipher_name(const struct BLOCK_CIPHER *primitive)
 {
     return primitive->name;
 }
@@ -73,17 +73,17 @@ static struct BLOCK_CIPHER primitives[] =
     }
 };
 
-const struct BLOCK_CIPHER* NullCipher(void)
+const struct BLOCK_CIPHER *nullcipher(void)
 {
     return &primitives[NULLCIPHER_ID];
 }
 
-const struct BLOCK_CIPHER* Threefish256(void)
+const struct BLOCK_CIPHER *threefish256(void)
 {
     return &primitives[THREEFISH256_ID];
 }
 
-const struct BLOCK_CIPHER* AES(void)
+const struct BLOCK_CIPHER *aes(void)
 {
     return &primitives[AES_ID];
 }
@@ -95,7 +95,7 @@ size_t block_cipher_count(void)
     return sizeof(primitives) / sizeof(struct BLOCK_CIPHER);
 }
 
-const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
+const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
 {
     size_t t;
 
@@ -109,14 +109,14 @@ const struct BLOCK_CIPHER* block_cipher_by_name(const char *name)
     return 0;
 }
 
-const struct BLOCK_CIPHER* block_cipher_by_id(size_t id)
+const struct BLOCK_CIPHER *block_cipher_by_id(size_t id)
 {
     return (id < block_cipher_count()) ? &primitives[id] : 0;
 }
 
 /******************************************************************************/
 
-void* block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
+void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
 {
     return primitive->alloc();
 }
@@ -124,10 +124,10 @@ void* block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
 int block_cipher_init(const struct BLOCK_CIPHER *primitive,
                       void *state,
                       const void *key,
-                      size_t key_size,
+                      size_t key_len,
                       const void *params)
 {
-    return primitive->init(state, key, key_size, params);
+    return primitive->init(state, key, key_len, params);
 }
 
 void block_cipher_forward(const struct BLOCK_CIPHER *primitive,

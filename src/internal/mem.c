@@ -135,7 +135,7 @@ void mem_free(void *ptr)
 void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
 {
     int revert = ((alloc == 0) && (free == 0));
-    
+
     mem_alloc_f = (revert ? ordo_mem_alloc : alloc);
     mem_free_f  = (revert ? ordo_mem_free  : free);
 }

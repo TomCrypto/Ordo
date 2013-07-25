@@ -31,11 +31,9 @@ extern "C" {
 #endif
 
 /*! Initializes the library.
- @returns Returns #ORDO_SUCCESS on success, or a negative value on failure.
- @remarks This function should be called prior to using the library for most
-          purposes.
- @remarks If this function fails, one should probably abort as it means
-          something has gone very wrong.
+ *  @returns Returns #ORDO_SUCCESS on success, or an error code.
+ *  @remarks This function should be called prior to using the library for
+             most purposes.
 */
 int ordo_init(void);
 
@@ -54,7 +52,7 @@ int ordo_init(void);
  @param in_len The length of the input buffer.
  @param out The output ciphertext (or, respectively, plaintext) buffer.
  @param out_len The length of the output buffer.
- @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
  @remarks The \c out buffer should have enough space to contain the entire
           ciphertext, which may be larger than the plaintext if a mode
           which padding (with padding enabled) is used. See remarks
@@ -77,7 +75,7 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
  @param len The length, in bytes, of the buffer.
  @param key The cryptographic key to use for encryption.
  @param key_len The length, in bytes, of the key.
- @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
  @remarks Stream ciphers do not, strictly speaking, require an initialization
           vector. If such a feature is required, it is recommended to use a
           key derivation function to derive a new encryption key from a
@@ -98,7 +96,7 @@ int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
  @param in The input buffer to hash.
  @param in_len The length in bytes of the buffer.
  @param digest The buffer in which to put the digest.
- @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
 */
 int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
                 const void *in, size_t in_len,
@@ -112,7 +110,7 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
  @param in The input buffer to authenticate.
  @param in_len The length, in bytes, of the input buffer.
  @param fingerprint A pointer to where the fingerprint will be written.
- @return Returns \c #ORDO_SUCCESS on success, or a negative value on failure.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
  @remarks Do not use hash parameters which modify the hash function's output
           length, or this function's behavior is undefined.
 */

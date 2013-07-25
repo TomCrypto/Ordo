@@ -24,7 +24,7 @@ struct STREAM_CIPHER
 
 /******************************************************************************/
 
-const char* stream_cipher_name(const struct STREAM_CIPHER *primitive)
+const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
 {
     return primitive->name;
 }
@@ -47,7 +47,7 @@ static struct STREAM_CIPHER primitives[] =
     }
 };
 
-const struct STREAM_CIPHER* RC4(void)
+const struct STREAM_CIPHER *rc4(void)
 {
     return &primitives[RC4_ID];
 }
@@ -73,14 +73,14 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
     return 0;
 }
 
-const struct STREAM_CIPHER* stream_cipher_by_id(size_t id)
+const struct STREAM_CIPHER *stream_cipher_by_id(size_t id)
 {
     return (id < stream_cipher_count()) ? &primitives[id] : 0;
 }
 
 /******************************************************************************/
 
-void* stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
+void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
 {
     return primitive->alloc();
 }
@@ -88,18 +88,18 @@ void* stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
 int stream_cipher_init(const struct STREAM_CIPHER *primitive,
                        void* state,
                        const void *key,
-                       size_t key_size,
+                       size_t key_len,
                        const void *params)
 {
-    return primitive->init(state, key, key_size, params);
+    return primitive->init(state, key, key_len, params);
 }
 
 void stream_cipher_update(const struct STREAM_CIPHER *primitive,
                           void* state,
                           void *buffer,
-                          size_t size)
+                          size_t len)
 {
-    primitive->update(state, buffer, size);
+    primitive->update(state, buffer, len);
 }
 
 void stream_cipher_free(const struct STREAM_CIPHER *primitive,

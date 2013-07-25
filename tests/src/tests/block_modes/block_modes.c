@@ -99,7 +99,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
         /* We will encrypt in place, for simplicity (this also implicitly
          * tests buffered encryption, by definition). Also note that the
          * NullCipher uses no key, so no need to pass that in. */
-        err = ordo_enc_block(NullCipher(), 0, mode, 0,
+        err = ordo_enc_block(nullcipher(), 0, mode, 0,
                              1, /* encryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,
@@ -140,7 +140,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
         }
 
         /* Now we decrypt, hoping to get back the original input. */
-        err = ordo_enc_block(NullCipher(), 0, mode, 0,
+        err = ordo_enc_block(nullcipher(), 0, mode, 0,
                              0, /* decryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,

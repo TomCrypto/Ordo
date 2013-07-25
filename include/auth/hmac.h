@@ -50,7 +50,7 @@ struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
  *  @param key The cryptographic key to use.
  *  @param key_len The size, in bytes, of the key.
  *  @param params Hash function specific parameters.
- *  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks The hash parameters apply to the inner hash function only (the one
  *           used to hash the passed key with the inner mask).
  *  @remarks Do not use hash parameters which modify the hash function's output
@@ -72,7 +72,7 @@ void hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len);
 /*! Finalizes a HMAC context, returning the final digest.
  *  @param ctx An allocated HMAC context.
  *  @param digest A pointer to a buffer to which the digest will be written.
- *  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks The digest length is equal to the underlying hash function's
  *           digest length, which may be queried via \c hash_digest_length().
 */

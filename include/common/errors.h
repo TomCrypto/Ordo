@@ -26,6 +26,10 @@ extern "C" {
 */
 const char *error_msg(int code);
 
+/*! @enum ORDO_ERROR
+ *
+ *  Error codes used by the library.
+*/
 enum ORDO_ERROR
 {
     /*! The function succeeded.

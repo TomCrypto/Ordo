@@ -36,7 +36,7 @@ extern "C" {
  *  @param out A buffer to which to write the derived key.
  *  @param out_len The desired length, in bytes, of the derived key. The \c out
  *                 buffer should be at least \c out_len bytes long.
- *  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks There is a maximum output length of 2^32 - 1 multiplied by the
  *           digest length of the chosen hash function, but it is unlikely
  *           to be reached as derived keys are generally no longer than

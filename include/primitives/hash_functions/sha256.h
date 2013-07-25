@@ -18,34 +18,34 @@ extern "C" {
 
 struct SHA256_STATE;
 
-/*! @see \c digest_alloc() */
+/*! @see \c hash_function_alloc() */
 struct SHA256_STATE *sha256_alloc(void);
 
-/*! @see \c digest_init()
+/*! @see \c hash_function_init()
  *  @remarks The \c params parameter is ignored.
- *  @remarks This function always returns \c #ORDO_SUCCESS.
 */
 int sha256_init(struct SHA256_STATE *state,
                 const void *params);
 
-/*! @see \c digest_update() */
+/*! @see \c hash_function_update() */
 void sha256_update(struct SHA256_STATE *state,
                    const void *buffer,
                    size_t len);
 
-/*! @see \c digest_final()
+/*! @see \c hash_function_final()
  *  @remarks The digest buffer must be at least 32 bytes (256 bits) large.
 */
 void sha256_final(struct SHA256_STATE *state,
                   void *digest);
 
-/*! @see \c digest_free() */
+/*! @see \c hash_function_free() */
 void sha256_free(struct SHA256_STATE *state);
 
-/*! @see \c digest_copy() */
+/*! @see \c hash_function_copy() */
 void sha256_copy(struct SHA256_STATE *dst,
                  const struct SHA256_STATE *src);
-                 
+
+/*! @see \c hash_function_query() */         
 size_t sha256_query(int query, size_t value);
 
 #ifdef __cplusplus

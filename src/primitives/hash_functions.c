@@ -26,7 +26,7 @@ struct HASH_FUNCTION
 
 /******************************************************************************/
 
-const char* hash_function_name(const struct HASH_FUNCTION *primitive)
+const char *hash_function_name(const struct HASH_FUNCTION *primitive)
 {
     return primitive->name;
 }
@@ -74,17 +74,17 @@ static struct HASH_FUNCTION primitives[] =
     }
 };
 
-const struct HASH_FUNCTION* SHA256(void)
+const struct HASH_FUNCTION *sha256(void)
 {
     return &primitives[SHA256_ID];
 }
 
-const struct HASH_FUNCTION* MD5(void)
+const struct HASH_FUNCTION *md5(void)
 {
     return &primitives[MD5_ID];
 }
 
-const struct HASH_FUNCTION* Skein256(void)
+const struct HASH_FUNCTION *skein256(void)
 {
     return &primitives[SKEIN256_ID];
 }
@@ -96,7 +96,7 @@ size_t hash_function_count(void)
     return sizeof(primitives) / sizeof(struct HASH_FUNCTION);
 }
 
-const struct HASH_FUNCTION* hash_function_by_name(const char *name)
+const struct HASH_FUNCTION *hash_function_by_name(const char *name)
 {
     size_t t;
 
@@ -110,14 +110,14 @@ const struct HASH_FUNCTION* hash_function_by_name(const char *name)
     return 0;
 }
 
-const struct HASH_FUNCTION* hash_function_by_id(size_t id)
+const struct HASH_FUNCTION *hash_function_by_id(size_t id)
 {
     return (id < hash_function_count()) ? &primitives[id] : 0;
 }
 
 /******************************************************************************/
 
-void* hash_function_alloc(const struct HASH_FUNCTION *primitive)
+void *hash_function_alloc(const struct HASH_FUNCTION *primitive)
 {
     return primitive->alloc();
 }
@@ -132,9 +132,9 @@ int hash_function_init(const struct HASH_FUNCTION *primitive,
 void hash_function_update(const struct HASH_FUNCTION *primitive,
                           void *state,
                           const void *buffer,
-                          size_t size)
+                          size_t len)
 {
-    primitive->update(state, buffer, size);
+    primitive->update(state, buffer, len);
 }
 
 void hash_function_final(const struct HASH_FUNCTION *primitive,

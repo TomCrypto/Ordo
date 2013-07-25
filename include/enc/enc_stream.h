@@ -30,7 +30,7 @@ struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher);
  @param key The cryptographic key to use for encryption.
  @param key_size The size, in bytes, of the key.
  @param params Stream cipher specific parameters.
- @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
 */
 int enc_stream_init(struct ENC_STREAM_CTX *ctx,
                     const void *key,

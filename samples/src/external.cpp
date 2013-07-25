@@ -23,7 +23,7 @@ int main()
 
     std::cout << "Testing digest module..." << std::endl;
 
-    const struct HASH_FUNCTION *primitive = MD5();
+    const struct HASH_FUNCTION *primitive = md5();
 
     std::string input = "hello world";
     std::vector<unsigned char> digest(digest_length(primitive));

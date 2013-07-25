@@ -104,7 +104,7 @@ void *block_mode_alloc(const struct BLOCK_MODE *mode,
  *  @param iv_len The length, in bytes, of the initialization vector.
  *  @param direction Whether to encrypt or decrypt.
  *  @param params Block mode parameters.
- *  @return Returns \c #ORDO_SUCCESS on success, or a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks The \c direction parameter is to be set to 0 for decryption, and
  *           1 for encryption.
 */
@@ -143,7 +143,7 @@ void block_mode_update(const struct BLOCK_MODE *mode, void *state,
  *  @param out The output buffer.
  *  @param out_len A pointer to an integer to which to write the number of
  *                bytes written to \c out.
- *  @return Returns \c #ORDO_SUCCESS on success, or a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks This function will return any input bytes which were not returned
  *          by calls to \c block_mode_update(), in the correct order.
 */
@@ -180,7 +180,7 @@ void block_mode_copy(const struct BLOCK_MODE *mode,
 /*! Queries a block mode for its supported initialization vector lengths.
  *  @param mode A block mode object.
  *  @param cipher A block cipher object.
- *  @param iv_len A suggested initialization vector length.
+ *  @param value A suggested initialization vector length.
  *  @return The smallest valid initialization vector length for this block mode
  *          (using \c cipher) longer than \c iv_len. If no such length exists,
  *          returns the largest supported initialization vector length.

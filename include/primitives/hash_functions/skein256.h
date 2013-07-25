@@ -35,22 +35,22 @@ extern "C" {
 
 struct SKEIN256_STATE;
 
-/*! @see \c digest_alloc() */
+/*! @see \c hash_function_alloc() */
 struct SKEIN256_STATE* skein256_alloc(void);
 
-/*! @see \c digest_init()
+/*! @see \c hash_function_init()
  *  @retval #ORDO_ARG if parameters were provided and requested an output
  *                       length of zero bytes.
 */
 int skein256_init(struct SKEIN256_STATE *state,
                   const struct SKEIN256_PARAMS *params);
 
-/*! @see \c digest_update() */
+/*! @see \c hash_function_update() */
 void skein256_update(struct SKEIN256_STATE *state,
                      const void *buffer,
                      size_t len);
 
-/*! @see \c digest_final()
+/*! @see \c hash_function_final()
  *  @remarks If no parameters were provided, the digest buffer must be at least
  *           32 bytes (256 bits) large. If parameters were provided, the buffer
  *           must be sufficiently large to store the output length requested
@@ -60,13 +60,14 @@ void skein256_update(struct SKEIN256_STATE *state,
 void skein256_final(struct SKEIN256_STATE *state,
                     void *digest);
 
-/*! @see \c digest_free() */
+/*! @see \c hash_function_free() */
 void skein256_free(struct SKEIN256_STATE *state);
 
-/*! @see \c digest_copy() */
+/*! @see \c hash_function_copy() */
 void skein256_copy(struct SKEIN256_STATE *dst,
                    const struct SKEIN256_STATE *src);
 
+/*! @see \c hash_function_query() */
 size_t skein256_query(int query, size_t value);
 
 #ifdef __cplusplus

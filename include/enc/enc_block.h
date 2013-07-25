@@ -49,7 +49,7 @@ struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER *cipher,
  @param direction The encryption direction: 1 is encryption, 0 decryption.
  @param cipher_params Block cipher specific parameters.
  @param mode_params Mode of operation specific parameters.
- @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
  @remarks The initialization vector may be nil, if the mode of operation
           does not require one; consult the documentation of the mode of
           operation to find out what it expects.
@@ -86,7 +86,7 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
  @param ctx An initialized block encryption context.
  @param out A buffer in which to write the remaining plaintext or ciphertext.
  @param out_len The number of bytes written to the \c out buffer.
- @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ @return Returns \c #ORDO_SUCCESS on success, or an error code.
  @remarks This function will return up to one block size's worth of data, and
           may not return any data at all. As an example, for the CBC mode of
           operation with padding enabled, this function will, for encryption,

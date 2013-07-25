@@ -50,7 +50,7 @@ struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
 /*! Initializes a digest context, provided optional parameters.
  *  @param ctx An allocated digest context.
  *  @param params Hash function specific parameters.
- *  @return Returns \c #ORDO_SUCCESS on success, and a negative value on error.
+ *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
  *  @remarks It is always valid to pass nil for \c params if you do not wish to
              use more advanced features offered by a specific hash function.
 */
