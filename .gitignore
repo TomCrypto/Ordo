@@ -1,6 +1,7 @@
 lib
 obj
 doc
+bindings
 
 *.S~
 *.c~

@@ -61,40 +61,30 @@ static void *ordo_mem_alloc(size_t size)
 {
     if (state == M_READY)
     {
-        size_t blocks = 1 + size / POOL_WORD;
+        size_t blocks = 1 + (size - 1) / POOL_WORD;
         if (size == 0) return pool;
 
         mutex_acquire();
 
-        if (usage + blocks < POOL_SIZE)
+        if (usage + blocks <= POOL_SIZE)
         {
-            size_t t = 0;
+            size_t n, t = 0;
 
-            while (t + blocks < POOL_SIZE)
+            while (t + blocks <= POOL_SIZE)
             {
-                if (allocated[t])
-                {
-                    /* This block, and possibly more ahead, is used so skip to *
-                     * the next block which doesn't belong to this allocation. */
-                    t += allocated[t];
-                }
-                else
-                {
-                    size_t n;
+                for (n = 0; n < blocks; ++n)
+                    if (allocated[t + n])
+                    {
+                        t += n + allocated[t + n];
+                        goto retry;
+                    }
 
-                    for (n = 1; n < blocks; ++n)
-                        if (allocated[t + n])
-                        {
-                            t += n + allocated[t + n];
-                            goto retry;
-                        }
-
-                    allocated[t] = blocks;
-                    usage += blocks;
-
-                    mutex_release();
-                    return pool + t * POOL_WORD;
-                }
+                allocated[t] = blocks;
+                
+                usage += blocks;
+                mutex_release();
+                
+                return pool + t * POOL_WORD;
 retry:
                 continue;
             }
