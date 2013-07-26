@@ -1,4 +1,4 @@
-#include <tests/digest/digest.h>
+#include "tests/digest/digest.h"
 
 struct TEST_VECTOR
 {

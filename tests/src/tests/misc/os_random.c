@@ -1,6 +1,4 @@
-#include <tests/misc/os_random.h>
-
-#include <misc/os_random.h>
+#include "tests/misc/os_random.h"
 
 int test_os_random(char *output, size_t maxlen, FILE *ext)
 {

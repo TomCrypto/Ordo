@@ -1,7 +1,7 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
-#include <testenv.h>
+#include "testenv.h"
 
 int test_macros(char *output, size_t maxlen, FILE *ext);
 

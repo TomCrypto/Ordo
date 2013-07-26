@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include <ordo.h>
+#include "ordo.h"
 
 /* A test returns 0 on failure, 1 on success. It can output stuff to a char
  * array passed as an argument, but without a newline (52 chars available).

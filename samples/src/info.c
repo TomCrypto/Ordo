@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <ordo.h>
+#include "ordo.h"
 
 int main()
 {

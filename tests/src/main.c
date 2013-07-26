@@ -1,5 +1,5 @@
-#include <common/version.h> /* Contains library version/build info. */
-#include <testenv.h> /* Contains the library's unit test framework. */
+#include "ordo/common/version.h" /* Contains library version/build. */
+#include "testenv.h" /* Contains the library's unit test framework. */
 
 #define line "+------------------------------------------------------+------+"
 #define MAX_LEN 53 /* Long enough buffer to store anything to be displayed. */

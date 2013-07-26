@@ -1,4 +1,4 @@
-#include <tests/hmac/hmac.h>
+#include "tests/hmac/hmac.h"
 
 struct TEST_VECTOR
 {

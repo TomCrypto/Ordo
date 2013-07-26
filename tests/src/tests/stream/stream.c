@@ -1,4 +1,4 @@
-#include <tests/stream/stream.h>
+#include "tests/stream/stream.h"
 
 struct TEST_VECTOR
 {

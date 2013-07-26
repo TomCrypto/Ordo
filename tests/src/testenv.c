@@ -1,4 +1,4 @@
-#include <testenv.h>
+#include "testenv.h"
 
 #define MAX_TESTS 1024
 
@@ -24,21 +24,21 @@ TEST test(size_t index)
  * test by using the register_test function. Please do not printf in tests. */
 
 /* These are tests concerning library utilities i.e. not related to crypto. */
-#include <tests/utility/errors.h>
-#include <tests/utility/utils.h>
-#include <tests/utility/mem.h>
+#include "tests/utility/errors.h"
+#include "tests/utility/utils.h"
+#include "tests/utility/mem.h"
 
 /* This is for the OS-provided CSPRNG. */
-#include <tests/misc/os_random.h>
+#include "tests/misc/os_random.h"
 
 /* This tests the digest interface and all hash functions. */
-#include <tests/digest/digest.h>
-#include <tests/hmac/hmac.h>
-#include <tests/pbkdf2/pbkdf2.h>
+#include "tests/digest/digest.h"
+#include "tests/hmac/hmac.h"
+#include "tests/pbkdf2/pbkdf2.h"
 
-#include <tests/stream/stream.h>
-#include <tests/block/block.h>
-#include <tests/block_modes/block_modes.h>
+#include "tests/stream/stream.h"
+#include "tests/block/block.h"
+#include "tests/block_modes/block_modes.h"
 
 int register_all_tests(void)
 {

@@ -1,9 +1,11 @@
-#include <tests/utility/mem.h>
+#include "tests/utility/mem.h"
 
 /* Note: you should NEVER include any internal header in your code, nor use
  * any such internal functions, but here it's fine because we are actually
- * testing those functions. */
-#include <internal/mem.h>
+ * testing those functions.
+ * PS: actually, this header contains one function that you may use if you
+ *     really need to, custom_allocator(), for using your memory manager. */
+#include "ordo/internal/mem.h"
 
 int test_mem(char *output, size_t maxlen, FILE *ext)
 {

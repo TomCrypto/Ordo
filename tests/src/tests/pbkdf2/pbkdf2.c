@@ -1,4 +1,4 @@
-#include <tests/pbkdf2/pbkdf2.h>
+#include "tests/pbkdf2/pbkdf2.h"
 
 struct TEST_VECTOR
 {

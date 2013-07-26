@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include <ordo.h>
+#include "ordo.h"
 
 #define BUF_SIZE 4096
 

@@ -1,6 +1,4 @@
-#include <tests/utility/utils.h>
-
-#include <common/utils.h>
+#include "tests/utility/utils.h"
 
 /* Tests a bunch of macros used by the library. */
 int test_macros(char *output, size_t maxlen, FILE *ext)

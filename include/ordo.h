@@ -1,18 +1,18 @@
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
-#include "common/version.h"
-#include "common/errors.h"
-#include "common/utils.h"
-#include "common/query.h"
+#include "ordo/common/version.h"
+#include "ordo/common/errors.h"
+#include "ordo/common/utils.h"
+#include "ordo/common/query.h"
 
-#include "enc/enc_stream.h"
-#include "enc/enc_block.h"
+#include "ordo/enc/enc_stream.h"
+#include "ordo/enc/enc_block.h"
 
-#include "kdf/pbkdf2.h"
-#include "auth/hmac.h"
+#include "ordo/kdf/pbkdf2.h"
+#include "ordo/auth/hmac.h"
 
-#include "misc/os_random.h"
+#include "ordo/misc/os_random.h"
 
 /******************************************************************************/
 

@@ -1,6 +1,6 @@
 #include "ordo.h"
 
-#include "internal/mem.h"
+#include "ordo/internal/mem.h"
 
 /******************************************************************************/
 

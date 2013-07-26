@@ -1,6 +1,4 @@
-#include <tests/block_modes/block_modes.h>
-
-#include <enc/enc_block.h>
+#include "tests/block_modes/block_modes.h"
 
 /* Note the block mode tests are always run against the NullCipher.
  * This is to ensure the underlying block cipher cannot be responsible
