@@ -4,12 +4,12 @@
 
 /******************************************************************************/
 
-typedef void*  (*BLOCK_ALLOC)  (void                                   );
-typedef  int   (*BLOCK_INIT)   (void*, const void*, size_t, const void*);
-typedef void   (*BLOCK_UPDATE) (void*,       void*                     );
-typedef void   (*BLOCK_FREE)   (void*                                  );
-typedef void   (*BLOCK_COPY)   (void*, const void*                     );
-typedef size_t (*BLOCK_QUERY)  (int, size_t                            );
+typedef void  *(*BLOCK_ALLOC)  (void                                      );
+typedef  int   (*BLOCK_INIT)   (void *, const void *, size_t, const void *);
+typedef void   (*BLOCK_UPDATE) (void *,       void *                      );
+typedef void   (*BLOCK_FREE)   (void *                                    );
+typedef void   (*BLOCK_COPY)   (void *, const void *                      );
+typedef size_t (*BLOCK_QUERY)  (int, size_t                               );
 
 struct BLOCK_CIPHER
 {
@@ -20,7 +20,7 @@ struct BLOCK_CIPHER
     BLOCK_FREE free;
     BLOCK_COPY copy;
     BLOCK_QUERY query;
-    const char* name;
+    const char *name;
 };
 
 /******************************************************************************/

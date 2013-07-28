@@ -1,5 +1,5 @@
-#ifndef ORDO_CBC_H
-#define ORDO_CBC_H
+#ifndef ORDO_CBC_MODE_H
+#define ORDO_CBC_MODE_H
 
 #include "ordo/enc/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
@@ -30,19 +30,44 @@ extern "C" {
 
 struct CBC_STATE;
 
-struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state);
+/*! @see \c block_mode_alloc() */
+struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
+                            void *cipher_state);
 
-int cbc_init(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const struct CBC_PARAMS* params);
+/*! @see \c block_mode_init() */
+int cbc_init(struct CBC_STATE *state,
+             const struct BLOCK_CIPHER *cipher,
+             void *cipher_state,
+             const void *iv, size_t iv_len,
+             int dir,
+             const struct CBC_PARAMS *params);
 
-void cbc_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen);
+/*! @see \c block_mode_update() */
+void cbc_update(struct CBC_STATE *state,
+                const struct BLOCK_CIPHER *cipher,
+                void *cipher_state,
+                const unsigned char *in, size_t in_len,
+                unsigned char *out, size_t *out_len);
 
-int cbc_final(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen);
+/*! @see \c block_mode_final() */
+int cbc_final(struct CBC_STATE *state,
+              const struct BLOCK_CIPHER *cipher,
+              void *cipher_state,
+              unsigned char *out, size_t *out_len);
 
-void cbc_free(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state);
+/*! @see \c block_mode_free() */
+void cbc_free(struct CBC_STATE *state,
+              const struct BLOCK_CIPHER *cipher,
+              void *cipher_state);
 
-void cbc_copy(struct CBC_STATE *dst, const struct CBC_STATE *src, const struct BLOCK_CIPHER* cipher);
+/*! @see \c block_mode_copy() */
+void cbc_copy(struct CBC_STATE *dst,
+              const struct CBC_STATE *src,
+              const struct BLOCK_CIPHER *cipher);
 
-size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
+/*! @see \c block_mode_query() */
+size_t cbc_query(const struct BLOCK_CIPHER *cipher,
+                 int query, size_t value);
 
 #ifdef __cplusplus
 }

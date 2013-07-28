@@ -1,11 +1,9 @@
 #include "ordo/primitives/hash_functions/md5.h"
 
 #include "ordo/internal/endianness.h"
-#include "ordo/internal/mem.h"
 
-#include "ordo/common/errors.h"
+#include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 #include <string.h>
 

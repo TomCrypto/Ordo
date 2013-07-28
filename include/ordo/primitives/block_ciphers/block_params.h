@@ -1,8 +1,10 @@
 #ifndef ORDO_BLOCK_PARAMS_H
 #define ORDO_BLOCK_PARAMS_H
 
+/*! @cond */
 #include <stdlib.h>
 #include <stdint.h>
+/*! @endcond */
 
 /******************************************************************************/
 
@@ -28,9 +30,9 @@ struct THREEFISH256_PARAMS
 struct AES_PARAMS
 {
     /*! The number of rounds to use.
-     @remarks The defaults are 10 for a 128-bit key, 12 for a 192-bit key and
-              14 for a 256-bit key, and are standardized. It is strongly
-              discouraged to lower the number of rounds below the defaults.
+     *  @remarks The defaults are 10 for a 128-bit key, 12 for a 192-bit key,
+     *           14 for a 256-bit key, and are standardized. It is strongly
+     *           discouraged to lower the number of rounds below the defaults.
     */
     size_t rounds;
 };

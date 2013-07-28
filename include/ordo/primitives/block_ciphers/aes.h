@@ -27,7 +27,8 @@ struct AES_STATE* aes_alloc(void);
 
 /*! @see \c block_cipher_init()
  *  @retval #ORDO_KEY_LEN if the key length is not 16, 24, or 32 (bytes).
- *  @retval #ORDO_ARG if parameters were provided and requested zero rounds.
+ *  @retval #ORDO_ARG if parameters were provided and requested zero rounds
+ *                    or more than 20 rounds.
 */
 int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,

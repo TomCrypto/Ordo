@@ -2,7 +2,6 @@
 
 #include "ordo/internal/environment.h"
 
-#include "ordo/common/errors.h"
 #include "ordo/common/utils.h"
 
 /******************************************************************************/

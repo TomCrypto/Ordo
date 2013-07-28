@@ -1,7 +1,9 @@
 #ifndef ORDO_OS_RANDOM_H
 #define ORDO_OS_RANDOM_H
 
+/*! @cond */
 #include <stdlib.h>
+/*! @endcond */
 
 /******************************************************************************/
 

@@ -1,10 +1,7 @@
 #include "ordo/enc/block_modes/cbc.h"
 
 #include "ordo/internal/mem.h"
-
-#include "ordo/common/errors.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 #include <string.h>
 

@@ -66,7 +66,7 @@ const struct HASH_FUNCTION *hash_function_by_id(size_t id);
 
 /*! Allocates a hash function state.
  *  @param primitive A hash function primitive.
- *  @returns An allocated hash function state, or nil on error.
+ *  @returns Returns an allocated hash function state, or nil on error.
 */
 void* hash_function_alloc(const struct HASH_FUNCTION *primitive);
 
@@ -126,7 +126,7 @@ void hash_function_copy(const struct HASH_FUNCTION *primitive,
  *  @param primitive A hash function primitive.
  *  @param query A query code.
  *  @param value A suggested value.
- *  @returns A suitable parameter of type \c query based on \c value.
+ *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
 size_t hash_function_query(const struct HASH_FUNCTION *primitive,

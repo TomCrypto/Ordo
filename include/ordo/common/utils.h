@@ -1,8 +1,13 @@
 #ifndef ORDO_UTILS_H
 #define ORDO_UTILS_H
 
+/*! @cond */
 #include <stdlib.h>
 #include <stdint.h>
+/*! @endcond */
+
+#include "ordo/common/errors.h"
+#include "ordo/common/query.h"
 
 /******************************************************************************/
 

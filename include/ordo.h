@@ -2,9 +2,7 @@
 #define ORDO_ORDO_H
 
 #include "ordo/common/version.h"
-#include "ordo/common/errors.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 #include "ordo/enc/enc_stream.h"
 #include "ordo/enc/enc_block.h"

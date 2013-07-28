@@ -4,41 +4,41 @@
 
 /******************************************************************************/
 
-typedef void* (* BLOCK_MODE_ALLOC)(const struct BLOCK_CIPHER *,
-                                   void *);
+typedef void *(*BLOCK_MODE_ALLOC)(const struct BLOCK_CIPHER *,
+                                  void *);
 
-typedef int (* BLOCK_MODE_INIT)(void *, 
+typedef int (*BLOCK_MODE_INIT)(void *, 
+                               const struct BLOCK_CIPHER *,
+                               void *,
+                               const void *,
+                               size_t,
+                               int,
+                               const void *);
+
+typedef void (*BLOCK_MODE_UPDATE)(void *,
+                                  const struct BLOCK_CIPHER *,
+                                  void *,
+                                  const void *,
+                                  size_t,
+                                  void *,
+                                  size_t *);
+
+typedef int (*BLOCK_MODE_FINAL)(void *,
                                 const struct BLOCK_CIPHER *,
                                 void *,
+                                void *,
+                                size_t *);
+
+typedef void (*BLOCK_MODE_FREE)(void *,
+                                const struct BLOCK_CIPHER *,
+                                void *);
+
+typedef size_t (*BLOCK_MODE_QUERY)(const struct BLOCK_CIPHER *,
+                                   int, size_t);
+
+typedef void (*BLOCK_MODE_COPY)(void *,
                                 const void *,
-                                size_t,
-                                int,
-                                const void *);
-
-typedef void (* BLOCK_MODE_UPDATE)(void *,
-                                   const struct BLOCK_CIPHER *,
-                                   void *,
-                                   const void *,
-                                   size_t,
-                                   void *,
-                                   size_t *);
-
-typedef int (* BLOCK_MODE_FINAL)(void *,
-                                 const struct BLOCK_CIPHER *,
-                                 void *,
-                                 void *,
-                                 size_t *);
-
-typedef void (* BLOCK_MODE_FREE)(void *,
-                                 const struct BLOCK_CIPHER *,
-                                 void *);
-
-typedef size_t (* BLOCK_MODE_QUERY)(const struct BLOCK_CIPHER *,
-                                    int, size_t);
-
-typedef void (* BLOCK_MODE_COPY)(void *,
-                                 const void *,
-                                 const struct BLOCK_CIPHER *);
+                                const struct BLOCK_CIPHER *);
 
 struct BLOCK_MODE
 {

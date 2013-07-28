@@ -1,8 +1,7 @@
 #include "ordo/enc/enc_stream.h"
 
 #include "ordo/internal/mem.h"
-
-#include "ordo/common/query.h"
+#include "ordo/common/utils.h"
 
 /******************************************************************************/
 

@@ -60,7 +60,7 @@ const struct STREAM_CIPHER *stream_cipher_by_id(size_t id);
 
 /*! Allocates a stream cipher state.
  *  @param primitive A stream cipher primitive.
- *  @returns An allocated stream cipher state, or nil on error.
+ *  @returns Returns an allocated stream cipher state, or nil on error.
 */
 void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
 
@@ -117,7 +117,7 @@ void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
  *  @param primitive A stream cipher primitive.
  *  @param query A query code.
  *  @param value A suggested value.
- *  @returns A suitable parameter of type \c query based on \c value.
+ *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
 size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,

@@ -29,82 +29,44 @@ extern "C" {
 
 struct ECB_STATE;
 
-/*! Allocates an ECB state.
- @remarks Refer to \c block_mode_alloc() for an overview of the function.
- @remarks A valid cipher state need not be provided here yet, but a valid
-          cipher object must be as the ECB mode state dynamically allocates
-          some memory according to the block cipher's block size.
-*/
-struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER* cipher,
+/*! @see \c block_mode_alloc() */
+struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
                             void *cipher_state);
 
-/*! Initializes an ECB state.
- @remarks Refer to \c block_mode_init() for an overview of this function.
- @remarks The \c iv_len parameter must be zero.
- @retval #ORDO_SUCCESS if the function encountered no error.
- @retval #ORDO_ARG if the \c iv_len parameter was not zero.
-*/
+/*! @see \c block_mode_init() */
 int ecb_init(struct ECB_STATE *state,
              const struct BLOCK_CIPHER *cipher,
              void *cipher_state,
-             const void *iv,
-             size_t iv_len,
-             int direction,
+             const void *iv, size_t iv_len,
+             int dir,
              const struct ECB_PARAMS *params);
 
-/*! Encrypts or decrypts a buffer.
- @remarks Refer to \c block_mode_update() for an overview of this function.
- @remarks \c in and \c out may point to the same buffer, in order to achieve
-          in-place encryption/decryption.
-*/
+/*! @see \c block_mode_update() */
 void ecb_update(struct ECB_STATE *state,
                 const struct BLOCK_CIPHER *cipher,
                 void *cipher_state,
-                const unsigned char *in,
-                size_t in_len,
-                unsigned char *out,
-                size_t *out_len);
+                const unsigned char *in, size_t in_len,
+                unsigned char *out, size_t *out_len);
 
-/*! Finalizes an ECB state.
- @remarks Refer to \c block_mode_final() for an overview of this function.
- @retval #ORDO_SUCCESS if the function encountered no error.
- @retval #ORDO_LEFTOVER if padding is disabled and the total length in bytes of
-                        the data to encrypt was not a multiple of the block
-                        cipher's block size.
- @retval #ORDO_LEFTOVER if, when decrypting, the total length in bytes of the
-                        data to decrypt was not a multiple of the block
-                        cipher's block size.
- @retval #ORDO_PADDING if, when decrypting, the last ciphertext block does not
-                       describe a valid PKCS padding block (in which case
-                       decryption cannot be unambiguously carried out).
- @remarks If the function returns #ORDO_LEFTOVER, the number of leftover bytes
-          will be written to \c *out_len.
- @remarks If the function returns #ORDO_PADDING, \c *out_len will be zeroed.
- @remarks \c out_len may not be nil.
-*/
+/*! @see \c block_mode_final() */
 int ecb_final(struct ECB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               void *cipher_state,
-              unsigned char *out,
-              size_t *out_len);
+              unsigned char *out, size_t *out_len);
 
-/*! Frees an ECB state.
- @remarks Refer to \c block_mode_free() for an overview of this function.
-*/
+/*! @see \c block_mode_free() */
 void ecb_free(struct ECB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               void *cipher_state);
 
-/*! Performs a deep-copy of an ECB state into another.
- @remarks Refer to \c block_mode_copy() for an overview of this function.
- @remarks The source and destination ECB states must have been allocated using
-          the same block cipher, and, if initialized, with the same parameters.
-*/
+/*! @see \c block_mode_copy() */
 void ecb_copy(struct ECB_STATE *dst,
               const struct ECB_STATE *src,
               const struct BLOCK_CIPHER *cipher);
 
-size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value);
+/*! @see \c block_mode_query() */
+size_t ecb_query(const struct BLOCK_CIPHER *cipher,
+                 int query, size_t value);
 
 #ifdef __cplusplus
 }

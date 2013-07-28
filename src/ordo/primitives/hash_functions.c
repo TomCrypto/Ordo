@@ -4,13 +4,13 @@
 
 /******************************************************************************/
 
-typedef void*  (*HASH_ALLOC)  (void                      );
-typedef  int   (*HASH_INIT)   (void*, const void*        );
-typedef void   (*HASH_UPDATE) (void*, const void*, size_t);
-typedef void   (*HASH_FINAL)  (void*, void*              );
-typedef void   (*HASH_FREE)   (void*                     );
-typedef void   (*HASH_COPY)   (void*, const void*        );
-typedef size_t (*HASH_QUERY)  (int, size_t               );
+typedef void  *(*HASH_ALLOC)  (void                        );
+typedef  int   (*HASH_INIT)   (void *, const void *        );
+typedef void   (*HASH_UPDATE) (void *, const void *, size_t);
+typedef void   (*HASH_FINAL)  (void *, void *              );
+typedef void   (*HASH_FREE)   (void *                      );
+typedef void   (*HASH_COPY)   (void *, const void *        );
+typedef size_t (*HASH_QUERY)  (int, size_t                 );
 
 struct HASH_FUNCTION
 {
@@ -21,7 +21,7 @@ struct HASH_FUNCTION
     HASH_FREE free;
     HASH_COPY copy;
     HASH_QUERY query;
-    const char* name;
+    const char *name;
 };
 
 /******************************************************************************/

@@ -1,10 +1,7 @@
 #include "ordo/primitives/block_ciphers/nullcipher.h"
 
 #include "ordo/internal/mem.h"
-
-#include "ordo/common/errors.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 /******************************************************************************/
 

@@ -1,9 +1,8 @@
 #include "ordo/kdf/pbkdf2.h"
 
 #include "ordo/internal/endianness.h"
-#include "ordo/internal/mem.h"
 
-#include "ordo/common/errors.h"
+#include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
 
 #include "ordo/auth/hmac.h"

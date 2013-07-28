@@ -17,11 +17,9 @@ REDISTRIBUTION OF THIS SOFTWARE.
 #include "ordo/primitives/block_ciphers/aes.h"
 
 #include "ordo/internal/asm/resolve.h"
-#include "ordo/internal/mem.h"
 
-#include "ordo/common/errors.h"
+#include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 #include <string.h>
 
@@ -434,6 +432,7 @@ int aes_init(struct AES_STATE *state,
     if (params)
     {
         if (params->rounds == 0) return ORDO_ARG;
+        if (params->rounds > 20) return ORDO_ARG;
         state->rounds = params->rounds;
     }
     else

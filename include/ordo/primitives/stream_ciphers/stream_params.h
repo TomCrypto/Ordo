@@ -1,8 +1,10 @@
 #ifndef ORDO_STREAM_PARAMS_H
 #define ORDO_STREAM_PARAMS_H
 
+/*! @cond */
 #include <stdlib.h>
 #include <stdint.h>
+/*! @endcond */
 
 /******************************************************************************/
 
@@ -21,9 +23,10 @@ extern "C" {
 struct RC4_PARAMS
 {
     /*! The number of keystream bytes to drop prior to encryption.
-     @remarks Setting this implements the RC4-drop variant.
-     @remarks If the \c RC4_PARAMS structure is not passed to the RC4 stream
-              cipher primitive, the default drop is 2048. */
+     *  @remarks Setting this implements the RC4-drop variant.
+     *  @remarks If the \c RC4_PARAMS structure is not passed to the RC4
+     *           stream, cipher primitive, the default drop is 2048.
+    */
     size_t drop;
 };
 

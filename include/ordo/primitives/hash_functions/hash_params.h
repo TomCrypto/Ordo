@@ -1,8 +1,10 @@
 #ifndef ORDO_HASH_PARAMS_H
 #define ORDO_HASH_PARAMS_H
 
+/*! @cond */
 #include <stdlib.h>
 #include <stdint.h>
+/*! @endcond */
 
 /******************************************************************************/
 
@@ -18,8 +20,9 @@ extern "C" {
 */
 
 /*! @brief Skein-256 hash function parameters. 
-    @remarks Refer to the Skein specification to know more about what each
-             parameter field stands for. */
+ *  @remarks Refer to the Skein specification to know more about what each
+ *           parameter field stands for.
+*/
 struct SKEIN256_PARAMS
 {
     /*! The schema identifier, on four bytes. */
@@ -29,10 +32,10 @@ struct SKEIN256_PARAMS
     /*! Reserved, should be left zero according to the Skein specification. */
     uint8_t reserved[2];
     /*! Desired output length, in bits.
-     @remarks This parameter affects the hash function's digest length.
-     @remarks The actual output length will be in bytes, and this parameter
-              will be truncated to a byte boundary, so this should be a
-              multiple of 8.
+     *  @remarks This parameter affects the hash function's digest length.
+     *  @remarks The actual output length will be in bytes, and this parameter
+     *           will be truncated to a byte boundary, so this should be a
+     *           multiple of 8.
     */
     uint64_t out_len;
     /*! Unused, should be left zero according to the Skein specification. */

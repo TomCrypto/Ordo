@@ -4,12 +4,12 @@
 
 /******************************************************************************/
 
-typedef void* (*STREAM_ALLOC)   (void                                   );
-typedef  int  (*STREAM_INIT)    (void*, const void*, size_t, const void*);
-typedef void  (*STREAM_UPDATE)  (void*,       void*, size_t             );
-typedef void  (*STREAM_FREE)    (void*                                  );
-typedef void  (*STREAM_COPY)    (void*, const void*                     );
-typedef size_t (*STREAM_QUERY)  (int, size_t                            );
+typedef void  *(*STREAM_ALLOC)  (void                                      );
+typedef  int   (*STREAM_INIT)   (void *, const void *, size_t, const void *);
+typedef void   (*STREAM_UPDATE) (void *,       void *, size_t              );
+typedef void   (*STREAM_FREE)   (void *                                    );
+typedef void   (*STREAM_COPY)   (void *, const void *                      );
+typedef size_t (*STREAM_QUERY)  (int, size_t                               );
 
 struct STREAM_CIPHER
 {
@@ -19,7 +19,7 @@ struct STREAM_CIPHER
     STREAM_FREE free;
     STREAM_COPY copy;
     STREAM_QUERY query;
-    const char* name;
+    const char *name;
 };
 
 /******************************************************************************/

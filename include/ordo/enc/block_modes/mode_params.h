@@ -1,8 +1,10 @@
 #ifndef ORDO_MODE_PARAMS_H
 #define ORDO_MODE_PARAMS_H
 
+/*! @cond */
 #include <stdlib.h>
 #include <stdint.h>
+/*! @endcond */
 
 /******************************************************************************/
 
@@ -21,9 +23,10 @@ extern "C" {
 struct ECB_PARAMS
 {
     /*! Whether padding should be used.
-     @remarks Set to 0 to disable padding, and 1 to enable it. Only the least
-              significant bit is used, all other bits are ignored.
-     @remarks Padding is enabled by default if parameters are not used. */
+     *  @remarks Set to 0 to disable padding, and 1 to enable it. Only the
+     *           least significant bit is used, all other bits are ignored.
+     *  @remarks Padding is enabled by default if parameters are not used.
+    */
     size_t padding;
 };
 
@@ -31,9 +34,10 @@ struct ECB_PARAMS
 struct CBC_PARAMS
 {
     /*! Whether padding should be used.
-     @remarks Set to 0 to disable padding, and 1 to enable it. Only the least
-              significant bit is used, all other bits are ignored.
-     @remarks Padding is enabled by default if parameters are not used. */
+     *  @remarks Set to 0 to disable padding, and 1 to enable it. Only the
+     *           least significant bit is used, all other bits are ignored.
+     *  @remarks Padding is enabled by default if parameters are not used.
+    */
     size_t padding;
 };
 

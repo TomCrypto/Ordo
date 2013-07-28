@@ -1,7 +1,9 @@
 #ifndef ORDO_MEM_BASE_H
 #define ORDO_MEM_BASE_H
 
+/*! @cond */
 #include <stdlib.h>
+/*! @endcond */
 
 /******************************************************************************/
 

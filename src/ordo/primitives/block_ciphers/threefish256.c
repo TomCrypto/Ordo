@@ -1,11 +1,9 @@
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
 #include "ordo/internal/asm/resolve.h"
-#include "ordo/internal/mem.h"
 
-#include "ordo/common/errors.h"
+#include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
-#include "ordo/common/query.h"
 
 #include <string.h>
 

@@ -66,7 +66,7 @@ const struct BLOCK_CIPHER *block_cipher_by_id(size_t id);
 
 /*! Allocates a block cipher state.
  *  @param primitive A block cipher primitive.
- *  @returns An allocated block cipher state, or nil on error.
+ *  @returns Returns an allocated block cipher state, or nil on error.
 */
 void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive);
 
@@ -128,7 +128,7 @@ void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
  *  @param primitive A block cipher primitive.
  *  @param query A query code.
  *  @param value A suggested value.
- *  @returns A suitable parameter of type \c query based on \c value.
+ *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
 size_t block_cipher_query(const struct BLOCK_CIPHER *primitive,
