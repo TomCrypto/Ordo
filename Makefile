@@ -37,7 +37,7 @@ ifeq ($(shared), 1)
 	LD = $(CC)
 else
 	LIBNAME = libordo.a
-	LDFLAGS = rcs # do not link -pthread!
+	LDFLAGS = rcs # no linking in static mode - override LDFLAGS
 	LD = ar
 endif
 
