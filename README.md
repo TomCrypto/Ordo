@@ -83,7 +83,7 @@ The following compilers are supported:
 
 * gcc
 * MinGW (use `msys` for the makefiles to work, and perhaps `CC=gcc` when invoking the makefile)
-* Clang (should work out of the box with `-no-integrated-as` since Clang doesn't use the same assembler as gcc - to actually fix this, sanitize the assembly files to conform to the `llvm` assembler used by Clang)
+* Clang (should work out of the box with `-no-integrated-as` since Clang doesn't use the same assembler as gcc. To actually fix this, sanitize the assembly files to conform to the `llvm` assembler used by Clang - note the makefile does this automatically when it detects Clang is being used)
 
 Conclusion
 ----------
