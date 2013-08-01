@@ -3,6 +3,10 @@ compiler:
   - gcc
   - clang
 
-script: make && make tests && ./tests/bin/tests -color -extended 2>tests_log
+script:
+  - make debug=1 && make tests && ./tests/bin/tests -color -extended 2>tests_log_debug
+  - make && make tests && ./tests/bin/tests -color -extended 2>tests_log_default
 
-after_script: cat ./tests_log
+after_script:
+  - cat ./tests_log_debug
+  - cat ./tests_log_default
