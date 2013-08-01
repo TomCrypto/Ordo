@@ -3,4 +3,6 @@ compiler:
   - gcc
   - clang
 
-script: make && make tests && ./tests/bin/tests
+script: make && make tests && ./tests/bin/tests -color -extended 2>tests_log
+
+after_script: cat ./tests_log
