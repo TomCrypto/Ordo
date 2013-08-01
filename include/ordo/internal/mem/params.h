@@ -14,6 +14,8 @@
  * Generally this depends only on the architecture, since it represents
  * how much memory the pool will use.
  *
+ * Those are largely heuristics, and can be modified if needed.
+ *
  * This module is not to be used from outside the library, and is only
  * meaningful at compile-time.
 */
@@ -22,16 +24,13 @@
 extern "C" {
 #endif
 
-/* For all x86 and x86_64 processors, assume general-purpose usage. */
-#if defined(CPU_X86) || defined(CPU_X86_64)
+/* For all processors which aren't generally used in embedded hardware and are
+ * usually equipped with dedicated memory storage hardware (i.e. RAM sticks),
+ * assume general purpose usage. */
+#if defined(CPU_X86) || defined(CPU_X86_64) || defined(CPU_ARM)
 
     #define POOL_SIZE 1024
     #define POOL_WORD 32
-
-#elif defined(CPU_ARM)
-
-    #define POOL_SIZE 512
-    #define POOL_WORD 16
 
 #endif
 

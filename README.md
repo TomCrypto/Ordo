@@ -75,7 +75,7 @@ Compatibility
 
 The library has been tested against the following platforms:
 
-* Linux i386, x86_64
+* Linux i386, x86_64, ARMv5
 * OpenBSD x86_64
 * FreeBSD x86_64
 * NetBSD i386
