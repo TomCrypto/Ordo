@@ -48,6 +48,16 @@ extern "C" {
     #define ENVIRONMENT_32
 #endif
 
+/* Detect different types of processors. */
+
+#if __x86_64__
+    #define CPU_X86_64
+#elif __i386__
+    #define CPU_X86
+#elif __ARMEL__ /* ? */
+    #define CPU_ARM
+#endif
+
 /* These are feature flags used to enable various optimizations. Note these
  * can be overriden via your compiler's options, since they are set from
  * whatever features the compiler reports are available for use. */

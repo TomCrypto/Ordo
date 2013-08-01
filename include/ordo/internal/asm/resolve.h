@@ -49,11 +49,11 @@ extern "C" {
 #else
 
     /* This encompasses most Unix-like distributions using the same ABI. */
-    #if defined(PLATFORM_POSIX) && __x86_64__
+    #if defined(PLATFORM_POSIX) && defined(CPU_X86_64)
 
         #define RC4_X86_64_LINUX
 
-    #elif defined(PLATFORM_WINDOWS) && __x86_64__
+    #elif defined(PLATFORM_WINDOWS) && defined(CPU_X86_64)
 
         #define RC4_X86_64_WINDOWS
 
@@ -63,11 +63,11 @@ extern "C" {
 
     #endif
 
-    #if defined(PLATFORM_POSIX) && __x86_64__
+    #if defined(PLATFORM_POSIX) && defined(CPU_X86_64)
 
         #define THREEFISH256_X86_64_LINUX
 
-    #elif defined(PLATFORM_WINDOWS) && __x86_64__
+    #elif defined(PLATFORM_WINDOWS) && defined(CPU_X86_64)
 
         #define THREEFISH256_X86_64_WINDOWS
 
@@ -77,11 +77,11 @@ extern "C" {
 
     #endif
 
-    #if defined(PLATFORM_POSIX) && __x86_64__ && defined(FEATURE_AES)
+    #if defined(PLATFORM_POSIX) && defined(CPU_X86_64) && defined(FEATURE_AES)
 
         #define AES_X86_64_LINUX
 
-    #elif defined(PLATFORM_WINDOWS) && __x86_64__ && defined(FEATURE_AES)
+    #elif defined(PLATFORM_WINDOWS) && defined(CPU_X86_64) && defined(FEATURE_AES)
 
         #define AES_X86_64_WINDOWS
 

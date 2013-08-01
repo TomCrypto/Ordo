@@ -35,6 +35,18 @@ void mem_unlock(void *ptr, size_t len)
     VirtualUnlock(ptr, len);
 }
 
+#elif defined(__ARMEL__)
+
+int mem_lock(void *ptr, size_t len)
+{
+    return 0;
+}
+
+void mem_unlock(void *ptr, size_t len)
+{
+    return;
+}
+
 #else
 
 #error No memory allocator implementation for this platform!

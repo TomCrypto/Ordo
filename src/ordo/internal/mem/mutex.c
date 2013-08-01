@@ -62,6 +62,28 @@ void mutex_free(void)
     pthread_mutex_destroy(&mutex);
 }
 
+#elif defined(__ARMEL__)
+
+int mutex_init(void)
+{
+    return 0;
+}
+
+void mutex_acquire(void)
+{
+    return;
+}
+
+void mutex_release(void)
+{
+    return;
+}
+
+void mutex_free(void)
+{
+    return;
+}
+
 #else
 
 #error No mutex implementation for this platform!

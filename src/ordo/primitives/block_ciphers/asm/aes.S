@@ -1,8 +1,8 @@
 #include "ordo/internal/asm/resolve.h"
 
-.intel_syntax noprefix;
-
 #if defined (AES_X86_64_LINUX)
+
+.intel_syntax noprefix;
 
 .globl aes_forward_ASM
 .globl aes_inverse_ASM
@@ -77,6 +77,8 @@ aes_inverse_ASM:
     ret
 
 #elif defined (AES_X86_64_WINDOWS)
+
+.intel_syntax noprefix;
 
 .globl aes_forward_ASM
 .globl aes_inverse_ASM

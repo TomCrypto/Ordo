@@ -23,10 +23,15 @@ extern "C" {
 #endif
 
 /* For all x86 and x86_64 processors, assume general-purpose usage. */
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(CPU_X86) || defined(CPU_X86_64)
 
     #define POOL_SIZE 1024
     #define POOL_WORD 32
+
+#elif defined(CPU_ARM)
+
+    #define POOL_SIZE 512
+    #define POOL_WORD 16
 
 #endif
 

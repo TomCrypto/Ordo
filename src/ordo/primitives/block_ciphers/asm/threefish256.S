@@ -1,8 +1,8 @@
 #include "ordo/internal/asm/resolve.h"
 
-.intel_syntax noprefix;
-
 #if defined (THREEFISH256_X86_64_LINUX)
+
+.intel_syntax noprefix;
 
 .globl threefish256_forward_ASM
 .globl threefish256_inverse_ASM
@@ -196,6 +196,8 @@ threefish256_inverse_ASM:
     ret
 
 #elif defined (THREEFISH256_X86_64_WINDOWS)
+
+.intel_syntax noprefix;
 
 .globl threefish256_forward_ASM
 .globl threefish256_inverse_ASM
