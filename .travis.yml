@@ -4,11 +4,11 @@ compiler:
   - clang
 
 script:
-  - make clean && make debug=1 && make tests && ./tests/bin/tests -color -extended 2>tests_log_debug
-  - make clean && make shared=1 && make tests shared=1 && ./tests/bin/tests -color -extended 2>tests_log_sharedlib
-  - make clean && make && make tests && ./tests/bin/tests -color -extended 2>tests_log_default
+  - make clean && make debug=1 && make tests && cd tests && ./bin/tests -color -extended 2>tests_log_debug && cd ..
+  - make clean && make shared=1 && make tests shared=1 && cd tests && ./bin/tests -color -extended 2>tests_log_sharedlib && cd ..
+  - make clean && make && make tests && cd tests && ./bin/tests -color -extended 2>tests_log_default && cd ..
 
 after_failure:
-  - cat ./tests_log_debug
-  - cat ./tests_log_sharedlib
-  - cat ./tests_log_default
+  - cd tests && cat ./tests_log_debug && cd ..
+  - cd tests && cat ./tests_log_sharedlib && cd ..
+  - cd tests && cat ./tests_log_default && cd ..
