@@ -9,6 +9,8 @@ This is the github repository for Ordo, a minimalist cryptography library with a
 Status
 ------
 
+[![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
+
 What's new in 2.3:
  - fully implemented new unified query interface for gathering information from primitives and other modules such as key lengths, IV lengths, cipher block sizes (if needed), and so on, while avoiding having dozens of trivial functions scattered everywhere, and improving code consistency
 
