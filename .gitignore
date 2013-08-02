@@ -7,3 +7,4 @@ bindings
 *.c~
 *.h~
 *~
+*.swp

@@ -42,7 +42,7 @@ typedef void  (* MEM_FREE)(void*);
  *           it will be aligned to a 32-byte boundary).
  *  @remarks This function is thread-safe.
 */
-void *mem_alloc(size_t size) __attribute__((__malloc__));
+void *mem_alloc(size_t size);
 
 /*! Deallocates a memory buffer.
  *  @param ptr A memory buffer to free.
