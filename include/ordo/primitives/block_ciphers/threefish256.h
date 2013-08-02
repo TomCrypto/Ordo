@@ -24,7 +24,7 @@ extern "C" {
 struct THREEFISH256_STATE;
 
 /*! @see \c block_cipher_alloc() */
-struct THREEFISH256_STATE* threefish256_alloc(void);
+struct THREEFISH256_STATE *threefish256_alloc(void);
 
 /*! Initializes a Threefish-256 block cipher context.
  @param state An allocated Threefish-256 context.
@@ -36,16 +36,16 @@ struct THREEFISH256_STATE* threefish256_alloc(void);
  @remarks The \c params parameter may be nil if no parameters are required.
 */
 int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t* key, size_t keySize,
-                      const struct THREEFISH256_PARAMS* params);
+                      const uint64_t *key, size_t key_len,
+                      const struct THREEFISH256_PARAMS *params);
 
 /*! @see \c block_cipher_forward() */
 void threefish256_forward(struct THREEFISH256_STATE *state,
-                          uint64_t* block);
+                          uint64_t *block);
 
 /*! @see \c block_cipher_inverse() */
 void threefish256_inverse(struct THREEFISH256_STATE *state,
-                          uint64_t* block);
+                          uint64_t *block);
 
 /*! @see \c block_cipher_free() */
 void threefish256_free(struct THREEFISH256_STATE *state);

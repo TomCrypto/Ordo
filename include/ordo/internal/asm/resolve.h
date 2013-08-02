@@ -30,6 +30,10 @@
  * Finally, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
  * mode), the standard C code path \b must unconditionally be selected.
  *
+ * This module also defines the \c ASM_WORD type, which is the type to be
+ * used when passing integer parameters to assembly routines (not pointers)
+ * and is defined on a per-processor basis.
+ *
  * This module is not to be used from outside the library, and is only
  * meaningful at compile-time.
 */
@@ -37,6 +41,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if defined(CPU_X86_64)
+    #define ASM_WORD uint64_t
+#elif defined(CPU_X86)
+    #define ASM_WORD uint32_t
+#elif defined(CPU_ARM)
+    #define ASM_WORD uint32_t /* ? */
+#endif
+
+/******************************************************************************/
 
 #ifdef ORDO_DEBUG
 

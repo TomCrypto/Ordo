@@ -34,11 +34,11 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
 
 /*! @see \c block_cipher_forward() */
 void nullcipher_forward(struct NULLCIPHER_STATE *state,
-                        void* block);
+                        void *block);
 
 /*! @see \c block_cipher_inverse() */
 void nullcipher_inverse(struct NULLCIPHER_STATE *state,
-                        void* block);
+                        void *block);
 
 /*! @see \c block_cipher_free() */
 void nullcipher_free(struct NULLCIPHER_STATE *state);

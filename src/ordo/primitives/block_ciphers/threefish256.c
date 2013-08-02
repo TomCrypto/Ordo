@@ -9,11 +9,10 @@
 
 /******************************************************************************/
 
-#if defined(THREEFISH256_X86_64_LINUX)\
- || defined(THREEFISH256_X86_64_WINDOWS)
+#if !defined(THREEFISH256_STANDARD)
 void threefish256_forward_ASM(void *block, void *subkeys);
 void threefish256_inverse_ASM(void *block, void *subkeys);
-#elif defined(THREEFISH256_STANDARD)
+#else
 static void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
 __attribute__((hot));
 static void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
@@ -327,7 +326,10 @@ int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
 {
-    if (key_len != 32) return ORDO_KEY_LEN;
+    if (threefish256_query(KEY_LEN, key_len) != key_len)
+    {
+        return ORDO_KEY_LEN;
+    }
 
     threefish256_key_schedule(key, (params == 0) ? 0 : params->tweak,
                               state->subkey);
@@ -337,30 +339,28 @@ int threefish256_init(struct THREEFISH256_STATE *state,
 
 void threefish256_forward_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
-    #if defined (THREEFISH256_X86_64_LINUX)\
-     || defined (THREEFISH256_X86_64_WINDOWS)
-    threefish256_forward_ASM(block, subkeys);
-    #elif defined (THREEFISH256_STANDARD)
+    #if defined(THREEFISH256_STANDARD)
     threefish256_forward_C(block, subkeys);
+    #else
+    threefish256_forward_ASM(block, subkeys);
     #endif
 }
 
 void threefish256_inverse_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
-    #if defined(THREEFISH256_X86_64_LINUX)\
-     || defined(THREEFISH256_X86_64_WINDOWS)
-    threefish256_inverse_ASM(block, subkeys);
-    #elif defined (THREEFISH256_STANDARD)
+    #if defined(THREEFISH256_STANDARD)
     threefish256_inverse_C(block, subkeys);
+    #else
+    threefish256_inverse_ASM(block, subkeys);
     #endif
 }
 
-void threefish256_forward(struct THREEFISH256_STATE *state, uint64_t* block)
+void threefish256_forward(struct THREEFISH256_STATE *state, uint64_t *block)
 {
     threefish256_forward_raw(block, state->subkey);
 }
 
-void threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t* block)
+void threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t *block)
 {
     threefish256_inverse_raw(block, state->subkey);
 }
@@ -381,6 +381,7 @@ size_t threefish256_query(int query, size_t value)
     switch(query)
     {
         case BLOCK_SIZE: return THREEFISH256_BLOCK;
+
         case KEY_LEN: return 32;
         
         default: return 0;

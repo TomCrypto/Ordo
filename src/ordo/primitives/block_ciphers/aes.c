@@ -25,11 +25,6 @@ REDISTRIBUTION OF THIS SOFTWARE.
 
 /******************************************************************************/
 
-#if !defined(AES_STANDARD)
-void aes_forward_ASM(void *block, void *key, size_t rounds);
-void aes_inverse_ASM(void *block, void *key, size_t rounds);
-#endif
-
 #define AES_BLOCK (bits(128))
 
 /* This is the only table needed if AES-NI is available, as it is required for
@@ -70,8 +65,12 @@ static const uint8_t sbox[256] =
     0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 };
 
-#if defined (AES_STANDARD)
+/******************************************************************************/
 
+#if !defined(AES_STANDARD)
+void aes_forward_ASM(void *block, void *key, ASM_WORD rounds);
+void aes_inverse_ASM(void *block, void *key, ASM_WORD rounds);
+#else
 static const uint8_t ibox[256] =
 {
     0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
@@ -549,7 +548,45 @@ static void AddRoundKey (uint8_t *state, uint8_t *key)
     for (t = 0; t < 16; ++t) state[t] ^= key[t];
 }
 
+void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+{
+    size_t t;
+
+    AddRoundKey(block, key);
+
+    for (t = 1; t < rounds + 1; ++t)
+    {
+        if (t < rounds)
+        {
+            MixSubColumns(block);
+        }
+        else
+        {
+            ShiftRows(block);
+        }
+
+        AddRoundKey(block, key + 16 * t);
+    }
+}
+
+void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+{
+    size_t t;
+
+    AddRoundKey(block, key + 16 * rounds);
+
+    InvShiftRows(block);
+
+    for (t = rounds; t--;)
+    {
+        AddRoundKey(block, key + 16 * t);
+        if (t) InvMixSubColumns(block);
+    }
+}
+
 #endif
+
+/******************************************************************************/
 
 /* Key schedule constants. */
 static const uint8_t ks[11] =
@@ -602,14 +639,15 @@ static void ExpandKey(const uint8_t *key, uint8_t *ext,
     }
 }
 
+/******************************************************************************/
 
-/* This is the internal state of AES. */
+/* Key length in bytes from number of rounds. */
+#define key_bytes(rounds) (16 * ((rounds) + 1))
+
 struct AES_STATE
 {
     /* The expanded key. */
     uint8_t *key;
-    /* The number of 32-bit words in the key. */
-    size_t key_len;
     /* The number of rounds to use. */
     size_t rounds;
 };
@@ -617,13 +655,7 @@ struct AES_STATE
 struct AES_STATE *aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
-
-    if (state)
-    {
-        state->key_len = 0;
-        state->key = 0;
-    }
-
+    if (state) state->key = 0;
     return state;
 }
 
@@ -631,9 +663,11 @@ int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,
              const struct AES_PARAMS *params)
 {
-    if (aes_query(KEY_LEN, key_len) != key_len) return ORDO_KEY_LEN;
+    if (aes_query(KEY_LEN, key_len) != key_len)
+    {
+        return ORDO_KEY_LEN;
+    }
 
-    /* Read the parameters, if available. */
     if (params)
     {
         if (params->rounds == 0) return ORDO_ARG;
@@ -648,11 +682,11 @@ int aes_init(struct AES_STATE *state,
         else if (key_len == 32) state->rounds = 14;
     }
 
-    /* Allocate the expanded key array. */
-    state->key_len = 16 * (state->rounds + 1);
-    if (state->key) mem_free(state->key);
+    size_t aes_key_len = key_bytes(state->rounds);
 
-    state->key = mem_alloc(state->key_len);
+    /* Allocate the expanded key array. */
+    if (state->key) mem_free(state->key);
+    state->key = mem_alloc(aes_key_len);
     if (!state->key) return ORDO_ALLOC;
 
     /* Perform the key schedule. */
@@ -664,45 +698,19 @@ int aes_init(struct AES_STATE *state,
 
 void aes_forward(struct AES_STATE *state, uint8_t *block)
 {
-    #if defined (AES_X86_64_LINUX) || defined (AES_X86_64_WINDOWS)
+    #if defined(AES_STANDARD)
+    aes_forward_C(block, state->key, state->rounds);
+    #else
     aes_forward_ASM(block, state->key, state->rounds);
-    #elif defined (AES_STANDARD)
-    size_t t;
-
-    AddRoundKey(block, state->key);
-
-    for (t = 1; t < state->rounds + 1; ++t)
-    {
-        if (t < state->rounds)
-        {
-            MixSubColumns(block);
-        }
-        else
-        {
-            ShiftRows(block);
-        }
-
-        AddRoundKey(block, state->key + 16 * t);
-    }
     #endif
 }
 
 void aes_inverse(struct AES_STATE *state, uint8_t *block)
 {
-    #if defined (AES_X86_64_LINUX) || defined (AES_X86_64_WINDOWS)
-    aes_inverse_ASM(block, state->key + 16 * state->rounds, state->rounds);
-    #elif defined (AES_STANDARD)
-    size_t t;
-
-    AddRoundKey(block, state->key + 16 * state->rounds);
-
-    InvShiftRows(block);
-
-    for (t = state->rounds; t--;)
-    {
-        AddRoundKey(block, state->key + 16 * t);
-        if (t) InvMixSubColumns(block);
-    }
+    #if defined(AES_STANDARD)
+   aes_inverse_C(block, state->key, state->rounds);
+    #else
+    aes_inverse_ASM(block, state->key, state->rounds);
     #endif
 }
 
@@ -715,9 +723,7 @@ void aes_free(struct AES_STATE *state)
 void aes_copy(struct AES_STATE *dst,
               const struct AES_STATE *src)
 {
-    dst->rounds = src->rounds;
-    dst->key_len = src->key_len;
-    memcpy(dst->key, src->key, dst->key_len);
+    memcpy(dst->key, src->key, key_bytes(dst->rounds));
 }
 
 size_t aes_query(int query, size_t value)

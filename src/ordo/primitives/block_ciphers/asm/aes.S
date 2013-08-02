@@ -41,8 +41,15 @@ aes_forward_ASM:
     ret
 
 aes_inverse_ASM:
-    /* The last key is passed in RSI, and the block in RDI. First, move the block in XMM0... */
+    /* The first key is passed in RSI, and the block in RDI. First, move the block in XMM0... */
     MOVDQU %XMM0, [%RDI]
+    
+    /* Now increment the key to reach the last key (based on round count RDX) */
+    PUSH %RDX
+    MOV %RAX, 0x10
+    MUL %RDX
+    ADD %RSI, %RAX
+    POP %RDX
 
     /* Move the last key in XMM1... */
     MOVDQU %XMM1, [%RSI]
@@ -119,6 +126,13 @@ aes_forward_ASM:
 aes_inverse_ASM:
     /* The last key is passed in RDX, and the block in RCX. First, move the block in XMM0... */
     MOVDQU %XMM0, [%RCX]
+    
+    /* Now increment the key to reach the last key (based on round count RDX) */
+    PUSH %RDX
+    MOV %RAX, 0x10
+    MUL %RDX
+    ADD %RSI, %RAX
+    POP %RDX
 
     /* Move the last key in XMM1... */
     MOVDQU %XMM1, [%RDX]
@@ -159,6 +173,7 @@ aes_inverse_ASM:
 
 /***********************
  * CURRENTLY DEAD CODE *
+ *   NOT UP TO DATE!   *
  ***********************/
 
 aes_forward_ASM:
