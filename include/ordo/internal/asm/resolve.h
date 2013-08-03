@@ -48,6 +48,12 @@ extern "C" {
     #define ASM_WORD uint32_t
 #elif defined(CPU_ARM)
     #define ASM_WORD uint32_t /* ? */
+#elif defined(CPU_PPC)
+    #if defined(ENVIRONMENT_32)
+        #define ASM_WORD uint32_t /* ? */
+    #else
+        #define ASM_WORD uint64_t /* ? */
+    #endif
 #endif
 
 /******************************************************************************/

@@ -22,8 +22,7 @@ extern "C" {
 #endif
 
 /* Detect the endianness of the system - normally this is defined by the
- * system library e.g. endian.h under most Unix distributions, however Ordo
- * will try to set up the necessary conversion functions on its own. */
+ * system library e.g. endian.h under most Unix distributions at least. */
 
 #if defined(PLATFORM_WINDOWS)
     /* For Windows, assume little-endian. Also don't expect Windows to

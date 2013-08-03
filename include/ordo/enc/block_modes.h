@@ -43,7 +43,7 @@ struct BLOCK_MODE;
 /******************************************************************************/
 
 /*! Returns the name of a block mode primitive
- *  @param primitive A block mode primitive.
+ *  @param mode A block mode primitive.
  *  @returns Returns the block mode's name.
  *  @remarks This name can then be used in \c block_mode_by_name().
 */

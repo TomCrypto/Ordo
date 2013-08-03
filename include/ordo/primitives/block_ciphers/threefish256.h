@@ -29,7 +29,7 @@ struct THREEFISH256_STATE *threefish256_alloc(void);
 /*! Initializes a Threefish-256 block cipher context.
  @param state An allocated Threefish-256 context.
  @param key A pointer to a 256-bit key, as a \c uint64_t[4] structure.
- @param keySize The key size, in bytes. Must be 32 (256 bits).
+ @param key_len The key size, in bytes. Must be 32 (256 bits).
  @param params A pointer to a Threefish-256 parameter structure.
  @returns Returns \c #ORDO_SUCCESS on success, or \c #ORDO_KEY_LEN if the
           key size passed was invalid.

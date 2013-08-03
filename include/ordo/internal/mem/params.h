@@ -33,6 +33,8 @@ extern "C" {
     #define POOL_SIZE 1024
     #define POOL_WORD 32
 
+/* Put other configurations here. */
+
 #endif
 
 #if defined(POOL_SIZE) && defined(POOL_WORD)

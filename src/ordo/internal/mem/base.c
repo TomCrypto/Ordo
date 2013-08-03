@@ -37,6 +37,6 @@ void mem_unlock(void *ptr, size_t len)
 
 #else
 
-#error No memory allocator implementation for this platform!
+#error No memory pool base implementation for this platform!
 
 #endif

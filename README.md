@@ -1,4 +1,4 @@
-Ordo v2.3.0
+Ordo v2.3.1
 ===========
 
 Symmetric Cryptography Library
@@ -11,11 +11,12 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.3:
- - fully implemented new unified query interface for gathering information from primitives and other modules such as key lengths, IV lengths, cipher block sizes (if needed), and so on, while avoiding having dozens of trivial functions scattered everywhere, and improving code consistency
+What's new in 2.3.1:
+ - fixed some endianness bugs, added PowerPC support
 
 Todo:
  - wrap stdint.h in a cross-platform header (for future portability concerns)
+ - better endianness handling (it's going to get out hand soon)
 
 Feature Map
 -----------
@@ -50,12 +51,12 @@ Where the `extra` argument is used to refine processor specification. For instan
 
 If your operating system is supported by Ordo, it *will run* as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.
 
-Finally, there are a few additional configuration options possible:
+Finally, there are a few additional configuration options possible (just pass them as arguments to `make`):
 
-* `make strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
-* `make debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable debugging symbols. By default, debug mode is not enabled.
-* `make shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
-* `make nopthread=1` will build the library without linking to `pthread`. Use this when you do not actually need the `pthread` mutex implementation, e.g. under Windows.
+* `strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
+* `debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable debugging symbols. By default, debug mode is not enabled.
+* `shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
+* `nopthread=1` will build the library without linking to `pthread`. Use this when you do not actually need the `pthread` mutex implementation, e.g. under Windows.
 
 To build and run the tests, use `make tests` and run the executable in `tests/bin`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` and `nopthread` makefile parameters also apply to the tests and samples, and they must be the same for the library and the tests/samples.
 
@@ -80,8 +81,10 @@ The library has been tested against the following platforms:
 * FreeBSD x86_64
 * NetBSD i386
 * Windows i386, x86_64
+* Debian PowerPC (32-bit)
+* Debian ARM (armv5tejl)
 
-The following compilers are supported:
+The following compilers are supported (for building the library):
 
 * gcc
 * MinGW (use `msys` for the makefiles to work, and perhaps `CC=gcc` when invoking the makefile)

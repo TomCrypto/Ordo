@@ -548,7 +548,7 @@ static void AddRoundKey (uint8_t *state, uint8_t *key)
     for (t = 0; t < 16; ++t) state[t] ^= key[t];
 }
 
-void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
 {
     size_t t;
 
@@ -569,7 +569,7 @@ void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
     }
 }
 
-void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
 {
     size_t t;
 
@@ -708,7 +708,7 @@ void aes_forward(struct AES_STATE *state, uint8_t *block)
 void aes_inverse(struct AES_STATE *state, uint8_t *block)
 {
     #if defined(AES_STANDARD)
-   aes_inverse_C(block, state->key, state->rounds);
+    aes_inverse_C(block, state->key, state->rounds);
     #else
     aes_inverse_ASM(block, state->key, state->rounds);
     #endif
