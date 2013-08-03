@@ -2,6 +2,8 @@
 
 #include "ordo/internal/asm/resolve.h"
 
+#include "ordo/internal/endianness.h"
+
 #include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
 
@@ -21,6 +23,11 @@ __attribute__((hot));
 void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
 {
     size_t t;
+
+    block[0] = htole64(block[0]);
+    block[1] = htole64(block[1]);
+    block[2] = htole64(block[2]);
+    block[3] = htole64(block[3]);
 
     block[0] += subkeys[0][0];
     block[1] += subkeys[0][1];
@@ -137,11 +144,21 @@ void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
         block[2] += subkeys[t * 2 + 2][2];
         block[3] += subkeys[t * 2 + 2][3];
     }
+    
+    block[0] = le64toh(block[0]);
+    block[1] = le64toh(block[1]);
+    block[2] = le64toh(block[2]);
+    block[3] = le64toh(block[3]);
 }
 
 void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
 {
     size_t t;
+
+    block[0] = htole64(block[0]);
+    block[1] = htole64(block[1]);
+    block[2] = htole64(block[2]);
+    block[3] = htole64(block[3]);
 
     for (t = 9; t > 0; t--)
     {
@@ -258,6 +275,11 @@ void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
     block[1] -= subkeys[0][1];
     block[2] -= subkeys[0][2];
     block[3] -= subkeys[0][3];
+    
+    block[0] = le64toh(block[0]);
+    block[1] = le64toh(block[1]);
+    block[2] = le64toh(block[2]);
+    block[3] = le64toh(block[3]);
 }
 
 #endif
@@ -278,13 +300,13 @@ void threefish256_key_schedule(const uint64_t key[4], const uint64_t tweak[2],
     uint64_t tweak_w[3];
     uint64_t key_w[5];
     
-    key_w[0] = key[0];
-    key_w[1] = key[1];
-    key_w[2] = key[2];
-    key_w[3] = key[3];
+    key_w[0] = htole64(key[0]);
+    key_w[1] = htole64(key[1]);
+    key_w[2] = htole64(key[2]);
+    key_w[3] = htole64(key[3]);
 
-    tweak_w[0] = (tweak ? tweak[0] : 0);
-    tweak_w[1] = (tweak ? tweak[1] : 0);
+    tweak_w[0] = (tweak ? htole64(tweak[0]) : 0);
+    tweak_w[1] = (tweak ? htole64(tweak[1]) : 0);
 
     key_w[4] = key_w[0] ^ key_w[1] ^ key_w[2] ^ key_w[3] ^ K_S;
     tweak_w[2] = tweak_w[0] ^ tweak_w[1];
