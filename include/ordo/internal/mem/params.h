@@ -27,7 +27,8 @@ extern "C" {
 /* For all processors which aren't generally used in embedded hardware and are
  * usually equipped with dedicated memory storage hardware (i.e. RAM sticks),
  * assume general purpose usage. */
-#if defined(CPU_X86) || defined(CPU_X86_64) || defined(CPU_ARM)
+#if defined(CPU_X86) || defined(CPU_X86_64) \
+ || defined(CPU_ARM) || defined(CPU_PPC)
 
     #define POOL_SIZE 1024
     #define POOL_WORD 32

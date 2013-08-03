@@ -262,7 +262,7 @@ void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
 
 #endif
 
-#define THREEFISH256_BLOCK (bits(256)) /* 256-bit block */
+#define THREEFISH256_BLOCK (bits(256))
 
 #define subkey(n, s0, s1, s2, s3, t0, t1)\
     subkeys[n][0] = key_w[s0]; \

@@ -56,6 +56,8 @@ extern "C" {
     #define CPU_X86
 #elif __ARMEL__ /* ? */
     #define CPU_ARM
+#elif __powerpc__
+    #define CPU_PPC
 #endif
 
 /* These are feature flags used to enable various optimizations. Note these

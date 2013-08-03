@@ -2,6 +2,8 @@
 
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
+#include "ordo/internal/endianness.h"
+
 #include "ordo/internal/mem.h"
 #include "ordo/common/utils.h"
 
@@ -32,8 +34,8 @@ static void make_tweak(uint64_t tweak[2],
                        uint64_t first,
                        uint64_t final)
 {
-    tweak[0] = position;
-    tweak[1] = (final << 63) | (first << 62) | (type  << 56);
+    tweak[0] = htole64(position);
+    tweak[1] = htole64((final << 63) | (first << 62) | (type  << 56));
 }
 
 static void skein256_compress(const uint64_t *block,
@@ -96,6 +98,12 @@ int skein256_init(struct SKEIN256_STATE *state,
         /* No parameters, use default configuration block. */
         memcpy(state->state, skein256_iv, SKEIN256_INTERNAL);
         state->out_len = SKEIN256_INTERNAL;
+        
+        /* Configuration block is actually little-endian. */
+        state->state[0] = le64toh(state->state[0]);
+        state->state[1] = le64toh(state->state[1]);
+        state->state[2] = le64toh(state->state[2]);
+        state->state[3] = le64toh(state->state[3]);
     }
 
     return ORDO_SUCCESS;
