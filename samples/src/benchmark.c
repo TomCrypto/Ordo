@@ -2,247 +2,394 @@
  * ------
  * Demonstrates:
  *  - enumerating algorithms
- *  - using the high-level API (no contexts are used here)
+ *  - querying information about algorithms (key/IV length, etc..)
  * ------
- * Usage: benchmark [optional: buffer size in megabytes]
- * If no buffer size is provided, uses 128 megabytes by default.
+ * Usage: see benchmark_usage() below, or run with no arguments.
  * ------
- * Comments: some of the code here is rather convoluted, this is because
- *           parameters are not part of the abstraction layer. In particular,
- *           padding is a block mode parameter and hence it is difficult to
- *           abstract it away. What is done instead is assume there is enough
- *           space to handle padding (by adding a few extra dummy bytes at
- *           the end of the buffer) which is good enough for benchmarking
- *           purposes.
- *           In a real application the mode of operation would be known in
- *           advance and parameters would be concretely passed and padding
- *           handled as it should be. Equivalently, we could do that here
- *           by manually implementing each and every algorithm, but this
- *           would lead to a lot of repeated code and would overall be
- *           worse than the alternative.
+ * Comments: note that some of the benchmarked algorithms do have specific
+ *           parameters set, see the *_params() functions, and can be done
+ *           on a per-algorithm basis rather elegantly - for instance here
+ *           it is used to disable RC4 drop (so as not to skew small block
+ *           size timings) and ECB/CBC padding. Furthermore, for the block
+ *           cipher algorithms, only encryption is currently benchmarked.
 */
 
-#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <time.h>
 
 #include "ordo.h"
 
-#define BUF_SIZE (128 * 1024 * 1024)
+/***                         DATA STORAGE BUFFER                            ***/
 
-/* This is a fast algorithm for randomizing a buffer. It is not included in the
- * timing calculations but is used to prevent the hardware optimizing things by
- * keeping the buffer in cache, which would skew the benchmark results. */
-void randomize(void *buffer, size_t buf_size)
+#define MAX_BLOCK_SIZE 65536
+
+static char buffer[MAX_BLOCK_SIZE];
+
+/***                    MISCELLANEOUS UTILITY FUNCTIONS                     ***/
+
+static void *allocate(size_t size)
 {
-    /* OK fine, this is really using RC4 with a random key >.< */
-    size_t key_len = 32;
-    void *key = malloc(key_len);
-    os_random(key, key_len);
-
-    ordo_enc_stream(rc4(), 0, key, key_len, buffer, buf_size);
-    free(key);
+    void *ptr = malloc(size);
+    if (ptr)
+    {
+        os_random(ptr, size);
+        return ptr;
+    }
+        
+    printf("\t* Memory allocation failed!\n");
+    printf("\nAn error occurred.\n");
+    exit(EXIT_FAILURE);
 }
 
-void benchmark_hash_functions(void *buffer, size_t buf_size)
+static void benchmark_usage(int argc, char * const argv[])
 {
-    for (size_t id = 0; id < hash_function_count(); ++id)
+    size_t t, count;
+
+    printf("Usage:\n\n"); 
+    printf("\t%s [hash function]\n", argv[0]);
+    printf("\t%s [stream cipher]\n", argv[0]);
+    printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
+
+    printf("\nAvailable hash functions:\n\n\t");
+    count = hash_function_count();
+    for (t = 0; t < count; ++t)
     {
-        const struct HASH_FUNCTION *primitive = hash_function_by_id(id);
-        printf(" * %.20s: \t", hash_function_name(primitive));
-        fflush(stdout);
-
-        randomize(buffer, buf_size);
-
-        clock_t start = clock();
-
-        ordo_digest(primitive, 0, /* No parameters. */
-                    buffer, buf_size,
-                    buffer); /* For simplicity, write output in buffer. */
-
-        double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
-        double speed = buf_size / (1024 * 1024 * time);
-
-        printf("%.0f MB/s.\n", speed);
+        printf("%s", hash_function_name(hash_function_by_id(t)));
+        if (t != count - 1) printf(", "); else printf("\n");
     }
 
-    printf(" -\n\n");
+    printf("\nAvailable stream ciphers:\n\n\t");
+    count = stream_cipher_count();
+    for (t = 0; t < count; ++t)
+    {
+        printf("%s", stream_cipher_name(stream_cipher_by_id(t)));
+        if (t != count - 1) printf(", "); else printf("\n");
+    }
+
+    printf("\nAvailable block ciphers:\n\n\t");
+    count = block_cipher_count();
+    for (t = 0; t < count; ++t)
+    {
+        printf("%s", block_cipher_name(block_cipher_by_id(t)));
+        if (t != count - 1) printf(", "); else printf("\n");
+    }
+
+    printf("\nAvailable modes of operation:\n\n\t");
+    count = block_mode_count();
+    for (t = 0; t < count; ++t)
+    {
+        printf("%s", block_mode_name(block_mode_by_id(t)));
+        if (t != count - 1) printf(", "); else printf("\n");
+    }
+
 }
 
-void benchmark_block_ciphers(void *buffer, size_t buf_size)
+/***                         TIME UTILITY FUNCTIONS                         ***/
+
+#define INTERVAL 3.0
+
+static double now()
 {
-    for (size_t id = 0; id < block_cipher_count(); ++id)
+    return (double)clock() / CLOCKS_PER_SEC;
+}
+
+static double speed_MiB(double processed)
+{
+    return processed / (INTERVAL * 1024 * 1024);
+}
+
+/***                        PARAMETERIZED UTILITIES                         ***/
+
+static void *hash_params(const struct HASH_FUNCTION *hash)
+{
+    return 0;
+}
+
+static void *block_params(const struct BLOCK_CIPHER *cipher)
+{
+    return 0;
+}
+
+static void *block_mode_params(const struct BLOCK_MODE *mode)
+{
+    if (mode == ecb())
     {
-        const struct BLOCK_CIPHER *primitive = block_cipher_by_id(id);
+        struct ECB_PARAMS *ecb = allocate(sizeof(*ecb));
+        ecb->padding = 0;
+        return ecb;
+    }
 
-        /* Probe cipher's smallest key length. */
-        size_t key_len = enc_block_key_len(primitive, 0);
-        void *key = malloc(key_len);
+    if (mode == cbc())
+    {
+        struct CBC_PARAMS *cbc = allocate(sizeof(*cbc));
+        cbc->padding = 0;
+        return cbc;
+    }
 
-        for (size_t mode_id = 0; mode_id < block_mode_count(); ++mode_id)
+    return 0;
+}
+
+static void *stream_params(const struct STREAM_CIPHER *cipher)
+{
+    if (cipher == rc4())
+    {
+        struct RC4_PARAMS *rc4 = allocate(sizeof(*rc4));
+        rc4->drop = 0;
+        return rc4;
+    }
+
+    return 0;
+}
+
+/***                          LOW-LEVEL BENCHMARKS                          ***/
+
+static double hash_speed(const struct HASH_FUNCTION *hash,
+                         uint64_t block)
+{
+    struct DIGEST_CTX *ctx = digest_alloc(hash);
+    os_random(buffer, sizeof(buffer));
+
+    if (ctx)
+    {
+        void *params = hash_params(hash);
+
+        uint64_t iterations = 0;
+        double start = now();
+
+        while ((++iterations) && (now() - start < INTERVAL))
         {
-            const struct BLOCK_MODE *mode = block_mode_by_id(mode_id);
-            size_t iv_len = enc_block_iv_len(primitive, mode, -1);
-            void *iv = malloc(iv_len);
-            
-            printf(" * %.20s [%.10s]: \t", block_cipher_name(primitive),
-                                           block_mode_name(mode));
-            fflush(stdout);
-
-            os_random(iv, iv_len);
-            os_random(key, key_len);
-            randomize(buffer, buf_size);
-
-            clock_t start = clock();
-
-            /* Encryption */
-            size_t out_len = 0;
-            ordo_enc_block(primitive, 0, mode, 0,
-                           1,
-                           key,
-                           key_len,
-                           iv,
-                           iv_len,
-                           buffer, buf_size,
-                           buffer, &out_len); /* Encrypt in-place */
-
-            double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
-            double speed = buf_size / (1024 * 1024 * time);
-
-            printf("%.0f MB/s (enc)\t|\t", speed);
-            fflush(stdout);
-
-            os_random(iv, iv_len);
-            os_random(key, key_len);
-            randomize(buffer, out_len);
-
-            start = clock();
-
-            /* Decryption */
-            ordo_enc_block(primitive, 0, mode, 0,
-                           0,
-                           key,
-                           key_len,
-                           iv,
-                           iv_len,
-                           buffer, out_len,
-                           buffer, &out_len);
-
-            time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
-            speed = buf_size / (1024 * 1024 * time);
-
-            printf("%.0f MB/s (dec) ", speed);
-            printf("\t[%d-bit key]\n", (int)key_len * 8);
-            free(iv);
+            digest_init(ctx, params);
+            digest_update(ctx, buffer, block);
+            digest_final(ctx, buffer);
         }
 
-        free(key);
-        if (id != block_cipher_count() - 1) printf(" &\n");
+        digest_free(ctx);
+        free(params);
+
+        return speed_MiB(block * iterations);
     }
 
-    printf(" -\n\n");
+    printf("\t* Context allocation failed!\n");
+    printf("\nAn error occurred.\n");
+    exit(EXIT_FAILURE);
 }
 
-
-void benchmark_stream_ciphers(void *buffer, size_t buf_size)
+static double stream_speed(const struct STREAM_CIPHER *cipher,
+                           uint64_t block)
 {
-    for (size_t id = 0; id < stream_cipher_count(); ++id)
+    struct ENC_STREAM_CTX *ctx = enc_stream_alloc(cipher);
+    os_random(buffer, sizeof(buffer));
+
+    if (ctx)
     {
-        const struct STREAM_CIPHER *primitive = stream_cipher_by_id(id);
-        printf(" * %.20s: \t", stream_cipher_name(primitive));
-        fflush(stdout);
+        void *params = stream_params(cipher);
 
-        randomize(buffer, buf_size);
+        size_t key_len = stream_cipher_query(cipher, KEY_LEN, (size_t)-1);
+        
+        void *key = allocate(key_len);
 
-        clock_t start = clock();
+        uint64_t iterations = 0;
+        double start = now();
 
-        /* Probe the stream cipher for the smallest key length (we are not
-         * benchmarking the key schedule, and encryption speed is normally
-         * independent from key size). */
-        size_t key_len = enc_stream_key_len(primitive, 0);
-        void *key = malloc(key_len);
-        os_random(key, key_len);
+        while ((++iterations) && (now() - start < INTERVAL))
+        {
+            enc_stream_init(ctx, key, key_len, params);
+            enc_stream_update(ctx, buffer, block);
+        }
 
-        ordo_enc_stream(primitive, 0, key, key_len, buffer, buf_size);
+        enc_stream_free(ctx);
+        free(params);
         free(key);
 
-        double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
-        double speed = buf_size / (1024 * 1024 * time);
-
-        printf("%.0f MB/s\t[%d-bit key].\n", speed, (int)key_len * 8);
+        return speed_MiB(block * iterations);
     }
 
-    printf(" -\n\n");
+    printf("\t* Context allocation failed!\n");
+    printf("\nAn error occurred.\n");
+    exit(EXIT_FAILURE);
 }
 
-void benchmark_pbkdf2(void *buffer, size_t buf_size, size_t iterations)
+static double block_speed(const struct BLOCK_CIPHER *cipher,
+                          const struct BLOCK_MODE *mode,
+                          uint64_t block)
 {
-    for (size_t id = 0; id < hash_function_count(); ++id)
+    struct ENC_BLOCK_CTX *ctx = enc_block_alloc(cipher, mode);
+    os_random(buffer, sizeof(buffer));
+
+    if (ctx)
     {
-        const struct HASH_FUNCTION *primitive = hash_function_by_id(id);
-        printf(" * PBKDF2 [%.10s]: \t", hash_function_name(primitive));
-        fflush(stdout);
+        void *cipher_params = block_params(cipher);
+        void *mode_params = block_mode_params(mode);
 
-        /* We only want to benchmark one "block" of PBKDF2, so feed it only
-         * one byte by convention. */
-        buf_size = 1;
+        size_t key_len = block_cipher_query(cipher, KEY_LEN, (size_t)-1);
+        size_t iv_len = block_mode_query(mode, cipher, IV_LEN, (size_t)-1);
 
-        clock_t start = clock();
+        void *key = allocate(key_len);
+        void *iv = allocate(iv_len);
 
-        pbkdf2(primitive, 0,
-               buffer, buf_size,
-               buffer, buf_size,
-               iterations,
-               buffer, buf_size); 
+        uint64_t iterations = 0;
+        double start = now();
 
-        double time = (double)(clock() - start) / (double)CLOCKS_PER_SEC;
+        while ((++iterations) && (now() - start < INTERVAL))
+        {
+            size_t out;
+            enc_block_init(ctx, key, key_len, iv, iv_len,
+                           1, cipher_params, mode_params);
+            enc_block_update(ctx, buffer, block, buffer, &out);
+            enc_block_final(ctx, buffer, &out);
+        }
 
-        printf("%.1f s.\n", time);
+        enc_block_free(ctx);
+        free(cipher_params);
+        free(mode_params);
+        free(key);
+        free(iv);
+
+        return speed_MiB(block * iterations);
     }
 
-    printf(" -\n\n");
+    printf("\t* Context allocation failed!\n");
+    printf("\nAn error occurred.\n");
+    exit(EXIT_FAILURE);
 }
 
-int main(int argc, char *argv[])
+/***                          HIGH-LEVEL BENCHMARK                          ***/
+
+static int benchmark_hash_function(const struct HASH_FUNCTION *hash,
+                                   int argc, char * const argv[])
 {
+    const char *name = hash_function_name(hash);
+    
     if (argc > 2)
     {
-        printf("Usage: benchmark [optional: buffer size in megabytes]\n");
+        printf("Unrecognized argument '%s'.\n", argv[2]);
+        return EXIT_FAILURE;
+    }
+    
+    printf("Benchmarking hash function %s:\n\n", name);
+    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(hash,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(hash,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(hash,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(hash,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(hash, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
+
+    return EXIT_SUCCESS;
+}
+
+static int benchmark_stream_cipher(const struct STREAM_CIPHER *cipher,
+                                   int argc, char * const argv[])
+{
+    const char *name = stream_cipher_name(cipher);
+
+    if (argc != 2)
+    {
+        printf("Unrecognized argument '%s'.\n", argv[2]);
         return EXIT_FAILURE;
     }
 
+    printf("Benchmarking stream cipher %s:\n\n", name);
+    printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(cipher,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(cipher,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(cipher,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(cipher,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(cipher, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
+
+    return EXIT_SUCCESS;
+}
+
+static int benchmark_block_cipher(const struct BLOCK_CIPHER *cipher,
+                                   int argc, char * const argv[])
+{
+    const char *name = block_cipher_name(cipher);
+    const struct BLOCK_MODE *mode;
+
+    if (argc == 2)
+    {
+        printf("Please specify one mode of operation.\n");
+        return EXIT_FAILURE;
+    }
+        
+    if (argc > 3)
+    {
+        printf("Please specify only one mode of operation.\n");
+        return EXIT_FAILURE;
+    }
+
+    if (!(mode = block_mode_by_name(argv[2])))
+    {
+        printf("Unrecognized mode of operation '%s'.\n", argv[2]);
+        return EXIT_FAILURE;
+    }
+
+    printf("Benchmarking block cipher %s in %s mode:\n\n", name, argv[2]);
+    printf("\t*    16 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", block_speed(cipher, mode, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
+
+    return EXIT_SUCCESS;
+}
+
+/***                        ALGORITHM IDENTIFICATION                        ***/
+
+enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
+
+static enum ALG_TYPE identify(const char *name)
+{
+    if (hash_function_by_name(name) != 0) return ALG_HASH;
+    if (stream_cipher_by_name(name) != 0) return ALG_STREAM;
+    if (block_cipher_by_name(name)  != 0) return ALG_BLOCK;
+    return ALG_NONE;
+}
+
+/***                             MAIN DISPATCHER                            ***/
+
+int main(int argc, char *argv[])
+{
     if (ordo_init())
     {
         printf("Failed to initialize Ordo.\n");
         return EXIT_FAILURE;
     }
 
-    size_t buf_size = (argc == 2 ? atoi(argv[1]) : 128);
-    buf_size *= 1024 * 1024; /* To MB */
+    if (argc < 2)
+    {
+        benchmark_usage(argc, argv);
+        return EXIT_FAILURE;
+    }
 
-    /* Add a megabyte of padding for algorithms which use padding, to make
-     * sure they don't fail (this is a bit ugly but sufficient for what we 
-     * are doing here, see comments at top of source file). */
-    void *buffer = malloc(buf_size + 1024 * 1024);
-    memset(buffer, 0x00, buf_size + 1024 * 1024);
+    switch (identify(argv[1]))
+    {
+        case ALG_HASH:
+        {
+            const struct HASH_FUNCTION *p = hash_function_by_name(argv[1]);
+            return benchmark_hash_function(p, argc, argv);
+        }
 
-    printf("Benchmarking: Hash Functions\n");
-    printf("----------------------------\n\n");
-    benchmark_hash_functions(buffer, buf_size);
+        case ALG_STREAM:
+        {
+            const struct STREAM_CIPHER *p = stream_cipher_by_name(argv[1]);
+            return benchmark_stream_cipher(p, argc, argv);
+        }
 
-    printf("Benchmarking: Block Ciphers\n");
-    printf("---------------------------\n\n");
-    benchmark_block_ciphers(buffer, buf_size);
+        case ALG_BLOCK:
+        {
+            const struct BLOCK_CIPHER *p = block_cipher_by_name(argv[1]);
+            return benchmark_block_cipher(p, argc, argv);
+        }
 
-    printf("Benchmarking: Stream Ciphers\n");
-    printf("----------------------------\n\n");
-    benchmark_stream_ciphers(buffer, buf_size);
-
-    printf("Benchmarking: PBKDF2 (100000 iterations)\n");
-    printf("----------------------------------------\n\n");
-    benchmark_pbkdf2(buffer, buf_size, 100000);
-
-
-    free(buffer);
+        case ALG_NONE:
+        {
+            printf("Unrecognized argument '%s'.\n", argv[1]);
+            return EXIT_FAILURE;
+        }
+    }
+    
     return EXIT_SUCCESS;
 }

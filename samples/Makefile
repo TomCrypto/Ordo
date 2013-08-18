@@ -2,10 +2,12 @@ BINDIR = bin
 SRCDIR = src
 
 CC ?= gcc
-CFLAGS = -O2 -Wall -Wextra -std=c99
+CFLAGS = -O2 -Wall -Wextra -std=c89 -pedantic -pedantic-errors -Wno-unused-parameter
+CFLAGS += $(extra)
 
 CXX ?= g++
 CXXFLAGS = -O2 -Wall -Wextra
+CXXFLAGS += $(extra)
 
 ifeq ($(nopthread), 1)
 	LDFLAGS = 
@@ -14,7 +16,6 @@ else
 	LDFLAGS = -pthread
 endif
 
-# Decides whether to link to the Ordo shared library or not.
 ifeq ($(shared), 1)
 	ORDO_LIBNAME = libordo.so
 else

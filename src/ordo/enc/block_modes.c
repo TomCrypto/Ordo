@@ -119,27 +119,27 @@ static struct BLOCK_MODE block_modes[] =
     }
 };
 
-const struct BLOCK_MODE *ECB(void)
+const struct BLOCK_MODE *ecb(void)
 {
     return &block_modes[ECB_ID];
 }
 
-const struct BLOCK_MODE *CBC(void)
+const struct BLOCK_MODE *cbc(void)
 {
     return &block_modes[CBC_ID];
 }
 
-const struct BLOCK_MODE *CTR(void)
+const struct BLOCK_MODE *ctr(void)
 {
     return &block_modes[CTR_ID];
 }
 
-const struct BLOCK_MODE *CFB(void)
+const struct BLOCK_MODE *cfb(void)
 {
     return &block_modes[CFB_ID];
 }
 
-const struct BLOCK_MODE *OFB(void)
+const struct BLOCK_MODE *ofb(void)
 {
     return &block_modes[OFB_ID];
 }

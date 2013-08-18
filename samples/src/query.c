@@ -7,7 +7,7 @@
 
 #include "ordo.h"
 
-void prompt_user(char *prompt, char *buffer, size_t max_len)
+static void prompt_user(char *prompt, char *buffer, int max_len)
 {
     printf("%s", prompt);
     if (fgets(buffer, max_len, stdin))
@@ -40,12 +40,12 @@ int main()
         }
         else
         {
-            int pwd_len = strlen(pwd_s);
-            int key_len = block_cipher_query(cipher, KEY_LEN, pwd_len);
+            size_t pwd_len = strlen(pwd_s);
+            size_t key_len = block_cipher_query(cipher, KEY_LEN, pwd_len);
         
             printf("Password is %d bytes long. Conservatively, the best key"
                    "length to use for this cipher is... %d bits.\n",
-                   pwd_len, bytes(key_len));
+                   (int)pwd_len, (int)bytes(key_len));
         }
         
         return EXIT_SUCCESS;

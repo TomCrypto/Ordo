@@ -52,19 +52,19 @@ const char *block_mode_name(const struct BLOCK_MODE *mode);
 /******************************************************************************/
 
 /*! The ECB (Electronic CodeBook) block mode of operation. */
-const struct BLOCK_MODE *ECB(void);
+const struct BLOCK_MODE *ecb(void);
 
 /*! The CBC (Ciphertext Block Chaining) block mode of operation. */
-const struct BLOCK_MODE *CBC(void);
+const struct BLOCK_MODE *cbc(void);
 
 /*! The CTR (CounTeR) block mode of operation. */
-const struct BLOCK_MODE *CTR(void);
+const struct BLOCK_MODE *ctr(void);
 
 /*! The CFB (Cipher FeedBack) block mode of operation. */
-const struct BLOCK_MODE *CFB(void);
+const struct BLOCK_MODE *cfb(void);
 
 /*! The OFB (Output FeedBack) block mode of operation. */
-const struct BLOCK_MODE *OFB(void);
+const struct BLOCK_MODE *ofb(void);
 
 /******************************************************************************/
 
