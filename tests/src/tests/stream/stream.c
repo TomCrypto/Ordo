@@ -164,14 +164,14 @@ int test_stream_utilities(char *output, size_t maxlen, FILE *ext)
 
     for (t = 0; t < count; ++t)
     {
-        const struct STREAM_CIPHER *cipher = stream_cipher_by_id(t);
+        const struct STREAM_CIPHER *cipher = stream_cipher_by_index(t);
         if (!cipher)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
-            fail("Supposedly valid stream cipher ID is invalid.");
+            if (ext) fprintf(ext, "[!] Index %d rejected!\n\n", (int)t);
+            fail("Supposedly valid stream cipher index is invalid.");
         }
     }
 
-    if (ext) fprintf(ext, "[+] All stream cipher ID's reported valid.\n\n");
+    if (ext) fprintf(ext, "[+] All stream cipher indices are valid.\n\n");
     pass("Stream cipher library utilities.");
 }

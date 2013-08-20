@@ -21,7 +21,7 @@ int main()
 
     for (t = 0; t < block_cipher_count(); ++t)
     {
-        const struct BLOCK_CIPHER *cipher = block_cipher_by_id(t);
+        const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
         size_t key_len = block_cipher_query(cipher, KEY_LEN, 0);
 
         printf("Key lengths for %s:\n", block_cipher_name(cipher));

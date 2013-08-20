@@ -56,7 +56,7 @@ static void benchmark_usage(int argc, char * const argv[])
     count = hash_function_count();
     for (t = 0; t < count; ++t)
     {
-        printf("%s", hash_function_name(hash_function_by_id(t)));
+        printf("%s", hash_function_name(hash_function_by_index(t)));
         if (t != count - 1) printf(", "); else printf("\n");
     }
 
@@ -64,7 +64,7 @@ static void benchmark_usage(int argc, char * const argv[])
     count = stream_cipher_count();
     for (t = 0; t < count; ++t)
     {
-        printf("%s", stream_cipher_name(stream_cipher_by_id(t)));
+        printf("%s", stream_cipher_name(stream_cipher_by_index(t)));
         if (t != count - 1) printf(", "); else printf("\n");
     }
 
@@ -72,7 +72,7 @@ static void benchmark_usage(int argc, char * const argv[])
     count = block_cipher_count();
     for (t = 0; t < count; ++t)
     {
-        printf("%s", block_cipher_name(block_cipher_by_id(t)));
+        printf("%s", block_cipher_name(block_cipher_by_index(t)));
         if (t != count - 1) printf(", "); else printf("\n");
     }
 
@@ -80,7 +80,7 @@ static void benchmark_usage(int argc, char * const argv[])
     count = block_mode_count();
     for (t = 0; t < count; ++t)
     {
-        printf("%s", block_mode_name(block_mode_by_id(t)));
+        printf("%s", block_mode_name(block_mode_by_index(t)));
         if (t != count - 1) printf(", "); else printf("\n");
     }
 

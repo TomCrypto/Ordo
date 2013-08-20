@@ -212,14 +212,14 @@ int test_block_modes_utilities(char *output, size_t maxlen, FILE *ext)
 
     for (t = 0; t < count; ++t)
     {
-        const struct BLOCK_MODE *mode = block_mode_by_id(t);
+        const struct BLOCK_MODE *mode = block_mode_by_index(t);
         if (!mode)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
-            fail("Supposedly valid block mode ID is invalid.");
+            if (ext) fprintf(ext, "[!] Index %d rejected!\n\n", (int)t);
+            fail("Supposedly valid block mode index is invalid.");
         }
     }
 
-    if (ext) fprintf(ext, "[+] All block mode ID's reported valid.\n\n");
+    if (ext) fprintf(ext, "[+] All block mode indices are valid.\n\n");
     pass("Block mode library utilities.");
 }

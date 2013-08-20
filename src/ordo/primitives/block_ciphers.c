@@ -1,5 +1,7 @@
 #include "ordo/primitives/block_ciphers.h"
 
+#include "ordo/common/identification.h"
+
 #include <string.h>
 
 /******************************************************************************/
@@ -109,9 +111,20 @@ const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
     return 0;
 }
 
+const struct BLOCK_CIPHER *block_cipher_by_index(size_t index)
+{
+    return (index < block_cipher_count()) ? &primitives[index] : 0;
+}
+
 const struct BLOCK_CIPHER *block_cipher_by_id(size_t id)
 {
-    return (id < block_cipher_count()) ? &primitives[id] : 0;
+    switch (id)
+    {
+        case BLOCK_NULLCIPHER       : return &primitives[NULLCIPHER_ID];
+        case BLOCK_AES              : return &primitives[AES_ID];
+        case BLOCK_THREEFISH256     : return &primitives[THREEFISH256_ID];
+        default                     : return 0;
+    }
 }
 
 /******************************************************************************/

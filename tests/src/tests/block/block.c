@@ -255,14 +255,14 @@ int test_block_utilities(char *output, size_t maxlen, FILE *ext)
 
     for (t = 0; t < count; ++t)
     {
-        const struct BLOCK_CIPHER *cipher = block_cipher_by_id(t);
+        const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
         if (!cipher)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
-            fail("Supposedly valid block cipher ID is invalid.");
+            if (ext) fprintf(ext, "[!] Index %d rejected!\n\n", (int)t);
+            fail("Supposedly valid block cipher index is invalid.");
         }
     }
 
-    if (ext) fprintf(ext, "[+] All block cipher ID's reported valid.\n\n");
+    if (ext) fprintf(ext, "[+] All block cipher indices are valid.\n\n");
     pass("Block cipher library utilities.");
 }

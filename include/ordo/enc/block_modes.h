@@ -81,12 +81,19 @@ size_t block_mode_count(void);
 */
 const struct BLOCK_MODE *block_mode_by_name(const char* name);
 
-/*! Returns a block mode primitive from an ID.
- *  @param id A block mode ID.
+/*! Returns a block mode primitive from an index.
+ *  @param index A block mode index.
  *  @returns The corresponding block mode primitive, or nil if no such
  *           block mode exists.
  *  @remarks Use \c block_mode_count() to get an upper bound on
- *           block mode ID's.
+ *           block mode indices.
+*/
+const struct BLOCK_MODE *block_mode_by_index(size_t index);
+
+/*! Returns a block mode primitive from a primitive ID.
+ *  @param id A primitive ID.
+ *  @returns The corresponding block mode primitive, or nil if no such
+ *           block cipher exists.
 */
 const struct BLOCK_MODE *block_mode_by_id(size_t id);
 

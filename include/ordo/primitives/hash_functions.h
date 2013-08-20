@@ -53,12 +53,19 @@ size_t hash_function_count(void);
 */
 const struct HASH_FUNCTION *hash_function_by_name(const char *name);
 
-/*! Returns a hash function primitive from an ID.
- *  @param id A hash function ID.
+/*! Returns a hash function primitive from an index.
+ *  @param index A hash function index.
  *  @returns The corresponding hash function primitive, or nil if no such
  *           hash function exists.
  *  @remarks Use \c hash_function_count() to get an upper bound on
- *           hash function ID's.
+ *           hash function indices.
+*/
+const struct HASH_FUNCTION *hash_function_by_index(size_t index);
+
+/*! Returns a hash function primitive from a primitive ID.
+ *  @param id A primitive ID.
+ *  @returns The corresponding hash function primitive, or nil if no such
+ *           hash function exists.
 */
 const struct HASH_FUNCTION *hash_function_by_id(size_t id);
 

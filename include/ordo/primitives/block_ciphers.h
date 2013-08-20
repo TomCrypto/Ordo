@@ -53,12 +53,19 @@ size_t block_cipher_count(void);
 */
 const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
 
-/*! Returns a block cipher primitive from an ID.
- *  @param id A block cipher ID.
+/*! Returns a block cipher primitive from an index.
+ *  @param index A block cipher index.
  *  @returns The corresponding block cipher primitive, or nil if no such
  *           block cipher exists.
  *  @remarks Use \c block_cipher_count() to get an upper bound on
- *           block cipher ID's.
+ *           block cipher indices.
+*/
+const struct BLOCK_CIPHER *block_cipher_by_index(size_t index);
+
+/*! Returns a block cipher primitive from a primitive ID.
+ *  @param id A primitive ID.
+ *  @returns The corresponding block cipher primitive, or nil if no such
+ *           block cipher exists.
 */
 const struct BLOCK_CIPHER *block_cipher_by_id(size_t id);
 

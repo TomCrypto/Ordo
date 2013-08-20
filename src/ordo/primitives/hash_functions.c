@@ -1,5 +1,7 @@
 #include "ordo/primitives/hash_functions.h"
 
+#include "ordo/common/identification.h"
+
 #include <string.h>
 
 /******************************************************************************/
@@ -110,9 +112,20 @@ const struct HASH_FUNCTION *hash_function_by_name(const char *name)
     return 0;
 }
 
+const struct HASH_FUNCTION *hash_function_by_index(size_t index)
+{
+    return (index < hash_function_count()) ? &primitives[index] : 0;
+}
+
 const struct HASH_FUNCTION *hash_function_by_id(size_t id)
 {
-    return (id < hash_function_count()) ? &primitives[id] : 0;
+    switch (id)
+    {
+        case HASH_MD5               : return &primitives[MD5_ID];
+        case HASH_SHA256            : return &primitives[SHA256_ID];
+        case HASH_SKEIN256          : return &primitives[SKEIN256_ID];
+        default                     : return 0;
+    }
 }
 
 /******************************************************************************/

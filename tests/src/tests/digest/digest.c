@@ -248,14 +248,14 @@ int test_digest_utilities(char *output, size_t maxlen, FILE *ext)
 
     for (t = 0; t < count; ++t)
     {
-        const struct HASH_FUNCTION *hash = hash_function_by_id(t);
+        const struct HASH_FUNCTION *hash = hash_function_by_index(t);
         if (!hash)
         {
-            if (ext) fprintf(ext, "[!] Library rejected ID %d!\n\n", (int)t);
-            fail("Supposedly valid hash function ID is invalid.");
+            if (ext) fprintf(ext, "[!] Index %d rejected!\n\n", (int)t);
+            fail("Supposedly valid hash function index is invalid.");
         }
     }
 
-    if (ext) fprintf(ext, "[+] All hash function ID's reported valid.\n\n");
+    if (ext) fprintf(ext, "[+] All hash function indices are valid.\n\n");
     pass("Hash function library utilities.");
 }

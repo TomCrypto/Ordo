@@ -27,7 +27,7 @@ ORDO_LIBPATH = $(addprefix $(ORDO_LIBDIR), $(ORDO_LIBNAME))
 ORDO_INCLUDE = ../include/
 
 .PHONY: all
-all: md5sum benchmark external info query
+all: md5sum benchmark external info
 	
 
 .PHONY: md5sum
@@ -49,11 +49,6 @@ external:
 info:
 	@mkdir -p $(BINDIR)
 	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/info.c -o $(BINDIR)/info -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
-	
-.PHONY: query
-query:
-	@mkdir -p $(BINDIR)
-	$(CC) $(LDFLAGS) $(CFLAGS) $(SRCDIR)/query.c -o $(BINDIR)/query -I$(ORDO_INCLUDE) $(ORDO_LIBPATH)
 
 .PHONY: clean
 clean:

@@ -1,5 +1,7 @@
 #include "ordo/enc/block_modes.h"
 
+#include "ordo/common/identification.h"
+
 #include <string.h>
 
 /******************************************************************************/
@@ -60,7 +62,7 @@ struct BLOCK_MODE
 #include "ordo/enc/block_modes/cfb.h"
 #include "ordo/enc/block_modes/ofb.h"
 
-static struct BLOCK_MODE block_modes[] =
+static struct BLOCK_MODE primitives[] =
 {
     #define ECB_ID 0
     {
@@ -121,27 +123,27 @@ static struct BLOCK_MODE block_modes[] =
 
 const struct BLOCK_MODE *ecb(void)
 {
-    return &block_modes[ECB_ID];
+    return &primitives[ECB_ID];
 }
 
 const struct BLOCK_MODE *cbc(void)
 {
-    return &block_modes[CBC_ID];
+    return &primitives[CBC_ID];
 }
 
 const struct BLOCK_MODE *ctr(void)
 {
-    return &block_modes[CTR_ID];
+    return &primitives[CTR_ID];
 }
 
 const struct BLOCK_MODE *cfb(void)
 {
-    return &block_modes[CFB_ID];
+    return &primitives[CFB_ID];
 }
 
 const struct BLOCK_MODE *ofb(void)
 {
-    return &block_modes[OFB_ID];
+    return &primitives[OFB_ID];
 }
 
 /******************************************************************************/
@@ -155,7 +157,7 @@ const char *block_mode_name(const struct BLOCK_MODE *mode)
 
 size_t block_mode_count(void)
 {
-    return sizeof(block_modes) / sizeof(struct BLOCK_MODE);
+    return sizeof(primitives) / sizeof(struct BLOCK_MODE);
 }
 
 const struct BLOCK_MODE *block_mode_by_name(const char *name)
@@ -164,20 +166,33 @@ const struct BLOCK_MODE *block_mode_by_name(const char *name)
 
     for (t = 0; t < block_mode_count(); t++)
     {
-        size_t len = strlen(block_modes[t].name);
+        size_t len = strlen(primitives[t].name);
 
-        if (!strncmp(name, block_modes[t].name, len))
+        if (!strncmp(name, primitives[t].name, len))
         {
-            return &block_modes[t];
+            return &primitives[t];
         }
     }
 
     return 0;
 }
 
+const struct BLOCK_MODE *block_mode_by_index(size_t index)
+{
+    return (index < block_mode_count()) ? &primitives[index] : 0;
+}
+
 const struct BLOCK_MODE *block_mode_by_id(size_t id)
 {
-    return (id < block_mode_count()) ? &block_modes[id] : 0;
+    switch (id)
+    {
+        case BLOCK_MODE_ECB         : return &primitives[ECB_ID];
+        case BLOCK_MODE_CBC         : return &primitives[CBC_ID];
+        case BLOCK_MODE_CTR         : return &primitives[CTR_ID];
+        case BLOCK_MODE_CFB         : return &primitives[CFB_ID];
+        case BLOCK_MODE_OFB         : return &primitives[OFB_ID];
+        default                     : return 0;
+    }
 }
 
 /******************************************************************************/

@@ -47,12 +47,19 @@ size_t stream_cipher_count(void);
 */
 const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
 
-/*! Returns a stream cipher primitive from an ID.
- *  @param id A stream cipher ID.
+/*! Returns a stream cipher primitive from an index.
+ *  @param index A stream cipher index.
  *  @returns The corresponding stream cipher primitive, or nil if no such
  *           stream cipher exists.
  *  @remarks Use \c stream_cipher_count() to get an upper bound on
- *           stream cipher ID's.
+ *           stream cipher indices.
+*/
+const struct STREAM_CIPHER *stream_cipher_by_index(size_t index);
+
+/*! Returns a stream cipher primitive from a primitive ID.
+ *  @param id A primitive ID.
+ *  @returns The corresponding stream cipher primitive, or nil if no such
+ *           stream cipher exists.
 */
 const struct STREAM_CIPHER *stream_cipher_by_id(size_t id);
 

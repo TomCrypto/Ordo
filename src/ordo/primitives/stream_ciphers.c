@@ -1,5 +1,7 @@
 #include "ordo/primitives/stream_ciphers.h"
 
+#include "ordo/common/identification.h"
+
 #include <string.h>
 
 /******************************************************************************/
@@ -73,9 +75,18 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
     return 0;
 }
 
+const struct STREAM_CIPHER *stream_cipher_by_index(size_t index)
+{
+    return (index < stream_cipher_count()) ? &primitives[index] : 0;
+}
+
 const struct STREAM_CIPHER *stream_cipher_by_id(size_t id)
 {
-    return (id < stream_cipher_count()) ? &primitives[id] : 0;
+    switch (id)
+    {
+        case STREAM_RC4             : return &primitives[RC4_ID];
+        default                     : return 0;
+    }
 }
 
 /******************************************************************************/

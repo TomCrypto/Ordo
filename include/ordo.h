@@ -1,11 +1,13 @@
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
+#include "ordo/common/identification.h"
 #include "ordo/common/version.h"
 #include "ordo/common/utils.h"
 
 #include "ordo/enc/enc_stream.h"
 #include "ordo/enc/enc_block.h"
+#include "ordo/digest/digest.h"
 
 #include "ordo/kdf/pbkdf2.h"
 #include "ordo/auth/hmac.h"
