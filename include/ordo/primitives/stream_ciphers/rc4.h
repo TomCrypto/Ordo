@@ -1,6 +1,8 @@
 #ifndef ORDO_RC4_H
 #define ORDO_RC4_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/stream_ciphers/stream_params.h"
 
 /******************************************************************************/
@@ -26,7 +28,8 @@ extern "C" {
 struct RC4_STATE;
 
 /*! @see \c stream_cipher_alloc() */
-struct RC4_STATE *rc4_alloc(void);
+ORDO_API struct RC4_STATE * ORDO_CALLCONV
+rc4_alloc(void);
 
 /*! @see \c stream_cipher_init()
  *  @retval #ORDO_KEY_LEN if the key length was less than 40 bits (5 bytes) or
@@ -34,23 +37,28 @@ struct RC4_STATE *rc4_alloc(void);
  *  @remarks The number of keystream bytes to drop can be set via the \c params
  *           argument, see \c RC4_PARAMS. By default, 2048 bytes are dropped.
 */
-int rc4_init(struct RC4_STATE *state,
-             const uint8_t *key, size_t key_len,
-             const struct RC4_PARAMS *params);
+ORDO_API int ORDO_CALLCONV
+rc4_init(struct RC4_STATE *state,
+         const uint8_t *key, size_t key_len,
+         const struct RC4_PARAMS *params);
 
 /*! @see \c stream_cipher_update() */
-void rc4_update(struct RC4_STATE *state,
-                uint8_t *buffer, size_t len);
+ORDO_API void ORDO_CALLCONV
+rc4_update(struct RC4_STATE *state,
+           uint8_t *buffer, size_t len);
 
 /*! @see \c stream_cipher_free() */
-void rc4_free(struct RC4_STATE *state);
+ORDO_API void ORDO_CALLCONV
+rc4_free(struct RC4_STATE *state);
 
 /*! @see \c stream_cipher_copy() */
-void rc4_copy(struct RC4_STATE *dst,
-              const struct RC4_STATE *src);
+ORDO_API void ORDO_CALLCONV
+rc4_copy(struct RC4_STATE *dst,
+         const struct RC4_STATE *src);
 
 /*! @see \c stream_cipher_query() */
-size_t rc4_query(int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+rc4_query(int query, size_t value);
 
 #ifdef __cplusplus
 }

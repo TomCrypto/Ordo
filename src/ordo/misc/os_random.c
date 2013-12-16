@@ -13,7 +13,8 @@
 
 #include <stdio.h>
 
-int os_random(void *buffer, size_t size)
+int ORDO_CALLCONV
+os_random(void *buffer, size_t size)
 {
     FILE* f = fopen("/dev/urandom", "r");
     if (!f) return ORDO_FAIL;
@@ -39,9 +40,10 @@ int os_random(void *buffer, size_t size)
 #elif defined(PLATFORM_WINDOWS)
 
 #include <windows.h>
-#include <Wincrypt.h>
+#include <wincrypt.h>
 
-int os_random(void *buffer, size_t size)
+int ORDO_CALLCONV
+os_random(void *buffer, size_t size)
 {
     /* Acquire a CSP token. */
     HCRYPTPROV hProv;

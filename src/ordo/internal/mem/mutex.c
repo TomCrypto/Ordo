@@ -1,5 +1,7 @@
 #include "ordo/internal/mem/mutex.h"
 
+#if !defined(ORDO_DISABLE_POOL)
+
 #include "ordo/internal/environment.h"
 
 /******************************************************************************/
@@ -15,23 +17,27 @@
  * as it doesn't incur a kernel call (we don't care about inter-process). */
 static CRITICAL_SECTION mutex;
 
-int mutex_init(void)
+int ORDO_CALLCONV
+mutex_init(void)
 {
     InitializeCriticalSection(&mutex);
     return 0;
 }
 
-void mutex_acquire(void)
+void ORDO_CALLCONV
+mutex_acquire(void)
 {
     EnterCriticalSection(&mutex);
 }
 
-void mutex_release(void)
+void ORDO_CALLCONV
+mutex_release(void)
 {
     LeaveCriticalSection(&mutex);
 }
 
-void mutex_free(void)
+void ORDO_CALLCONV
+mutex_free(void)
 {
     DeleteCriticalSection(&mutex);
 }
@@ -42,22 +48,26 @@ void mutex_free(void)
 
 static pthread_mutex_t mutex;
 
-int mutex_init(void)
+int ORDO_CALLCONV
+mutex_init(void)
 {
     return pthread_mutex_init(&mutex, 0);
 }
 
-void mutex_acquire(void)
+void ORDO_CALLCONV
+mutex_acquire(void)
 {
     pthread_mutex_lock(&mutex);
 }
 
-void mutex_release(void)
+void ORDO_CALLCONV
+mutex_release(void)
 {
     pthread_mutex_unlock(&mutex);
 }
 
-void mutex_free(void)
+void ORDO_CALLCONV
+mutex_free(void)
 {
     pthread_mutex_destroy(&mutex);
 }
@@ -65,5 +75,7 @@ void mutex_free(void)
 #else
 
 #error No mutex implementation for this platform!
+
+#endif
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef ORDO_ENC_BLOCK_H
 #define ORDO_ENC_BLOCK_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/enc/block_modes.h"
 
 /******************************************************************************/
@@ -37,8 +39,9 @@ struct ENC_BLOCK_CTX;
  @return Returns the allocated block encryption context, or nil if an
          allocation error occurred.
 */
-struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER *cipher,
-                                      const struct BLOCK_MODE *mode);
+ORDO_API struct ENC_BLOCK_CTX * ORDO_CALLCONV
+enc_block_alloc(const struct BLOCK_CIPHER *cipher,
+                const struct BLOCK_MODE *mode);
 
 /*! Initializes a block encryption context.
  @param ctx An allocated block encryption context.
@@ -54,12 +57,13 @@ struct ENC_BLOCK_CTX* enc_block_alloc(const struct BLOCK_CIPHER *cipher,
           does not require one; consult the documentation of the mode of
           operation to find out what it expects.
 */
-int enc_block_init(struct ENC_BLOCK_CTX* ctx,
-                   const void *key, size_t key_len,
-                   const void *iv, size_t iv_len,
-                   int direction,
-                   const void *cipher_params,
-                   const void *mode_params);
+ORDO_API int ORDO_CALLCONV
+enc_block_init(struct ENC_BLOCK_CTX* ctx,
+               const void *key, size_t key_len,
+               const void *iv, size_t iv_len,
+               int direction,
+               const void *cipher_params,
+               const void *mode_params);
 
 /*! Encrypts or decrypts a data buffer.
  @param ctx An initialized block encryption context.
@@ -77,9 +81,10 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx,
           case they may allow \c out_len to be nil; check the documentation
           of the relevant mode of operation.
 */
-void enc_block_update(struct ENC_BLOCK_CTX *ctx,
-                      const void *in, size_t in_len,
-                      void *out, size_t *out_len);
+ORDO_API void ORDO_CALLCONV
+enc_block_update(struct ENC_BLOCK_CTX *ctx,
+                 const void *in, size_t in_len,
+                 void *out, size_t *out_len);
 
 /*! Finalizes a block encryption context, returning any remaining plaintext
     or ciphertext.
@@ -97,14 +102,16 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
           case they may allow \c out_len to be nil; check the documentation
           of the relevant mode of operation.
 */
-int enc_block_final(struct ENC_BLOCK_CTX *ctx,
-                    void *out, size_t *out_len);
+ORDO_API int ORDO_CALLCONV
+enc_block_final(struct ENC_BLOCK_CTX *ctx,
+                void *out, size_t *out_len);
 
 /*! Frees a block encryption context.
  @param ctx A block encryption context.
  @remarks The context need not have been initialized.
 */
-void enc_block_free(struct ENC_BLOCK_CTX *ctx);
+ORDO_API void ORDO_CALLCONV
+enc_block_free(struct ENC_BLOCK_CTX *ctx);
 
 /*! Performs a deep copy of one context into another.
  @param dst The destination context.
@@ -114,15 +121,18 @@ void enc_block_free(struct ENC_BLOCK_CTX *ctx);
           parameter documentation states otherwise) else the function's
           behavior is undefined.
 */
-void enc_block_copy(struct ENC_BLOCK_CTX *dst,
-                    const struct ENC_BLOCK_CTX *src);
-                    
-size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
-                         size_t key_len);
+ORDO_API void ORDO_CALLCONV
+enc_block_copy(struct ENC_BLOCK_CTX *dst,
+               const struct ENC_BLOCK_CTX *src);
 
-size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
-                        const struct BLOCK_MODE *mode,
-                        size_t iv_len);
+ORDO_API size_t ORDO_CALLCONV     
+enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+                  size_t key_len);
+
+ORDO_API size_t ORDO_CALLCONV
+enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
+                 const struct BLOCK_MODE *mode,
+                 size_t iv_len);
 
 #ifdef __cplusplus
 }

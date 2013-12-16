@@ -1,6 +1,8 @@
 #ifndef ORDO_OS_RANDOM_H
 #define ORDO_OS_RANDOM_H
 
+#include "ordo/internal/api.h"
+
 /*! @cond */
 #include <stdlib.h>
 /*! @endcond */
@@ -35,7 +37,8 @@ extern "C" {
  *  @remarks If the platform does not provide this feature, this function will
  *           always fail with \c #ORDO_FAIL.
 */
-int os_random(void *out, size_t len);
+ORDO_API int ORDO_CALLCONV
+os_random(void *out, size_t len);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,8 @@
 #ifndef ORDO_ECB_MODE_H
 #define ORDO_ECB_MODE_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/enc/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
 
@@ -30,43 +32,50 @@ extern "C" {
 struct ECB_STATE;
 
 /*! @see \c block_mode_alloc() */
-struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
-                            void *cipher_state);
+ORDO_API struct ECB_STATE * ORDO_CALLCONV
+ecb_alloc(const struct BLOCK_CIPHER *cipher,
+          void *cipher_state);
 
 /*! @see \c block_mode_init() */
-int ecb_init(struct ECB_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             void *cipher_state,
-             const void *iv, size_t iv_len,
-             int dir,
-             const struct ECB_PARAMS *params);
+ORDO_API int ORDO_CALLCONV
+ecb_init(struct ECB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv, size_t iv_len,
+         int dir,
+         const struct ECB_PARAMS *params);
 
 /*! @see \c block_mode_update() */
-void ecb_update(struct ECB_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                void *cipher_state,
-                const unsigned char *in, size_t in_len,
-                unsigned char *out, size_t *out_len);
+ORDO_API void ORDO_CALLCONV
+ecb_update(struct ECB_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in, size_t in_len,
+           unsigned char *out, size_t *out_len);
 
 /*! @see \c block_mode_final() */
-int ecb_final(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state,
-              unsigned char *out, size_t *out_len);
+ORDO_API int ORDO_CALLCONV
+ecb_final(struct ECB_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out, size_t *out_len);
 
 /*! @see \c block_mode_free() */
-void ecb_free(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state);
+ORDO_API void ORDO_CALLCONV
+ecb_free(struct ECB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state);
 
 /*! @see \c block_mode_copy() */
-void ecb_copy(struct ECB_STATE *dst,
-              const struct ECB_STATE *src,
-              const struct BLOCK_CIPHER *cipher);
+ORDO_API void ORDO_CALLCONV
+ecb_copy(struct ECB_STATE *dst,
+         const struct ECB_STATE *src,
+         const struct BLOCK_CIPHER *cipher);
 
 /*! @see \c block_mode_query() */
-size_t ecb_query(const struct BLOCK_CIPHER *cipher,
-                 int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+ecb_query(const struct BLOCK_CIPHER *cipher,
+          int query, size_t value);
 
 #ifdef __cplusplus
 }

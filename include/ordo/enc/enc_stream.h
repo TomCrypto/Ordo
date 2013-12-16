@@ -1,6 +1,8 @@
 #ifndef ORDO_ENC_STREAM_H
 #define ORDO_ENC_STREAM_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/stream_ciphers.h"
 
 /******************************************************************************/
@@ -23,7 +25,8 @@ struct ENC_STREAM_CTX;
  @return Returns the allocated stream encryption context, or nil if an
          allocation error occurred.
 */
-struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher);
+ORDO_API struct ENC_STREAM_CTX * ORDO_CALLCONV
+enc_stream_alloc(const struct STREAM_CIPHER *cipher);
 
 /*! Initializes a stream encryption context.
  @param ctx An allocated stream encryption context.
@@ -32,10 +35,11 @@ struct ENC_STREAM_CTX* enc_stream_alloc(const struct STREAM_CIPHER *cipher);
  @param params Stream cipher specific parameters.
  @return Returns \c #ORDO_SUCCESS on success, or an error code.
 */
-int enc_stream_init(struct ENC_STREAM_CTX *ctx,
-                    const void *key,
-                    size_t key_size,
-                    const void *params);
+ORDO_API int ORDO_CALLCONV
+enc_stream_init(struct ENC_STREAM_CTX *ctx,
+                const void *key,
+                size_t key_size,
+                const void *params);
 
 /*! Encrypts or decrypts a data buffer.
  @param ctx An initialized stream encryption context.
@@ -46,15 +50,17 @@ int enc_stream_init(struct ENC_STREAM_CTX *ctx,
           original data.
  @remarks Stream encryption is always done in place by design.
 */
-void enc_stream_update(struct ENC_STREAM_CTX *ctx,
-                       void *buffer,
-                       size_t len);
+ORDO_API void ORDO_CALLCONV
+enc_stream_update(struct ENC_STREAM_CTX *ctx,
+                  void *buffer,
+                  size_t len);
 
 /*! Frees a stream encryption context.
  @param ctx A stream encryption context.
  @remarks The context need not have been initialized.
 */
-void enc_stream_free(struct ENC_STREAM_CTX *ctx);
+ORDO_API void ORDO_CALLCONV
+enc_stream_free(struct ENC_STREAM_CTX *ctx);
 
 /*! Performs a deep copy of one context into another.
  @param dst The destination context.
@@ -63,8 +69,9 @@ void enc_stream_free(struct ENC_STREAM_CTX *ctx);
           and the exact same parameters (unless the parameter documentation
           states otherwise) else the function's behavior is undefined.
 */
-void enc_stream_copy(struct ENC_STREAM_CTX *dst,
-                     const struct ENC_STREAM_CTX *src);
+ORDO_API void ORDO_CALLCONV
+enc_stream_copy(struct ENC_STREAM_CTX *dst,
+                const struct ENC_STREAM_CTX *src);
 
 /*! Probes a stream cipher for its key length.
  @param cipher The stream cipher to probe.
@@ -75,8 +82,9 @@ void enc_stream_copy(struct ENC_STREAM_CTX *dst,
           exists, it will return the largest key length admitted by the
           stream cipher.
 */
-size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
-                          size_t key_len);
+ORDO_API size_t ORDO_CALLCONV
+enc_stream_key_len(const struct STREAM_CIPHER *cipher,
+                   size_t key_len);
 
 #ifdef __cplusplus
 }

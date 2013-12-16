@@ -29,6 +29,7 @@ extern "C" {
      * provide endianness functions, you gotta do it all yourself. */
     #define __LITTLE_ENDIAN 1234
     #define __BYTE_ORDER __LITTLE_ENDIAN
+    #define ORDO_BUILTIN_SWAP
 #elif defined(PLATFORM_LINUX)
     /* For Linux, endian.h *must* provide the correct definitions. */
     #include <sys/types.h>
@@ -39,106 +40,54 @@ extern "C" {
     #include <sys/endian.h>
 #endif
 
-/* Define generic byte swapping macros if they are not already provided. */
+#if defined(ORDO_BUILTIN_SWAP)
 
-#ifndef __bswap_16
-    #define __bswap_16(x) (((x) << 8) & 0xff00) | (((x) >> 8 ) & 0xff)
-#endif
+    #define __bswap_16(x) ((((x) << 8) & 0xff00) \
+                         | (((x) >> 8 ) & 0xff))
 
-#ifndef __bswap_32
-    #define __bswap_32(x) (((x) << 24) & 0xff000000)  \
-                        | (((x) << 8) & 0xff0000)   \
-                        | (((x) >> 8) & 0xff00)     \
-                        | (((x) >> 24) & 0xff )
-#endif
+    #define __bswap_32(x) ((((x) << 24) & 0xff000000) \
+                         | (((x) << 8) & 0xff0000)    \
+                         | (((x) >> 8) & 0xff00)      \
+                         | (((x) >> 24) & 0xff))
 
-#ifndef __bswap_64
-    #define __bswap_64(x) ((((x) & (uint64_t)0xff00000000000000ull) >> 56) \
-                        | (((x) & (uint64_t)0x00ff000000000000ull) >> 40) \
-                        | (((x) & (uint64_t)0x0000ff0000000000ull) >> 24) \
-                        | (((x) & (uint64_t)0x000000ff00000000ull) >> 8) \
-                        | (((x) & (uint64_t)0x00000000ff000000ull) << 8) \
-                        | (((x) & (uint64_t)0x0000000000ff0000ull) << 24) \
-                        | (((x) & (uint64_t)0x000000000000ff00ull) << 40) \
-                        | (((x) & (uint64_t)0x00000000000000ffull) << 56))
-#endif
+    #define __bswap_64(x) ((((x) & (uint64_t)0xff00000000000000ULL) >> 56) \
+                         | (((x) & (uint64_t)0x00ff000000000000ULL) >> 40) \
+                         | (((x) & (uint64_t)0x0000ff0000000000ULL) >> 24) \
+                         | (((x) & (uint64_t)0x000000ff00000000ULL) >> 8)  \
+                         | (((x) & (uint64_t)0x00000000ff000000ULL) << 8)  \
+                         | (((x) & (uint64_t)0x0000000000ff0000ULL) << 24) \
+                         | (((x) & (uint64_t)0x000000000000ff00ULL) << 40) \
+                         | (((x) & (uint64_t)0x00000000000000ffULL) << 56))
 
-/* Endianness helpers: HOST -> BIG-ENDIAN. */
-
-#ifndef htobe16
     #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe16(x) (__bswap_16(x))
-    #else
-        #define htobe16(x) (x)
-    #endif
-#endif
-
-#ifndef htobe32
-    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe32(x) (__bswap_32(x))
-    #else
-        #define htobe32(x) (x)
-    #endif
-#endif
-
-#ifndef htobe64
-    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htobe64(x) (__bswap_64(x))
-    #else
-        #define htobe64(x) (x)
-    #endif
-#endif
-
-/* Endianness helpers: HOST -> LITTLE-ENDIAN. */
-
-#ifndef htole16
-    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
         #define htole16(x) (x)
+        #define htole32(x) (x)
+        #define htole64(x) (x)
+        
+        #define be16toh(x) (__bswap_16(x))
+        #define be32toh(x) (__bswap_32(x))
+        #define be64toh(x) (__bswap_64(x))
+        #define le16toh(x) (x)
+        #define le32toh(x) (x)
+        #define le64toh(x) (x)
     #else
         #define htole16(x) (__bswap_16(x))
-    #endif
-#endif
-
-#ifndef htole32
-    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
-        #define htole32(x) (x)
-    #else
         #define htole32(x) (__bswap_32(x))
-    #endif
-#endif
-
-#ifndef htole64
-    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
-        #define htole64(x) (x)
-    #else
         #define htole64(x) (__bswap_64(x))
+        #define htobe16(x) (x)
+        #define htobe32(x) (x)
+        #define htobe64(x) (x)
+        
+        #define le16toh(x) (__bswap_16(x))
+        #define le32toh(x) (__bswap_32(x))
+        #define le64toh(x) (__bswap_64(x))
+        #define be16toh(x) (x)
+        #define be32toh(x) (x)
+        #define be64toh(x) (x)
     #endif
-#endif
-
-/* Little/big endian to host helpers. */
-
-#ifndef be16toh
-    #define be16toh htobe16
-#endif
-
-#ifndef be32toh
-    #define be32toh htobe32
-#endif
-
-#ifndef be64toh
-    #define be64toh htobe64
-#endif
-
-#ifndef le16toh
-    #define le16toh htole16
-#endif
-
-#ifndef le32toh
-    #define le32toh htole32
-#endif
-
-#ifndef le64toh
-    #define le64toh htole64
 #endif
 
 #ifdef __cplusplus

@@ -6,13 +6,20 @@
 
 /******************************************************************************/
 
-typedef void  *(*HASH_ALLOC)  (void                        );
-typedef  int   (*HASH_INIT)   (void *, const void *        );
-typedef void   (*HASH_UPDATE) (void *, const void *, size_t);
-typedef void   (*HASH_FINAL)  (void *, void *              );
-typedef void   (*HASH_FREE)   (void *                      );
-typedef void   (*HASH_COPY)   (void *, const void *        );
-typedef size_t (*HASH_QUERY)  (int, size_t                 );
+typedef void  *(ORDO_CALLCONV *HASH_ALLOC)
+    (void);
+typedef  int   (ORDO_CALLCONV *HASH_INIT)
+    (void *, const void *);
+typedef void   (ORDO_CALLCONV *HASH_UPDATE)
+    (void *, const void *, size_t);
+typedef void   (ORDO_CALLCONV *HASH_FINAL)
+    (void *, void *);
+typedef void   (ORDO_CALLCONV *HASH_FREE)
+    (void *);
+typedef void   (ORDO_CALLCONV *HASH_COPY)
+    (void *, const void *);
+typedef size_t (ORDO_CALLCONV *HASH_QUERY)
+    (int, size_t);
 
 struct HASH_FUNCTION
 {
@@ -28,7 +35,8 @@ struct HASH_FUNCTION
 
 /******************************************************************************/
 
-const char *hash_function_name(const struct HASH_FUNCTION *primitive)
+const char * ORDO_CALLCONV
+hash_function_name(const struct HASH_FUNCTION *primitive)
 {
     return primitive->name;
 }
@@ -76,29 +84,34 @@ static struct HASH_FUNCTION primitives[] =
     }
 };
 
-const struct HASH_FUNCTION *sha256(void)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+sha256(void)
 {
     return &primitives[SHA256_ID];
 }
 
-const struct HASH_FUNCTION *md5(void)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+md5(void)
 {
     return &primitives[MD5_ID];
 }
 
-const struct HASH_FUNCTION *skein256(void)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+skein256(void)
 {
     return &primitives[SKEIN256_ID];
 }
 
 /******************************************************************************/
 
-size_t hash_function_count(void)
+size_t ORDO_CALLCONV
+hash_function_count(void)
 {
     return sizeof(primitives) / sizeof(struct HASH_FUNCTION);
 }
 
-const struct HASH_FUNCTION *hash_function_by_name(const char *name)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+hash_function_by_name(const char *name)
 {
     size_t t;
 
@@ -112,12 +125,14 @@ const struct HASH_FUNCTION *hash_function_by_name(const char *name)
     return 0;
 }
 
-const struct HASH_FUNCTION *hash_function_by_index(size_t index)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+hash_function_by_index(size_t index)
 {
     return (index < hash_function_count()) ? &primitives[index] : 0;
 }
 
-const struct HASH_FUNCTION *hash_function_by_id(size_t id)
+const struct HASH_FUNCTION * ORDO_CALLCONV
+hash_function_by_id(size_t id)
 {
     switch (id)
     {
@@ -130,48 +145,55 @@ const struct HASH_FUNCTION *hash_function_by_id(size_t id)
 
 /******************************************************************************/
 
-void *hash_function_alloc(const struct HASH_FUNCTION *primitive)
+void * ORDO_CALLCONV
+hash_function_alloc(const struct HASH_FUNCTION *primitive)
 {
     return primitive->alloc();
 }
 
-int hash_function_init(const struct HASH_FUNCTION *primitive,
-                       void *state,
-                       const void *params)
+int ORDO_CALLCONV
+hash_function_init(const struct HASH_FUNCTION *primitive,
+                   void *state,
+                   const void *params)
 {
     return primitive->init(state, params);
 }
 
-void hash_function_update(const struct HASH_FUNCTION *primitive,
-                          void *state,
-                          const void *buffer,
-                          size_t len)
+void ORDO_CALLCONV
+hash_function_update(const struct HASH_FUNCTION *primitive,
+                     void *state,
+                     const void *buffer,
+                     size_t len)
 {
     primitive->update(state, buffer, len);
 }
 
-void hash_function_final(const struct HASH_FUNCTION *primitive,
-                         void *state,
-                         void *digest)
+void ORDO_CALLCONV
+hash_function_final(const struct HASH_FUNCTION *primitive,
+                    void *state,
+                    void *digest)
 {
     primitive->final(state, digest);
 }
 
-void hash_function_free(const struct HASH_FUNCTION *primitive,
-                        void *state)
+void ORDO_CALLCONV
+hash_function_free(const struct HASH_FUNCTION *primitive,
+                   void *state)
 {
     primitive->free(state);
 }
 
-void hash_function_copy(const struct HASH_FUNCTION *primitive,
-                        void *dst,
-                        const void *src)
+void ORDO_CALLCONV
+hash_function_copy(const struct HASH_FUNCTION *primitive,
+                   void *dst,
+                   const void *src)
 {
     primitive->copy(dst, src);
 }
 
-size_t hash_function_query(const struct HASH_FUNCTION *primitive,
-                           int query, size_t value)
+size_t ORDO_CALLCONV
+hash_function_query(const struct HASH_FUNCTION *primitive,
+                    int query, size_t value)
 {
     return primitive->query(query, value);
 }

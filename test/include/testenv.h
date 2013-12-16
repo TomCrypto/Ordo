@@ -35,11 +35,16 @@ size_t test_count(void);
 /* Registers all tests known to the test framework. */
 int register_all_tests(void);
 
+/* Obviously MSVC has to be all special and different, as usual. */
+#if _MSC_VER
+	#define snprintf(fd, l, s, ...) sprintf_s(fd, l, s, __VA_ARGS__)
+#endif
+
 /* These are helpful macros to fail or pass tests. They assume the output
  * buffer is declared as "output", with maximum length "maxlen", as it is
  * by default. They only work with plain unformatted output strings. */
-#define pass(str) { snprintf(output, maxlen, str); return 1; }
-#define fail(str) { snprintf(output, maxlen, str); return 0; }
+#define pass(str) { snprintf(output, maxlen, "%s", str); return 1; }
+#define fail(str) { snprintf(output, maxlen, "%s", str); return 0; }
 
 /* This will just return a random integer between 0 and N - 1. Note this is
  * biased but should be good enough for tests which just need to cover some

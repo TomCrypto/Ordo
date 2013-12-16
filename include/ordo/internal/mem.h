@@ -5,6 +5,8 @@
 #include <stdlib.h>
 /*! @endcond */
 
+#include "ordo/internal/api.h"
+
 /******************************************************************************/
 
 /*!
@@ -27,8 +29,8 @@
 extern "C" {
 #endif
 
-typedef void *(* MEM_ALLOC)(size_t);
-typedef void  (* MEM_FREE)(void*);
+typedef void *(ORDO_CALLCONV *MEM_ALLOC)(size_t);
+typedef void  (ORDO_CALLCONV *MEM_FREE)(void*);
 
 /*! Allocates a memory buffer.
  *  @param size The amount of memory to allocate, in bytes.
@@ -42,7 +44,8 @@ typedef void  (* MEM_FREE)(void*);
  *           it will be aligned to a 32-byte boundary).
  *  @remarks This function is thread-safe.
 */
-void *mem_alloc(size_t size);
+ORDO_API void * ORDO_CALLCONV
+mem_alloc(size_t size);
 
 /*! Deallocates a memory buffer.
  *  @param ptr A memory buffer to free.
@@ -52,13 +55,15 @@ void *mem_alloc(size_t size);
  *           sensitive data lingers in memory.
  *  @remarks This function is thread-safe.
 */
-void mem_free(void *ptr);
+ORDO_API void ORDO_CALLCONV
+mem_free(void *ptr);
 
 /*! Overwrites a memory buffer with zeroes.
  *  @param ptr The memory buffer to overwrite.
  *  @param size The number of bytes to overwrite.
 */
-void mem_erase(void *ptr, size_t size);
+ORDO_API void ORDO_CALLCONV
+mem_erase(void *ptr, size_t size);
 
 /*! Initializes the default memory allocator.
  *  @return Returns 0 on success, and any other value on error.
@@ -70,7 +75,8 @@ void mem_erase(void *ptr, size_t size);
              the host program terminates (this will not interfere with custom
              allocators).
 */
-int mem_init(void);
+ORDO_API int ORDO_CALLCONV
+mem_init(void);
 
 /*! Replaces the default memory allocator with a custom one.
  *  @param alloc The allocation function.
@@ -88,7 +94,8 @@ int mem_init(void);
  *           when using a custom allocator (in other words, you are on your
  *           own).
 */
-void mem_allocator(MEM_ALLOC alloc, MEM_FREE free);
+ORDO_API void ORDO_CALLCONV
+mem_allocator(MEM_ALLOC alloc, MEM_FREE free);
 
 #ifdef __cplusplus
 }

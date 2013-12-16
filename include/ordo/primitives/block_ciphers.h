@@ -1,6 +1,8 @@
 #ifndef ORDO_BLOCK_CIPHERS_H
 #define ORDO_BLOCK_CIPHERS_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/block_ciphers/block_params.h"
 
 /******************************************************************************/
@@ -25,18 +27,22 @@ struct BLOCK_CIPHER;
  *  @returns Returns the block cipher's name.
  *  @remarks This name can then be used in \c block_cipher_by_name().
 */
-const char *block_cipher_name(const struct BLOCK_CIPHER *primitive);
+ORDO_API const char * ORDO_CALLCONV
+block_cipher_name(const struct BLOCK_CIPHER *primitive);
 
 /******************************************************************************/
 
 /*! The NullCipher block cipher. */
-const struct BLOCK_CIPHER *nullcipher(void);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+nullcipher(void);
 
 /*! The Threefish-256 block cipher. */
-const struct BLOCK_CIPHER *threefish256(void);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+threefish256(void);
 
 /*! The AES block cipher. */
-const struct BLOCK_CIPHER *aes(void);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+aes(void);
 
 /******************************************************************************/
 
@@ -44,14 +50,16 @@ const struct BLOCK_CIPHER *aes(void);
  *  @returns The number of available block ciphers (at least one).
  *  @remarks This is for use in enumerating block cipher ID's.
 */
-size_t block_cipher_count(void);
+ORDO_API size_t ORDO_CALLCONV
+block_cipher_count(void);
 
 /*! Returns a block cipher primitive from a name.
  *  @param name A block cipher name.
  *  @returns The corresponding block cipher primitive, or nil if no such
  *           block cipher exists.
 */
-const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_name(const char *name);
 
 /*! Returns a block cipher primitive from an index.
  *  @param index A block cipher index.
@@ -60,14 +68,16 @@ const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
  *  @remarks Use \c block_cipher_count() to get an upper bound on
  *           block cipher indices.
 */
-const struct BLOCK_CIPHER *block_cipher_by_index(size_t index);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_index(size_t index);
 
 /*! Returns a block cipher primitive from a primitive ID.
  *  @param id A primitive ID.
  *  @returns The corresponding block cipher primitive, or nil if no such
  *           block cipher exists.
 */
-const struct BLOCK_CIPHER *block_cipher_by_id(size_t id);
+ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_id(size_t id);
 
 /******************************************************************************/
 
@@ -75,7 +85,8 @@ const struct BLOCK_CIPHER *block_cipher_by_id(size_t id);
  *  @param primitive A block cipher primitive.
  *  @returns Returns an allocated block cipher state, or nil on error.
 */
-void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive);
+ORDO_API void * ORDO_CALLCONV
+block_cipher_alloc(const struct BLOCK_CIPHER *primitive);
 
 /*! Initializes a block cipher state.
  *  @param primitive A block cipher primitive.
@@ -85,11 +96,12 @@ void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive);
  *  @param params Block cipher specific parameters.
  *  @returns Returns \c #ORDO_SUCCESS on success, or an error code.
 */
-int block_cipher_init(const struct BLOCK_CIPHER *primitive,
-                      void *state,
-                      const void *key,
-                      size_t key_len,
-                      const void *params);
+ORDO_API int ORDO_CALLCONV
+block_cipher_init(const struct BLOCK_CIPHER *primitive,
+                  void *state,
+                  const void *key,
+                  size_t key_len,
+                  const void *params);
 
 /*! Applies a block cipher's forward permutation.
  *  @param primitive A block cipher primitive.
@@ -98,9 +110,10 @@ int block_cipher_init(const struct BLOCK_CIPHER *primitive,
  *  @remarks The block should be the size of the block cipher's
  *           block size.
 */
-void block_cipher_forward(const struct BLOCK_CIPHER *primitive,
-                          void *state,
-                          void *block);
+ORDO_API void ORDO_CALLCONV
+block_cipher_forward(const struct BLOCK_CIPHER *primitive,
+                     void *state,
+                     void *block);
 
 /*! Applies a block cipher's inverse permutation.
  *  @param primitive A block cipher primitive.
@@ -109,16 +122,18 @@ void block_cipher_forward(const struct BLOCK_CIPHER *primitive,
  *  @remarks The block should be the size of the block cipher's
  *           block size.
 */
-void block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
-                          void *state,
-                          void *block);
+ORDO_API void ORDO_CALLCONV
+block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
+                     void *state,
+                     void *block);
 
 /*! Frees a block cipher state.
  *  @param primitive A block cipher primitive.
  *  @param state A block cipher state.
 */
-void block_cipher_free(const struct BLOCK_CIPHER *primitive,
-                       void *state);
+ORDO_API void ORDO_CALLCONV
+block_cipher_free(const struct BLOCK_CIPHER *primitive,
+                  void *state);
 
 /*! Copies a block cipher state to another.
  *  @param primitive A block cipher primitive.
@@ -127,9 +142,10 @@ void block_cipher_free(const struct BLOCK_CIPHER *primitive,
  *  @remarks Both states must have been initialized with the same block
  *           cipher and parameters.
 */
-void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
-                       void *dst,
-                       const void *src);
+ORDO_API void ORDO_CALLCONV
+block_cipher_copy(const struct BLOCK_CIPHER *primitive,
+                  void *dst,
+                  const void *src);
 
 /*! Queries a block cipher for suitable parameters.
  *  @param primitive A block cipher primitive.
@@ -138,8 +154,9 @@ void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
  *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
-size_t block_cipher_query(const struct BLOCK_CIPHER *primitive,
-                          int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+block_cipher_query(const struct BLOCK_CIPHER *primitive,
+                   int query, size_t value);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,6 @@
 #include "ordo/primitives/stream_ciphers/rc4.h"
 
+#include "ordo/internal/environment.h"
 #include "ordo/internal/asm/resolve.h"
 
 #include "ordo/internal/mem.h"
@@ -31,16 +32,20 @@ struct RC4_STATE
     uint8_t j;
 };
     
-static void swap_byte(uint8_t* a, uint8_t* b)
+static void ORDO_CALLCONV
+swap_byte(uint8_t* a, uint8_t* b)
 {
     uint8_t c = *a;
     *a = *b;
     *b = c;
 }
 
-static uint8_t rc4_next(struct RC4_STATE *state) __attribute__((hot));
+static uint8_t ORDO_CALLCONV
+rc4_next(struct RC4_STATE *state)
+ORDO_HOT_CODE;
 
-uint8_t rc4_next(struct RC4_STATE *state)
+uint8_t ORDO_CALLCONV
+rc4_next(struct RC4_STATE *state)
 {
     state->j += state->s[++state->i];
     swap_byte(&state->s[state->i], &state->s[state->j]);
@@ -51,14 +56,16 @@ uint8_t rc4_next(struct RC4_STATE *state)
 
 /******************************************************************************/
 
-struct RC4_STATE *rc4_alloc(void)
+struct RC4_STATE * ORDO_CALLCONV
+rc4_alloc(void)
 {
     return mem_alloc(sizeof(struct RC4_STATE));
 }
 
-int rc4_init(struct RC4_STATE *state,
-             const uint8_t *key, size_t key_len,
-             const struct RC4_PARAMS *params)
+int ORDO_CALLCONV
+rc4_init(struct RC4_STATE *state,
+         const uint8_t *key, size_t key_len,
+         const struct RC4_PARAMS *params)
 {
     uint8_t t = 0;
     uint8_t tmp;
@@ -93,8 +100,9 @@ int rc4_init(struct RC4_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void rc4_update(struct RC4_STATE *state,
-                uint8_t *buffer, size_t len)
+void ORDO_CALLCONV
+rc4_update(struct RC4_STATE *state,
+           uint8_t *buffer, size_t len)
 {
     #if defined(RC4_X86_64_LINUX) || defined(RC4_X86_64_WINDOWS)
 
@@ -107,12 +115,14 @@ void rc4_update(struct RC4_STATE *state,
     #endif
 }
 
-void rc4_free(struct RC4_STATE *state)
+void ORDO_CALLCONV
+rc4_free(struct RC4_STATE *state)
 {
     mem_free(state);
 }
 
-size_t rc4_query(int query, size_t key_len)
+size_t ORDO_CALLCONV
+rc4_query(int query, size_t key_len)
 {
     switch (query)
     {
@@ -127,8 +137,9 @@ size_t rc4_query(int query, size_t key_len)
     }
 }
 
-void rc4_copy(struct RC4_STATE *dst,
-              const struct RC4_STATE *src)
+void ORDO_CALLCONV
+rc4_copy(struct RC4_STATE *dst,
+         const struct RC4_STATE *src)
 {
     memcpy(dst, src, sizeof(struct RC4_STATE));
 }

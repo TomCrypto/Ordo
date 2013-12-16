@@ -1,6 +1,8 @@
 #ifndef ORDO_MEM_PARAMS_H
 #define ORDO_MEM_PARAMS_H
 
+#if !defined(ORDO_DISABLE_POOL)
+
 #include "ordo/internal/environment.h"
 
 /******************************************************************************/
@@ -44,6 +46,8 @@ extern "C" {
 #else
 
     #error No memory pool parameters defined for this platform!
+
+#endif
 
 #endif
 

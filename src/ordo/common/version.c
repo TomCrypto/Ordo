@@ -5,20 +5,23 @@
 /******************************************************************************/
 
 #define VERSION_MAJOR 2
-#define VERSION_MINOR 3
-#define VERSION_REV   1
+#define VERSION_MINOR 4
+#define VERSION_REV   0
 
-int ordo_version_major()
+int ORDO_CALLCONV
+ordo_version_major(void)
 {
     return VERSION_MAJOR;
 }
 
-int ordo_version_minor()
+int ORDO_CALLCONV
+ordo_version_minor(void)
 {
     return VERSION_MINOR;
 }
 
-int ordo_version_rev()
+int ORDO_CALLCONV
+ordo_version_rev(void)
 {
     return VERSION_REV;
 }
@@ -35,12 +38,14 @@ static const char *platform = "FreeBSD";
 static const char *platform = "NetBSD";
 #endif
 
-const char *ordo_platform()
+const char * ORDO_CALLCONV
+ordo_platform(void)
 {
     return platform;
 }
 
-int ordo_word_size()
+int ORDO_CALLCONV
+ordo_word_size(void)
 {
     #if defined(ENVIRONMENT_32)
     return 32;

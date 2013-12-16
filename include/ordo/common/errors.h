@@ -1,6 +1,8 @@
 #ifndef ORDO_ERRORS_H
 #define ORDO_ERRORS_H
 
+#include "ordo/internal/api.h"
+
 /******************************************************************************/
 
 /*!
@@ -24,7 +26,8 @@ extern "C" {
  *  @return A null-terminated string containing the message.
  *  @remarks This function is intended for debugging purposes.
 */
-const char *error_msg(int code);
+ORDO_API const char * ORDO_CALLCONV
+error_msg(int code);
 
 /*! @enum ORDO_ERROR
  *

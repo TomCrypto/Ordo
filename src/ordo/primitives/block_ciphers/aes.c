@@ -359,7 +359,8 @@ static const uint8_t mulE[256] =
 };
 
 /* Shifts rows according to the AES specification and substitutes the state. */
-static void ShiftRows (uint8_t *state)
+static void ORDO_CALLCONV
+ShiftRows (uint8_t *state)
 {
     uint8_t tmp;
 
@@ -389,7 +390,8 @@ static void ShiftRows (uint8_t *state)
 }
 
 /* Reverses the row shifts and substitutions. */
-static void InvShiftRows (uint8_t *state)
+static void ORDO_CALLCONV
+InvShiftRows (uint8_t *state)
 {
     uint8_t tmp;
 
@@ -419,7 +421,8 @@ static void InvShiftRows (uint8_t *state)
 }
 
 /* Recombine and mix the state. */
-static void MixSubColumns (uint8_t *state)
+static void ORDO_CALLCONV
+MixSubColumns (uint8_t *state)
 {
     uint8_t tmp[16];
 
@@ -479,7 +482,8 @@ static void MixSubColumns (uint8_t *state)
 }
 
 /* Restore and unmix the state. */
-static void InvMixSubColumns (uint8_t *state)
+static void ORDO_CALLCONV
+InvMixSubColumns (uint8_t *state)
 {
     uint8_t tmp[16];
     size_t t;
@@ -541,14 +545,16 @@ static void InvMixSubColumns (uint8_t *state)
 }
 
 /* Add the round key to the state. */
-static void AddRoundKey (uint8_t *state, uint8_t *key)
+static void ORDO_CALLCONV
+AddRoundKey (uint8_t *state, uint8_t *key)
 {
     size_t t;
 
     for (t = 0; t < 16; ++t) state[t] ^= key[t];
 }
 
-static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void ORDO_CALLCONV
+aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
 {
     size_t t;
 
@@ -569,7 +575,8 @@ static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
     }
 }
 
-static void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void ORDO_CALLCONV
+aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
 {
     size_t t;
 
@@ -595,8 +602,9 @@ static const uint8_t ks[11] =
 };
 
 /* Expands a variable-size key to a certain number of rounds. */
-static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds)
+static void ORDO_CALLCONV
+ExpandKey(const uint8_t *key, uint8_t *ext,
+          size_t key_len, size_t rounds)
 {
     /* Local variables. */
     uint8_t tmp[5];
@@ -652,16 +660,18 @@ struct AES_STATE
     size_t rounds;
 };
 
-struct AES_STATE *aes_alloc(void)
+struct AES_STATE * ORDO_CALLCONV
+aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
     if (state) state->key = 0;
     return state;
 }
 
-int aes_init(struct AES_STATE *state,
-             const void *key, size_t key_len,
-             const struct AES_PARAMS *params)
+int ORDO_CALLCONV
+aes_init(struct AES_STATE *state,
+         const void *key, size_t key_len,
+         const struct AES_PARAMS *params)
 {
     if (aes_query(KEY_LEN, key_len) != key_len)
     {
@@ -682,11 +692,9 @@ int aes_init(struct AES_STATE *state,
         else if (key_len == 32) state->rounds = 14;
     }
 
-    size_t aes_key_len = key_bytes(state->rounds);
-
     /* Allocate the expanded key array. */
     if (state->key) mem_free(state->key);
-    state->key = mem_alloc(aes_key_len);
+    state->key = mem_alloc(key_bytes(state->rounds));
     if (!state->key) return ORDO_ALLOC;
 
     /* Perform the key schedule. */
@@ -696,7 +704,8 @@ int aes_init(struct AES_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void aes_forward(struct AES_STATE *state, uint8_t *block)
+void ORDO_CALLCONV
+aes_forward(struct AES_STATE *state, uint8_t *block)
 {
     #if defined(AES_STANDARD)
     aes_forward_C(block, state->key, state->rounds);
@@ -705,7 +714,8 @@ void aes_forward(struct AES_STATE *state, uint8_t *block)
     #endif
 }
 
-void aes_inverse(struct AES_STATE *state, uint8_t *block)
+void ORDO_CALLCONV
+aes_inverse(struct AES_STATE *state, uint8_t *block)
 {
     #if defined(AES_STANDARD)
     aes_inverse_C(block, state->key, state->rounds);
@@ -714,19 +724,22 @@ void aes_inverse(struct AES_STATE *state, uint8_t *block)
     #endif
 }
 
-void aes_free(struct AES_STATE *state)
+void ORDO_CALLCONV
+aes_free(struct AES_STATE *state)
 {
     if (state->key) mem_free(state->key);
     mem_free(state);
 }
 
-void aes_copy(struct AES_STATE *dst,
-              const struct AES_STATE *src)
+void ORDO_CALLCONV
+aes_copy(struct AES_STATE *dst,
+         const struct AES_STATE *src)
 {
     memcpy(dst->key, src->key, key_bytes(dst->rounds));
 }
 
-size_t aes_query(int query, size_t value)
+size_t ORDO_CALLCONV
+aes_query(int query, size_t value)
 {
     switch(query)
     {

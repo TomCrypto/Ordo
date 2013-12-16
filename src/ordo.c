@@ -4,20 +4,22 @@
 
 /******************************************************************************/
 
-int ordo_init()
+int ORDO_CALLCONV
+ordo_init()
 {
     return mem_init();
 }
 
-int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
-                   const void *cipher_params,
-                   const struct BLOCK_MODE* mode,
-                   const void *mode_params,
-                   int direction,
-                   const void *key, size_t key_len,
-                   const void *iv, size_t iv_len,
-                   const void *in,size_t in_len,
-                   void* out, size_t *out_len)
+int ORDO_CALLCONV
+ordo_enc_block(const struct BLOCK_CIPHER* cipher,
+               const void *cipher_params,
+               const struct BLOCK_MODE* mode,
+               const void *mode_params,
+               int direction,
+               const void *key, size_t key_len,
+               const void *iv, size_t iv_len,
+               const void *in,size_t in_len,
+               void* out, size_t *out_len)
 {
     int err = ORDO_ALLOC;
     size_t end_pos = 0;
@@ -45,9 +47,10 @@ fail:
     return err;
 }
 
-int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
-                    const void *key, size_t key_len,
-                    void *buffer, size_t len)
+int ORDO_CALLCONV
+ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
+                const void *key, size_t key_len,
+                void *buffer, size_t len)
 {
     int err = ORDO_ALLOC;
 
@@ -62,9 +65,10 @@ fail:
     return err;
 }
 
-int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
-                const void *in, size_t len,
-                void *digest)
+int ORDO_CALLCONV
+ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
+            const void *in, size_t len,
+            void *digest)
 {
     int err = ORDO_ALLOC;
 
@@ -81,10 +85,11 @@ fail:
     return err;
 }
 
-int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
-              const void *key, size_t key_len,
-              const void *in, size_t len,
-              void* fingerprint)
+int ORDO_CALLCONV
+ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
+          const void *key, size_t key_len,
+          const void *in, size_t len,
+          void* fingerprint)
 {
     int err = ORDO_ALLOC;
 

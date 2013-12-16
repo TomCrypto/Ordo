@@ -19,8 +19,9 @@ struct CBC_STATE
     int direction;
 };
 
-struct CBC_STATE* cbc_alloc(const struct BLOCK_CIPHER *cipher,
-                            void *cipher_state)
+struct CBC_STATE * ORDO_CALLCONV
+cbc_alloc(const struct BLOCK_CIPHER *cipher,
+          void *cipher_state)
 {
     
 
@@ -42,13 +43,14 @@ fail:
     return 0;
 }
 
-int cbc_init(struct CBC_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             void *cipher_state,
-             const void *iv,
-             size_t iv_len,
-             int dir,
-             const struct CBC_PARAMS *params)
+int ORDO_CALLCONV
+cbc_init(struct CBC_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv,
+         size_t iv_len,
+         int dir,
+         const struct CBC_PARAMS *params)
 {
     if (cbc_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
 
@@ -63,13 +65,14 @@ int cbc_init(struct CBC_STATE *state,
     return ORDO_SUCCESS;
 }
 
-static void cbc_encrypt_update(struct CBC_STATE *state,
-                               const struct BLOCK_CIPHER *cipher,
-                               void *cipher_state,
-                               const unsigned char *in,
-                               size_t in_len,
-                               unsigned char *out,
-                               size_t *out_len)
+static void ORDO_CALLCONV
+cbc_encrypt_update(struct CBC_STATE *state,
+                   const struct BLOCK_CIPHER *cipher,
+                   void *cipher_state,
+                   const unsigned char *in,
+                   size_t in_len,
+                   unsigned char *out,
+                   size_t *out_len)
 {
     size_t block_size = state->block_size;
 
@@ -100,7 +103,14 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
     state->available += in_len;
 }
 
-static void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t in_len, unsigned char* out, size_t* out_len)
+static void ORDO_CALLCONV
+cbc_decrypt_update(struct CBC_STATE *state,
+                   const struct BLOCK_CIPHER *cipher,
+                   void *cipher_state,
+                   const unsigned char *in,
+                   size_t in_len,
+                   unsigned char *out,
+                   size_t *out_len)
 {
     size_t block_size = state->block_size;
 
@@ -136,11 +146,12 @@ static void cbc_decrypt_update(struct CBC_STATE *state, const struct BLOCK_CIPHE
     state->available += in_len;
 }
 
-static int cbc_encrypt_final(struct CBC_STATE *state, 
-                             const struct BLOCK_CIPHER *cipher,
-                             void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+static int ORDO_CALLCONV
+cbc_encrypt_final(struct CBC_STATE *state, 
+                  const struct BLOCK_CIPHER *cipher,
+                  void *cipher_state,
+                  unsigned char *out,
+                  size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -165,11 +176,12 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
     return ORDO_SUCCESS;
 }
 
-static int cbc_decrypt_final(struct CBC_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+static int ORDO_CALLCONV
+cbc_decrypt_final(struct CBC_STATE *state,
+                  const struct BLOCK_CIPHER *cipher,
+                  void *cipher_state,
+                  unsigned char *out,
+                  size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -207,13 +219,14 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void cbc_update(struct CBC_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                void *cipher_state,
-                const unsigned char *in,
-                size_t in_len,
-                unsigned char *out,
-                size_t *out_len)
+void ORDO_CALLCONV
+cbc_update(struct CBC_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in,
+           size_t in_len,
+           unsigned char *out,
+           size_t *out_len)
 {
     (state->direction
      ? cbc_encrypt_update(state, cipher, cipher_state,
@@ -222,20 +235,22 @@ void cbc_update(struct CBC_STATE *state,
                           in, in_len, out, out_len));
 }
 
-int cbc_final(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state,
-              unsigned char *out,
-              size_t *out_len)
+int ORDO_CALLCONV
+cbc_final(struct CBC_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out,
+          size_t *out_len)
 {
     return (state->direction
             ? cbc_encrypt_final(state, cipher, cipher_state, out, out_len)
             : cbc_decrypt_final(state, cipher, cipher_state, out, out_len));
 }
 
-void cbc_free(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state)
+void ORDO_CALLCONV
+cbc_free(struct CBC_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state)
 {
     if (state)
     {
@@ -245,9 +260,10 @@ void cbc_free(struct CBC_STATE *state,
     }
 }
 
-void cbc_copy(struct CBC_STATE *dst,
-              const struct CBC_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
+void ORDO_CALLCONV
+cbc_copy(struct CBC_STATE *dst,
+         const struct CBC_STATE *src,
+         const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->block, src->block, dst->block_size);
     memcpy(dst->iv, src->iv, dst->block_size);
@@ -256,7 +272,8 @@ void cbc_copy(struct CBC_STATE *dst,
     dst->padding = src->padding;
 }
 
-size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ORDO_CALLCONV
+cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {

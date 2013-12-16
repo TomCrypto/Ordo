@@ -1,6 +1,8 @@
 #ifndef ORDO_HMAC_H
 #define ORDO_HMAC_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/digest/digest.h"
 
 /******************************************************************************/
@@ -43,7 +45,8 @@ struct HMAC_CTX;
  *           with default parameters. It is not possible to use hash function
  *           extensions (e.g. Skein in specialized HMAC mode) via this module.
 */
-struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
+ORDO_API struct HMAC_CTX * ORDO_CALLCONV
+hmac_alloc(const struct HASH_FUNCTION *hash);
 
 /*! Initializes an HMAC context, provided optional parameters.
  *  @param ctx An allocated HMAC context.
@@ -56,9 +59,10 @@ struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
  *  @remarks Do not use hash parameters which modify the hash function's output
  *           length, or this function's behavior is undefined.
 */
-int hmac_init(struct HMAC_CTX *ctx,
-              const void *key, size_t key_len,
-              const void *params);
+ORDO_API int ORDO_CALLCONV
+hmac_init(struct HMAC_CTX *ctx,
+          const void *key, size_t key_len,
+          const void *params);
 
 /*! Updates an HMAC context, feeding more data into it.
  *  @param ctx An allocated HMAC context.
@@ -67,7 +71,8 @@ int hmac_init(struct HMAC_CTX *ctx,
  *  @remarks This function has the same property with respect to the input
  *           buffer as \c digest_update().
 */
-void hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len);
+ORDO_API void ORDO_CALLCONV
+hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len);
 
 /*! Finalizes a HMAC context, returning the final digest.
  *  @param ctx An allocated HMAC context.
@@ -76,13 +81,15 @@ void hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len);
  *  @remarks The digest length is equal to the underlying hash function's
  *           digest length, which may be queried via \c hash_digest_length().
 */
-int hmac_final(struct HMAC_CTX *ctx, void *digest);
+ORDO_API int ORDO_CALLCONV
+hmac_final(struct HMAC_CTX *ctx, void *digest);
 
 /*! Frees an HMAC context.
  *  @param ctx An allocated HMAC context.
  *  @remarks Passing nil to this function is valid and will do nothing.
 */
-void hmac_free(struct HMAC_CTX *ctx);
+ORDO_API void ORDO_CALLCONV
+hmac_free(struct HMAC_CTX *ctx);
 
 /*! Deep-copies a context to another.
  *  @param dst The destination context.
@@ -91,7 +98,8 @@ void hmac_free(struct HMAC_CTX *ctx);
  *           function and the exact same parameters, or this function's
  *           behavior is undefined.
 */
-void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src);
+ORDO_API void ORDO_CALLCONV
+hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src);
 
 #ifdef __cplusplus
 }

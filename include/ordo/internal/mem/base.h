@@ -1,9 +1,13 @@
 #ifndef ORDO_MEM_BASE_H
 #define ORDO_MEM_BASE_H
 
+#if !defined(ORDO_DISABLE_POOL)
+
 /*! @cond */
 #include <stdlib.h>
 /*! @endcond */
+
+#include "ordo/internal/api.h"
 
 /******************************************************************************/
 
@@ -33,7 +37,8 @@ extern "C" {
           needs to advise the operating system towards this end.
  @remarks This function will not be called again once it succeeds.
 */
-int mem_lock(void *ptr, size_t len);
+ORDO_INTERNAL int ORDO_CALLCONV
+mem_lock(void *ptr, size_t len);
 
 /*! Unlocks a memory buffer, reversing the effect of \c mem_lock().
  @param ptr The memory buffer to unlock.
@@ -41,10 +46,13 @@ int mem_lock(void *ptr, size_t len);
  @remarks This function need not report an error even if it fails internally,
           as the host program will terminate shortly after either way.
 */
-void mem_unlock(void *ptr, size_t len);
+ORDO_INTERNAL void ORDO_CALLCONV
+mem_unlock(void *ptr, size_t len);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

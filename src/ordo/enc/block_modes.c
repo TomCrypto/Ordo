@@ -6,41 +6,41 @@
 
 /******************************************************************************/
 
-typedef void *(*BLOCK_MODE_ALLOC)(const struct BLOCK_CIPHER *,
-                                  void *);
+typedef void  *(ORDO_CALLCONV *BLOCK_MODE_ALLOC)(const struct BLOCK_CIPHER *,
+                                             void *);
 
-typedef int (*BLOCK_MODE_INIT)(void *, 
-                               const struct BLOCK_CIPHER *,
-                               void *,
-                               const void *,
-                               size_t,
-                               int,
-                               const void *);
+typedef int    (ORDO_CALLCONV *BLOCK_MODE_INIT)(void *, 
+                                            const struct BLOCK_CIPHER *,
+                                            void *,
+                                            const void *,
+                                            size_t,
+                                            int,
+                                            const void *);
 
-typedef void (*BLOCK_MODE_UPDATE)(void *,
-                                  const struct BLOCK_CIPHER *,
-                                  void *,
-                                  const void *,
-                                  size_t,
-                                  void *,
-                                  size_t *);
+typedef void   (ORDO_CALLCONV *BLOCK_MODE_UPDATE)(void *,
+                                              const struct BLOCK_CIPHER *,
+                                              void *,
+                                              const void *,
+                                              size_t,
+                                              void *,
+                                              size_t *);
 
-typedef int (*BLOCK_MODE_FINAL)(void *,
-                                const struct BLOCK_CIPHER *,
-                                void *,
-                                void *,
-                                size_t *);
+typedef int    (ORDO_CALLCONV *BLOCK_MODE_FINAL)(void *,
+                                             const struct BLOCK_CIPHER *,
+                                             void *,
+                                             void *,
+                                             size_t *);
 
-typedef void (*BLOCK_MODE_FREE)(void *,
-                                const struct BLOCK_CIPHER *,
-                                void *);
+typedef void   (ORDO_CALLCONV *BLOCK_MODE_FREE)(void *,
+                                            const struct BLOCK_CIPHER *,
+                                            void *);
 
-typedef size_t (*BLOCK_MODE_QUERY)(const struct BLOCK_CIPHER *,
-                                   int, size_t);
+typedef size_t (ORDO_CALLCONV *BLOCK_MODE_QUERY)(const struct BLOCK_CIPHER *,
+                                             int, size_t);
 
-typedef void (*BLOCK_MODE_COPY)(void *,
-                                const void *,
-                                const struct BLOCK_CIPHER *);
+typedef void   (ORDO_CALLCONV *BLOCK_MODE_COPY)(void *,
+                                            const void *,
+                                            const struct BLOCK_CIPHER *);
 
 struct BLOCK_MODE
 {
@@ -121,46 +121,54 @@ static struct BLOCK_MODE primitives[] =
     }
 };
 
-const struct BLOCK_MODE *ecb(void)
+const struct BLOCK_MODE * ORDO_CALLCONV
+ecb(void)
 {
     return &primitives[ECB_ID];
 }
 
-const struct BLOCK_MODE *cbc(void)
+const struct BLOCK_MODE * ORDO_CALLCONV
+cbc(void)
 {
     return &primitives[CBC_ID];
 }
 
-const struct BLOCK_MODE *ctr(void)
+const struct BLOCK_MODE * ORDO_CALLCONV
+ctr(void)
 {
     return &primitives[CTR_ID];
 }
 
-const struct BLOCK_MODE *cfb(void)
+const struct BLOCK_MODE * ORDO_CALLCONV
+cfb(void)
 {
     return &primitives[CFB_ID];
 }
 
-const struct BLOCK_MODE *ofb(void)
+const struct BLOCK_MODE * ORDO_CALLCONV
+ofb(void)
 {
     return &primitives[OFB_ID];
 }
 
 /******************************************************************************/
 
-const char *block_mode_name(const struct BLOCK_MODE *mode)
+const char * ORDO_CALLCONV
+block_mode_name(const struct BLOCK_MODE *mode)
 {
     return mode->name;
 }
 
 /******************************************************************************/
 
-size_t block_mode_count(void)
+size_t ORDO_CALLCONV
+block_mode_count(void)
 {
     return sizeof(primitives) / sizeof(struct BLOCK_MODE);
 }
 
-const struct BLOCK_MODE *block_mode_by_name(const char *name)
+const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_name(const char *name)
 {
     size_t t;
 
@@ -177,12 +185,14 @@ const struct BLOCK_MODE *block_mode_by_name(const char *name)
     return 0;
 }
 
-const struct BLOCK_MODE *block_mode_by_index(size_t index)
+const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_index(size_t index)
 {
     return (index < block_mode_count()) ? &primitives[index] : 0;
 }
 
-const struct BLOCK_MODE *block_mode_by_id(size_t id)
+const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_id(size_t id)
 {
     switch (id)
     {
@@ -197,17 +207,19 @@ const struct BLOCK_MODE *block_mode_by_id(size_t id)
 
 /******************************************************************************/
 
-void *block_mode_alloc(const struct BLOCK_MODE *mode,
-                       const struct BLOCK_CIPHER *cipher, void *cipher_state)
+void * ORDO_CALLCONV
+block_mode_alloc(const struct BLOCK_MODE *mode,
+                 const struct BLOCK_CIPHER *cipher, void *cipher_state)
 {
     return mode->alloc(cipher, cipher_state);
 }
 
-int block_mode_init(const struct BLOCK_MODE *mode, void *state,
-                    const struct BLOCK_CIPHER *cipher, void *cipher_state,
-                    const void *iv, size_t iv_len,
-                    int direction,
-                    const void *params)
+int ORDO_CALLCONV
+block_mode_init(const struct BLOCK_MODE *mode, void *state,
+                const struct BLOCK_CIPHER *cipher, void *cipher_state,
+                const void *iv, size_t iv_len,
+                int direction,
+                const void *params)
 {
     return mode->init(state,
                       cipher, cipher_state,
@@ -216,38 +228,43 @@ int block_mode_init(const struct BLOCK_MODE *mode, void *state,
                       params);
 }
 
-void block_mode_update(const struct BLOCK_MODE *mode, void *state,
-                       const struct BLOCK_CIPHER *cipher, void *cipher_state,
-                       const void *in, size_t in_len,
-                       void *out, size_t *out_len)
+void ORDO_CALLCONV
+block_mode_update(const struct BLOCK_MODE *mode, void *state,
+                  const struct BLOCK_CIPHER *cipher, void *cipher_state,
+                  const void *in, size_t in_len,
+                  void *out, size_t *out_len)
 {
     mode->update(state, cipher, cipher_state, in, in_len, out, out_len);
 }
 
-int block_mode_final(const struct BLOCK_MODE *mode, void *state,
-                     const struct BLOCK_CIPHER *cipher, void *cipher_state,
-                     void *out, size_t *out_len)
+int ORDO_CALLCONV
+block_mode_final(const struct BLOCK_MODE *mode, void *state,
+                 const struct BLOCK_CIPHER *cipher, void *cipher_state,
+                 void *out, size_t *out_len)
 {
     return mode->final(state, cipher, cipher_state, out, out_len);
 }
 
-void block_mode_free(const struct BLOCK_MODE *mode, void *state,
-                     const struct BLOCK_CIPHER *cipher, void *cipher_state)
+void ORDO_CALLCONV
+block_mode_free(const struct BLOCK_MODE *mode, void *state,
+                const struct BLOCK_CIPHER *cipher, void *cipher_state)
 {
     mode->free(state, cipher, cipher_state);
 }
 
-size_t block_mode_query(const struct BLOCK_MODE *mode,
-                        const struct BLOCK_CIPHER *cipher,
-                        int query, size_t value)
+size_t ORDO_CALLCONV
+block_mode_query(const struct BLOCK_MODE *mode,
+                 const struct BLOCK_CIPHER *cipher,
+                 int query, size_t value)
 {
     return mode->query(cipher, query, value);
 }
 
-void block_mode_copy(const struct BLOCK_MODE *mode,
-                     const struct BLOCK_CIPHER *cipher,
-                     void *dst,
-                     const void *src)
+void ORDO_CALLCONV
+block_mode_copy(const struct BLOCK_MODE *mode,
+                const struct BLOCK_CIPHER *cipher,
+                void *dst,
+                const void *src)
 {
     mode->copy(dst, src, cipher);
 }

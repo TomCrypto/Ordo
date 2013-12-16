@@ -1,6 +1,8 @@
 #ifndef ORDO_DIGEST_H
 #define ORDO_DIGEST_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/hash_functions.h"
 
 /******************************************************************************/
@@ -45,7 +47,8 @@ struct DIGEST_CTX;
  *  @return Returns the allocated digest context, or nil if an allocation error
             occurred.
 */
-struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
+ORDO_API struct DIGEST_CTX * ORDO_CALLCONV
+digest_alloc(const struct HASH_FUNCTION *hash);
 
 /*! Initializes a digest context, provided optional parameters.
  *  @param ctx An allocated digest context.
@@ -54,7 +57,8 @@ struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
  *  @remarks It is always valid to pass nil for \c params if you do not wish to
              use more advanced features offered by a specific hash function.
 */
-int digest_init(struct DIGEST_CTX *ctx, const void *params);
+ORDO_API int ORDO_CALLCONV
+digest_init(struct DIGEST_CTX *ctx, const void *params);
 
 /*! Feeds data into a digest context.
  *  @param ctx An initialized digest context.
@@ -66,7 +70,8 @@ int digest_init(struct DIGEST_CTX *ctx, const void *params);
  *  update(x) followed by update(y)  <=>  update(x || y)  (|| is concatenation)
  *  @endcode
 */
-void digest_update(struct DIGEST_CTX *ctx, const void *in, size_t in_len);
+ORDO_API void ORDO_CALLCONV
+digest_update(struct DIGEST_CTX *ctx, const void *in, size_t in_len);
 
 /*! Finalizes a digest context, returning the digest of all data fed into it
  *  by \c digest_update() calls.
@@ -82,14 +87,16 @@ void digest_update(struct DIGEST_CTX *ctx, const void *in, size_t in_len);
  *           and will return the so-called "zero-length" digest, which is the
  *           digest of the input of length zero.
 */
-void digest_final(struct DIGEST_CTX *ctx, void *digest);
+ORDO_API void ORDO_CALLCONV
+digest_final(struct DIGEST_CTX *ctx, void *digest);
 
 /*! Frees a digest context.
  *  @param ctx The digest context to be freed.
  *  @remarks The context need not have been initialized.
  *  @remarks Passing nil to this function is valid and will do nothing.
 */
-void digest_free(struct DIGEST_CTX *ctx);
+ORDO_API void ORDO_CALLCONV
+digest_free(struct DIGEST_CTX *ctx);
 
 /*! Performs a deep copy of one context into another.
  *  @param dst The destination context.
@@ -98,7 +105,8 @@ void digest_free(struct DIGEST_CTX *ctx);
  *           function, with the exact same parameters, else the function's
  *           behavior is undefined.
 */
-void digest_copy(struct DIGEST_CTX *dst, const struct DIGEST_CTX *src);
+ORDO_API void ORDO_CALLCONV
+digest_copy(struct DIGEST_CTX *dst, const struct DIGEST_CTX *src);
 
 /*! Returns the default digest length of a hash function.
  *  @param hash A hash function primitive.
@@ -106,7 +114,8 @@ void digest_copy(struct DIGEST_CTX *dst, const struct DIGEST_CTX *src);
  *           \c digest_final(), if no parameters which affect output length
  *           were provided to \c digest_init().
 */
-size_t digest_length(const struct HASH_FUNCTION *hash);
+ORDO_API size_t ORDO_CALLCONV
+digest_length(const struct HASH_FUNCTION *hash);
 
 #ifdef __cplusplus
 }

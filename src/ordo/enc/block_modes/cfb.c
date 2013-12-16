@@ -21,7 +21,8 @@ struct CFB_STATE
     int direction;
 };
 
-struct CFB_STATE* cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct CFB_STATE * ORDO_CALLCONV
+cfb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     struct CFB_STATE* state = mem_alloc(sizeof(struct CFB_STATE));
     if (!state) goto fail;
@@ -42,7 +43,14 @@ fail:
     return 0;
 }
 
-int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
+int ORDO_CALLCONV
+cfb_init(struct CFB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv,
+         size_t iv_len,
+         int dir,
+         const void *params)
 {
     size_t block_size = state->block_size;
 
@@ -61,7 +69,14 @@ int cfb_init(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     return ORDO_SUCCESS;
 }
 
-static void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void ORDO_CALLCONV
+cfb_encrypt_update(struct CFB_STATE *state,
+                   const struct BLOCK_CIPHER *cipher,
+                   void *cipher_state,
+                   const unsigned char *in,
+                   size_t inlen,
+                   unsigned char *out,
+                   size_t *outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = state->block_size;
@@ -96,7 +111,14 @@ static void cfb_encrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHE
     }
 }
 
-static void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+static void ORDO_CALLCONV
+cfb_decrypt_update(struct CFB_STATE *state,
+                   const struct BLOCK_CIPHER *cipher,
+                   void *cipher_state,
+                   const unsigned char *in,
+                   size_t inlen,
+                   unsigned char *out,
+                   size_t *outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = state->block_size;
@@ -132,20 +154,35 @@ static void cfb_decrypt_update(struct CFB_STATE *state, const struct BLOCK_CIPHE
     }
 }
 
-void cfb_update(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ORDO_CALLCONV
+cfb_update(struct CFB_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in,
+           size_t inlen,
+           unsigned char *out,
+           size_t *outlen)
 {
     (state->direction
      ? cfb_encrypt_update(state, cipher, cipher_state, in, inlen, out, outlen)
      : cfb_decrypt_update(state, cipher, cipher_state, in, inlen, out, outlen));
 }
 
-int cfb_final(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ORDO_CALLCONV
+cfb_final(struct CFB_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out,
+          size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
 }
 
-void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
+void ORDO_CALLCONV
+cfb_free(struct CFB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state)
 {
     if (!state) return;
 
@@ -154,7 +191,10 @@ void cfb_free(struct CFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
     mem_free(state);
 }
 
-void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct BLOCK_CIPHER* cipher)
+void ORDO_CALLCONV
+cfb_copy(struct CFB_STATE *dst,
+         const struct CFB_STATE *src,
+         const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->tmp, src->tmp, dst->block_size);
     memcpy(dst->iv, src->iv, dst->block_size);
@@ -162,7 +202,9 @@ void cfb_copy(struct CFB_STATE *dst, const struct CFB_STATE *src, const struct B
     dst->direction = src->direction;
 }
 
-size_t cfb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ORDO_CALLCONV
+cfb_query(const struct BLOCK_CIPHER *cipher,
+          int query, size_t value)
 {
     switch(query)
     {

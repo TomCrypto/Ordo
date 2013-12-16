@@ -19,8 +19,9 @@ struct ECB_STATE
     int direction;
 };
 
-struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
-                            void *cipher_state)
+struct ECB_STATE * ORDO_CALLCONV
+ecb_alloc(const struct BLOCK_CIPHER *cipher,
+          void *cipher_state)
 {
     struct ECB_STATE* state = mem_alloc(sizeof(*state));
     if (!state) goto fail;
@@ -37,13 +38,14 @@ fail:
     return 0;
 }
 
-int ecb_init(struct ECB_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             void *cipher_state,
-             const void *iv,
-             size_t iv_len,
-             int direction,
-             const struct ECB_PARAMS *params)
+int ORDO_CALLCONV
+ecb_init(struct ECB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv,
+         size_t iv_len,
+         int direction,
+         const struct ECB_PARAMS *params)
 {
     /* ECB accepts no IV - it is an error to pass it one. Note for consistency
      * only the iv_len parameter is checked - iv itself is in fact ignored. */
@@ -56,13 +58,14 @@ int ecb_init(struct ECB_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void ecb_update(struct ECB_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                void *cipher_state,
-                const unsigned char *in,
-                size_t in_len,
-                unsigned char *out,
-                size_t *out_len)
+void ORDO_CALLCONV
+ecb_update(struct ECB_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in,
+           size_t in_len,
+           unsigned char *out,
+           size_t *out_len)
 {
     size_t block_size = state->block_size;
 
@@ -99,11 +102,12 @@ void ecb_update(struct ECB_STATE *state,
     state->available += in_len;
 }
 
-static int ecb_encrypt_final(struct ECB_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+static int ORDO_CALLCONV
+ecb_encrypt_final(struct ECB_STATE *state,
+                  const struct BLOCK_CIPHER *cipher,
+                  void *cipher_state,
+                  unsigned char *out,
+                  size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -130,11 +134,12 @@ static int ecb_encrypt_final(struct ECB_STATE *state,
     return ORDO_SUCCESS;
 }
 
-static int ecb_decrypt_final(struct ECB_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+static int ORDO_CALLCONV
+ecb_decrypt_final(struct ECB_STATE *state,
+                  const struct BLOCK_CIPHER *cipher,
+                  void *cipher_state,
+                  unsigned char *out,
+                  size_t *out_len)
 {
     if (!state->padding)
     {
@@ -174,20 +179,22 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
     return ORDO_SUCCESS;
 }
 
-int ecb_final(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state,
-              unsigned char *out,
-              size_t *out_len)
+int ORDO_CALLCONV
+ecb_final(struct ECB_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out,
+          size_t *out_len)
 {
     return (state->direction
             ? ecb_encrypt_final(state, cipher, cipher_state, out, out_len)
             : ecb_decrypt_final(state, cipher, cipher_state, out, out_len));
 }
 
-void ecb_free(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              void *cipher_state)
+void ORDO_CALLCONV
+ecb_free(struct ECB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state)
 {
     if (state)
     {
@@ -196,9 +203,10 @@ void ecb_free(struct ECB_STATE *state,
     }
 }
 
-void ecb_copy(struct ECB_STATE *dst,
-              const struct ECB_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
+void ORDO_CALLCONV
+ecb_copy(struct ECB_STATE *dst,
+         const struct ECB_STATE *src,
+         const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->block, src->block, dst->block_size);
     dst->available = src->available;
@@ -206,7 +214,8 @@ void ecb_copy(struct ECB_STATE *dst,
     dst->padding = src->padding;
 }
 
-size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ORDO_CALLCONV
+ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {

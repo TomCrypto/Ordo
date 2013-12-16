@@ -1,6 +1,8 @@
 #ifndef ORDO_BLOCK_MODES_H
 #define ORDO_BLOCK_MODES_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/enc/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
 
@@ -47,24 +49,30 @@ struct BLOCK_MODE;
  *  @returns Returns the block mode's name.
  *  @remarks This name can then be used in \c block_mode_by_name().
 */
-const char *block_mode_name(const struct BLOCK_MODE *mode);
+ORDO_API const char * ORDO_CALLCONV
+block_mode_name(const struct BLOCK_MODE *mode);
 
 /******************************************************************************/
 
 /*! The ECB (Electronic CodeBook) block mode of operation. */
-const struct BLOCK_MODE *ecb(void);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+ecb(void);
 
 /*! The CBC (Ciphertext Block Chaining) block mode of operation. */
-const struct BLOCK_MODE *cbc(void);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+cbc(void);
 
 /*! The CTR (CounTeR) block mode of operation. */
-const struct BLOCK_MODE *ctr(void);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+ctr(void);
 
 /*! The CFB (Cipher FeedBack) block mode of operation. */
-const struct BLOCK_MODE *cfb(void);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+cfb(void);
 
 /*! The OFB (Output FeedBack) block mode of operation. */
-const struct BLOCK_MODE *ofb(void);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+ofb(void);
 
 /******************************************************************************/
 
@@ -72,14 +80,16 @@ const struct BLOCK_MODE *ofb(void);
  *  @returns The number of available block modes (at least one).
  *  @remarks This is for use in enumerating block mode ID's.
 */
-size_t block_mode_count(void);
+ORDO_API size_t ORDO_CALLCONV
+block_mode_count(void);
 
 /*! Returns a block mode primitive from a name.
  *  @param name A block mode name.
  *  @returns The corresponding block mode primitive, or nil if no such
  *           block mode exists.
 */
-const struct BLOCK_MODE *block_mode_by_name(const char* name);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_name(const char* name);
 
 /*! Returns a block mode primitive from an index.
  *  @param index A block mode index.
@@ -88,14 +98,16 @@ const struct BLOCK_MODE *block_mode_by_name(const char* name);
  *  @remarks Use \c block_mode_count() to get an upper bound on
  *           block mode indices.
 */
-const struct BLOCK_MODE *block_mode_by_index(size_t index);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_index(size_t index);
 
 /*! Returns a block mode primitive from a primitive ID.
  *  @param id A primitive ID.
  *  @returns The corresponding block mode primitive, or nil if no such
  *           block cipher exists.
 */
-const struct BLOCK_MODE *block_mode_by_id(size_t id);
+ORDO_API const struct BLOCK_MODE * ORDO_CALLCONV
+block_mode_by_id(size_t id);
 
 /******************************************************************************/
 
@@ -105,8 +117,9 @@ const struct BLOCK_MODE *block_mode_by_id(size_t id);
  *  @param cipher_state A block cipher state.
  *  @returns Returns an allocated block mode state, or nil on error.
 */
-void *block_mode_alloc(const struct BLOCK_MODE *mode,
-                       const struct BLOCK_CIPHER *cipher, void *cipher_state);
+ORDO_API void * ORDO_CALLCONV
+block_mode_alloc(const struct BLOCK_MODE *mode,
+                 const struct BLOCK_CIPHER *cipher, void *cipher_state);
 
 /*! Initializes a block mode state.
  *  @param mode A block mode object.
@@ -121,11 +134,12 @@ void *block_mode_alloc(const struct BLOCK_MODE *mode,
  *  @remarks The \c direction parameter is to be set to 0 for decryption, and
  *           1 for encryption.
 */
-int block_mode_init(const struct BLOCK_MODE *mode, void *state,
-                    const struct BLOCK_CIPHER *cipher, void *cipher_state,
-                    const void *iv, size_t iv_len,
-                    int direction,
-                    const void *params);
+ORDO_API int ORDO_CALLCONV
+block_mode_init(const struct BLOCK_MODE *mode, void *state,
+                const struct BLOCK_CIPHER *cipher, void *cipher_state,
+                const void *iv, size_t iv_len,
+                int direction,
+                const void *params);
 
 /*! Encrypts or decrypts a buffer.
  *  @param mode A block mode object.
@@ -143,10 +157,11 @@ int block_mode_init(const struct BLOCK_MODE *mode, void *state,
  *           \c out) may not be supported by \c mode, check the relevant
  *           documentation.
 */
-void block_mode_update(const struct BLOCK_MODE *mode, void *state,
-                       const struct BLOCK_CIPHER *cipher, void *cipher_state,
-                       const void *in, size_t in_len,
-                       void *out, size_t *out_len);
+ORDO_API void ORDO_CALLCONV
+block_mode_update(const struct BLOCK_MODE *mode, void *state,
+                  const struct BLOCK_CIPHER *cipher, void *cipher_state,
+                  const void *in, size_t in_len,
+                  void *out, size_t *out_len);
 
 /*! Finalizes a block mode state.
  *  @param mode A block mode object.
@@ -160,9 +175,10 @@ void block_mode_update(const struct BLOCK_MODE *mode, void *state,
  *  @remarks This function will return any input bytes which were not returned
  *           by calls to \c block_mode_update(), in the correct order.
 */
-int block_mode_final(const struct BLOCK_MODE *mode, void *state,
-                     const struct BLOCK_CIPHER *cipher, void* cipher_state,
-                     void *out, size_t *out_len);
+ORDO_API int ORDO_CALLCONV
+block_mode_final(const struct BLOCK_MODE *mode, void *state,
+                 const struct BLOCK_CIPHER *cipher, void* cipher_state,
+                 void *out, size_t *out_len);
 
 /*! Frees a block mode state.
  *  @param mode A block mode primitive.
@@ -170,8 +186,9 @@ int block_mode_final(const struct BLOCK_MODE *mode, void *state,
  *  @param cipher A block cipher primitive.
  *  @param cipher_state A block cipher state.
 */
-void block_mode_free(const struct BLOCK_MODE *mode, void *state,
-                     const struct BLOCK_CIPHER *cipher, void *cipher_state);
+ORDO_API void ORDO_CALLCONV
+block_mode_free(const struct BLOCK_MODE *mode, void *state,
+                const struct BLOCK_CIPHER *cipher, void *cipher_state);
 
 /*! Copies a block mode state to another.
  *  @param mode A block mode primitive.
@@ -181,10 +198,11 @@ void block_mode_free(const struct BLOCK_MODE *mode, void *state,
  *  @remarks Both states must have been initialized with the same block
  *           mode, block cipher, and parameters (for both).
 */
-void block_mode_copy(const struct BLOCK_MODE *mode,
-                     const struct BLOCK_CIPHER *cipher,
-                     void *dst,
-                     const void *src);
+ORDO_API void ORDO_CALLCONV
+block_mode_copy(const struct BLOCK_MODE *mode,
+                const struct BLOCK_CIPHER *cipher,
+                void *dst,
+                const void *src);
 
 /*! Queries a block mode for suitable parameters.
  *  @param mode A block mode primitive.
@@ -194,9 +212,10 @@ void block_mode_copy(const struct BLOCK_MODE *mode,
  *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
-size_t block_mode_query(const struct BLOCK_MODE *mode,
-                        const struct BLOCK_CIPHER *cipher,
-                        int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+block_mode_query(const struct BLOCK_MODE *mode,
+                 const struct BLOCK_CIPHER *cipher,
+                 int query, size_t value);
 
 #ifdef __cplusplus
 }

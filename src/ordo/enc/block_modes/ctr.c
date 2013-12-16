@@ -20,7 +20,8 @@ struct CTR_STATE
     size_t block_size;
 };
 
-struct CTR_STATE* ctr_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct CTR_STATE * ORDO_CALLCONV
+ctr_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     struct CTR_STATE *state = mem_alloc(sizeof(struct CTR_STATE));
     if (!state) goto fail;
@@ -41,7 +42,14 @@ fail:
     return 0;
 }
 
-int ctr_init(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
+int ORDO_CALLCONV
+ctr_init(struct CTR_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv,
+         size_t iv_len,
+         int dir,
+         const void *params)
 {
     size_t block_size = state->block_size;
 
@@ -61,7 +69,14 @@ int ctr_init(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     return ORDO_SUCCESS;
 }
 
-void ctr_update(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ORDO_CALLCONV
+ctr_update(struct CTR_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in,
+           size_t inlen,
+           unsigned char *out,
+           size_t *outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = state->block_size;
@@ -97,13 +112,21 @@ void ctr_update(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void
     }
 }
 
-int ctr_final(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ORDO_CALLCONV
+ctr_final(struct CTR_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out,
+          size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
 }
 
-void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
+void ORDO_CALLCONV
+ctr_free(struct CTR_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state)
 {
     if (!state) return;
 
@@ -112,14 +135,18 @@ void ctr_free(struct CTR_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
     mem_free(state);
 }
 
-void ctr_copy(struct CTR_STATE *dst, const struct CTR_STATE *src, const struct BLOCK_CIPHER* cipher)
+void ORDO_CALLCONV
+ctr_copy(struct CTR_STATE *dst,
+         const struct CTR_STATE *src,
+         const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->counter, src->counter, dst->block_size);
     memcpy(dst->iv, src->iv, dst->block_size);
     dst->remaining = src->remaining;
 }
 
-size_t ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ORDO_CALLCONV
+ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {

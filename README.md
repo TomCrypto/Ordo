@@ -1,4 +1,4 @@
-Ordo v2.3.1
+Ordo v2.4.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,12 +11,11 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.3.1:
- - fixed some endianness bugs, added PowerPC support
-
-Todo:
- - wrap stdint.h in a cross-platform header (for future portability concerns)
- - better endianness handling (it's going to get out hand soon)
+What's new in 2.4.0:
+ - new and improved build system, using CMake
+ - MSVC semi-compatibility (see build notes)
+ - explicit export symbols and calling conventions
+ - a couple minor bug fixes (the API is unchanged)
 
 Feature Map
 -----------
@@ -34,42 +33,31 @@ This table doesn't include every single feature but gives a high level overview 
 Documentation
 -------------
 
-Ordo is documented for Doxygen, and you can automatically generate all documentation via `make doc`. The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working LaTeX environment for this to work). Symlinks will be automatically created in the `doc` directory for your convenience.
+Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target (if available). The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working LaTeX environment for this to work).
 
-Note that by default, internal headers and functions (which should never be used from outside the library except in very specific cases) *are* documented. To disable them, set `INTERNAL_DOCS` to `NO` in the `Doxyfile`. This will remove all internal code from the documentation.
+Note that by default, internal headers and functions (which should never be used from outside the library except in very specific cases) *are* documented. To disable them, set `INTERNAL_DOCS` to `NO` in the `Doxyfile.in` file. This will remove all internal code from the documentation.
 
 How To Build
 ------------
 
-As Ordo is somewhat environment-dependent (it needs to know, among others, the target operating system for some platform-specific API's such as memory locking, and the target processor's endianness and configuration for processor-specific optimizations) we use a custom makefile to facilitate the build process. The makefile is *not* set up for cross-compiling and you will need to set this up yourself if you wish to build for different operating systems. If you are building for the current operating system, then you may tweak the processor architecture and Ordo will optimize accordingly, but unless you know what you are doing you should just build for your current system.
+We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to.
 
-The makefile is used as follows:
+- STATIC_LIB: builds the library as a static library, in addition to the standard shared library build. Note the static library is suffixed with `_s`.
+- NO_ASM: disables **all** assembly code paths in the library, and does not even include the assembly files in the build process.
+- NATIVE_ARCH: tries to get the compiler to tune the library for the current system (e.g. `-march=native` or equivalent).
+- NO_POOL: turns off the memory pool, requiring you to provide a custom allocator (experimental, do not use).
 
-    make extra=[arguments to the compiler]
+### Static Linking
 
-Where the `extra` argument is used to refine processor specification. For instance, if your processor supports the AES-NI instructions, you will want to pass `extra="-maes"`. If you want full optimization for your own system, you should probably use `extra="-march=native"`. Those are passed directly to the compiler so you can provide extra architecture information if you have more information on your target processor, in order to optimize the library further.
+If you wish to link statically to the library, please build it as a static library (this should be done automatically by CMake if you set the right option), and define the `ORDO_STATIC_LIB` preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library).
 
-If your operating system is supported by Ordo, it *will run* as everything has a standard C code path. However, if specific optimizations are not available for your system and/or processor architecture, performance may not be ideal.
+### MSVC and Assembly
 
-Finally, there are a few additional configuration options possible (just pass them as arguments to `make`):
+The GCC, MinGW, and Clang compilers are able to process assembly source files as though they were ordinary C source files. MSVC does not, and will ignore the .S files completely (therefore only the `NO_ASM` build is technically supported out of the box). To make MSVC understand the assembly files, you will need to write custom build rules to send them to a third party assembler (such as `NASM`), and you will need to preprocess the assembly files to get them into the format expected by said assembler. We are working on a solution to automate this.
 
-* `strip=1` will strip symbols from the the built libraries using the `strip` tool, generally making them a bit smaller.
-* `debug=1` will enable the debug build functionality, which will disable all optimizations and assembly code paths, and enable debugging symbols. By default, debug mode is not enabled.
-* `shared=1` will build a shared library (`libordo.so`) instead of a static one (`libordo.a`) by default. Note that you will need to `make clean` if you want to change from a static to a shared library, as the object files are not compatible between both library types (shared libraries require position independent code whereas static ones don't).
-* `nopthread=1` will build the library without linking to `pthread`. Use this when you do not actually need the `pthread` mutex implementation, e.g. under Windows.
+### Additional Notes
 
-To build and run the tests, use `make tests` and run the executable in `tests/bin`. To build the samples, use `make samples`. The samples will be built into the `samples/bin` directory where you can try them out. Note the `shared` and `nopthread` makefile parameters also apply to the tests and samples, and they must be the same for the library and the tests/samples.
-
-If you want to have both a static and a shared library, first do `make` to build the static library, then `make clean_obj` to remove the object files (but not the newly created library) and finally `make shared=1`. You should probably then do another `make clean_obj` to remove the object files for consistency.
-
-For most uses, the build process should go like this:
-
-    make
-    make tests
-    cd tests
-    ./bin/tests # add "-color" if your terminal supports it
-
-Finally, `make clean` will remove all generated files in the repository, leaving behind only original content.
+- On Windows, the tests and samples may require you to move the library's DLL around to make the resulting executables run.
 
 Compatibility
 -------------
@@ -83,12 +71,6 @@ The library has been tested against the following platforms:
 * Windows i386, x86_64
 * Debian PowerPC (32-bit)
 * Debian ARM (armv5tejl)
-
-The following compilers are supported (for building the library):
-
-* gcc
-* MinGW (use `msys` for the makefiles to work, and perhaps `CC=gcc` when invoking the makefile)
-* Clang (should work out of the box with `-no-integrated-as` since Clang doesn't use the same assembler as gcc. To actually fix this, sanitize the assembly files to conform to the `llvm` assembler used by Clang - note the makefile does this automatically when it detects Clang is being used)
 
 Conclusion
 ----------

@@ -6,12 +6,18 @@
 
 /******************************************************************************/
 
-typedef void  *(*STREAM_ALLOC)  (void                                      );
-typedef  int   (*STREAM_INIT)   (void *, const void *, size_t, const void *);
-typedef void   (*STREAM_UPDATE) (void *,       void *, size_t              );
-typedef void   (*STREAM_FREE)   (void *                                    );
-typedef void   (*STREAM_COPY)   (void *, const void *                      );
-typedef size_t (*STREAM_QUERY)  (int, size_t                               );
+typedef void  *(ORDO_CALLCONV *STREAM_ALLOC)
+    (void);
+typedef  int   (ORDO_CALLCONV *STREAM_INIT)
+    (void *, const void *, size_t, const void *);
+typedef void   (ORDO_CALLCONV *STREAM_UPDATE)
+    (void *, void *, size_t);
+typedef void   (ORDO_CALLCONV *STREAM_FREE)
+    (void *);
+typedef void   (ORDO_CALLCONV *STREAM_COPY)
+    (void *, const void *);
+typedef size_t (ORDO_CALLCONV *STREAM_QUERY)
+    (int, size_t);
 
 struct STREAM_CIPHER
 {
@@ -26,7 +32,8 @@ struct STREAM_CIPHER
 
 /******************************************************************************/
 
-const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
+const char * ORDO_CALLCONV
+stream_cipher_name(const struct STREAM_CIPHER *primitive)
 {
     return primitive->name;
 }
@@ -49,19 +56,22 @@ static struct STREAM_CIPHER primitives[] =
     }
 };
 
-const struct STREAM_CIPHER *rc4(void)
+const struct STREAM_CIPHER * ORDO_CALLCONV
+rc4(void)
 {
     return &primitives[RC4_ID];
 }
 
 /******************************************************************************/
 
-size_t stream_cipher_count(void)
+size_t ORDO_CALLCONV
+stream_cipher_count(void)
 {
     return sizeof(primitives) / sizeof(struct STREAM_CIPHER);
 }
 
-const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
+const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_name(const char *name)
 {
     size_t t;
 
@@ -75,12 +85,14 @@ const struct STREAM_CIPHER* stream_cipher_by_name(const char *name)
     return 0;
 }
 
-const struct STREAM_CIPHER *stream_cipher_by_index(size_t index)
+const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_index(size_t index)
 {
     return (index < stream_cipher_count()) ? &primitives[index] : 0;
 }
 
-const struct STREAM_CIPHER *stream_cipher_by_id(size_t id)
+const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_id(size_t id)
 {
     switch (id)
     {
@@ -91,43 +103,49 @@ const struct STREAM_CIPHER *stream_cipher_by_id(size_t id)
 
 /******************************************************************************/
 
-void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
+void * ORDO_CALLCONV
+stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
 {
     return primitive->alloc();
 }
 
-int stream_cipher_init(const struct STREAM_CIPHER *primitive,
-                       void* state,
-                       const void *key,
-                       size_t key_len,
-                       const void *params)
+int ORDO_CALLCONV
+stream_cipher_init(const struct STREAM_CIPHER *primitive,
+                   void* state,
+                   const void *key,
+                   size_t key_len,
+                   const void *params)
 {
     return primitive->init(state, key, key_len, params);
 }
 
-void stream_cipher_update(const struct STREAM_CIPHER *primitive,
-                          void* state,
-                          void *buffer,
-                          size_t len)
+void ORDO_CALLCONV
+stream_cipher_update(const struct STREAM_CIPHER *primitive,
+                     void* state,
+                     void *buffer,
+                     size_t len)
 {
     primitive->update(state, buffer, len);
 }
 
-void stream_cipher_free(const struct STREAM_CIPHER *primitive,
-                        void *state)
+void ORDO_CALLCONV
+stream_cipher_free(const struct STREAM_CIPHER *primitive,
+                   void *state)
 {
     primitive->free(state);
 }
 
-void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
-                        void *dst,
-                        const void *src)
+void ORDO_CALLCONV
+stream_cipher_copy(const struct STREAM_CIPHER *primitive,
+                   void *dst,
+                   const void *src)
 {
     primitive->copy(dst, src);
 }
 
-size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,
-                           int query, size_t value)
+size_t ORDO_CALLCONV
+stream_cipher_query(const struct STREAM_CIPHER *primitive,
+                    int query, size_t value)
 {
     return primitive->query(query, value);
 }

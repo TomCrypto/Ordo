@@ -1,6 +1,8 @@
 #ifndef ORDO_STREAM_CIPHERS_H
 #define ORDO_STREAM_CIPHERS_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/stream_ciphers/stream_params.h"
 
 /******************************************************************************/
@@ -25,12 +27,14 @@ struct STREAM_CIPHER;
  *  @returns Returns the stream cipher's name.
  *  @remarks This name can then be used in \c stream_cipher_by_name().
 */
-const char *stream_cipher_name(const struct STREAM_CIPHER *primitive);
+ORDO_API const char * ORDO_CALLCONV
+stream_cipher_name(const struct STREAM_CIPHER *primitive);
 
 /******************************************************************************/
 
 /*! The RC4 stream cipher. */
-const struct STREAM_CIPHER *rc4(void);
+ORDO_API const struct STREAM_CIPHER * ORDO_CALLCONV
+rc4(void);
 
 /******************************************************************************/
 
@@ -38,14 +42,16 @@ const struct STREAM_CIPHER *rc4(void);
  *  @returns The number of available stream ciphers (at least one).
  *  @remarks This is for use in enumerating stream cipher ID's.
 */
-size_t stream_cipher_count(void);
+ORDO_API size_t ORDO_CALLCONV
+stream_cipher_count(void);
 
 /*! Returns a stream cipher primitive from a name.
  *  @param name A stream cipher name.
  *  @returns The corresponding stream cipher primitive, or nil if no such
  *           stream cipher exists.
 */
-const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
+ORDO_API const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_name(const char *name);
 
 /*! Returns a stream cipher primitive from an index.
  *  @param index A stream cipher index.
@@ -54,14 +60,16 @@ const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
  *  @remarks Use \c stream_cipher_count() to get an upper bound on
  *           stream cipher indices.
 */
-const struct STREAM_CIPHER *stream_cipher_by_index(size_t index);
+ORDO_API const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_index(size_t index);
 
 /*! Returns a stream cipher primitive from a primitive ID.
  *  @param id A primitive ID.
  *  @returns The corresponding stream cipher primitive, or nil if no such
  *           stream cipher exists.
 */
-const struct STREAM_CIPHER *stream_cipher_by_id(size_t id);
+ORDO_API const struct STREAM_CIPHER * ORDO_CALLCONV
+stream_cipher_by_id(size_t id);
 
 /******************************************************************************/
 
@@ -69,7 +77,8 @@ const struct STREAM_CIPHER *stream_cipher_by_id(size_t id);
  *  @param primitive A stream cipher primitive.
  *  @returns Returns an allocated stream cipher state, or nil on error.
 */
-void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
+ORDO_API void * ORDO_CALLCONV
+stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
 
 /*! Initializes a stream cipher state.
  *  @param primitive A stream cipher primitive.
@@ -79,11 +88,12 @@ void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
  *  @param params Stream cipher specific parameters.
  *  @returns Returns \c #ORDO_SUCCESS on success, or an error code.
 */
-int stream_cipher_init(const struct STREAM_CIPHER *primitive,
-                       void* state,
-                       const void *key,
-                       size_t key_len,
-                       const void *params);
+ORDO_API int ORDO_CALLCONV
+stream_cipher_init(const struct STREAM_CIPHER *primitive,
+                   void* state,
+                   const void *key,
+                   size_t key_len,
+                   const void *params);
 
 /*! Encrypts or decrypts a buffer using a stream cipher state.
  *  @param primitive A stream cipher primitive.
@@ -97,17 +107,19 @@ int stream_cipher_init(const struct STREAM_CIPHER *primitive,
  *           unlike block ciphers which are deterministic
  *           permutations.
 */
-void stream_cipher_update(const struct STREAM_CIPHER *primitive,
-                          void* state,
-                          void *buffer,
-                          size_t len);
+ORDO_API void ORDO_CALLCONV
+stream_cipher_update(const struct STREAM_CIPHER *primitive,
+                     void* state,
+                     void *buffer,
+                     size_t len);
 
 /*! Frees a stream cipher state.
  *  @param primitive A stream cipher primitive.
  *  @param state A stream cipher state.
 */
-void stream_cipher_free(const struct STREAM_CIPHER *primitive,
-                        void *state);
+ORDO_API void ORDO_CALLCONV
+stream_cipher_free(const struct STREAM_CIPHER *primitive,
+                   void *state);
 
 /*! Copies a stream cipher state to another.
  *  @param primitive A stream cipher primitive.
@@ -116,9 +128,10 @@ void stream_cipher_free(const struct STREAM_CIPHER *primitive,
  *  @remarks Both states must have been initialized with the same stream
  *           cipher and parameters.
 */
-void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
-                        void *dst,
-                        const void *src);
+ORDO_API void ORDO_CALLCONV
+stream_cipher_copy(const struct STREAM_CIPHER *primitive,
+                   void *dst,
+                   const void *src);
 
 /*! Queries a stream cipher for suitable parameters.
  *  @param primitive A stream cipher primitive.
@@ -127,8 +140,9 @@ void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
  *  @returns Returns a suitable parameter of type \c query based on \c value.
  *  @see query.h
 */
-size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,
-                           int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+stream_cipher_query(const struct STREAM_CIPHER *primitive,
+                    int query, size_t value);
 
 #ifdef __cplusplus
 }

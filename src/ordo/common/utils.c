@@ -2,7 +2,8 @@
 
 /******************************************************************************/
 
-int pad_check(const unsigned char *buffer, uint8_t padding)
+int ORDO_CALLCONV
+pad_check(const unsigned char *buffer, uint8_t padding)
 {
     size_t t;
 
@@ -12,7 +13,8 @@ int pad_check(const unsigned char *buffer, uint8_t padding)
     return 1;
 }
 
-void xor_buffer(void *dst, const void *src, size_t len)
+void ORDO_CALLCONV
+xor_buffer(void *dst, const void *src, size_t len)
 {
     while (len--)
     {
@@ -24,7 +26,8 @@ void xor_buffer(void *dst, const void *src, size_t len)
     }
 }
 
-void inc_buffer(unsigned char *buffer, size_t len)
+void ORDO_CALLCONV
+inc_buffer(unsigned char *buffer, size_t len)
 {
     size_t carry = 1;
     size_t t = 0;

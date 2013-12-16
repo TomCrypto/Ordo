@@ -27,8 +27,8 @@
  * The relevant code (rc4.c and rc4.S) can then include/exclude accordingly,
  * simplifying maintenance costs and improving overall readability.
  *
- * Finally, if `ORDO_DEBUG` is defined (i.e. Ordo is being compiled in debug
- * mode), the standard C code path \b must unconditionally be selected.
+ * Finally, if `ORDO_NO_ASM` is defined, the standard C code path \b must
+ * unconditionally be selected.
  *
  * This module also defines the \c ASM_WORD type, which is the type to be
  * used when passing integer parameters to assembly routines (not pointers)
@@ -58,7 +58,7 @@ extern "C" {
 
 /******************************************************************************/
 
-#ifdef ORDO_DEBUG
+#ifdef ORDO_NO_ASM
 
     #define RC4_STANDARD
 

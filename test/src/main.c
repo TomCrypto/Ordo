@@ -62,12 +62,12 @@ static int parse_args(int argc, char *argv[], int *color, FILE **extended)
 
     for (t = 1; t < argc; ++t)
     {
-        if (!strcmp(argv[t], "-color"))
+        if (!strcmp(argv[t], "--color"))
         {
             if (*color == 1) return 1;
             *color = 1;
         }
-        else if (!strcmp(argv[t], "-extended"))
+        else if (!strcmp(argv[t], "--extended"))
         {
             if (*extended != 0) return 1;
             *extended = stderr;
@@ -81,9 +81,9 @@ static int parse_args(int argc, char *argv[], int *color, FILE **extended)
 static void print_usage(int argc, char *argv[])
 {
     printf("Usage:\n");
-    printf("\t%s          \truns the test driver (plain mode).\n", argv[0]);
-    printf("\t%s -color   \truns the test driver using colors.\n", argv[0]);
-    printf("\t%s -extended\toutputs extended test information.\n", argv[0]);
+    printf("\t%s           \truns the test driver (plain mode).\n", argv[0]);
+    printf("\t%s --color   \truns the test driver using colors.\n", argv[0]);
+    printf("\t%s --extended\toutputs extended test information.\n", argv[0]);
 }
 
 int main(int argc, char *argv[])

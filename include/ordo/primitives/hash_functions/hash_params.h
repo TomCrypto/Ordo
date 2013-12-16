@@ -6,6 +6,8 @@
 #include <stdint.h>
 /*! @endcond */
 
+#include "ordo/internal/api.h"
+
 /******************************************************************************/
 
 #ifdef __cplusplus
@@ -23,6 +25,7 @@ extern "C" {
  *  @remarks Refer to the Skein specification to know more about what each
  *           parameter field stands for.
 */
+#pragma pack(push,1)
 struct SKEIN256_PARAMS
 {
     /*! The schema identifier, on four bytes. */
@@ -41,6 +44,10 @@ struct SKEIN256_PARAMS
     /*! Unused, should be left zero according to the Skein specification. */
     uint8_t unused[16];
 };
+#pragma pack(pop)
+
+ORDO_API struct SKEIN256_PARAMS ORDO_CALLCONV
+skein256_default(void);
 
 #ifdef __cplusplus
 }

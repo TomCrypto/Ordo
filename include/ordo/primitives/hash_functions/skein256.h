@@ -1,6 +1,8 @@
 #ifndef ORDO_SKEIN256_H
 #define ORDO_SKEIN256_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/hash_functions/hash_params.h"
 
 /******************************************************************************/
@@ -36,19 +38,22 @@ extern "C" {
 struct SKEIN256_STATE;
 
 /*! @see \c hash_function_alloc() */
-struct SKEIN256_STATE* skein256_alloc(void);
+ORDO_API struct SKEIN256_STATE * ORDO_CALLCONV
+skein256_alloc(void);
 
 /*! @see \c hash_function_init()
  *  @retval #ORDO_ARG if parameters were provided and requested an output
  *                       length of zero bytes.
 */
-int skein256_init(struct SKEIN256_STATE *state,
-                  const struct SKEIN256_PARAMS *params);
+ORDO_API int ORDO_CALLCONV
+skein256_init(struct SKEIN256_STATE *state,
+              const struct SKEIN256_PARAMS *params);
 
 /*! @see \c hash_function_update() */
-void skein256_update(struct SKEIN256_STATE *state,
-                     const void *buffer,
-                     size_t len);
+ORDO_API void ORDO_CALLCONV
+skein256_update(struct SKEIN256_STATE *state,
+                const void *buffer,
+                size_t len);
 
 /*! @see \c hash_function_final()
  *  @remarks If no parameters were provided, the digest buffer must be at least
@@ -57,18 +62,22 @@ void skein256_update(struct SKEIN256_STATE *state,
  *           by the parameters (note the parameters specify an output length
  *           in \b bits).
 */
-void skein256_final(struct SKEIN256_STATE *state,
-                    void *digest);
+ORDO_API void ORDO_CALLCONV
+skein256_final(struct SKEIN256_STATE *state,
+               void *digest);
 
 /*! @see \c hash_function_free() */
-void skein256_free(struct SKEIN256_STATE *state);
+ORDO_API void ORDO_CALLCONV
+skein256_free(struct SKEIN256_STATE *state);
 
 /*! @see \c hash_function_copy() */
-void skein256_copy(struct SKEIN256_STATE *dst,
-                   const struct SKEIN256_STATE *src);
+ORDO_API void ORDO_CALLCONV
+skein256_copy(struct SKEIN256_STATE *dst,
+              const struct SKEIN256_STATE *src);
 
 /*! @see \c hash_function_query() */
-size_t skein256_query(int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+skein256_query(int query, size_t value);
 
 #ifdef __cplusplus
 }

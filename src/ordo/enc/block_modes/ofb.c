@@ -18,7 +18,8 @@ struct OFB_STATE
     size_t block_size;
 };
 
-struct OFB_STATE* ofb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
+struct OFB_STATE * ORDO_CALLCONV
+ofb_alloc(const struct BLOCK_CIPHER* cipher, void* cipher_state)
 {
     struct OFB_STATE* state = mem_alloc(sizeof(struct OFB_STATE));
     if (!state) goto fail;
@@ -36,7 +37,14 @@ fail:
     return 0;
 }
 
-int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const void* iv, size_t iv_len, int dir, const void* params)
+int ORDO_CALLCONV
+ofb_init(struct OFB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state,
+         const void *iv,
+         size_t iv_len,
+         int dir,
+         const void *params)
 {
     size_t block_size = state->block_size;
 
@@ -53,7 +61,14 @@ int ofb_init(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* c
     return ORDO_SUCCESS;
 }
 
-void ofb_update(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, const unsigned char* in, size_t inlen, unsigned char* out, size_t* outlen)
+void ORDO_CALLCONV
+ofb_update(struct OFB_STATE *state,
+           const struct BLOCK_CIPHER *cipher,
+           void *cipher_state,
+           const unsigned char *in,
+           size_t inlen,
+           unsigned char *out,
+           size_t *outlen)
 {
     /* Variable to store how much data can be processed per iteration. */
     size_t block_size = state->block_size;
@@ -87,13 +102,21 @@ void ofb_update(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void
     }
 }
 
-int ofb_final(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state, unsigned char* out, size_t* outlen)
+int ORDO_CALLCONV
+ofb_final(struct OFB_STATE *state,
+          const struct BLOCK_CIPHER *cipher,
+          void *cipher_state,
+          unsigned char *out,
+          size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
 }
 
-void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* cipher_state)
+void ORDO_CALLCONV
+ofb_free(struct OFB_STATE *state,
+         const struct BLOCK_CIPHER *cipher,
+         void *cipher_state)
 {
     if (!state) return;
 
@@ -101,13 +124,17 @@ void ofb_free(struct OFB_STATE *state, const struct BLOCK_CIPHER* cipher, void* 
     mem_free(state);
 }
 
-void ofb_copy(struct OFB_STATE *dst, const struct OFB_STATE *src, const struct BLOCK_CIPHER* cipher)
+void ORDO_CALLCONV
+ofb_copy(struct OFB_STATE *dst,
+         const struct OFB_STATE *src,
+         const struct BLOCK_CIPHER *cipher)
 {
     memcpy(dst->iv, src->iv, dst->block_size);
     dst->remaining = src->remaining;
 }
 
-size_t ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ORDO_CALLCONV
+ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {

@@ -1,5 +1,6 @@
 #include "ordo/primitives/hash_functions/sha256.h"
 
+#include "ordo/internal/environment.h"
 #include "ordo/internal/endianness.h"
 
 #include "ordo/internal/mem.h"
@@ -41,10 +42,12 @@ static const uint32_t sha256_table[64] =
 #define ma(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
 #define ch(x, y, z) ((x & y) ^ (~x & z))
 
-static void sha256_compress(const uint32_t block[16], uint32_t digest[8])
-__attribute__((hot));
+static void ORDO_CALLCONV
+sha256_compress(const uint32_t block[16], uint32_t digest[8])
+ORDO_HOT_CODE;
 
-void sha256_compress(const uint32_t block[16], uint32_t digest[8])
+void ORDO_CALLCONV
+sha256_compress(const uint32_t block[16], uint32_t digest[8])
 {
     size_t t;
 
@@ -110,13 +113,15 @@ struct SHA256_STATE
     uint64_t msg_len;
 };
 
-struct SHA256_STATE *sha256_alloc(void)
+struct SHA256_STATE * ORDO_CALLCONV
+sha256_alloc(void)
 {
     return mem_alloc(sizeof(struct SHA256_STATE));
 }
 
-int sha256_init(struct SHA256_STATE *state,
-                const void *params)
+int ORDO_CALLCONV
+sha256_init(struct SHA256_STATE *state,
+            const void *params)
 {
     memcpy(state->digest, sha256_iv, SHA256_DIGEST);
     state->block_len = 0;
@@ -125,15 +130,16 @@ int sha256_init(struct SHA256_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void sha256_update(struct SHA256_STATE *state,
-                   const void *buffer,
-                   size_t size)
+void ORDO_CALLCONV
+sha256_update(struct SHA256_STATE *state,
+              const void *buffer,
+              size_t size)
 {
     state->msg_len += size;
 
     if (state->block_len + size >= SHA256_BLOCK)
     {
-        size_t pad = SHA256_BLOCK - state->block_len;
+        size_t pad = (size_t)(SHA256_BLOCK - state->block_len);
 
         memcpy(offset(state->block, state->block_len), buffer, pad);
         sha256_compress(state->block, state->digest);
@@ -156,8 +162,9 @@ void sha256_update(struct SHA256_STATE *state,
     state->block_len += size;
 }
 
-void sha256_final(struct SHA256_STATE *state,
-                  void *digest)
+void ORDO_CALLCONV
+sha256_final(struct SHA256_STATE *state,
+             void *digest)
 {
     /* See the MD5 code for a description of Merkle padding. */
     uint64_t len = htobe64(bytes(state->msg_len));
@@ -180,18 +187,21 @@ void sha256_final(struct SHA256_STATE *state,
     memcpy(digest, state->digest, SHA256_DIGEST);
 }
 
-void sha256_free(struct SHA256_STATE *state)
+void ORDO_CALLCONV
+sha256_free(struct SHA256_STATE *state)
 {
     mem_free(state);
 }
 
-void sha256_copy(struct SHA256_STATE *dst,
-                 const struct SHA256_STATE *src)
+void ORDO_CALLCONV
+sha256_copy(struct SHA256_STATE *dst,
+            const struct SHA256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SHA256_STATE));
 }
 
-size_t sha256_query(int query, size_t value)
+size_t ORDO_CALLCONV
+sha256_query(int query, size_t value)
 {
     switch(query)
     {

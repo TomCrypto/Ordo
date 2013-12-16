@@ -32,13 +32,15 @@ TEST test(size_t index)
 #include "tests/misc/os_random.h"
 
 /* This tests the digest interface and all hash functions. */
-#include "tests/digest/digest.h"
 #include "tests/hmac/hmac.h"
 #include "tests/pbkdf2/pbkdf2.h"
 
 #include "tests/stream/stream.h"
 #include "tests/block/block.h"
 #include "tests/block_modes/block_modes.h"
+
+#include "tests/digest/digest.h"
+#include "tests/digest/specific/skein256.h"
 
 int register_all_tests(void)
 {
@@ -51,16 +53,26 @@ int register_all_tests(void)
     register_test(test_pad_check);
     register_test(test_xor_buffer);
     register_test(test_inc_buffer);
+    
     register_test(test_digest);
     register_test(test_digest_utilities);
+    
+    register_test(test_skein256);
+    
     register_test(test_hmac);
     register_test(test_pbkdf2);
     register_test(test_stream);
     register_test(test_stream_utilities);
+    
+    
     register_test(test_block);
     register_test(test_block_utilities);
+    
+    
     register_test(test_block_modes);
     register_test(test_block_modes_utilities);
+    
+    
 
     return 0; /* All tests registered. */
 }

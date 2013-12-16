@@ -4,11 +4,11 @@ compiler:
   - clang
 
 script:
-  - make clean && make debug=1 && make tests && cd tests && ./bin/tests -color -extended 2>tests_log_debug && cd ..
-  - make clean && make shared=1 && make tests shared=1 && cd tests && ./bin/tests -color -extended 2>tests_log_sharedlib && cd ..
-  - make clean && make && make tests && cd tests && ./bin/tests -color -extended 2>tests_log_default && cd ..
+  - cd build && cmake .. && make && ./test/test --color --extended 2>test_log_default && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
+  - cd build && cmake .. -DNO_ASM=on && make && ./test/test --color --extended 2>test_log_no_asm && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
+  - cd build && cmake .. -DNATIVE_ARCH=on && make && ./test/test --color --extended 2>test_log_native_arch && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
 
 after_failure:
-  - cd tests && cat ./tests_log_debug && cd ..
-  - cd tests && cat ./tests_log_sharedlib && cd ..
-  - cd tests && cat ./tests_log_default && cd ..
+  - cd build && cat ./tests_log_debug && cd ..
+  - cd build && cat ./tests_log_sharedlib && cd ..
+  - cd build && cat ./tests_log_default && cd ..

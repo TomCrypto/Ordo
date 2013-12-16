@@ -1,6 +1,8 @@
 #ifndef ORDO_VERSION_H
 #define ORDO_VERSION_H
 
+#include "ordo/internal/api.h"
+
 /******************************************************************************/
 
 /*!
@@ -20,17 +22,22 @@ extern "C" {
 #endif
 
 /*! The major version number of the library. */
-int ordo_version_major(void);
+ORDO_API int ORDO_CALLCONV
+ordo_version_major(void);
 /*! The minor version number of the library. */
-int ordo_version_minor(void);
+ORDO_API int ORDO_CALLCONV
+ordo_version_minor(void);
 /*! The revision number of the library. */
-int ordo_version_rev(void);
+ORDO_API int ORDO_CALLCONV
+ordo_version_rev(void);
 
 /*! The name of the platform the library was built for. */
-const char *ordo_platform(void);
+ORDO_API const char * ORDO_CALLCONV
+ordo_platform(void);
 
 /*! The word size of the architecture the library was built for, in bits. */
-int ordo_word_size(void);
+ORDO_API int ORDO_CALLCONV
+ordo_word_size(void);
 
 #ifdef __cplusplus
 }

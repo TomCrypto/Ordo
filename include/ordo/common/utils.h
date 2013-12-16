@@ -6,6 +6,8 @@
 #include <stdint.h>
 /*! @endcond */
 
+#include "ordo/internal/api.h"
+
 #include "ordo/common/errors.h"
 #include "ordo/common/query.h"
 
@@ -40,8 +42,16 @@ extern "C" {
 */
 #define offset(ptr, len) ((unsigned char *)ptr + len)
 
-#define min(a, b) ((a < b) ? a : b)
-#define max(a, b) ((a > b) ? a : b)
+/* min and max are almost always implemented as macros. If they are missing,
+ * assume the standard environment does not provide them, so define them. */
+
+#ifndef min
+    #define min(a, b) ((a < b) ? a : b)
+#endif
+
+#ifndef max
+    #define max(a, b) ((a > b) ? a : b)
+#endif
 
 /* Various bit-rotation operators. */
 #define rol16(n, r) (((n) << (r)) | ((n) >> (16 - (r))))
@@ -62,8 +72,8 @@ extern "C" {
  *           a multiple of the block cipher's block size.
  *  @remarks This implies the buffer must be at least \c padding bytes long.
 */
-int pad_check(const unsigned char *buffer, uint8_t padding)
-__attribute__((hot));
+ORDO_API int ORDO_CALLCONV
+pad_check(const unsigned char *buffer, uint8_t padding);
 
 /*! Performs a bitwise exclusive-or of one buffer onto another.
  *  @param dst The destination buffer, where the result will be stored.
@@ -74,8 +84,8 @@ __attribute__((hot));
  *           the buffer will contain \c len zeroes), otherwise they may not
  *           overlap.
 */
-void xor_buffer(void *dst, const void *src, size_t len)
-__attribute__((hot));
+ORDO_API void ORDO_CALLCONV
+xor_buffer(void *dst, const void *src, size_t len);
 
 /*! Increments a buffer of arbitrary size as though it were a \c len byte
  *  integer stored as a byte array.
@@ -83,8 +93,8 @@ __attribute__((hot));
  *  @param len The size, in bytes, of the buffer.
  *  @remarks Carry propagation is done left-to-right.
 */
-void inc_buffer(unsigned char *buffer, size_t len)
-__attribute__((hot));
+ORDO_API void ORDO_CALLCONV
+inc_buffer(unsigned char *buffer, size_t len);
 
 #ifdef __cplusplus
 }

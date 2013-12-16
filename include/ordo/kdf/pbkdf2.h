@@ -1,6 +1,8 @@
 #ifndef ORDO_PBKDF2_H
 #define ORDO_PBKDF2_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/digest/digest.h"
 
 /******************************************************************************/
@@ -46,15 +48,16 @@ extern "C" {
  *  @remarks Do not use hash parameters which modify the hash function's output
  *           length, or this function's behavior is undefined.
 */
-int pbkdf2(const struct HASH_FUNCTION *hash,
-           const void *params,
-           const void *password,
-           size_t password_len,
-           const void *salt,
-           size_t salt_len,
-           size_t iterations,
-           void *out,
-           size_t out_len);
+ORDO_API int ORDO_CALLCONV
+pbkdf2(const struct HASH_FUNCTION *hash,
+       const void *params,
+       const void *password,
+       size_t password_len,
+       const void *salt,
+       size_t salt_len,
+       size_t iterations,
+       void *out,
+       size_t out_len);
 
 #ifdef __cplusplus
 }

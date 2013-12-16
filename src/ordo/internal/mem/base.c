@@ -1,5 +1,7 @@
 #include "ordo/internal/mem/base.h"
 
+#if !defined(ORDO_DISABLE_POOL)
+
 #include "ordo/internal/environment.h"
 
 /******************************************************************************/
@@ -11,12 +13,14 @@
 
 #include <sys/mman.h>
 
-int mem_lock(void *ptr, size_t len)
+int ORDO_CALLCONV
+mem_lock(void *ptr, size_t len)
 {
     return mlock(ptr, len);
 }
 
-void mem_unlock(void *ptr, size_t len)
+void ORDO_CALLCONV
+mem_unlock(void *ptr, size_t len)
 {
     munlock(ptr, len);
 }
@@ -25,12 +29,14 @@ void mem_unlock(void *ptr, size_t len)
 
 #include <windows.h>
 
-int mem_lock(void *ptr, size_t len)
+int ORDO_CALLCONV
+mem_lock(void *ptr, size_t len)
 {
     return !VirtualLock(ptr, len);
 }
 
-void mem_unlock(void *ptr, size_t len)
+void ORDO_CALLCONV
+mem_unlock(void *ptr, size_t len)
 {
     VirtualUnlock(ptr, len);
 }
@@ -38,5 +44,7 @@ void mem_unlock(void *ptr, size_t len)
 #else
 
 #error No memory pool base implementation for this platform!
+
+#endif
 
 #endif

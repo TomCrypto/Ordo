@@ -1,5 +1,9 @@
 #include "ordo/internal/mem.h"
 
+#if !defined(ORDO_DISABLE_POOL)
+
+#include "ordo/internal/environment.h"
+
 #include "ordo/internal/mem/base.h"
 #include "ordo/internal/mem/mutex.h"
 #include "ordo/internal/mem/params.h"
@@ -8,7 +12,7 @@
 
 /* The generic allocator uses a high-performance, fixed-size slab allocator, *
  * sufficient for most uses. It does *not* fall back to an alternative pool. */
-static unsigned char pool[POOL_LEN] __attribute__ ((aligned(POOL_WORD)));
+static ORDO_ALIGN(POOL_WORD) unsigned char pool[POOL_LEN];
 static size_t allocated[POOL_SIZE];
 static size_t usage;
 
@@ -28,7 +32,8 @@ static void mem_final(void)
     mutex_free();
 }
 
-int mem_init(void)
+int ORDO_CALLCONV
+mem_init(void)
 {
     if (state != M_READY)
     {
@@ -57,7 +62,8 @@ int mem_init(void)
     return 0;
 }
 
-static void *ordo_mem_alloc(size_t size)
+static void * ORDO_CALLCONV
+ordo_mem_alloc(size_t size)
 {
     if (state == M_READY)
     {
@@ -96,7 +102,8 @@ retry:
     return 0;
 }
 
-static void ordo_mem_free(void *ptr)
+static void ORDO_CALLCONV
+ordo_mem_free(void *ptr)
 {
     if ((!ptr) || (state != M_READY)) return;
 
@@ -122,17 +129,8 @@ static void ordo_mem_free(void *ptr)
 static MEM_ALLOC mem_alloc_f = ordo_mem_alloc;
 static MEM_FREE mem_free_f   = ordo_mem_free;
 
-void *mem_alloc(size_t size)
-{
-    return mem_alloc_f(size);
-}
-
-void mem_free(void *ptr)
-{
-    mem_free_f(ptr);
-}
-
-void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
+void ORDO_CALLCONV
+mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
 {
     int revert = ((alloc == 0) && (free == 0));
 
@@ -140,7 +138,39 @@ void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
     mem_free_f  = (revert ? ordo_mem_free  : free);
 }
 
-void mem_erase(void *ptr, size_t size)
+#else
+
+int ORDO_CALLCONV
+mem_init(void)
+{
+    return 0;
+}
+
+static MEM_ALLOC mem_alloc_f = 0;
+static MEM_FREE mem_free_f   = 0;
+
+void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
+{
+    mem_alloc_f = alloc;
+    mem_free_f  = free;
+}
+
+#endif
+
+void * ORDO_CALLCONV
+mem_alloc(size_t size)
+{
+    return mem_alloc_f(size);
+}
+
+void ORDO_CALLCONV
+mem_free(void *ptr)
+{
+    mem_free_f(ptr);
+}
+
+void ORDO_CALLCONV
+mem_erase(void *ptr, size_t size)
 {
     if (ptr)
     {

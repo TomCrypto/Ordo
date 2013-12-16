@@ -1,6 +1,8 @@
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/common/identification.h"
 #include "ordo/common/version.h"
 #include "ordo/common/utils.h"
@@ -35,7 +37,8 @@ extern "C" {
  *  @remarks This function should be called prior to using the library for
              most purposes.
 */
-int ordo_init(void);
+ORDO_API int ORDO_CALLCONV
+ordo_init(void);
 
 /*! Encrypts or decrypts a buffer using a block cipher in an encryption-only
  *  mode of operation.
@@ -58,15 +61,16 @@ int ordo_init(void);
           which padding (with padding enabled) is used. See remarks
           about padding in \c enc_block.h.
 */
-int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
-                   const void *cipher_params,
-                   const struct BLOCK_MODE* mode,
-                   const void *mode_params,
-                   int direction,
-                   const void *key, size_t key_len,
-                   const void *iv, size_t iv_len,
-                   const void *in, size_t in_len,
-                   void* out, size_t *out_len);
+ORDO_API int ORDO_CALLCONV
+ordo_enc_block(const struct BLOCK_CIPHER* cipher,
+               const void *cipher_params,
+               const struct BLOCK_MODE* mode,
+               const void *mode_params,
+               int direction,
+               const void *key, size_t key_len,
+               const void *iv, size_t iv_len,
+               const void *in, size_t in_len,
+               void* out, size_t *out_len);
 
 /*! Encrypts or decrypts a buffer using a stream cipher.
  @param cipher The stream cipher to use.
@@ -86,9 +90,10 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
           ciphers. An implication of this, is that encrypting a message
           twice with the same key yields the original message.
 */
-int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
-                    const void *key, size_t key_len,
-                    void *inout, size_t len);
+ORDO_API int ORDO_CALLCONV
+ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
+                const void *key, size_t key_len,
+                void *inout, size_t len);
 
 /*! Returns the digest of a buffer.
  @param hash The hash function to use.
@@ -98,9 +103,10 @@ int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
  @param digest The buffer in which to put the digest.
  @return Returns \c #ORDO_SUCCESS on success, or an error code.
 */
-int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
-                const void *in, size_t in_len,
-                void *digest);
+ORDO_API int ORDO_CALLCONV
+ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
+            const void *in, size_t in_len,
+            void *digest);
 
 /*! Returns the HMAC fingerprint of a buffer.
  @param hash The hash function to use.
@@ -114,10 +120,11 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
  @remarks Do not use hash parameters which modify the hash function's output
           length, or this function's behavior is undefined.
 */
-int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
-              const void *key, size_t key_len,
-              const void *in, size_t in_len,
-              void* fingerprint);
+ORDO_API int ORDO_CALLCONV
+ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
+          const void *key, size_t key_len,
+          const void *in, size_t in_len,
+          void* fingerprint);
 
 #ifdef __cplusplus
 }

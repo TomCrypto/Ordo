@@ -1,5 +1,6 @@
 #include "ordo/primitives/hash_functions/md5.h"
 
+#include "ordo/internal/environment.h"
 #include "ordo/internal/endianness.h"
 
 #include "ordo/internal/mem.h"
@@ -17,10 +18,12 @@ static const uint32_t md5_iv[4] =
     0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 };
 
-static void md5_compress(uint32_t block[16], uint32_t digest[4])
-__attribute__((hot));
+static void ORDO_CALLCONV
+md5_compress(uint32_t block[16], uint32_t digest[4])
+ORDO_HOT_CODE;
 
-static void md5_compress(uint32_t block[16], uint32_t digest[4])
+static void ORDO_CALLCONV
+md5_compress(uint32_t block[16], uint32_t digest[4])
 {
     uint32_t a = digest[0];
     uint32_t b = digest[1];
@@ -181,13 +184,15 @@ struct MD5_STATE
     uint64_t msg_len;
 };
 
-struct MD5_STATE *md5_alloc(void)
+struct MD5_STATE * ORDO_CALLCONV
+md5_alloc(void)
 {
     return mem_alloc(sizeof(struct MD5_STATE));
 }
 
-int md5_init(struct MD5_STATE *state,
-             const void *params)
+int ORDO_CALLCONV
+md5_init(struct MD5_STATE *state,
+         const void *params)
 {
     memcpy(state->digest, md5_iv, MD5_DIGEST);
     state->block_len = 0;
@@ -196,16 +201,18 @@ int md5_init(struct MD5_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void md5_update(struct MD5_STATE *state,
-                const void *buffer,
-                size_t size)
+void ORDO_CALLCONV
+md5_update(struct MD5_STATE *state,
+           const void *buffer,
+           size_t size)
 {
     state->msg_len += size;
 
     /* Do we have enough to complete a message block? */
     if (state->block_len + size >= MD5_BLOCK)
     {
-        size_t pad = MD5_BLOCK - state->block_len;
+        /* This is certain to be in [0 .. MD5_BLOCK - 1]. */
+        size_t pad = (size_t)(MD5_BLOCK - state->block_len);
 
         memcpy(offset(state->block, state->block_len), buffer, pad);
         md5_compress(state->block, state->digest);
@@ -230,8 +237,9 @@ void md5_update(struct MD5_STATE *state,
     state->block_len += size;
 }
 
-void md5_final(struct MD5_STATE *state,
-               void *digest)
+void ORDO_CALLCONV
+md5_final(struct MD5_STATE *state,
+          void *digest)
 {
     uint64_t len = htole64(bytes(state->msg_len));
     uint8_t one = 0x80, zero = 0x00;
@@ -261,18 +269,21 @@ void md5_final(struct MD5_STATE *state,
     memcpy(digest, state->digest, MD5_DIGEST);
 }
 
-void md5_free(struct MD5_STATE *state)
+void ORDO_CALLCONV
+md5_free(struct MD5_STATE *state)
 {
     mem_free(state);
 }
 
-void md5_copy(struct MD5_STATE *dst,
-              const struct MD5_STATE *src)
+void ORDO_CALLCONV
+md5_copy(struct MD5_STATE *dst,
+         const struct MD5_STATE *src)
 {
     memcpy(dst, src, sizeof(struct MD5_STATE));
 }
 
-size_t md5_query(int query, size_t value)
+size_t ORDO_CALLCONV
+md5_query(int query, size_t value)
 {
     switch(query)
     {

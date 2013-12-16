@@ -6,12 +6,18 @@
 
 /******************************************************************************/
 
-typedef void  *(*BLOCK_ALLOC)  (void                                      );
-typedef  int   (*BLOCK_INIT)   (void *, const void *, size_t, const void *);
-typedef void   (*BLOCK_UPDATE) (void *,       void *                      );
-typedef void   (*BLOCK_FREE)   (void *                                    );
-typedef void   (*BLOCK_COPY)   (void *, const void *                      );
-typedef size_t (*BLOCK_QUERY)  (int, size_t                               );
+typedef void  *(ORDO_CALLCONV *BLOCK_ALLOC)
+    (void);
+typedef  int   (ORDO_CALLCONV *BLOCK_INIT)
+    (void *, const void *, size_t, const void *);
+typedef void   (ORDO_CALLCONV *BLOCK_UPDATE)
+    (void *, void *);
+typedef void   (ORDO_CALLCONV *BLOCK_FREE)
+    (void *);
+typedef void   (ORDO_CALLCONV *BLOCK_COPY)
+    (void *, const void *);
+typedef size_t (ORDO_CALLCONV *BLOCK_QUERY)
+    (int, size_t);
 
 struct BLOCK_CIPHER
 {
@@ -27,7 +33,8 @@ struct BLOCK_CIPHER
 
 /******************************************************************************/
 
-const char *block_cipher_name(const struct BLOCK_CIPHER *primitive)
+const char * ORDO_CALLCONV
+block_cipher_name(const struct BLOCK_CIPHER *primitive)
 {
     return primitive->name;
 }
@@ -75,29 +82,34 @@ static struct BLOCK_CIPHER primitives[] =
     }
 };
 
-const struct BLOCK_CIPHER *nullcipher(void)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+nullcipher(void)
 {
     return &primitives[NULLCIPHER_ID];
 }
 
-const struct BLOCK_CIPHER *threefish256(void)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+threefish256(void)
 {
     return &primitives[THREEFISH256_ID];
 }
 
-const struct BLOCK_CIPHER *aes(void)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+aes(void)
 {
     return &primitives[AES_ID];
 }
 
 /******************************************************************************/
 
-size_t block_cipher_count(void)
+size_t ORDO_CALLCONV
+block_cipher_count(void)
 {
     return sizeof(primitives) / sizeof(struct BLOCK_CIPHER);
 }
 
-const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_name(const char *name)
 {
     size_t t;
 
@@ -111,12 +123,14 @@ const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
     return 0;
 }
 
-const struct BLOCK_CIPHER *block_cipher_by_index(size_t index)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_index(size_t index)
 {
     return (index < block_cipher_count()) ? &primitives[index] : 0;
 }
 
-const struct BLOCK_CIPHER *block_cipher_by_id(size_t id)
+const struct BLOCK_CIPHER * ORDO_CALLCONV
+block_cipher_by_id(size_t id)
 {
     switch (id)
     {
@@ -129,49 +143,56 @@ const struct BLOCK_CIPHER *block_cipher_by_id(size_t id)
 
 /******************************************************************************/
 
-void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
+void * ORDO_CALLCONV
+block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
 {
     return primitive->alloc();
 }
 
-int block_cipher_init(const struct BLOCK_CIPHER *primitive,
-                      void *state,
-                      const void *key,
-                      size_t key_len,
-                      const void *params)
+int ORDO_CALLCONV
+block_cipher_init(const struct BLOCK_CIPHER *primitive,
+                  void *state,
+                  const void *key,
+                  size_t key_len,
+                  const void *params)
 {
     return primitive->init(state, key, key_len, params);
 }
 
-void block_cipher_forward(const struct BLOCK_CIPHER *primitive,
-                          void *state,
-                          void *block)
+void ORDO_CALLCONV
+block_cipher_forward(const struct BLOCK_CIPHER *primitive,
+                     void *state,
+                     void *block)
 {
     primitive->forward(state, block);
 }
 
-void block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
-                          void *state,
-                          void *block)
+void ORDO_CALLCONV
+block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
+                     void *state,
+                     void *block)
 {
     primitive->inverse(state, block);
 }
 
-void block_cipher_free(const struct BLOCK_CIPHER *primitive,
-                       void *state)
+void ORDO_CALLCONV
+block_cipher_free(const struct BLOCK_CIPHER *primitive,
+                  void *state)
 {
     primitive->free(state);
 }
 
-void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
-                       void *dst,
-                       const void *src)
+void ORDO_CALLCONV
+block_cipher_copy(const struct BLOCK_CIPHER *primitive,
+                  void *dst,
+                  const void *src)
 {
     primitive->copy(dst, src);
 }
 
-size_t block_cipher_query(const struct BLOCK_CIPHER *primitive,
-                          int query, size_t value)
+size_t ORDO_CALLCONV
+block_cipher_query(const struct BLOCK_CIPHER *primitive,
+                   int query, size_t value)
 {
     return primitive->query(query, value);
 }

@@ -11,15 +11,16 @@
 
 /******************************************************************************/
 
-int pbkdf2(const struct HASH_FUNCTION *hash,
-           const void *params,
-           const void *password,
-           size_t password_len,
-           const void *salt,
-           size_t salt_len,
-           size_t iterations,
-           void *out,
-           size_t out_len)
+int ORDO_CALLCONV
+pbkdf2(const struct HASH_FUNCTION *hash,
+       const void *params,
+       const void *password,
+       size_t password_len,
+       const void *salt,
+       size_t salt_len,
+       size_t iterations,
+       void *out,
+       size_t out_len)
 {
     int err = ORDO_SUCCESS;
 

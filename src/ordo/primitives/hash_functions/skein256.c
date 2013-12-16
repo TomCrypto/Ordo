@@ -2,6 +2,7 @@
 
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
+#include "ordo/internal/environment.h"
 #include "ordo/internal/endianness.h"
 
 #include "ordo/internal/mem.h"
@@ -28,22 +29,25 @@ static const uint64_t skein256_iv[4] = {
 
 /* Note this assumes "first" and "final" are boolean (0 or 1). The result is a
  * UBI-compliant tweak, however with a message length only up to 2^64 bits. */
-static void make_tweak(uint64_t tweak[2],
-                       uint64_t type,
-                       uint64_t position,
-                       uint64_t first,
-                       uint64_t final)
+static void ORDO_CALLCONV
+make_tweak(uint64_t tweak[2],
+           uint64_t type,
+           uint64_t position,
+           uint64_t first,
+           uint64_t final)
 {
     tweak[0] = htole64(position);
     tweak[1] = htole64((final << 63) | (first << 62) | (type  << 56));
 }
 
-static void skein256_compress(const uint64_t *block,
-                              uint64_t *state,
-                              uint64_t *tweak)
-__attribute__((hot));
+static void ORDO_CALLCONV
+skein256_compress(const uint64_t *block,
+                  uint64_t *state,
+                  uint64_t *tweak)
+ORDO_HOT_CODE;
 
-void skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
+void ORDO_CALLCONV
+skein256_compress(const uint64_t *block, uint64_t *state, uint64_t *tweak)
 {
     uint64_t subkeys[19][4];
 
@@ -67,13 +71,15 @@ struct SKEIN256_STATE
     uint64_t out_len;
 };
 
-struct SKEIN256_STATE *skein256_alloc(void)
+struct SKEIN256_STATE * ORDO_CALLCONV
+skein256_alloc(void)
 {
     return mem_alloc(sizeof(struct SKEIN256_STATE));
 }
 
-int skein256_init(struct SKEIN256_STATE *state,
-                  const struct SKEIN256_PARAMS *params)
+int ORDO_CALLCONV
+skein256_init(struct SKEIN256_STATE *state,
+              const struct SKEIN256_PARAMS *params)
 {
     state->block_len = 0;
     state->msg_len = 0;
@@ -83,7 +89,7 @@ int skein256_init(struct SKEIN256_STATE *state,
         uint64_t tweak[2];
 
         if (bits(params->out_len) == 0) return ORDO_ARG;
-
+        
         /* Save the output length, in bytes. */
         state->out_len = bits(params->out_len);
 
@@ -109,13 +115,14 @@ int skein256_init(struct SKEIN256_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void skein256_update(struct SKEIN256_STATE *state,
-                     const void *buffer,
-                     size_t size)
+void ORDO_CALLCONV
+skein256_update(struct SKEIN256_STATE *state,
+                const void *buffer,
+                size_t size)
 {
     if (state->block_len + size > SKEIN256_BLOCK)
     {
-        size_t pad = SKEIN256_BLOCK - state->block_len;
+        size_t pad = (size_t)(SKEIN256_BLOCK - state->block_len);
         uint64_t tweak[2];
 
         memcpy(offset(state->block, state->block_len), buffer, pad);
@@ -157,8 +164,9 @@ void skein256_update(struct SKEIN256_STATE *state,
     state->block_len += size;
 }
 
-void skein256_final(struct SKEIN256_STATE *state,
-                    void *digest)
+void ORDO_CALLCONV
+skein256_final(struct SKEIN256_STATE *state,
+               void *digest)
 {
     uint64_t tweak[2];
     uint64_t ctr = 0;
@@ -168,7 +176,7 @@ void skein256_final(struct SKEIN256_STATE *state,
      * mandates zero-fill, so erase any residual input data in the state. */
     memset(offset(state->block, state->block_len),
            0x00,
-           SKEIN256_BLOCK - state->block_len);
+           (size_t)(SKEIN256_BLOCK - state->block_len));
 
     /* However, only the actual input data counts towards the length. */
     state->msg_len += state->block_len;
@@ -189,7 +197,7 @@ void skein256_final(struct SKEIN256_STATE *state,
      * by (loosely stated) running the Threefish-256 cipher in counter mode. */
     while (state->out_len != 0)
     {
-        size_t cpy = min(state->out_len, SKEIN256_BLOCK);
+        size_t cpy = (size_t)min(state->out_len, SKEIN256_BLOCK);
 
         state->block[0] = ctr++;
         memcpy(out, state->state, SKEIN256_INTERNAL);
@@ -202,18 +210,21 @@ void skein256_final(struct SKEIN256_STATE *state,
     }
 }
 
-void skein256_free(struct SKEIN256_STATE *state)
+void ORDO_CALLCONV
+skein256_free(struct SKEIN256_STATE *state)
 {
     mem_free(state);
 }
 
-void skein256_copy(struct SKEIN256_STATE *dst,
-                   const struct SKEIN256_STATE *src)
+void ORDO_CALLCONV
+skein256_copy(struct SKEIN256_STATE *dst,
+              const struct SKEIN256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct SKEIN256_STATE));
 }
 
-size_t skein256_query(int query, size_t value)
+size_t ORDO_CALLCONV
+skein256_query(int query, size_t value)
 {
     switch(query)
     {

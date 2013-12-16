@@ -11,7 +11,8 @@ struct DIGEST_CTX
     void *state;
 };
 
-struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash)
+struct DIGEST_CTX * ORDO_CALLCONV
+digest_alloc(const struct HASH_FUNCTION *hash)
 {
     struct DIGEST_CTX *ctx = mem_alloc(sizeof(*ctx));
     if (!ctx) goto fail;
@@ -27,23 +28,27 @@ fail:
     return 0;
 }
 
-int digest_init(struct DIGEST_CTX *ctx, const void *params)
+int ORDO_CALLCONV
+digest_init(struct DIGEST_CTX *ctx, const void *params)
 {
     return hash_function_init(ctx->hash, ctx->state, params);
 }
 
-void digest_update(struct DIGEST_CTX *ctx,
-                   const void *in, size_t in_len)
+void ORDO_CALLCONV
+digest_update(struct DIGEST_CTX *ctx,
+              const void *in, size_t in_len)
 {
     hash_function_update(ctx->hash, ctx->state, in, in_len);
 }
 
-void digest_final(struct DIGEST_CTX *ctx, void *digest)
+void ORDO_CALLCONV
+digest_final(struct DIGEST_CTX *ctx, void *digest)
 {
     hash_function_final(ctx->hash, ctx->state, digest);
 }
 
-void digest_free(struct DIGEST_CTX *ctx)
+void ORDO_CALLCONV
+digest_free(struct DIGEST_CTX *ctx)
 {
     if (ctx)
     {
@@ -52,12 +57,14 @@ void digest_free(struct DIGEST_CTX *ctx)
     }
 }
 
-void digest_copy(struct DIGEST_CTX *dst, const struct DIGEST_CTX *src)
+void ORDO_CALLCONV
+digest_copy(struct DIGEST_CTX *dst, const struct DIGEST_CTX *src)
 {
     hash_function_copy(dst->hash, dst->state, src->state);
 }
 
-size_t digest_length(const struct HASH_FUNCTION *hash)
+size_t ORDO_CALLCONV
+digest_length(const struct HASH_FUNCTION *hash)
 {
     return hash_function_query(hash, DIGEST_LEN, 0);
 }

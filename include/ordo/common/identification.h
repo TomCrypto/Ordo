@@ -24,25 +24,45 @@ extern "C" {
  *
  * This also allows for a quick overview of what is implemented in Ordo.
  *
- * @TODO: the current values are placeholders used to test whether everything
- *        using them is properly implemented, and will be replaced very soon.
+ * The format to follow for the ID values is as follows, in bit notation
+ * (least significant bit first, 16-bit ID's maximum):
+ *
+ * 0     : set to 1 if the primitive was implemented by a third party (not
+ *         officially included in the library), and set to 0 otherwise
+ *
+ * 1..3  : reserved (set to 0)
+ *
+ * 4..7  : represents the type of primitive (see list below)
+ *
+ * 8..16 : arbitrary number (unique within this type group)
+ *
+ * The type ID's are:
+ * 0: reserved
+ * 1: hash function
+ * 2: block cipher
+ * 3: stream cipher
+ * 4: block mode
+ * 5..F: unused
+ *
+ * As an example, Threefish-256 is not provided by a third party, is a block
+ * cipher, and has the arbitrary number 0x1A, so its ID is 0x1A20.
 */
 
-#define BLOCK_NULLCIPHER                                                 0x0000
-#define BLOCK_THREEFISH256                                               0xE192
-#define BLOCK_AES                                                        0xB077
+#define BLOCK_NULLCIPHER                                                 0xFF20
+#define BLOCK_THREEFISH256                                               0x1A20
+#define BLOCK_AES                                                        0x0C20
 
-#define STREAM_RC4                                                       0x391A
+#define STREAM_RC4                                                       0x3130
 
-#define BLOCK_MODE_ECB                                                   0x7182
-#define BLOCK_MODE_CBC                                                   0xC934
-#define BLOCK_MODE_CTR                                                   0x192D
-#define BLOCK_MODE_CFB                                                   0x03DD
-#define BLOCK_MODE_OFB                                                   0x8190
+#define BLOCK_MODE_ECB                                                   0x8040
+#define BLOCK_MODE_CBC                                                   0x8140
+#define BLOCK_MODE_CTR                                                   0x8240
+#define BLOCK_MODE_CFB                                                   0x8340
+#define BLOCK_MODE_OFB                                                   0x8440
 
-#define HASH_SHA256                                                      0x2841
-#define HASH_MD5                                                         0x48AC
-#define HASH_SKEIN256                                                    0x0180
+#define HASH_SHA256                                                      0x8010
+#define HASH_MD5                                                         0x8110
+#define HASH_SKEIN256                                                    0x8210
 
 #ifdef __cplusplus
 }

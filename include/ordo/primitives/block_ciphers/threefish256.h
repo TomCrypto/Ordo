@@ -1,6 +1,8 @@
 #ifndef ORDO_THREEFISH256_H
 #define ORDO_THREEFISH256_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/block_ciphers/block_params.h"
 
 /******************************************************************************/
@@ -24,7 +26,8 @@ extern "C" {
 struct THREEFISH256_STATE;
 
 /*! @see \c block_cipher_alloc() */
-struct THREEFISH256_STATE *threefish256_alloc(void);
+ORDO_API struct THREEFISH256_STATE * ORDO_CALLCONV
+threefish256_alloc(void);
 
 /*! Initializes a Threefish-256 block cipher context.
  @param state An allocated Threefish-256 context.
@@ -35,27 +38,33 @@ struct THREEFISH256_STATE *threefish256_alloc(void);
           key size passed was invalid.
  @remarks The \c params parameter may be nil if no parameters are required.
 */
-int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t *key, size_t key_len,
-                      const struct THREEFISH256_PARAMS *params);
+ORDO_API int ORDO_CALLCONV
+threefish256_init(struct THREEFISH256_STATE *state,
+                  const uint64_t *key, size_t key_len,
+                  const struct THREEFISH256_PARAMS *params);
 
 /*! @see \c block_cipher_forward() */
-void threefish256_forward(struct THREEFISH256_STATE *state,
-                          uint64_t *block);
+ORDO_API void ORDO_CALLCONV
+threefish256_forward(struct THREEFISH256_STATE *state,
+                     uint64_t *block);
 
 /*! @see \c block_cipher_inverse() */
-void threefish256_inverse(struct THREEFISH256_STATE *state,
-                          uint64_t *block);
+ORDO_API void ORDO_CALLCONV
+threefish256_inverse(struct THREEFISH256_STATE *state,
+                     uint64_t *block);
 
 /*! @see \c block_cipher_free() */
-void threefish256_free(struct THREEFISH256_STATE *state);
+ORDO_API void ORDO_CALLCONV
+threefish256_free(struct THREEFISH256_STATE *state);
 
 /*! @see \c block_cipher_copy() */
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src);
+ORDO_API void ORDO_CALLCONV
+threefish256_copy(struct THREEFISH256_STATE *dst,
+                  const struct THREEFISH256_STATE *src);
 
 /*! @see \c block_cipher_query() */
-size_t threefish256_query(int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+threefish256_query(int query, size_t value);
 
 /*! This function is \b stateless and is meant to be used when a context-free
  *  access to the raw cryptographic block cipher is required (such as in the
@@ -66,23 +75,26 @@ size_t threefish256_query(int query, size_t value);
  @remarks Performs the Threefish-256 key schedule.
  @internal
 */
-void threefish256_key_schedule(const uint64_t key[4],
-                               const uint64_t tweak[2],
-                                     uint64_t subkeys[19][4]);
+ORDO_INTERNAL void ORDO_CALLCONV
+threefish256_key_schedule(const uint64_t key[4],
+                          const uint64_t tweak[2],
+                                uint64_t subkeys[19][4]);
 
 /*! See the \c threefish256_key_schedule() function.
  @remarks Computes the Threefish-256 forward permutation.
  @internal
 */
-void threefish256_forward_raw(uint64_t block[4],
-                                     uint64_t subkeys[19][4]);
+ORDO_INTERNAL void ORDO_CALLCONV
+threefish256_forward_raw(uint64_t block[4],
+                         uint64_t subkeys[19][4]);
 
 /*! See the \c threefish256_key_schedule() function.
  @remarks Computes the Threefish-256 inverse permutation.
  @internal
 */
-void threefish256_inverse_raw(uint64_t block[4],
-                                     uint64_t subkeys[19][4]);
+ORDO_INTERNAL void ORDO_CALLCONV
+threefish256_inverse_raw(uint64_t block[4],
+                         uint64_t subkeys[19][4]);
 
 #ifdef __cplusplus
 }

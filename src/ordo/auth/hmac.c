@@ -15,7 +15,8 @@ struct HMAC_CTX
     size_t digest_len;
 };
 
-struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash)
+struct HMAC_CTX * ORDO_CALLCONV
+hmac_alloc(const struct HASH_FUNCTION *hash)
 {
     struct HMAC_CTX *ctx = mem_alloc(sizeof(struct HMAC_CTX));
     size_t block_size = hash_function_query(hash, BLOCK_SIZE, 0);
@@ -35,9 +36,10 @@ fail:
     return 0;
 }
 
-int hmac_init(struct HMAC_CTX *ctx,
-              const void *key, size_t key_len,
-              const void *hash_params)
+int ORDO_CALLCONV
+hmac_init(struct HMAC_CTX *ctx,
+          const void *key, size_t key_len,
+          const void *hash_params)
 {
     size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE, 0);
 
@@ -64,12 +66,15 @@ int hmac_init(struct HMAC_CTX *ctx,
     return err;
 }
 
-void hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len)
+void ORDO_CALLCONV
+hmac_update(struct HMAC_CTX *ctx,
+            const void *in, size_t in_len)
 {
     digest_update(ctx->ctx, in, in_len);
 }
 
-int hmac_final(struct HMAC_CTX *ctx, void *digest)
+int ORDO_CALLCONV
+hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
     int err = ORDO_SUCCESS;
 
@@ -98,7 +103,8 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     return err;
 }
 
-void hmac_free(struct HMAC_CTX *ctx)
+void ORDO_CALLCONV
+hmac_free(struct HMAC_CTX *ctx)
 {
     if (!ctx) return;
 
@@ -111,7 +117,7 @@ void hmac_free(struct HMAC_CTX *ctx)
     mem_free(ctx);
 }
 
-void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
+void ORDO_CALLCONV hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
 {
     size_t block_size = hash_function_query(dst->hash, BLOCK_SIZE, 0);
     memcpy(dst->key, src->key, block_size);

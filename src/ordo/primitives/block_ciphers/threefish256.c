@@ -1,7 +1,7 @@
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
 #include "ordo/internal/asm/resolve.h"
-
+#include "ordo/internal/environment.h"
 #include "ordo/internal/endianness.h"
 
 #include "ordo/internal/mem.h"
@@ -15,12 +15,15 @@
 void threefish256_forward_ASM(void *block, void *subkeys);
 void threefish256_inverse_ASM(void *block, void *subkeys);
 #else
-static void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
-__attribute__((hot));
-static void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
-__attribute__((hot));
+static void ORDO_CALLCONV
+threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
+ORDO_HOT_CODE;
+static void ORDO_CALLCONV
+threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
+ORDO_HOT_CODE;
 
-void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
+void ORDO_CALLCONV
+threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
 {
     size_t t;
 
@@ -151,7 +154,8 @@ void threefish256_forward_C(uint64_t block[4], uint64_t subkeys[19][4])
     block[3] = le64toh(block[3]);
 }
 
-void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
+void ORDO_CALLCONV
+threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
 {
     size_t t;
 
@@ -292,10 +296,11 @@ void threefish256_inverse_C(uint64_t block[4], uint64_t subkeys[19][4])
     subkeys[n][2] = key_w[s2] + tweak_w[t1]; \
     subkeys[n][3] = key_w[s3] + n; \
 
-#define K_S (uint64_t)(0x1BD11BDAA9FC1A22ULL)
+#define K_S (0x1BD11BDAA9FC1A22ULL)
 
-void threefish256_key_schedule(const uint64_t key[4], const uint64_t tweak[2],
-                               uint64_t subkeys[19][4])
+void ORDO_CALLCONV
+threefish256_key_schedule(const uint64_t key[4], const uint64_t tweak[2],
+                          uint64_t subkeys[19][4])
 {
     uint64_t tweak_w[3];
     uint64_t key_w[5];
@@ -339,14 +344,16 @@ struct THREEFISH256_STATE
     uint64_t subkey[19][4];
 };
 
-struct THREEFISH256_STATE *threefish256_alloc(void)
+struct THREEFISH256_STATE * ORDO_CALLCONV
+threefish256_alloc(void)
 {
     return mem_alloc(sizeof(struct THREEFISH256_STATE));
 }
 
-int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t *key, size_t key_len,
-                      const struct THREEFISH256_PARAMS *params)
+int ORDO_CALLCONV
+threefish256_init(struct THREEFISH256_STATE *state,
+                  const uint64_t *key, size_t key_len,
+                  const struct THREEFISH256_PARAMS *params)
 {
     if (threefish256_query(KEY_LEN, key_len) != key_len)
     {
@@ -359,7 +366,8 @@ int threefish256_init(struct THREEFISH256_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void threefish256_forward_raw(uint64_t block[4], uint64_t subkeys[19][4])
+void ORDO_CALLCONV
+threefish256_forward_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
     #if defined(THREEFISH256_STANDARD)
     threefish256_forward_C(block, subkeys);
@@ -368,7 +376,8 @@ void threefish256_forward_raw(uint64_t block[4], uint64_t subkeys[19][4])
     #endif
 }
 
-void threefish256_inverse_raw(uint64_t block[4], uint64_t subkeys[19][4])
+void ORDO_CALLCONV
+threefish256_inverse_raw(uint64_t block[4], uint64_t subkeys[19][4])
 {
     #if defined(THREEFISH256_STANDARD)
     threefish256_inverse_C(block, subkeys);
@@ -377,28 +386,33 @@ void threefish256_inverse_raw(uint64_t block[4], uint64_t subkeys[19][4])
     #endif
 }
 
-void threefish256_forward(struct THREEFISH256_STATE *state, uint64_t *block)
+void ORDO_CALLCONV
+threefish256_forward(struct THREEFISH256_STATE *state, uint64_t *block)
 {
     threefish256_forward_raw(block, state->subkey);
 }
 
-void threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t *block)
+void ORDO_CALLCONV
+threefish256_inverse(struct THREEFISH256_STATE *state, uint64_t *block)
 {
     threefish256_inverse_raw(block, state->subkey);
 }
 
-void threefish256_free(struct THREEFISH256_STATE *state)
+void ORDO_CALLCONV
+threefish256_free(struct THREEFISH256_STATE *state)
 {
     mem_free(state);
 }
 
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src)
+void ORDO_CALLCONV
+threefish256_copy(struct THREEFISH256_STATE *dst,
+                  const struct THREEFISH256_STATE *src)
 {
     memcpy(dst, src, sizeof(struct THREEFISH256_STATE));
 }
 
-size_t threefish256_query(int query, size_t value)
+size_t ORDO_CALLCONV
+threefish256_query(int query, size_t value)
 {
     switch(query)
     {

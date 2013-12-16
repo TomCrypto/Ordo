@@ -1,6 +1,8 @@
 #ifndef ORDO_NULLCIPHER_H
 #define ORDO_NULLCIPHER_H
 
+#include "ordo/internal/api.h"
+
 #include "ordo/primitives/block_ciphers/block_params.h"
 
 /******************************************************************************/
@@ -23,32 +25,39 @@ extern "C" {
 struct NULLCIPHER_STATE;
 
 /*! @see \c block_cipher_alloc() */
-struct NULLCIPHER_STATE *nullcipher_alloc(void);
+ORDO_API struct NULLCIPHER_STATE * ORDO_CALLCONV
+nullcipher_alloc(void);
 
 /*! @see \c block_cipher_init()
  *  @retval #ORDO_KEY_LEN if the key length is not zero.
 */
-int nullcipher_init(struct NULLCIPHER_STATE *state,
-                    const void *key, size_t key_len,
-                    const void *params);
+ORDO_API int ORDO_CALLCONV
+nullcipher_init(struct NULLCIPHER_STATE *state,
+                const void *key, size_t key_len,
+                const void *params);
 
 /*! @see \c block_cipher_forward() */
-void nullcipher_forward(struct NULLCIPHER_STATE *state,
-                        void *block);
+ORDO_API void ORDO_CALLCONV
+nullcipher_forward(struct NULLCIPHER_STATE *state,
+                   void *block);
 
 /*! @see \c block_cipher_inverse() */
-void nullcipher_inverse(struct NULLCIPHER_STATE *state,
-                        void *block);
+ORDO_API void ORDO_CALLCONV
+nullcipher_inverse(struct NULLCIPHER_STATE *state,
+                   void *block);
 
 /*! @see \c block_cipher_free() */
-void nullcipher_free(struct NULLCIPHER_STATE *state);
+ORDO_API void ORDO_CALLCONV
+nullcipher_free(struct NULLCIPHER_STATE *state);
 
 /*! @see \c block_cipher_copy() */
-void nullcipher_copy(struct NULLCIPHER_STATE *dst,
-                     const struct NULLCIPHER_STATE *src);
+ORDO_API void ORDO_CALLCONV
+nullcipher_copy(struct NULLCIPHER_STATE *dst,
+                const struct NULLCIPHER_STATE *src);
 
 /*! @see \c block_cipher_query() */
-size_t nullcipher_query(int query, size_t value);
+ORDO_API size_t ORDO_CALLCONV
+nullcipher_query(int query, size_t value);
 
 #ifdef __cplusplus
 }
