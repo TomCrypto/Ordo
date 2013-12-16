@@ -18,7 +18,7 @@ aes_forward_ASM:
     /* Key whitening. */
     PXOR %XMM0, %XMM1
 
-    /* Now, perform as many rounds as needed (the round number is passed in R8). */
+    /* Now, perform as many rounds as needed (the round number is passed in RDX). */
     LOOPF:
         /* Move the appropriate key in XMM1. */
         MOVDQU %XMM1, [%RSI]
@@ -45,7 +45,7 @@ aes_inverse_ASM:
     MOVDQU %XMM0, [%RDI]
 
     /* Now increment the key to reach the last key (based on round count RDX) */
-    MOV %RAX, %R8
+    MOV %RAX, %RDX
     SHL %RAX, 4
     ADD %RSI, %RAX
 
@@ -56,7 +56,7 @@ aes_inverse_ASM:
     /* Reverse the key whitening and return. */
     PXOR %XMM0, %XMM1
 
-    /* Now, perform as many rounds as needed (the round number is passed in R8). */
+    /* Now, perform as many rounds as needed (the round number is passed in RDX). */
     LOOPI:
         /* Move the appropriate key in XMM1. */
         MOVDQU %XMM1, [%RSI]
