@@ -51,7 +51,7 @@ os_random(void *buffer, size_t size)
     if (hProv == 0) return ORDO_FAIL;
 
     /* Generate pseudorandom bytes. */
-    CryptGenRandom(hProv, size, (BYTE*)buffer);
+    CryptGenRandom(hProv, (DWORD)size, (BYTE*)buffer);
     CryptReleaseContext(hProv, 0);
     return ORDO_SUCCESS;
 }
