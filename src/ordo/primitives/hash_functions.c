@@ -132,7 +132,7 @@ hash_function_by_index(size_t index)
 }
 
 const struct HASH_FUNCTION * ORDO_CALLCONV
-hash_function_by_id(size_t id)
+hash_function_by_id(uint16_t id)
 {
     switch (id)
     {

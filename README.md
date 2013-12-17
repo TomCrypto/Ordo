@@ -1,4 +1,4 @@
-Ordo v2.4.0
+Ordo v2.4.1
 ===========
 
 Symmetric Cryptography Library
@@ -11,11 +11,15 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.4.0:
+What's new in 2.4.1:
  - new and improved build system, using CMake
  - MSVC semi-compatibility (see build notes)
  - explicit export symbols and calling conventions
- - a couple minor bug fixes (the API is unchanged)
+ - a couple minor bug fixes
+ - prefix some functions with a missing `ordo_`
+ - stopped exporting some internal memory functions
+ - changed primitive ID types to 16-bit unsigned
+ - fixed the CMake flags (forgot optimization)
 
 Feature Map
 -----------
@@ -49,7 +53,7 @@ We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are n
 
 ### Static Linking
 
-If you wish to link statically to the library, please build it as a static library (this should be done automatically by CMake if you set the right option), and define the `ORDO_STATIC_LIB` preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library).
+If you wish to link statically to the library, please build it as a static library (this should be done automatically by CMake if you set the right option), and define the `ORDO_STATIC_LIB` preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library, which may cause linking errors in some cases).
 
 ### MSVC and Assembly
 

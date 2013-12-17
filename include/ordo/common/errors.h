@@ -27,7 +27,7 @@ extern "C" {
  *  @remarks This function is intended for debugging purposes.
 */
 ORDO_API const char * ORDO_CALLCONV
-error_msg(int code);
+ordo_error_msg(int code);
 
 /*! @enum ORDO_ERROR
  *

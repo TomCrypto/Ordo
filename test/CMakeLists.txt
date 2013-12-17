@@ -9,6 +9,20 @@ PROJECT(Test C)
 SET(BIN_NAME "test")
 
 ################################################################################
+# :: Declare custom build options here.                                        #
+################################################################################
+
+OPTION(TEST_STATIC_LIB "Link test driver to static library" OFF)
+
+################################################################################
+# :: Link to threads if needed (only if linking statically).                   #
+################################################################################
+
+IF((NOT NO_POOL) AND (NOT SYSTEM_WINDOWS) AND (TEST_STATIC_LIB))
+    FIND_PACKAGE(Threads REQUIRED)
+ENDIF()
+
+################################################################################
 # :: List all the source code and header files the test driver uses.           #
 ################################################################################
 
@@ -63,7 +77,27 @@ ADD_EXECUTABLE(${BIN_NAME} ${INCLUDE_FILES} ${SOURCE_FILES})
 TARGET_INCLUDE_DIRECTORIES(${BIN_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 
 ################################################################################
-# :: Link to the Ordo library (shared only).                                   #
+# :: Set any specific preprocessor tokens that need to be defined.             #
 ################################################################################
 
-TARGET_LINK_LIBRARIES(${BIN_NAME} ordo)
+IF(TEST_STATIC_LIB)
+    TARGET_COMPILE_DEFINITIONS(${BIN_NAME} PRIVATE ORDO_STATIC_LIB)
+ENDIF()
+
+IF(NO_POOL)
+    TARGET_COMPILE_DEFINITIONS(${BIN_NAME} PRIVATE ORDO_NO_POOL)
+ENDIF()
+
+################################################################################
+# :: Link to the Ordo library (shared or static).                              #
+################################################################################
+
+IF(TEST_STATIC_LIB)
+    IF((NOT SYSTEM_WINDOWS) AND (NOT NO_POOL))
+        TARGET_LINK_LIBRARIES(${BIN_NAME} ordo_s ${CMAKE_THREAD_LIBS_INIT})
+    ELSE()
+        TARGET_LINK_LIBRARIES(${BIN_NAME} ordo_s)
+    ENDIF()
+ELSE()
+    TARGET_LINK_LIBRARIES(${BIN_NAME} ordo)
+ENDIF()

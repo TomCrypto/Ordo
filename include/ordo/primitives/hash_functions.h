@@ -1,6 +1,8 @@
 #ifndef ORDO_HASH_FUNCTIONS_H
 #define ORDO_HASH_FUNCTIONS_H
 
+#include <stdint.h>
+
 #include "ordo/internal/api.h"
 
 #include "ordo/primitives/hash_functions/hash_params.h"
@@ -77,7 +79,7 @@ hash_function_by_index(size_t index);
  *           hash function exists.
 */
 ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-hash_function_by_id(size_t id);
+hash_function_by_id(uint16_t id);
 
 /******************************************************************************/
 

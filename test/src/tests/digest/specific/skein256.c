@@ -81,7 +81,7 @@ static int config_block(void)
                           
         if (err)
         {
-            printf("Error: %s.\n", error_msg(err));
+            printf("Error: %s.\n", ordo_error_msg(err));
         }
                           
         if (memcmp(scratch, test.expected, (size_t)bits(params.out_len)))

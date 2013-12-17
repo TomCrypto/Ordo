@@ -1,14 +1,23 @@
 #include "tests/utility/mem.h"
 
-/* Note: you should NEVER include any internal header in your code, nor use
- * any such internal functions, but here it's fine because we are actually
- * testing those functions.
- * PS: actually, this header contains one function that you may use if you
- *     really need to, custom_allocator(), for using your memory manager. */
 #include "ordo/internal/mem.h"
 
 int test_mem(char *output, size_t maxlen, FILE *ext)
 {
+    #if defined(ORDO_NO_POOL)
+    
+    if (ext) fprintf(ext, "[*] Pool disabled in this build, setting library "
+                          "allocator to a valid allocator for the remaining "
+                          "test cases.\n\n");
+    
+    ordo_allocator(malloc, free);
+    
+    if (ext) fprintf(ext, "[+] Allocator set.\n\n");
+    
+    #endif
+
+    #if defined(ORDO_STATIC_LIB)
+
     void *ptr;
 
     if (ext) fprintf(ext, "[*] Testing memory allocator.\n\n");
@@ -43,4 +52,10 @@ int test_mem(char *output, size_t maxlen, FILE *ext)
     mem_free(ptr);
 
     pass("Memory allocator appears to be working.");
+    
+    #else
+    
+    pass("Cannot test memory allocator, hidden symbols.");
+    
+    #endif
 }

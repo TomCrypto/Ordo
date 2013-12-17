@@ -113,7 +113,8 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
         if (err)
         {
             /* If an error occurs, the test failed. */
-            if (ext) fprintf(ext, "[!] FAILED - %s.\n\n", error_msg(err));
+            if (ext) fprintf(ext, "[!] FAILED - %s.\n\n",
+                             ordo_error_msg(err));
             return 0;
         }
 

@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         fclose(f);
         free(digest);
         digest_free(ctx);
-        printf("An error occurred: %s.\n", error_msg(err));
+        printf("An error occurred: %s.\n", ordo_error_msg(err));
         return EXIT_FAILURE;
     }
 

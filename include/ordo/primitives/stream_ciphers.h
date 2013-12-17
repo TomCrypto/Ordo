@@ -1,6 +1,8 @@
 #ifndef ORDO_STREAM_CIPHERS_H
 #define ORDO_STREAM_CIPHERS_H
 
+#include <stdint.h>
+
 #include "ordo/internal/api.h"
 
 #include "ordo/primitives/stream_ciphers/stream_params.h"
@@ -69,7 +71,7 @@ stream_cipher_by_index(size_t index);
  *           stream cipher exists.
 */
 ORDO_API const struct STREAM_CIPHER * ORDO_CALLCONV
-stream_cipher_by_id(size_t id);
+stream_cipher_by_id(uint16_t id);
 
 /******************************************************************************/
 

@@ -6,7 +6,7 @@
 
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 4
-#define VERSION_REV   0
+#define VERSION_REV   1
 
 int ORDO_CALLCONV
 ordo_version_major(void)

@@ -130,7 +130,7 @@ static MEM_ALLOC mem_alloc_f = ordo_mem_alloc;
 static MEM_FREE mem_free_f   = ordo_mem_free;
 
 void ORDO_CALLCONV
-mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
+ordo_allocator(MEM_ALLOC alloc, MEM_FREE free)
 {
     int revert = ((alloc == 0) && (free == 0));
 
@@ -149,7 +149,7 @@ mem_init(void)
 static MEM_ALLOC mem_alloc_f = 0;
 static MEM_FREE mem_free_f   = 0;
 
-void mem_allocator(MEM_ALLOC alloc, MEM_FREE free)
+void ordo_allocator(MEM_ALLOC alloc, MEM_FREE free)
 {
     mem_alloc_f = alloc;
     mem_free_f  = free;

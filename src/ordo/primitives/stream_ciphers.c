@@ -92,7 +92,7 @@ stream_cipher_by_index(size_t index)
 }
 
 const struct STREAM_CIPHER * ORDO_CALLCONV
-stream_cipher_by_id(size_t id)
+stream_cipher_by_id(uint16_t id)
 {
     switch (id)
     {

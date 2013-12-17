@@ -39,7 +39,11 @@ extern "C" {
     #if defined(PLATFORM_WINDOWS)
         #define ORDO_CALLCONV __attribute__((stdcall))
     #elif defined(PLATFORM_LINUX) || defined(PLATFORM_BSD)
-        #define ORDO_CALLCONV
+        #if defined(ENVIRONMENT_32)
+            #define ORDO_CALLCONV __attribute__((cdecl))
+        #else
+            #define ORDO_CALLCONV
+        #endif
     #endif
 #endif
 

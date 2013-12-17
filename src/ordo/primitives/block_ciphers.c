@@ -130,7 +130,7 @@ block_cipher_by_index(size_t index)
 }
 
 const struct BLOCK_CIPHER * ORDO_CALLCONV
-block_cipher_by_id(size_t id)
+block_cipher_by_id(uint16_t id)
 {
     switch (id)
     {

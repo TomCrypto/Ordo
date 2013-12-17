@@ -3,7 +3,7 @@
 /******************************************************************************/
 
 const char* ORDO_CALLCONV
-error_msg(int code)
+ordo_error_msg(int code)
 {
     switch (code)
     {

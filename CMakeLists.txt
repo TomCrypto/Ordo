@@ -59,10 +59,8 @@ ENDIF()
 # Note: Windows does not require pthreads as it has a standard mutex.          #
 ################################################################################
 
-IF(NOT NO_POOL)
-    IF(NOT SYSTEM_WINDOWS)
-        FIND_PACKAGE(Threads REQUIRED)
-    ENDIF()
+IF((NOT NO_POOL) AND (NOT SYSTEM_WINDOWS))
+    FIND_PACKAGE(Threads REQUIRED)
 ENDIF()
 
 ################################################################################
@@ -70,7 +68,7 @@ ENDIF()
 ################################################################################
 
 IF(NOT COMPILER_MSVC)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -O3")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
 
@@ -83,12 +81,11 @@ IF(NOT COMPILER_MSVC)
 ELSE()
     # Disable some overzealous (but harmless) Visual Studio warnings
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /wd4706 /wd4100 /wd4127")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /O2")
 ENDIF()
 
-IF(NOT NO_ASM)
-    IF(COMPILER_CLANG)
-        SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -no-integrated-as")
-    ENDIF()
+IF((NOT NO_ASM) AND (COMPILER_CLANG))
+    SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -no-integrated-as")
 ENDIF()
 
 
@@ -255,12 +252,10 @@ ENDIF()
 # :: When pthreads is required, link it into the shared library.               #
 ################################################################################
 
-IF(NOT NO_POOL)
-    IF(NOT SYSTEM_WINDOWS)
-        TARGET_LINK_LIBRARIES(${LIB_NAME} ${CMAKE_THREAD_LIBS_INIT})
-    ELSE()
-        TARGET_LINK_LIBRARIES(${LIB_NAME})
-    ENDIF()
+IF((NOT NO_POOL) AND (NOT SYSTEM_WINDOWS))
+    TARGET_LINK_LIBRARIES(${LIB_NAME} ${CMAKE_THREAD_LIBS_INIT})
+ELSE()
+    TARGET_LINK_LIBRARIES(${LIB_NAME})
 ENDIF()
 
 ################################################################################

@@ -1,6 +1,8 @@
 #ifndef ORDO_BLOCK_CIPHERS_H
 #define ORDO_BLOCK_CIPHERS_H
 
+#include <stdint.h>
+
 #include "ordo/internal/api.h"
 
 #include "ordo/primitives/block_ciphers/block_params.h"
@@ -77,7 +79,7 @@ block_cipher_by_index(size_t index);
  *           block cipher exists.
 */
 ORDO_API const struct BLOCK_CIPHER * ORDO_CALLCONV
-block_cipher_by_id(size_t id);
+block_cipher_by_id(uint16_t id);
 
 /******************************************************************************/
 

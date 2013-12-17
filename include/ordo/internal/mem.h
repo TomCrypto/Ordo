@@ -21,7 +21,7 @@
  * and guarantees thread safety of allocation and deallocation functions.
  *
  * This module is not to be used from outside the library, with the exception
- * of the \c mem_allocator() function if you wish to replace the default
+ * of the \c ordo_allocator() function if you wish to replace the default
  * memory allocator with your own.
 */
 
@@ -44,7 +44,7 @@ typedef void  (ORDO_CALLCONV *MEM_FREE)(void*);
  *           it will be aligned to a 32-byte boundary).
  *  @remarks This function is thread-safe.
 */
-ORDO_API void * ORDO_CALLCONV
+ORDO_INTERNAL void * ORDO_CALLCONV
 mem_alloc(size_t size);
 
 /*! Deallocates a memory buffer.
@@ -55,14 +55,14 @@ mem_alloc(size_t size);
  *           sensitive data lingers in memory.
  *  @remarks This function is thread-safe.
 */
-ORDO_API void ORDO_CALLCONV
+ORDO_INTERNAL void ORDO_CALLCONV
 mem_free(void *ptr);
 
 /*! Overwrites a memory buffer with zeroes.
  *  @param ptr The memory buffer to overwrite.
  *  @param size The number of bytes to overwrite.
 */
-ORDO_API void ORDO_CALLCONV
+ORDO_INTERNAL void ORDO_CALLCONV
 mem_erase(void *ptr, size_t size);
 
 /*! Initializes the default memory allocator.
@@ -75,7 +75,7 @@ mem_erase(void *ptr, size_t size);
              the host program terminates (this will not interfere with custom
              allocators).
 */
-ORDO_API int ORDO_CALLCONV
+ORDO_INTERNAL int ORDO_CALLCONV
 mem_init(void);
 
 /*! Replaces the default memory allocator with a custom one.
@@ -95,7 +95,7 @@ mem_init(void);
  *           own).
 */
 ORDO_API void ORDO_CALLCONV
-mem_allocator(MEM_ALLOC alloc, MEM_FREE free);
+ordo_allocator(MEM_ALLOC alloc, MEM_FREE free);
 
 #ifdef __cplusplus
 }
