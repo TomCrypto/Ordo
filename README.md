@@ -49,9 +49,17 @@ We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are n
 
 Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know).
 
+If you are not using the `cmake-gui` utility, the command-line options to configure the library are:
+
+    `cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off]`
+
+For instance, a typical configuration for x86_64 machines with the AES-NI instructions could be:
+
+    `cd build && cmake .. -DARCH=amd64 -DAES_NI=on`
+
 ### Assembly Support
 
-We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been setup to autodetect NASM and get it to automatically compile assembly files, but they may not necessarily work for all versions of Visual Studio.
+We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.
 
 ### Static Linking
 
