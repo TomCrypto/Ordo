@@ -37,7 +37,7 @@ static void *allocate(size_t size)
         os_random(ptr, size);
         return ptr;
     }
-        
+
     printf("\t* Memory allocation failed!\n");
     printf("\nAn error occurred.\n");
     exit(EXIT_FAILURE);
@@ -47,7 +47,7 @@ static void benchmark_usage(int argc, char * const argv[])
 {
     size_t t, count;
 
-    printf("Usage:\n\n"); 
+    printf("Usage:\n\n");
     printf("\t%s [hash function]\n", argv[0]);
     printf("\t%s [stream cipher]\n", argv[0]);
     printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
@@ -88,16 +88,44 @@ static void benchmark_usage(int argc, char * const argv[])
 
 /***                         TIME UTILITY FUNCTIONS                         ***/
 
-#define INTERVAL 3.0
+#define INTERVAL 3.0 // seconds
 
-static double now()
-{
-    return (double)clock() / CLOCKS_PER_SEC;
-}
+#if defined(_WIN32) || defined(_WIN64)
+    typedef int64_t my_time;
+    #include <windows.h>
 
-static double speed_MiB(double processed)
+    static my_time now()
+    {
+        LARGE_INTEGER t;
+        QueryPerformanceCounter(&t);
+        return t.QuadPart;
+    }
+
+    static double get_elapsed(my_time start)
+    {
+        LARGE_INTEGER t, f;
+        QueryPerformanceFrequency(&f);
+        QueryPerformanceCounter(&t);
+
+        return (double)(t.QuadPart - start) / f.QuadPart;
+    }
+#else
+    typedef double my_time;
+
+    static my_time now()
+    {
+        return (double)clock() / CLOCKS_PER_SEC;
+    }
+
+    static double get_elapsed(my_time start)
+    {
+        return now() - start;
+    }
+#endif
+
+static double speed_MiB(uint64_t throughput, double elapsed)
 {
-    return processed / (INTERVAL * 1024 * 1024);
+    return ((double)throughput / (1024 * 1024)) / elapsed;
 }
 
 /***                        PARAMETERIZED UTILITIES                         ***/
@@ -135,6 +163,8 @@ static void *stream_params(const struct STREAM_CIPHER *cipher)
 {
     if (cipher == rc4())
     {
+        // we don't want to benchmark dropping bytes of RC4
+        // as this would heavily penalize the short blocks.
         struct RC4_PARAMS *rc4 = allocate(sizeof(*rc4));
         rc4->drop = 0;
         return rc4;
@@ -154,21 +184,21 @@ static double hash_speed(const struct HASH_FUNCTION *hash,
     if (ctx)
     {
         void *params = hash_params(hash);
+        digest_init(ctx, params);
 
         uint64_t iterations = 0;
-        double start = now();
+        my_time start = now();
+        double elapsed;
 
-        while ((++iterations) && (now() - start < INTERVAL))
-        {
-            digest_init(ctx, params);
+        while (++iterations && (get_elapsed(start) < INTERVAL))
             digest_update(ctx, buffer, block);
-            digest_final(ctx, buffer);
-        }
 
+        elapsed = get_elapsed(start);
+        digest_final(ctx, buffer);
         digest_free(ctx);
         free(params);
 
-        return speed_MiB(block * iterations);
+        return speed_MiB(block * iterations, elapsed);
     }
 
     printf("\t* Context allocation failed!\n");
@@ -187,23 +217,25 @@ static double stream_speed(const struct STREAM_CIPHER *cipher,
         void *params = stream_params(cipher);
 
         size_t key_len = stream_cipher_query(cipher, KEY_LEN, (size_t)-1);
-        
+
         void *key = allocate(key_len);
 
+        enc_stream_init(ctx, key, key_len, params);
+
         uint64_t iterations = 0;
-        double start = now();
+        my_time start = now();
+        double elapsed;
 
-        while ((++iterations) && (now() - start < INTERVAL))
-        {
-            enc_stream_init(ctx, key, key_len, params);
+        while (++iterations && (get_elapsed(start) < INTERVAL))
             enc_stream_update(ctx, buffer, block);
-        }
 
+        elapsed = get_elapsed(start);
+        enc_stream_final(ctx);
         enc_stream_free(ctx);
         free(params);
         free(key);
 
-        return speed_MiB(block * iterations);
+        return speed_MiB(block * iterations, elapsed);
     }
 
     printf("\t* Context allocation failed!\n");
@@ -229,25 +261,26 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
         void *key = allocate(key_len);
         void *iv = allocate(iv_len);
 
+        enc_block_init(ctx, key, key_len, iv, iv_len,
+                       1, cipher_params, mode_params);
+
         uint64_t iterations = 0;
-        double start = now();
+        my_time start = now();
+        double elapsed;
+        size_t out;
 
-        while ((++iterations) && (now() - start < INTERVAL))
-        {
-            size_t out;
-            enc_block_init(ctx, key, key_len, iv, iv_len,
-                           1, cipher_params, mode_params);
+        while (++iterations && (get_elapsed(start) < INTERVAL))
             enc_block_update(ctx, buffer, block, buffer, &out);
-            enc_block_final(ctx, buffer, &out);
-        }
 
+        elapsed = get_elapsed(start);
+        enc_block_final(ctx, buffer, &out);
         enc_block_free(ctx);
         free(cipher_params);
         free(mode_params);
         free(key);
         free(iv);
 
-        return speed_MiB(block * iterations);
+        return speed_MiB(block * iterations, elapsed);
     }
 
     printf("\t* Context allocation failed!\n");
@@ -261,13 +294,13 @@ static int benchmark_hash_function(const struct HASH_FUNCTION *hash,
                                    int argc, char * const argv[])
 {
     const char *name = hash_function_name(hash);
-    
+
     if (argc > 2)
     {
         printf("Unrecognized argument '%s'.\n", argv[2]);
         return EXIT_FAILURE;
     }
-    
+
     printf("Benchmarking hash function %s:\n\n", name);
     printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(hash,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(hash,   256));
@@ -312,7 +345,7 @@ static int benchmark_block_cipher(const struct BLOCK_CIPHER *cipher,
         printf("Please specify one mode of operation.\n");
         return EXIT_FAILURE;
     }
-        
+
     if (argc > 3)
     {
         printf("Please specify only one mode of operation.\n");
@@ -390,6 +423,6 @@ int main(int argc, char *argv[])
             return EXIT_FAILURE;
         }
     }
-    
+
     return EXIT_SUCCESS;
 }

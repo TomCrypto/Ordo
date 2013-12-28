@@ -10,9 +10,7 @@ static void display_header(void)
 {
     char header[MAX_LEN + 1];
 
-    snprintf(header, MAX_LEN, "Ordo v%d.%d.%d (compiled for %d-bit %s)",
-             ordo_version_major(), ordo_version_minor(), ordo_version_rev(),
-             ordo_word_size(), ordo_platform());
+    snprintf(header, MAX_LEN, "%s", ordo_build_tag());
 
     printf("%s\n", line);
     printf("| %s%-*s%s | %sTest%s |\n",
@@ -90,7 +88,7 @@ int main(int argc, char *argv[])
 {
     FILE *extended = 0;
     int color = 0;
-    
+
     if (ordo_init())
     {
         printf("Failed to initialize Ordo.\n");
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
         if (extended) fprintf(extended, "~~~ END LOG ~~~\n");
         return (total == passed) ? EXIT_SUCCESS : EXIT_FAILURE;
     }
-    
+
     if (extended) fprintf(extended, "~~~ END LOG ~~~\n");
     return EXIT_FAILURE; /* This should never happen. */
 }

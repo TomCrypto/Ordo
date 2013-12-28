@@ -1,105 +1,113 @@
+//===-- auth/hmac.h ------------------------------------*- PUBLIC -*- H -*-===//
+///
+/// @file
+/// @brief Module
+///
+/// Module  for computing  HMAC's (Hash-based  Message Authentication  Codes),
+/// which securely combine  a hash function with a  cryptographic key securely
+/// in order to provide both authentication and integrity, as per RFC 2104.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef ORDO_HMAC_H
 #define ORDO_HMAC_H
 
-#include "ordo/internal/api.h"
+/// @cond
+#include "ordo/common/interface.h"
+/// @endcond
 
 #include "ordo/digest/digest.h"
-
-/******************************************************************************/
-
-/*!
- * @file hmac.h
- * @brief HMAC module.
- *
- * Module for computing HMAC's (Hash-based Message Authentication Codes), which
- * securely combine a hash function with a cryptographic key securely in order
- * to provide both authentication and integrity, as per RFC 2104.
- *
- * This module follows the usual flow diagram:
- *
- * @code
- *      +--------------------------------------------------+
- *      |                      +----+                      |
- *      |                      |    |                      |
- *    +-|-----+   +------+   +-v----|-+   +-------+   +----v-+
- *    | alloc |-->| init |-->| update |-->| final |-->| free |
- *    +-------+   +-|----+   +--------+   +-----|-+   +------+
- *                  |                           |
- *                  +---------------------------+
- * @endcode
- *
- * Copying a digest context - via \c hmac_copy() - is meaningful only when
- * following \c hmac_init() and preceding \c hmac_final().
-*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//===----------------------------------------------------------------------===//
+
 struct HMAC_CTX;
 
-/*! Allocates a new HMAC context.
- *  @param hash The hash function to use.
- *  @return Returns the allocated HMAC context, or nil if an error occurred.
- *  @remarks The PRF used for the HMAC will be the hash function as it behaves
- *           with default parameters. It is not possible to use hash function
- *           extensions (e.g. Skein in specialized HMAC mode) via this module.
-*/
-ORDO_API struct HMAC_CTX * ORDO_CALLCONV
-hmac_alloc(const struct HASH_FUNCTION *hash);
+/// Allocates a new HMAC context.
+///
+/// @param [in]     hash           The hash function to use.
+///
+/// @return The allocated HMAC context, or \c 0 if allocation fails.
+///
+/// @remarks The PRF used for the HMAC will be the hash function as it behaves
+///          with default parameters. It is not  possible to use hash function
+///          extensions (e.g. Skein in specialized HMAC mode) via this module,
+///          though if you intend to use a specific hash function you can just
+///          skip this abstraction layer and directly use whatever features it
+///          provides to compute message authentication codes.
+ORDO_PUBLIC
+struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
 
-/*! Initializes an HMAC context, provided optional parameters.
- *  @param ctx An allocated HMAC context.
- *  @param key The cryptographic key to use.
- *  @param key_len The size, in bytes, of the key.
- *  @param params Hash function specific parameters.
- *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
- *  @remarks The hash parameters apply to the inner hash function only (the one
- *           used to hash the passed key with the inner mask).
- *  @remarks Do not use hash parameters which modify the hash function's output
- *           length, or this function's behavior is undefined.
-*/
-ORDO_API int ORDO_CALLCONV
-hmac_init(struct HMAC_CTX *ctx,
-          const void *key, size_t key_len,
-          const void *params);
+/// Initializes an HMAC context, provided optional parameters.
+///
+/// @param [in]     ctx            An allocated HMAC context.
+/// @param [in]     key            The cryptographic key to use.
+/// @param [in]     key_len        The size, in bytes, of the key.
+/// @param [out]    params         Hash function specific parameters.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks The hash parameters apply to the inner hash operation only, which
+///          is the one used to hash the passed key with the inner mask.
+///
+/// @remarks Do not use hash parameters which modify the output length or this
+///          function's behavior is undefined.
+ORDO_PUBLIC
+int hmac_init(struct HMAC_CTX *ctx,
+              const void *key, size_t key_len,
+              const void *params);
 
-/*! Updates an HMAC context, feeding more data into it.
- *  @param ctx An allocated HMAC context.
- *  @param in A pointer to data to feed into the context.
- *  @param in_len The amount of bytes of data to read from \c buffer.
- *  @remarks This function has the same property with respect to the input
- *           buffer as \c digest_update().
-*/
-ORDO_API void ORDO_CALLCONV
-hmac_update(struct HMAC_CTX *ctx, const void *in, size_t in_len);
+/// Updates an HMAC context, feeding more data into it.
+///
+/// @param [in]     ctx            An initialized HMAC context.
+/// @param [in]     in             The data to feed into the context.
+/// @param [in]     in_len         The length, in bytes, of the data.
+///
+/// @remarks This function has the same properties, with  respect to the input
+///          buffer, as the \c digest_update() function.
+ORDO_PUBLIC
+void hmac_update(struct HMAC_CTX *ctx,
+                 const void *in, size_t in_len);
 
-/*! Finalizes a HMAC context, returning the final digest.
- *  @param ctx An allocated HMAC context.
- *  @param digest A pointer to a buffer to which the digest will be written.
- *  @return Returns \c #ORDO_SUCCESS on success, or an error code.
- *  @remarks The digest length is equal to the underlying hash function's
- *           digest length, which may be queried via \c hash_digest_length().
-*/
-ORDO_API int ORDO_CALLCONV
-hmac_final(struct HMAC_CTX *ctx, void *digest);
+/// Finalizes a HMAC context, returning the final fingerprint.
+///
+/// @param [in]     ctx            An initialized HMAC context.
+/// @param [out]    fingerprint    The output buffer for the fingerprint.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks The fingerprint length is equal to the underlying hash function's
+///          digest length, which may be queried via \c hash_digest_length().
+ORDO_PUBLIC
+int hmac_final(struct HMAC_CTX *ctx, void *fingerprint);
 
-/*! Frees an HMAC context.
- *  @param ctx An allocated HMAC context.
- *  @remarks Passing nil to this function is valid and will do nothing.
-*/
-ORDO_API void ORDO_CALLCONV
-hmac_free(struct HMAC_CTX *ctx);
+/// Frees a digest context.
+///
+/// @param [in]     ctx            The HMAC context to be freed.
+///
+/// @remarks The  context need  not have been initialized, but if it has been,
+///          it must have been finalized before calling this function.
+///
+/// @remarks Passing \c 0 to this function is valid, and will do nothing.
+ORDO_PUBLIC
+void hmac_free(struct HMAC_CTX *ctx);
 
-/*! Deep-copies a context to another.
- *  @param dst The destination context.
- *  @param src The source context.
- *  @remarks Both contexts need to have been initialized with the same hash
- *           function and the exact same parameters, or this function's
- *           behavior is undefined.
-*/
-ORDO_API void ORDO_CALLCONV
-hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src);
+/// Performs a deep copy of one context into another.
+///
+/// @param [out]    dst            The destination context.
+/// @param [in]     src            The source context.
+///
+/// @remarks The contexts must have been initialized using the exact same hash
+///          function with the exact same parameters, or this function invokes
+///          undefined behaviour.
+ORDO_PUBLIC
+void hmac_copy(struct HMAC_CTX *dst,
+               const struct HMAC_CTX *src);
+
+//===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus
 }

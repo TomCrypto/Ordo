@@ -1,13 +1,16 @@
 #include "tests/utility/utils.h"
 
+#include "ordo/internal/alg.h"
+#include "ordo/internal/sys.h"
+
 /* Tests a bunch of macros used by the library. */
 int test_macros(char *output, size_t maxlen, FILE *ext)
 {
     if (bits(256) != 32)  fail("The 'bits' macro has failed.");
     if (bytes(32) != 256) fail("The 'bytes' macro has failed.");
 
-    if (min(1, 2) != 1) fail("The 'min' macro has failed.");
-    if (max(1, 2) != 2) fail("The 'max' macro has failed.");
+    if (min_(1, 2) != 1) fail("The 'min' macro has failed.");
+    if (max_(1, 2) != 2) fail("The 'max' macro has failed.");
 
     pass("Utility macros are working.");
 }
@@ -103,7 +106,7 @@ int test_inc_buffer(char *output, size_t maxlen, FILE *ext)
                          buffer[0], buffer[1], buffer[2]);
         fail("'inc_buffer' has failed.");
     }
- 
+
     /* { 0xff, 0xff, 5 } -> { 0, 0, 6 } */
     if (ext) fprintf(ext, "[*] Checking inc_buffer({ 0xff, 0xff, 5 })\n\n");
     buffer[0] = 0xff;

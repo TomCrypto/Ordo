@@ -1,10 +1,11 @@
 /* Sample: md5sum - calculates the MD5 digest of the file located at argv[1].
- * 
+ *
  * Usage: ./bin/md5sum [path to file]
  *
  * Comments: This is essentially a clone of the md5sum utility program.
 */
 
+#include <stdlib.h>
 #include <stdio.h>
 
 #include "ordo.h"

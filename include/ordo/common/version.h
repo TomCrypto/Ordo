@@ -1,43 +1,38 @@
+//===-- common/version.h -------------------------------*- PUBLIC -*- H -*-===//
+///
+/// @file
+/// @brief Utility
+///
+/// This header exposes functionality relating  to the Ordo library's version,
+/// architecture it was built for, and any additional features (such as AES-NI
+/// hardware instructions).
+///
+/// It is  probably not  useful to  reason about  the information  this header
+/// exposes, but it can be displayed in a human-readable format as needed.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef ORDO_VERSION_H
 #define ORDO_VERSION_H
 
-#include "ordo/internal/api.h"
-
-/******************************************************************************/
-
-/*!
- * @file version.h
- * @brief Library version.
- *
- * This header allows code to access the library version. It also contains
- * some information about the library such as the platform it was compiled
- * for, any additional build flags used, and so on.
- *
- * It is probably not useful to reason about the information provided in this
- * header, but it can be displayed when needed.
-*/
+/// @cond
+#include "ordo/common/interface.h"
+/// @endcond
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*! The major version number of the library. */
-ORDO_API int ORDO_CALLCONV
-ordo_version_major(void);
-/*! The minor version number of the library. */
-ORDO_API int ORDO_CALLCONV
-ordo_version_minor(void);
-/*! The revision number of the library. */
-ORDO_API int ORDO_CALLCONV
-ordo_version_rev(void);
+//===----------------------------------------------------------------------===//
 
-/*! The name of the platform the library was built for. */
-ORDO_API const char * ORDO_CALLCONV
-ordo_platform(void);
+/// Returns the build  tag for the library, which includes  its name, version,
+/// host system, architecture, and any additional information.
+///
+/// @returns The build tag, in a human-readable format.
+ORDO_PUBLIC
+const char *ordo_build_tag(void);
 
-/*! The word size of the architecture the library was built for, in bits. */
-ORDO_API int ORDO_CALLCONV
-ordo_word_size(void);
+//===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus
 }

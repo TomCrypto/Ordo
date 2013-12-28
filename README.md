@@ -1,4 +1,4 @@
-Ordo v2.4.1
+Ordo v2.5.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,15 +11,15 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.4.1:
- - new and improved build system, using CMake
- - MSVC semi-compatibility (see build notes)
- - explicit export symbols and calling conventions
- - a couple minor bug fixes
- - prefix some functions with a missing `ordo_`
- - stopped exporting some internal memory functions
- - changed primitive ID types to 16-bit unsigned
- - fixed the CMake flags (forgot optimization)
+What's new in 2.5.0:
+ - better build system
+ - got rid of the custom allocator in the generic code path
+ - completely revamped and finished public documentation
+ - improved header dependencies between headers and source files
+ - test driver updated accordingly
+ - fixed a few logical errors in the public headers and implementation
+ - official MSVC support
+ - fixed benchmark sample to only measure throughput, not setup
 
 Feature Map
 -----------
@@ -37,44 +37,30 @@ This table doesn't include every single feature but gives a high level overview 
 Documentation
 -------------
 
-Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target (if available). The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working LaTeX environment for this to work).
-
-Note that by default, internal headers and functions (which should never be used from outside the library except in very specific cases) *are* documented. To disable them, set `INTERNAL_DOCS` to `NO` in the `Doxyfile.in` file. This will remove all internal code from the documentation.
+Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target (if available). The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working TeX environment for the latter to work).
 
 How To Build
 ------------
 
 We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to.
 
-- STATIC_LIB: builds the library as a static library, in addition to the standard shared library build. Note the static library is suffixed with `_s`.
-- NO_ASM: disables **all** assembly code paths in the library, and does not even include the assembly files in the build process.
-- NATIVE_ARCH: tries to get the compiler to tune the library for the current system (e.g. `-march=native` or equivalent).
-- NO_POOL: turns off the memory pool, requiring you to provide a custom allocator (experimental, do not use).
+- `LTO`: use link-time optimization, this should be enabled for optimal performance.
+- `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
+
+Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported.
+
+### Assembly Support
+
+We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been setup to autodetect NASM and get it to automatically compile assembly files, but they may not necessarily work for all versions of Visual Studio.
 
 ### Static Linking
 
-If you wish to link statically to the library, please build it as a static library (this should be done automatically by CMake if you set the right option), and define the `ORDO_STATIC_LIB` preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library, which may cause linking errors in some cases).
-
-### MSVC and Assembly
-
-The GCC, MinGW, and Clang compilers are able to process assembly source files as though they were ordinary C source files. MSVC does not, and will ignore the .S files completely (therefore only the `NO_ASM` build is technically supported out of the box). To make MSVC understand the assembly files, you will need to write custom build rules to send them to a third party assembler (such as `NASM`), and you will need to preprocess the assembly files to get them into the format expected by said assembler. We are working on a solution to automate this.
-
-### Additional Notes
-
-- On Windows, the tests and samples may require you to move the library's DLL around to make the resulting executables run.
+If you wish to link statically to the library, please define the `ORDO_STATIC_LIB` preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library, which may raise some unwelcome compiler warnings).
 
 Compatibility
 -------------
 
-The library has been tested against the following platforms:
-
-* Linux i386, x86_64, ARMv5
-* OpenBSD x86_64
-* FreeBSD x86_64
-* NetBSD i386
-* Windows i386, x86_64
-* Debian PowerPC (32-bit)
-* Debian ARM (armv5tejl)
+The library will run everywhere a C99 compiler (with `stdint.h` and a couple other C99 features) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
 
 Conclusion
 ----------

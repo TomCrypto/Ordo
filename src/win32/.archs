@@ -1,0 +1,4 @@
+SET_PROPERTY(CACHE ARCH PROPERTY STRINGS
+             ${ARCH_GENERIC}
+             "amd64"
+)

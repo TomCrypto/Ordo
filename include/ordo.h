@@ -1,130 +1,182 @@
+//===-- ordo.h -----------------------------------------*- PUBLIC -*- H -*-===//
+///
+/// @file
+/// @brief Wrapper
+///
+/// This  is  the  highest-level  API  for Ordo,  which  forgoes  the  use  of
+/// cryptographic contexts completely,  resulting in more concise  code at the
+/// cost of  reduced flexibility - in other  words, if you  can afford  to use
+/// them, you probably want to do so.
+///
+/// This header also contains the \c  ordo_allocator() function, which is used
+/// for (optionally) changing the memory allocator used by the library.
+///
+/// Usage snippet (compare to snippet in \c digest.h):
+///
+/// @code
+///
+/// const char x[] = "Hello, world!";
+/// unsigned char out[32];
+/// int err = ordo_digest(sha256(), 0, x, strlen(x), out);
+/// if (err) printf("Error encountered!");
+/// // out = 315f5bdb76d0...
+///
+/// @endcode
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
-#include "ordo/internal/api.h"
+/// @cond
+#include "ordo/common/interface.h"
+/// @endcond
 
-#include "ordo/common/identification.h"
 #include "ordo/common/version.h"
-#include "ordo/common/utils.h"
+#include "ordo/common/error.h"
+#include "ordo/common/query.h"
 
 #include "ordo/enc/enc_stream.h"
 #include "ordo/enc/enc_block.h"
-#include "ordo/digest/digest.h"
 
 #include "ordo/kdf/pbkdf2.h"
-#include "ordo/auth/hmac.h"
 
 #include "ordo/misc/os_random.h"
-
-/******************************************************************************/
-
-/*!
- * @file ordo.h
- * @brief High-level library API.
- *
- * This is the highest-level API for Ordo, which forgoes the use of
- * cryptographic contexts completely,resulting in more concise code
- * at the cost of reduced flexibility. In other words, if you can
- * afford to use them, you probably should.
-*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*! Initializes the library.
- *  @returns Returns #ORDO_SUCCESS on success, or an error code.
- *  @remarks This function should be called prior to using the library for
-             most purposes.
-*/
-ORDO_API int ORDO_CALLCONV
-ordo_init(void);
+//===----------------------------------------------------------------------===//
 
-/*! Encrypts or decrypts a buffer using a block cipher in an encryption-only
- *  mode of operation.
- @param cipher The block cipher to use.
- @param cipher_params The block cipher parameters.
- @param mode The mode of operation to use.
- @param mode_params The mode of operation parameters.
- @param direction The encryption direction: 1 for encryption, 0 for decryption.
- @param key The cryptographic key to use for encryption.
- @param key_len The length in bytes of the key.
- @param iv The initialization vector.
- @param iv_len The length in bytes of the initialization vector.
- @param in The input plaintext (or ciphertext) buffer.
- @param in_len The length of the input buffer.
- @param out The output ciphertext (or, respectively, plaintext) buffer.
- @param out_len The length of the output buffer.
- @return Returns \c #ORDO_SUCCESS on success, or an error code.
- @remarks The \c out buffer should have enough space to contain the entire
-          ciphertext, which may be larger than the plaintext if a mode
-          which padding (with padding enabled) is used. See remarks
-          about padding in \c enc_block.h.
-*/
-ORDO_API int ORDO_CALLCONV
-ordo_enc_block(const struct BLOCK_CIPHER* cipher,
-               const void *cipher_params,
-               const struct BLOCK_MODE* mode,
-               const void *mode_params,
-               int direction,
-               const void *key, size_t key_len,
-               const void *iv, size_t iv_len,
-               const void *in, size_t in_len,
-               void* out, size_t *out_len);
+/// Initializes the library.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks This function must be called prior to using the library, for most
+///          cases, but can be skipped in some specific (documented) cases.
+ORDO_PUBLIC
+int ordo_init(void);
 
-/*! Encrypts or decrypts a buffer using a stream cipher.
- @param cipher The stream cipher to use.
- @param params The stream cipher parameters.
- @param inout The plaintext or ciphertext buffer.
- @param len The length, in bytes, of the buffer.
- @param key The cryptographic key to use for encryption.
- @param key_len The length, in bytes, of the key.
- @return Returns \c #ORDO_SUCCESS on success, or an error code.
- @remarks Stream ciphers do not, strictly speaking, require an initialization
-          vector. If such a feature is required, it is recommended to use a
-          key derivation function to derive a new encryption key from a
-          "master" key and a nonce.
- @remarks Encryption is always done in place. If you need out-of-place
-          encryption, make a copy of the plaintext buffer prior to encryption.
- @remarks By design, encryption and decryption are equivalent for stream
-          ciphers. An implication of this, is that encrypting a message
-          twice with the same key yields the original message.
-*/
-ORDO_API int ORDO_CALLCONV
-ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
-                const void *key, size_t key_len,
-                void *inout, size_t len);
+/// Replaces the default library memory allocator with a custom one.
+///
+/// @param [in]     alloc          The allocation function.
+/// @param [in]     free           The deallocation function.
+/// @param [in]     data           Custom data passed to the above.
+///
+/// @remarks After this  function returns, all  memory allocations done by the
+///          library will go through these functions instead.
+///
+/// @remarks Do \b not use this function when the library has memory allocated
+///          with the current allocator, for obvious reasons. As a result this
+///          function should only be used at the start of the program, or at a
+///          point where you know the library to not be allocating any memory,
+///          e.g. there are no active contexts.
+///
+/// @remarks Please ensure  your allocator returns memory suitably aligned for
+///          the library  to use - a 32-byte alignment is ideal, but a 16-byte
+///          alignment should suffice for most architectures.
+///
+/// @remarks Calling this function with both arguments equal to \c  0 restores
+///          the default memory allocator (immediately ready for use).
+ORDO_PUBLIC
+void ordo_allocator(void *(*alloc)(size_t, void*),
+                    void  (*free)(void *, void *),
+                    void *data);
 
-/*! Returns the digest of a buffer.
- @param hash The hash function to use.
- @param params The hash function parameters.
- @param in The input buffer to hash.
- @param in_len The length in bytes of the buffer.
- @param digest The buffer in which to put the digest.
- @return Returns \c #ORDO_SUCCESS on success, or an error code.
-*/
-ORDO_API int ORDO_CALLCONV
-ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
-            const void *in, size_t in_len,
-            void *digest);
+/// Encrypts or decrypts data using a block cipher with a mode of operation.
+///
+/// @param [in]     cipher         The block cipher to use.
+/// @param [in]     cipher_params  The block cipher parameters.
+/// @param [in]     mode           The mode of operation to use.
+/// @param [in]     mode_params    The mode of operation parameters.
+/// @param [in]     direction      1 for encryption, 0 for decryption.
+/// @param [in]     key            The cryptographic key to use.
+/// @param [in]     key_len        The length in bytes of the key.
+/// @param [in]     iv             The initialization vector.
+/// @param [in]     iv_len         The length in bytes of the IV.
+/// @param [in]     in             The input plaintext/ciphertext buffer.
+/// @param [in]     in_len         The length of the input buffer.
+/// @param [out]    out            The output ciphertext/plaintext buffer.
+/// @param [out]    out_len        The length of the output buffer.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks The \c out buffer should be large enough to accomodate the entire
+///          ciphertext which may be larger than the plaintext if a mode where
+///          padding is enabled and used, see padding notes in \c enc_block.h.
+ORDO_PUBLIC
+int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
+                   const void *cipher_params,
+                   const struct BLOCK_MODE* mode,
+                   const void *mode_params,
+                   int direction,
+                   const void *key, size_t key_len,
+                   const void *iv, size_t iv_len,
+                   const void *in, size_t in_len,
+                   void* out, size_t *out_len);
 
-/*! Returns the HMAC fingerprint of a buffer.
- @param hash The hash function to use.
- @param params The hash function parameters.
- @param key The key to use for authentication.
- @param key_len The length in bytes of the key.
- @param in The input buffer to authenticate.
- @param in_len The length, in bytes, of the input buffer.
- @param fingerprint A pointer to where the fingerprint will be written.
- @return Returns \c #ORDO_SUCCESS on success, or an error code.
- @remarks Do not use hash parameters which modify the hash function's output
-          length, or this function's behavior is undefined.
-*/
-ORDO_API int ORDO_CALLCONV
-ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
-          const void *key, size_t key_len,
-          const void *in, size_t in_len,
-          void* fingerprint);
+/// Encrypts or decrypts data using a stream cipher.
+///
+/// @param [in]     cipher         The stream cipher to use.
+/// @param [in]     params         The stream cipher parameters.
+/// @param [in,out] inout          The plaintext or ciphertext buffer.
+/// @param [in]     len            The length, in bytes, of the buffer.
+/// @param [in]     key            The cryptographic key to use.
+/// @param [in]     key_len        The length, in bytes, of the key.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks Stream ciphers do not strictly speaking require an initialization
+///          vector - if such a feature is needed, it is  recommended to use a
+///          key derivation function to derive an encryption key from a master
+///          key using a pseudorandomly generated nonce.
+///
+/// @remarks Encryption  is always done in  place. If you require out-of-place
+///          encryption, make a copy of the plaintext prior to encryption.
+///
+/// @remarks By design, encryption  and decryption are  equivalent for  stream
+///          ciphers - an implication is that encrypting a message twice using
+///          the same key yields the original message.
+ORDO_PUBLIC
+int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
+                    const void *key, size_t key_len,
+                    void *inout, size_t len);
+
+/// Calculates the digest of a buffer using any hash function.
+///
+/// @param [in]     hash           The hash function to use.
+/// @param [in]     params         The hash function parameters.
+/// @param [in]     in             The input buffer to hash.
+/// @param [in]     in_len         The length in bytes of the buffer.
+/// @param [out]    digest         The output buffer for the digest.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+ORDO_PUBLIC
+int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
+                const void *in, size_t in_len,
+                void *digest);
+
+/// Calculates the HMAC fingerprint of a buffer using any hash function.
+///
+/// @param [in]     hash           The hash function to use.
+/// @param [in]     params         The hash function parameters.
+/// @param [in]     key            The key to use for authentication.
+/// @param [in]     key_len        The length in bytes of the key.
+/// @param [in]     in             The input buffer to authenticate.
+/// @param [in]     in_len         The length, in bytes, of the input buffer.
+/// @param [out]    fingerprint    The output buffer for the fingerprint.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+///
+/// @remarks Do not use hash parameters which modify output length.
+ORDO_PUBLIC
+int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
+              const void *key, size_t key_len,
+              const void *in, size_t in_len,
+              void *fingerprint);
+
+//===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus
 }

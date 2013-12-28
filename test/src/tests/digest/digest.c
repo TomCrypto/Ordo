@@ -2,8 +2,8 @@
 
 struct TEST_VECTOR
 {
-    const char *name; 
-    size_t input_len; 
+    const char *name;
+    size_t input_len;
     const char *input;
     const char *expected;
 };

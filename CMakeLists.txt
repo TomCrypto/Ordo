@@ -1,27 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 
-################################################################################
-# :: Project for the Ordo symmetric cryptography library.                      #
-################################################################################
-
-PROJECT(Ordo C ASM)
+PROJECT(Ordo C ASM_NASM)
+ENABLE_LANGUAGE(ASM_NASM)
 
 SET(LIB_NAME "ordo")
-
-################################################################################
-# :: Declare custom build options here.                                        #
-################################################################################
-
-OPTION(STATIC_LIB "Build also as a static library" OFF)
-OPTION(NO_ASM "No assembly code (standard C only)" OFF)
-OPTION(NATIVE_ARCH "Tune for host CPU architecture" ON)
-OPTION(NO_POOL "Turn off the built-in memory pool" OFF)
-
-################################################################################
-# :: Detect the compiler in use, and warn about unsupported compilers.         #
-# ---------------------------------------------------------------------------- #
-# Note: We currently only support GCC, MinGW, Clang, and MSVC.                 #
-################################################################################
+SET(SRC_PATH "src" )
 
 IF("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     SET(COMPILER_GNU ON)
@@ -30,97 +13,91 @@ ELSEIF("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
 ELSEIF("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
     SET(COMPILER_MSVC ON)
 ELSE()
-    MESSAGE(SEND_ERROR "Unsupported compiler!")
+    MESSAGE(FATAL_ERROR "Unsupported compiler!")
 ENDIF()
 
-################################################################################
-# :: Detect the current system, and warn about unsupported systems.            #
-# ---------------------------------------------------------------------------- #
-# Note: We currently only support Linux, BSD's, and Windows.                   #
-################################################################################
+SET(ARCH_GENERIC   "generic")
+SET(FEATURES              "")
 
-IF("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-    SET(SYSTEM_WINDOWS ON)
+IF("${CMAKE_SYSTEM_NAME}"     STREQUAL "Windows")
+    SET(SYSTEM                         "win32")
 ELSEIF("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-    SET(SYSTEM_LINUX ON)
+    SET(SYSTEM                         "linux")
 ELSEIF("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
-    SET(SYSTEM_FREEBSD ON)
+    SET(SYSTEM                         "freebsd")
 ELSEIF("${CMAKE_SYSTEM_NAME}" STREQUAL "OpenBSD")
-    SET(SYSTEM_OPENBSD ON)
+    SET(SYSTEM                         "openbsd")
 ELSEIF("${CMAKE_SYSTEM_NAME}" STREQUAL "NetBSD")
-    SET(SYSTEM_NETBSD ON)
+    SET(SYSTEM                         "netbsd")
 ELSE()
-    MESSAGE(SEND_ERROR "Unsupported system!")
+    SET(SYSTEM  "generic")
+    SET(SYSTEM_GENERIC ON)
 ENDIF()
 
-################################################################################
-# :: Find the pthread library in order to use its mutex functionality.         #
-# ---------------------------------------------------------------------------- #
-# Note: Windows does not require pthreads as it has a standard mutex.          #
-################################################################################
-
-IF((NOT NO_POOL) AND (NOT SYSTEM_WINDOWS))
-    FIND_PACKAGE(Threads REQUIRED)
+SET(ARCH "${ARCH_GENERIC}" CACHE STRING "Architecture to build for")
+IF(SYSTEM_GENERIC)
+    SET_PROPERTY(CACHE ARCH PROPERTY STRINGS ${ARCH_GENERIC})
 ENDIF()
 
-################################################################################
-# :: Define compiler-specific compilation flags.                               #
-################################################################################
+IF(SYSTEM_GENERIC)
+    MESSAGE(WARNING "Generic system selected, specify endianness.")
+ELSE()
+    INCLUDE(${SRC_PATH}/${SYSTEM}/.archs)
+    IF(NOT ${ARCH} STREQUAL ${ARCH_GENERIC})
+        INCLUDE(${SRC_PATH}/${SYSTEM}/${ARCH}/.features)
+    ENDIF()
+ENDIF()
+
+OPTION(LTO "Link-Time Optimization" ON)
+
+IF(SYSTEM_GENERIC)
+    OPTION(LITTLE_ENDIAN "Assume little-endian system" ON)
+ENDIF()
 
 IF(NOT COMPILER_MSVC)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -O3")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
-
-    IF(NATIVE_ARCH)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
-        IF(NOT NO_ASM)
-            SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -march=native")
-        ENDIF()
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
+    
+    IF(LTO)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
     ENDIF()
 ELSE()
     # Disable some overzealous (but harmless) Visual Studio warnings
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /wd4706 /wd4100 /wd4127")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /O2")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /O2 /MP")
+    
+    IF(LTO)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /GL")
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LTCG")
+        SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /LTCG")
+    ENDIF()
 ENDIF()
-
-IF((NOT NO_ASM) AND (COMPILER_CLANG))
-    SET(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -no-integrated-as")
-ENDIF()
-
-
-################################################################################
-# :: List all the source code and header files in the library.                 #
-# ---------------------------------------------------------------------------- #
-# Note: the list includes assembly files, which may require special treatment. #
-################################################################################
 
 SET(INCLUDE_FILES
     include/ordo.h
-    include/ordo/common/errors.h
     include/ordo/common/version.h
-    include/ordo/common/identification.h
-    include/ordo/common/utils.h
+    include/ordo/common/interface.h
     include/ordo/common/query.h
+    include/ordo/common/error.h
     include/ordo/kdf/pbkdf2.h
     include/ordo/misc/os_random.h
-    include/ordo/internal/endianness.h
-    include/ordo/internal/mem/mutex.h
-    include/ordo/internal/mem/params.h
-    include/ordo/internal/mem/base.h
-    include/ordo/internal/api.h
     include/ordo/internal/mem.h
-    include/ordo/internal/environment.h
-    include/ordo/internal/asm/resolve.h
+    include/ordo/internal/alg.h
+    include/ordo/internal/sys.h
+    include/ordo/internal/implementation.h
     include/ordo/digest/digest.h
     include/ordo/enc/enc_stream.h
-    include/ordo/enc/block_modes.h
-    include/ordo/enc/block_modes/cfb.h
-    include/ordo/enc/block_modes/mode_params.h
-    include/ordo/enc/block_modes/cbc.h
-    include/ordo/enc/block_modes/ecb.h
-    include/ordo/enc/block_modes/ctr.h
-    include/ordo/enc/block_modes/ofb.h
+    include/ordo/primitives/block_modes.h
+    include/ordo/primitives/block_modes/cfb.h
+    include/ordo/primitives/block_modes/cbc.h
+    include/ordo/primitives/block_modes/ecb.h
+    include/ordo/primitives/block_modes/ctr.h
+    include/ordo/primitives/block_modes/ofb.h
+    include/ordo/primitives/block_modes/mode_params.h
     include/ordo/enc/enc_block.h
     include/ordo/primitives/stream_ciphers.h
     include/ordo/primitives/hash_functions.h
@@ -138,144 +115,137 @@ SET(INCLUDE_FILES
     include/ordo/auth/hmac.h
 )
 
-SET(SOURCE_FILES
-    src/ordo.c
-    src/ordo/common/errors.c
-    src/ordo/common/utils.c
-    src/ordo/common/version.c
-    src/ordo/kdf/pbkdf2.c
-    src/ordo/misc/os_random.c
-    src/ordo/internal/mem/base.c
-    src/ordo/internal/mem/mutex.c
-    src/ordo/internal/mem.c
-    src/ordo/digest/digest.c
-    src/ordo/enc/enc_stream.c
-    src/ordo/enc/block_modes.c
-    src/ordo/enc/block_modes/cbc.c
-    src/ordo/enc/block_modes/ecb.c
-    src/ordo/enc/block_modes/cfb.c
-    src/ordo/enc/block_modes/ofb.c
-    src/ordo/enc/block_modes/ctr.c
-    src/ordo/enc/enc_block.c
-    src/ordo/primitives/hash_functions.c
-    src/ordo/primitives/block_ciphers.c
-    src/ordo/primitives/stream_ciphers.c
-    src/ordo/primitives/hash_functions/skein256.c
-    src/ordo/primitives/hash_functions/md5.c
-    src/ordo/primitives/hash_functions/hash_params.c
-    src/ordo/primitives/hash_functions/sha256.c
-    src/ordo/primitives/stream_ciphers/rc4.c
-    src/ordo/primitives/block_ciphers/nullcipher.c
-    src/ordo/primitives/block_ciphers/threefish256.c
-    src/ordo/primitives/block_ciphers/aes.c
-    src/ordo/auth/hmac.c
+SET(IN_FILES
+    aes.asm
+    aes.c
+    alg.c
+    block_ciphers.c
+    block_modes.c
+    cbc.c
+    cfb.c
+    ctr.c
+    digest.c
+    ecb.c
+    enc_block.c
+    enc_stream.c
+    error.c
+    hash_functions.c
+    hash_params.c
+    hmac.c
+    md5.c
+    mem.c
+    nullcipher.c
+    ofb.c
+    ordo.c
+    os_random.c
+    pbkdf2.c
+    rc4.c
+    rc4.asm
+    sha256.c
+    skein256.c
+    stream_ciphers.c
+    threefish256.asm
+    threefish256.c
+    version.c
+    sys.c
 )
 
-IF(NOT NO_ASM)
-    SET(SOURCE_FILES ${SOURCE_FILES}
-        src/ordo/primitives/stream_ciphers/asm/rc4.S
-        src/ordo/primitives/block_ciphers/asm/threefish256.S
-        src/ordo/primitives/block_ciphers/asm/aes.S
-    )
+FUNCTION(PROCESS FOLDER)
+    FOREACH(F ${IN_FILES})
+        IF(EXISTS ${CMAKE_SOURCE_DIR}/${FOLDER}/${F})
+            LIST(REMOVE_ITEM IN_FILES ${F})
+
+            IF(COMPILER_MSVC)
+                GET_FILENAME_COMPONENT(FILE_EXT ${F} EXT)
+                IF(FILE_EXT STREQUAL ".asm")
+                    IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+                        SET(OBJ_TYPE win64)
+                    ELSE()
+                        SET(OBJ_TYPE win32)
+                    ENDIF()
+                    
+                    SET(OBJ_FILE ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${F}.obj)
+                    SET(CMD ${CMAKE_ASM_NASM_COMPILER} -f ${OBJ_TYPE} ${CMAKE_SOURCE_DIR}/${FOLDER}/${F} -o ${OBJ_FILE})
+                    ADD_CUSTOM_COMMAND(OUTPUT ${OBJ_FILE} COMMAND ${CMD} DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${FOLDER}/${F})
+
+                    LIST(APPEND SOURCE_FILES ${OBJ_FILE})
+                ELSE()
+                    LIST(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/${FOLDER}/${F})
+                ENDIF()
+            ELSE()
+                LIST(APPEND SOURCE_FILES ${CMAKE_SOURCE_DIR}/${FOLDER}/${F})
+            ENDIF()
+        ENDIF()
+    ENDFOREACH()
+    SET(SOURCE_FILES ${SOURCE_FILES} PARENT_SCOPE)
+    SET(IN_FILES ${IN_FILES} PARENT_SCOPE)
+ENDFUNCTION()
+
+IF(NOT SYSTEM_GENERIC)
+    IF(NOT ${ARCH} STREQUAL ${ARCH_GENERIC})
+        FOREACH(FEATURE ${FEATURES})
+            PROCESS(${SRC_PATH}/${SYSTEM}/${ARCH}/${FEATURE})
+        ENDFOREACH()
+
+        PROCESS(${SRC_PATH}/${SYSTEM}/${ARCH})
+    ENDIF()
+
+    PROCESS(${SRC_PATH}/${SYSTEM})
 ENDIF()
 
-################################################################################
-# :: This is for IDE's to place the various input files where they belong.     #
-################################################################################
+PROCESS(${SRC_PATH})
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
 SOURCE_GROUP("Source" FILES ${SOURCE_FILES})
 
-################################################################################
-# :: Add the shared and static libraries as build targets.                     #
-# ---------------------------------------------------------------------------- #
-# Note: the static library is suffixed with "_s" to avoid naming conflicts.    #
-################################################################################
-
 ADD_LIBRARY(${LIB_NAME} SHARED ${INCLUDE_FILES} ${SOURCE_FILES})
-
-IF(STATIC_LIB)
-    ADD_LIBRARY(${LIB_NAME}_s STATIC ${INCLUDE_FILES} ${SOURCE_FILES})
-ENDIF()
-
-################################################################################
-# :: Install the headers and libraries somewhere suitable.                     #
-# ---------------------------------------------------------------------------- #
-# Note: On Linux, this will probably install in /usr/local/*, and will require #
-#       root. On Windows, it may install in Program Files\Ordo or similar.     #
-################################################################################
+ADD_LIBRARY(${LIB_NAME}_s STATIC ${INCLUDE_FILES} ${SOURCE_FILES})
 
 INSTALL(FILES include/ordo.h DESTINATION include)
 INSTALL(DIRECTORY include/ordo DESTINATION include)
+INSTALL(TARGETS ${LIB_NAME} ${LIB_NAME}_s LIBRARY DESTINATION lib
+                                          ARCHIVE DESTINATION lib)
 
-IF(STATIC_LIB)
-    INSTALL(TARGETS ${LIB_NAME} ${LIB_NAME}_s LIBRARY DESTINATION lib
-                                              ARCHIVE DESTINATION lib)
-ELSE()
-    INSTALL(TARGETS ${LIB_NAME} LIBRARY DESTINATION lib
-                                ARCHIVE DESTINATION lib)
+TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC
+                           ${CMAKE_CURRENT_LIST_DIR}/include)
+TARGET_INCLUDE_DIRECTORIES(${LIB_NAME}_s PUBLIC
+                           ${CMAKE_CURRENT_LIST_DIR}/include)
+
+TARGET_COMPILE_DEFINITIONS(${LIB_NAME}   PRIVATE BUILDING_${LIB_NAME})
+TARGET_COMPILE_DEFINITIONS(${LIB_NAME}_s PRIVATE BUILDING_${LIB_NAME})
+
+ADD_DEFINITIONS(-DORDO_ARCH="${ARCH}")     # e.g. "amd64"
+ADD_DEFINITIONS(-DORDO_SYSTEM="${SYSTEM}") # e.g. "linux"
+
+IF(FEATURES)
+    FUNCTION(JOIN VALUES GLUE OUTPUT)
+        STRING(REPLACE ";" "${GLUE}" _TMP_STR "${VALUES}")
+        SET(${OUTPUT} "${_TMP_STR}" PARENT_SCOPE)
+    ENDFUNCTION()
+
+    ADD_DEFINITIONS(-DORDO_HAS_FEATURES)
+    JOIN("${FEATURES}" " " FEATURE_LIST)
+    ADD_DEFINITIONS(-DORDO_FEATURES="${FEATURE_LIST}")
 ENDIF()
 
-################################################################################
-# :: Set include directories so the compiler (and/or IDE) can find headers.    #
-################################################################################
-
-TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
-IF(STATIC_LIB)
-    TARGET_INCLUDE_DIRECTORIES(${LIB_NAME}_s PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
-ENDIF()
-
-################################################################################
-# :: Set any specific preprocessor tokens that need to be defined.             #
-################################################################################
-
-TARGET_COMPILE_DEFINITIONS(${LIB_NAME} PRIVATE BUILDING_${LIB_NAME})
-IF(STATIC_LIB)
-    TARGET_COMPILE_DEFINITIONS(${LIB_NAME}_s PRIVATE BUILDING_${LIB_NAME})
-ENDIF()
-
-IF(NO_POOL)
-    TARGET_COMPILE_DEFINITIONS(${LIB_NAME} PRIVATE ORDO_DISABLE_POOL)
-    IF(STATIC_LIB)
-        TARGET_COMPILE_DEFINITIONS(${LIB_NAME}_s PRIVATE ORDO_DISABLE_POOL)
+IF(SYSTEM_GENERIC)
+    IF (LITTLE_ENDIAN)
+        ADD_DEFINITIONS(-DORDO_LITTLE_ENDIAN)
+    ELSE()
+        ADD_DEFINITIONS(-DORDO_BIG_ENDIAN)
     ENDIF()
 ENDIF()
 
-IF(NO_ASM)
-    TARGET_COMPILE_DEFINITIONS(${LIB_NAME} PRIVATE ORDO_NO_ASM)
-    IF(STATIC_LIB)
-        TARGET_COMPILE_DEFINITIONS(${LIB_NAME}_s PRIVATE ORDO_NO_ASM)
-    ENDIF()
-ENDIF()
-
-################################################################################
-# :: When pthreads is required, link it into the shared library.               #
-################################################################################
-
-IF((NOT NO_POOL) AND (NOT SYSTEM_WINDOWS))
-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${CMAKE_THREAD_LIBS_INIT})
-ELSE()
-    TARGET_LINK_LIBRARIES(${LIB_NAME})
-ENDIF()
-
-################################################################################
-# :: Reference any additional projects (tests, etc...) in here.                #
-################################################################################
-
-add_subdirectory(test)
-add_subdirectory(samples)
-
-################################################################################
-# :: Generate the documentation using doxygen (if available).                  #
-################################################################################
+ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(samples)
 
 FIND_PACKAGE(Doxygen)
 
-if(DOXYGEN_FOUND)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+IF(DOXYGEN_FOUND)
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
                    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-    add_custom_target(doc
+    ADD_CUSTOM_TARGET(doc
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
-endif()
+ENDIF()

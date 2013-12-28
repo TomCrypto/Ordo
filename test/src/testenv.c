@@ -26,7 +26,6 @@ TEST test(size_t index)
 /* These are tests concerning library utilities i.e. not related to crypto. */
 #include "tests/utility/errors.h"
 #include "tests/utility/utils.h"
-#include "tests/utility/mem.h"
 
 /* This is for the OS-provided CSPRNG. */
 #include "tests/misc/os_random.h"
@@ -46,33 +45,32 @@ int register_all_tests(void)
 {
     srand((unsigned)time(0)); /* For tests which need to use randomness. */
 
-    register_test(test_mem);
     register_test(test_os_random);
     register_test(test_error_codes);
     register_test(test_macros);
     register_test(test_pad_check);
     register_test(test_xor_buffer);
     register_test(test_inc_buffer);
-    
+
     register_test(test_digest);
     register_test(test_digest_utilities);
-    
+
     register_test(test_skein256);
-    
+
     register_test(test_hmac);
     register_test(test_pbkdf2);
     register_test(test_stream);
     register_test(test_stream_utilities);
-    
-    
+
+
     register_test(test_block);
     register_test(test_block_utilities);
-    
-    
+
+
     register_test(test_block_modes);
     register_test(test_block_modes_utilities);
-    
-    
+
+
 
     return 0; /* All tests registered. */
 }

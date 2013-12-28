@@ -1,90 +1,109 @@
+//===-- enc/enc_stream.h -------------------------------*- PUBLIC -*- H -*-===//
+///
+/// @file
+/// @brief Module
+///
+/// Interface to encrypt plaintext and  decrypt ciphertext with various stream
+/// ciphers.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef ORDO_ENC_STREAM_H
 #define ORDO_ENC_STREAM_H
 
-#include "ordo/internal/api.h"
+/// @cond
+#include "ordo/common/interface.h"
+/// @endcond
 
 #include "ordo/primitives/stream_ciphers.h"
-
-/******************************************************************************/
-
-/*!
- * @file enc_stream.h
- * @brief Stream cipher encryption module.
- *
- * Interface to encrypt plaintext and decrypt ciphertext with various stream ciphers.
-*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//===----------------------------------------------------------------------===//
+
 struct ENC_STREAM_CTX;
 
-/*! Allocates a new stream encryption context.
- @param cipher The stream cipher to use.
- @return Returns the allocated stream encryption context, or nil if an
-         allocation error occurred.
-*/
-ORDO_API struct ENC_STREAM_CTX * ORDO_CALLCONV
-enc_stream_alloc(const struct STREAM_CIPHER *cipher);
+/// Allocates a new stream encryption context.
+///
+/// @param [in]     cipher         The stream cipher to use.
+///
+/// @returns The allocated stream encryption context, or \c 0 if an allocation
+///          error occurred.
+ORDO_PUBLIC
+struct ENC_STREAM_CTX *enc_stream_alloc(const struct STREAM_CIPHER *cipher);
 
-/*! Initializes a stream encryption context.
- @param ctx An allocated stream encryption context.
- @param key The cryptographic key to use for encryption.
- @param key_size The size, in bytes, of the key.
- @param params Stream cipher specific parameters.
- @return Returns \c #ORDO_SUCCESS on success, or an error code.
-*/
-ORDO_API int ORDO_CALLCONV
-enc_stream_init(struct ENC_STREAM_CTX *ctx,
-                const void *key,
-                size_t key_size,
-                const void *params);
+/// Initializes a stream encryption context.
+///
+/// @param [in,out] ctx            A stream encryption context.
+/// @param [in]     key            The cryptographic key to use.
+/// @param [in]     key_size       The size, in bytes, of the key.
+/// @param [in]     params         Stream cipher specific parameters.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+ORDO_PUBLIC
+int enc_stream_init(struct ENC_STREAM_CTX *ctx,
+                    const void *key,
+                    size_t key_size,
+                    const void *params);
 
-/*! Encrypts or decrypts a data buffer.
- @param ctx An initialized stream encryption context.
- @param buffer The plaintext or ciphertext buffer.
- @param len Number of bytes to read from the buffer.
- @remarks By nature, stream ciphers encrypt and decrypt data the same way. In
-          other words, if you encrypt data twice, you will get back the
-          original data.
- @remarks Stream encryption is always done in place by design.
-*/
-ORDO_API void ORDO_CALLCONV
-enc_stream_update(struct ENC_STREAM_CTX *ctx,
-                  void *buffer,
-                  size_t len);
+/// Encrypts or decrypts a data buffer.
+///
+/// @param [in,out] ctx            A stream encryption context.
+/// @param [in,out] buffer         The plaintext or ciphertext buffer.
+/// @param [in]     len            Number of bytes to read from the buffer.
+///
+/// @remarks By nature, stream  ciphers encrypt and decrypt data the same way,
+///          in other  words, if you encrypt data twice, you will get back the
+///          original data.
+///
+/// @remarks Stream encryption is always done in place by design.
+ORDO_PUBLIC
+void enc_stream_update(struct ENC_STREAM_CTX *ctx,
+                       void *buffer,
+                       size_t len);
 
-/*! Frees a stream encryption context.
- @param ctx A stream encryption context.
- @remarks The context need not have been initialized.
-*/
-ORDO_API void ORDO_CALLCONV
-enc_stream_free(struct ENC_STREAM_CTX *ctx);
+/// Finalizes a stream encryption context.
+///
+/// @param [in,out] ctx            A stream encryption context.
+ORDO_PUBLIC
+void enc_stream_final(struct ENC_STREAM_CTX *ctx);
 
-/*! Performs a deep copy of one context into another.
- @param dst The destination context.
- @param src The source context.
- @remarks Both contexts must have been allocated with the same hash function,
-          and the exact same parameters (unless the parameter documentation
-          states otherwise) else the function's behavior is undefined.
-*/
-ORDO_API void ORDO_CALLCONV
-enc_stream_copy(struct ENC_STREAM_CTX *dst,
-                const struct ENC_STREAM_CTX *src);
+/// Frees a stream encryption context.
+///
+/// @param [in,out] ctx            A stream encryption context.
+ORDO_PUBLIC
+void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 
-/*! Probes a stream cipher for its key length.
- @param cipher The stream cipher to probe.
- @param key_len A suggested key length.
- @returns Returns \c key_len if and only if \c key_len is a valid key length
-          for this stream cipher. Otherwise, returns the nearest valid key
-          length greater than \c key_len. However, if no such key length
-          exists, it will return the largest key length admitted by the
-          stream cipher.
-*/
-ORDO_API size_t ORDO_CALLCONV
-enc_stream_key_len(const struct STREAM_CIPHER *cipher,
-                   size_t key_len);
+/// Performs a deep copy of one context into another.
+///
+/// @param [out]    dst            The destination context.
+/// @param [in]     src            The source context.
+///
+/// @remarks Both the contexts must have been  allocated  with the same stream
+///          cipher, and  the exact  same  parameters - unless  the  parameter
+///          documentation states otherwise - else this function's behavior is
+///          undefined.
+ORDO_PUBLIC
+void enc_stream_copy(struct ENC_STREAM_CTX *dst,
+                     const struct ENC_STREAM_CTX *src);
+
+/// Queries a stream cipher for its key length.
+///
+/// @param [in]     cipher         The stream cipher to probe.
+/// @param [in]     key_len        A suggested key length.
+///
+/// @returns \c  key_len if and only if \c  key_len is a valid  key length for
+///          this  stream  cipher. Otherwise, returns  the nearest  valid  key
+///          length  greater than \c  key_len. However, if  no such key length
+///          exists, it will  return the  largest key  length  admitted by the
+///          stream cipher.
+ORDO_PUBLIC
+size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
+                          size_t key_len);
+
+//===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus
 }

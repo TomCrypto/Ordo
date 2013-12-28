@@ -1,162 +1,169 @@
+//===-- primitives/hash_functions.h --------------------*- PUBLIC -*- H -*-===//
+///
+/// @file
+/// @brief Abstraction Layer
+///
+/// This abstraction layer declares all the hash functions and also makes them
+/// available to higher level modules - for a slightly more convenient wrapper
+/// to this interface, you can use \c digest.h.
+///
+//===----------------------------------------------------------------------===//
+
 #ifndef ORDO_HASH_FUNCTIONS_H
 #define ORDO_HASH_FUNCTIONS_H
 
-#include <stdint.h>
-
-#include "ordo/internal/api.h"
-
+/// @cond
+#include "ordo/common/interface.h"
 #include "ordo/primitives/hash_functions/hash_params.h"
-
-/******************************************************************************/
-
-/*!
- * @file hash_functions.h
- * @brief Hash function abstraction layer.
- *
- * <description here>
-*/
+/// @endcond
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//===----------------------------------------------------------------------===//
+
 struct HASH_FUNCTION;
 
-/******************************************************************************/
+/// Returns the name of a hash function primitive.
+///
+/// @param [in]     primitive      A hash function primitive.
+///
+/// @returns Returns the hash function's name.
+///
+/// @remarks This name can then be used in \c hash_function_by_name().
+ORDO_PUBLIC
+const char *hash_function_name(const struct HASH_FUNCTION *primitive);
 
-/*! Returns the name of a hash function primitive
- *  @param primitive A hash function primitive.
- *  @returns Returns the hash function's name.
- *  @remarks This name can then be used in \c hash_function_by_name().
-*/
-ORDO_API const char * ORDO_CALLCONV
-hash_function_name(const struct HASH_FUNCTION *primitive);
+/// The SHA-256 hash function.
+ORDO_PUBLIC
+const struct HASH_FUNCTION *sha256(void);
 
-/******************************************************************************/
+/// The MD5 hash function.
+ORDO_PUBLIC
+const struct HASH_FUNCTION *md5(void);
 
-/*! The SHA256 hash function. */
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-sha256(void);
+/// The Skein-256 hash function.
+ORDO_PUBLIC
+const struct HASH_FUNCTION *skein256(void);
 
-/*! The MD5 hash function. */
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-md5(void);
+/// Exposes the number of hash functions available.
+///
+/// @returns The number of available hash functions (at least one).
+///
+/// @remarks This is for use in enumerating hash functions.
+ORDO_PUBLIC
+size_t hash_function_count(void);
 
-/*! The Skein-256 hash function. */
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-skein256(void);
+/// Returns a hash function primitive from a name.
+///
+/// @param name A hash function name.
+///
+/// @returns The hash function such that the following is true:
+///          @code hash_function_name(retval) = name @endcode
+///          or \c 0 if no such hash function exists.
+ORDO_PUBLIC
+const struct HASH_FUNCTION *hash_function_by_name(const char *name);
 
-/******************************************************************************/
+/// Returns a hash function primitive from an index.
+///
+/// @param [in]     index          A hash function index.
+///
+/// @returns The hash function  corresponding to the  provided  index, or \c 0
+///          if no such hash function exists.
+///
+/// @remarks Use \c hash_function_count() to  obtain an  upper  bound on  hash
+///          function indices (there will be at least one).
+ORDO_PUBLIC
+const struct HASH_FUNCTION *hash_function_by_index(size_t index);
 
-/*! Returns the number of hash functions available.
- *  @returns The number of available hash functions (at least one).
- *  @remarks This is for use in enumerating hash function ID's.
-*/
-ORDO_API size_t ORDO_CALLCONV
-hash_function_count(void);
+//===----------------------------------------------------------------------===//
 
-/*! Returns a hash function primitive from a name.
- *  @param name A hash function name.
- *  @returns The corresponding hash function primitive, or nil if no such
- *           hash function exists.
-*/
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-hash_function_by_name(const char *name);
+/// Allocates a hash function state.
+///
+/// @param [in]     primitive      A hash function primitive.
+///
+/// @returns An allocated hash function state, or \c 0 on error.
+ORDO_PUBLIC
+void *hash_function_alloc(const struct HASH_FUNCTION *primitive);
 
-/*! Returns a hash function primitive from an index.
- *  @param index A hash function index.
- *  @returns The corresponding hash function primitive, or nil if no such
- *           hash function exists.
- *  @remarks Use \c hash_function_count() to get an upper bound on
- *           hash function indices.
-*/
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-hash_function_by_index(size_t index);
+/// Initializes a hash function state.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [in,out] state          An allocated hash function state.
+/// @param [in]     params         Hash function specific parameters.
+///
+/// @returns \c #ORDO_SUCCESS on success, else an error code.
+ORDO_PUBLIC
+int hash_function_init(const struct HASH_FUNCTION *primitive,
+                       void *state,
+                       const void *params);
 
-/*! Returns a hash function primitive from a primitive ID.
- *  @param id A primitive ID.
- *  @returns The corresponding hash function primitive, or nil if no such
- *           hash function exists.
-*/
-ORDO_API const struct HASH_FUNCTION * ORDO_CALLCONV
-hash_function_by_id(uint16_t id);
+/// Updates a hash  function state by  appending a buffer to the  message this
+/// state is to calculate the cryptographic digest of.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [in,out] state          A hash function state.
+/// @param [in]     buffer         A buffer to append to the message.
+/// @param [in]     len            The length, in bytes, of the buffer.
+///
+/// @remarks This function has the property that doing `update(x)` followed by
+///          `update(y)` is equivalent to `update(x || y)`, where `||` denotes
+///          concatenation.
+ORDO_PUBLIC
+void hash_function_update(const struct HASH_FUNCTION *primitive,
+                          void *state,
+                          const void *buffer,
+                          size_t len);
 
-/******************************************************************************/
+/// Finalizes a hash function state, outputting the final digest.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [in,out] state          A hash function state.
+/// @param [out]    digest         A buffer in which to write the digest.
+///
+/// @remarks The \c digest buffer should  be as  large as the  hash function's
+///          digest length (unless you changed it via custom parameters).
+ORDO_PUBLIC
+void hash_function_final(const struct HASH_FUNCTION *primitive,
+                         void *state,
+                         void *digest);
 
-/*! Allocates a hash function state.
- *  @param primitive A hash function primitive.
- *  @returns Returns an allocated hash function state, or nil on error.
-*/
-ORDO_API void * ORDO_CALLCONV
-hash_function_alloc(const struct HASH_FUNCTION *primitive);
+/// Frees a hash function state.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [in,out] state          A hash function state.
+ORDO_PUBLIC
+void hash_function_free(const struct HASH_FUNCTION *primitive,
+                        void *state);
 
-/*! Initializes a hash function state.
- *  @param primitive A hash function primitive.
- *  @param state An allocated hash function state.
- *  @param params Hash function specific parameters.
- *  @returns Returns \c #ORDO_SUCCESS on success, or an error code.
-*/
-ORDO_API int ORDO_CALLCONV
-hash_function_init(const struct HASH_FUNCTION *primitive,
-                   void *state,
-                   const void *params);
+/// Copies a hash function state to another.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [out]    dst            The destination state.
+/// @param [in]     src            The source state.
+///
+/// @remarks The states must have been initialized with the same hash function
+///          and parameters, or this function's behaviour is undefined.
+ORDO_PUBLIC
+void hash_function_copy(const struct HASH_FUNCTION *primitive,
+                        void *dst,
+                        const void *src);
 
-/*! Updates a hash function state by appending a buffer to the message
- *  to calculate the cryptographic digest of.
- *  @param primitive A hash function primitive.
- *  @param state An allocated hash function state.
- *  @param buffer A buffer to add to the message.
- *  @param len The length, in bytes, of the buffer.
-*/
-ORDO_API void ORDO_CALLCONV
-hash_function_update(const struct HASH_FUNCTION *primitive,
-                     void *state,
-                     const void *buffer,
-                     size_t len);
+/// Queries a hash function for suitable parameters.
+///
+/// @param [in]     primitive      A hash function primitive.
+/// @param [in]     query          A query code.
+/// @param [in]     value          A suggested value.
+///
+/// @returns A suitable parameter of type \c query based on \c value.
+///
+/// @see query.h
+ORDO_PUBLIC
+size_t hash_function_query(const struct HASH_FUNCTION *primitive,
+                           int query, size_t value);
 
-/*! Finalizes a hash function state, outputting the final digest.
- *  @param primitive A hash function primitive.
- *  @param state An allocated hash function state.
- *  @param digest A buffer in which to write the digest.
- *  @remarks The \c digest buffer should be as large as the hash function's
- *           digest length (default length, unless you changed it via
- *           parameters).
-*/
-ORDO_API void ORDO_CALLCONV
-hash_function_final(const struct HASH_FUNCTION *primitive,
-                    void *state,
-                    void *digest);
-
-/*! Frees a hash function state.
- *  @param primitive A hash function primitive.
- *  @param state A hash function state.
-*/
-ORDO_API void ORDO_CALLCONV
-hash_function_free(const struct HASH_FUNCTION *primitive,
-                   void *state);
-
-/*! Copies a hash function state to another.
- *  @param primitive A hash function primitive.
- *  @param dst The destination state.
- *  @param src The source state.
- *  @remarks Both states must have been initialized with the same hash
- *           function and parameters.
-*/
-ORDO_API void ORDO_CALLCONV
-hash_function_copy(const struct HASH_FUNCTION *primitive,
-                   void *dst,
-                   const void *src);
-
-/*! Queries a hash function for suitable parameters.
- *  @param primitive A hash function primitive.
- *  @param query A query code.
- *  @param value A suggested value.
- *  @returns Returns a suitable parameter of type \c query based on \c value.
- *  @see query.h
-*/
-ORDO_API size_t ORDO_CALLCONV
-hash_function_query(const struct HASH_FUNCTION *primitive,
-                    int query, size_t value);
+//===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus
 }
