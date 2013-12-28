@@ -79,40 +79,40 @@ ENDIF()
 
 SET(INCLUDE_FILES
     include/ordo.h
-    include/ordo/common/version.h
-    include/ordo/common/interface.h
-    include/ordo/common/query.h
-    include/ordo/common/error.h
-    include/ordo/kdf/pbkdf2.h
     include/ordo/misc/os_random.h
-    include/ordo/internal/mem.h
-    include/ordo/internal/alg.h
-    include/ordo/internal/sys.h
-    include/ordo/internal/implementation.h
-    include/ordo/digest/digest.h
-    include/ordo/enc/enc_stream.h
-    include/ordo/primitives/block_modes.h
-    include/ordo/primitives/block_modes/cfb.h
-    include/ordo/primitives/block_modes/cbc.h
-    include/ordo/primitives/block_modes/ecb.h
-    include/ordo/primitives/block_modes/ctr.h
-    include/ordo/primitives/block_modes/ofb.h
-    include/ordo/primitives/block_modes/mode_params.h
     include/ordo/enc/enc_block.h
-    include/ordo/primitives/stream_ciphers.h
-    include/ordo/primitives/hash_functions.h
-    include/ordo/primitives/block_ciphers.h
-    include/ordo/primitives/hash_functions/sha256.h
-    include/ordo/primitives/hash_functions/md5.h
-    include/ordo/primitives/hash_functions/skein256.h
-    include/ordo/primitives/hash_functions/hash_params.h
+    include/ordo/enc/enc_stream.h
+    include/ordo/kdf/pbkdf2.h
+    include/ordo/common/error.h
+    include/ordo/common/query.h
+    include/ordo/common/interface.h
+    include/ordo/common/version.h
+    include/ordo/auth/hmac.h
+    include/ordo/internal/alg.h
+    include/ordo/internal/implementation.h
+    include/ordo/internal/mem.h
+    include/ordo/internal/sys.h
+    include/ordo/digest/digest.h
     include/ordo/primitives/stream_ciphers/rc4.h
     include/ordo/primitives/stream_ciphers/stream_params.h
-    include/ordo/primitives/block_ciphers/block_params.h
+    include/ordo/primitives/hash_functions/hash_params.h
+    include/ordo/primitives/hash_functions/skein256.h
+    include/ordo/primitives/hash_functions/sha256.h
+    include/ordo/primitives/hash_functions/md5.h
+    include/ordo/primitives/block_modes.h
     include/ordo/primitives/block_ciphers/threefish256.h
     include/ordo/primitives/block_ciphers/aes.h
+    include/ordo/primitives/block_ciphers/block_params.h
     include/ordo/primitives/block_ciphers/nullcipher.h
-    include/ordo/auth/hmac.h
+    include/ordo/primitives/hash_functions.h
+    include/ordo/primitives/block_modes/mode_params.h
+    include/ordo/primitives/block_modes/ctr.h
+    include/ordo/primitives/block_modes/ofb.h
+    include/ordo/primitives/block_modes/cfb.h
+    include/ordo/primitives/block_modes/ecb.h
+    include/ordo/primitives/block_modes/cbc.h
+    include/ordo/primitives/stream_ciphers.h
+    include/ordo/primitives/block_ciphers.h
 )
 
 SET(IN_FILES
@@ -139,15 +139,15 @@ SET(IN_FILES
     ordo.c
     os_random.c
     pbkdf2.c
-    rc4.c
     rc4.asm
+    rc4.c
     sha256.c
     skein256.c
     stream_ciphers.c
+    sys.c
     threefish256.asm
     threefish256.c
     version.c
-    sys.c
 )
 
 FUNCTION(PROCESS FOLDER)

@@ -184,16 +184,20 @@ static double hash_speed(const struct HASH_FUNCTION *hash,
     if (ctx)
     {
         void *params = hash_params(hash);
-        digest_init(ctx, params);
 
         uint64_t iterations = 0;
-        my_time start = now();
         double elapsed;
+        my_time start;
+
+        digest_init(ctx, params);
+
+        start = now(); // begin
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
             digest_update(ctx, buffer, block);
 
-        elapsed = get_elapsed(start);
+        elapsed = get_elapsed(start); // end
+
         digest_final(ctx, buffer);
         digest_free(ctx);
         free(params);
@@ -220,16 +224,19 @@ static double stream_speed(const struct STREAM_CIPHER *cipher,
 
         void *key = allocate(key_len);
 
+        uint64_t iterations = 0;
+        double elapsed;
+        my_time start;
+
         enc_stream_init(ctx, key, key_len, params);
 
-        uint64_t iterations = 0;
-        my_time start = now();
-        double elapsed;
+        start = now(); // begin
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
             enc_stream_update(ctx, buffer, block);
 
-        elapsed = get_elapsed(start);
+        elapsed = get_elapsed(start); // end
+
         enc_stream_final(ctx);
         enc_stream_free(ctx);
         free(params);
@@ -261,18 +268,21 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
         void *key = allocate(key_len);
         void *iv = allocate(iv_len);
 
+        uint64_t iterations = 0;
+        double elapsed;
+        my_time start;
+        size_t out;
+
         enc_block_init(ctx, key, key_len, iv, iv_len,
                        1, cipher_params, mode_params);
 
-        uint64_t iterations = 0;
-        my_time start = now();
-        double elapsed;
-        size_t out;
+        start = now(); // begin
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
             enc_block_update(ctx, buffer, block, buffer, &out);
 
-        elapsed = get_elapsed(start);
+        elapsed = get_elapsed(start); // end
+
         enc_block_final(ctx, buffer, &out);
         enc_block_free(ctx);
         free(cipher_params);
