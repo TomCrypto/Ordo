@@ -1,3 +1,6 @@
+# Please note : this file will probably be symlinked to a few other *nix'es, as
+# in general the ABI is the same, so the implementations are in fact identical.
+
 SET_PROPERTY(CACHE ARCH PROPERTY STRINGS
              ${ARCH_GENERIC}
              "amd64"
