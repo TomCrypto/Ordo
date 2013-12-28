@@ -47,7 +47,7 @@ We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are n
 - `LTO`: use link-time optimization, this should be enabled for optimal performance.
 - `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
 
-Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported.
+Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know).
 
 ### Assembly Support
 
