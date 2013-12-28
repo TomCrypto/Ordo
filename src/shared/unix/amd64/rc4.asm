@@ -1,4 +1,4 @@
-;/===-- rc4.asm ---------------------------------*- linux/amd64 -*- ASM -*-===//
+;/===-- rc4.asm ---------------------------*- shared/unix/amd64 -*- ASM -*-===//
 
 ; RC4 implementation optimized for AMD64.
 ;

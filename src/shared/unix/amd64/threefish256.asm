@@ -1,4 +1,4 @@
-;/===-- threefish256.asm ------------------------*- linux/amd64 -*- ASM -*-===//
+;/===-- threefish256.asm ------------------*- shared/unix/amd64 -*- ASM -*-===//
 
 ; Threefish-256 implementation for AMD64
 

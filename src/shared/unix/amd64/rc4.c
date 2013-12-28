@@ -1,4 +1,4 @@
-//===-- rc4.c -------------------------------------*- linux/amd64 -*- C -*-===//
+//===-- rc4.c -------------------------------*- shared/unix/amd64 -*- C -*-===//
 
 #include "ordo/primitives/stream_ciphers/rc4.h"
 

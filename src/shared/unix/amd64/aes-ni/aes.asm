@@ -1,4 +1,4 @@
-;/===-- aes.asm --------------------------*- linux/amd64/aes-ni -*- ASM -*-===//
+;/===-- aes.asm --------------------*- shared/unix/amd64/aes-ni -*- ASM -*-===//
 
 ; AES-NI implementation
 

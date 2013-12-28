@@ -1,4 +1,4 @@
-//===-- threefish256.c ----------------------------*- linux/amd64 -*- C -*-===//
+//===-- threefish256.c ----------------------*- shared/unix/amd64 -*- C -*-===//
 
 #include "ordo/primitives/block_ciphers/threefish256.h"
 

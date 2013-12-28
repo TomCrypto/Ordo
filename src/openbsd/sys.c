@@ -1,4 +1,4 @@
-//===-- sys.c ---------------------------------------------*- bsd -*- C -*-===//
+//===-- sys.c -----------------------------------------*- openbsd -*- C -*-===//
 
 #include "ordo/internal/sys.h"
 
@@ -11,7 +11,7 @@
 
 //===----------------------------------------------------------------------===//
 
-// On BSD's, this header is actually sys/endian.h, and the macros are slightly
+// For most BSD's the header is actually sys/endian.h, and macros are slightly
 // different (they always have the word size at the end, not after "le"/"be").
 
 uint16_t htole16_(uint16_t x) { return htole16(x); }
