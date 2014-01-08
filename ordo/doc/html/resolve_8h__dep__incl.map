@@ -1,5 +1,0 @@
-<map id="include/internal/asm/resolve.h" name="include/internal/asm/resolve.h">
-<area shape="rect" id="node3" href="$aes_8_s.html" title="AES assembly code [ABI: Windows x64, Linux x64]. " alt="" coords="5,102,144,149"/>
-<area shape="rect" id="node5" href="$threefish256_8_s.html" title="Threefish&#45;256 assembly code [ABI: Windows x64, Linux x64]. " alt="" coords="168,102,355,149"/>
-<area shape="rect" id="node7" href="$rc4_8_s.html" title="RC4 assembly code [ABI: Windows x64, Linux x64]. " alt="" coords="379,102,523,149"/>
-</map>
