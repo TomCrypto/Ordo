@@ -37,7 +37,9 @@ This table doesn't include every single feature but gives a high level overview 
 Documentation
 -------------
 
-Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target (if available). The HTML documentation will be generated in `doc/html` and the LaTeX documentation will be generated in `doc/latex` (note you need `pdflatex` and a working TeX environment for the latter to work).
+Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target, if deemed available on your system (you will need `doxygen`, and `pdflatex` with a working TeX environment for the LaTeX output). The HTML documentation will be generated in `doc/html`, and the LaTeX documentation will be generated in `doc/latex`, which you can then typeset using the generated makefile.
+
+You can also access a recent version of the documentation online through the [project page](http://tomcrypto.github.io/Ordo/).
 
 How To Build
 ------------
@@ -51,11 +53,11 @@ Note the system is autodetected and automatically included in the build. Additio
 
 If you are not using the `cmake-gui` utility, the command-line options to configure the library are:
 
-    `cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off]`
+    cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off]
 
 For instance, a typical configuration for x86_64 machines with the AES-NI instructions could be:
 
-    `cd build && cmake .. -DARCH=amd64 -DAES_NI=on`
+    cd build && cmake .. -DARCH=amd64 -DAES_NI=on
 
 ### Assembly Support
 
