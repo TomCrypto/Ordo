@@ -63,5 +63,5 @@ void enc_stream_copy(struct ENC_STREAM_CTX *dst,
 size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
                           size_t key_len)
 {
-    return stream_cipher_query(cipher, KEY_LEN, key_len);
+    return stream_cipher_query(cipher, KEY_LEN_Q, key_len);
 }

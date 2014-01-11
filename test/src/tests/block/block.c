@@ -160,7 +160,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
     }
     else
     {
-        size_t check_len = block_cipher_query(cipher, BLOCK_SIZE, 0);
+        size_t check_len = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
         void *state;
         int err;
 

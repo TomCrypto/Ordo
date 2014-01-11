@@ -35,7 +35,7 @@
 /// The motivation for  designing this interface in this fashion  is to ensure
 /// no information loss occurs when user input is provided to the library. For
 /// instance, if the user  provides a 160-bit key to AES,  he will first query
-/// the block cipher's key length using \c #KEY_LEN, suggesting a 160-bit key,
+/// the block cipher key length using \c #KEY_LEN_Q, suggesting a 160-bit key,
 /// and the  AES cipher will  correctly identify the  ideal key length  as 192
 /// bits, and not 128 bits (which would lead to part of the key being unused).
 /// This allows software  using the library to dynamically  adjust to whatever
@@ -58,7 +58,7 @@ extern "C" {
 
 /// @enum ORDO_QUERY
 ///
-/// Query codes used by the library.
+/// Query codes used by the library. These end in \c _Q.
 enum ORDO_QUERY
 {
     /// Query code to retrieve a key length.
@@ -66,7 +66,7 @@ enum ORDO_QUERY
     /// Applicable to:
     /// - block ciphers
     /// - stream ciphers
-    KEY_LEN,
+    KEY_LEN_Q,
 
     /// Query code to retrieve a block size.
     ///
@@ -78,7 +78,7 @@ enum ORDO_QUERY
     ///         message block to  the compression function, or, more formally,
     ///         the amount of data necessary to trigger a compression function
     ///         iteration. This may not be meaningful for all hash functions.
-    BLOCK_SIZE,
+    BLOCK_SIZE_Q,
 
     /// Query code to retrieve the default digest length of a hash function.
     ///
@@ -86,7 +86,7 @@ enum ORDO_QUERY
     ///
     /// Applicable to:
     /// - hash functions
-    DIGEST_LEN,
+    DIGEST_LEN_Q,
 
     /// Query code to retrieve an initialization vector length.
     ///
@@ -96,7 +96,7 @@ enum ORDO_QUERY
     /// @remarks As the block  mode of operation  primitives use block ciphers
     ///          internally, the  returned  initialization vector length might
     ///          depend on the block cipher (likely its block size).
-    IV_LEN
+    IV_LEN_Q
 };
 
 //===----------------------------------------------------------------------===//

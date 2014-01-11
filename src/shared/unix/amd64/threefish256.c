@@ -33,7 +33,7 @@ int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
 {
-    if (threefish256_query(KEY_LEN, key_len) != key_len)
+    if (threefish256_query(KEY_LEN_Q, key_len) != key_len)
     {
         return ORDO_KEY_LEN;
     }
@@ -74,9 +74,9 @@ size_t threefish256_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return THREEFISH256_BLOCK;
-        case KEY_LEN   : return 32;
-        default        : return 0;
+        case BLOCK_SIZE_Q: return THREEFISH256_BLOCK;
+        case KEY_LEN_Q   : return 32;
+        default          : return 0;
     }
 }
 

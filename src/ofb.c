@@ -21,7 +21,7 @@ struct OFB_STATE *ofb_alloc(const struct BLOCK_CIPHER *cipher,
     struct OFB_STATE *state = mem_alloc(sizeof(struct OFB_STATE));
     if (!state) goto fail;
 
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
 
     state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
@@ -44,7 +44,7 @@ int ofb_init(struct OFB_STATE *state,
 {
     size_t block_size = state->block_size;
 
-    if (ofb_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
+    if (ofb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     // Copy the IV (required) into the context IV
     memset(state->iv, 0x00, block_size);
@@ -65,7 +65,7 @@ void ofb_update(struct OFB_STATE *state,
                 unsigned char *out,
                 size_t *outlen)
 {
-    *outlen = 0;
+    if (outlen) *outlen = 0;
 
     while (inlen != 0)
     {
@@ -83,8 +83,8 @@ void ofb_update(struct OFB_STATE *state,
 
         if (out != in) memcpy(out, in, process);
         xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
+        if (outlen) (*outlen) += process;
         state->remaining -= process;
-        (*outlen) += process;
         inlen -= process;
         out += process;
         in += process;
@@ -121,7 +121,7 @@ size_t ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {
-        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
-        default    : return 0;
+        case IV_LEN_Q: return block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+        default      : return 0;
     }
 }

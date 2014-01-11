@@ -126,8 +126,8 @@ size_t md5_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return MD5_BLOCK;
-        case DIGEST_LEN: return MD5_DIGEST;
+        case BLOCK_SIZE_Q: return MD5_BLOCK;
+        case DIGEST_LEN_Q: return MD5_DIGEST;
 
         default: return 0;
     }

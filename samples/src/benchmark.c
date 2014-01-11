@@ -220,7 +220,7 @@ static double stream_speed(const struct STREAM_CIPHER *cipher,
     {
         void *params = stream_params(cipher);
 
-        size_t key_len = stream_cipher_query(cipher, KEY_LEN, (size_t)-1);
+        size_t key_len = stream_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
 
         void *key = allocate(key_len);
 
@@ -262,8 +262,8 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
         void *cipher_params = block_params(cipher);
         void *mode_params = block_mode_params(mode);
 
-        size_t key_len = block_cipher_query(cipher, KEY_LEN, (size_t)-1);
-        size_t iv_len = block_mode_query(mode, cipher, IV_LEN, (size_t)-1);
+        size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
+        size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
 
         void *key = allocate(key_len);
         void *iv = allocate(iv_len);

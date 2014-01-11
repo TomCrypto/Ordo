@@ -23,7 +23,7 @@ struct CFB_STATE *cfb_alloc(const struct BLOCK_CIPHER *cipher,
     struct CFB_STATE *state = mem_alloc(sizeof(struct CFB_STATE));
     if (!state) goto fail;
 
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
 
     state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
@@ -49,7 +49,7 @@ int cfb_init(struct CFB_STATE *state,
 {
     size_t block_size = state->block_size;
 
-    if (cfb_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
+    if (cfb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     state->direction = dir;
 
@@ -70,7 +70,7 @@ static void cfb_encrypt_update(struct CFB_STATE *state,
                                unsigned char *out,
                                size_t *outlen)
 {
-    *outlen = 0;
+    if (outlen) *outlen = 0;
 
     while (inlen != 0)
     {
@@ -88,8 +88,8 @@ static void cfb_encrypt_update(struct CFB_STATE *state,
         if (out != in) memcpy(out, in, process);
         xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
         memcpy(offset(state->iv, block_size - state->remaining), out, process);
+        if (outlen) (*outlen) += process;
         state->remaining -= process;
-        (*outlen) += process;
         inlen -= process;
         out += process;
         in += process;
@@ -104,7 +104,7 @@ static void cfb_decrypt_update(struct CFB_STATE *state,
                                unsigned char *out,
                                size_t *outlen)
 {
-    *outlen = 0;
+    if (outlen) *outlen = 0;
 
     while (inlen != 0)
     {
@@ -123,8 +123,8 @@ static void cfb_decrypt_update(struct CFB_STATE *state,
         memcpy(state->tmp, in, process);
         xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
         memcpy(offset(state->iv, block_size - state->remaining), state->tmp, process);
+        if (outlen) (*outlen) += process;
         state->remaining -= process;
-        (*outlen) += process;
         inlen -= process;
         out += process;
         in += process;
@@ -182,7 +182,7 @@ size_t cfb_query(const struct BLOCK_CIPHER *cipher,
 {
     switch(query)
     {
-        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
-        default    : return 0;
+        case IV_LEN_Q: return block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+        default      : return 0;
     }
 }

@@ -26,7 +26,7 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void *key, size_t key_len,
                     const void *params)
 {
-    if (nullcipher_query(KEY_LEN, key_len) != key_len) return ORDO_KEY_LEN;
+    if (nullcipher_query(KEY_LEN_Q, key_len) != key_len) return ORDO_KEY_LEN;
 
     state->dummy = 42;
     return ORDO_SUCCESS;
@@ -62,8 +62,8 @@ size_t nullcipher_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return NULLCIPHER_BLOCK;
-        case KEY_LEN   : return 0;
-        default        : return 0;
+        case BLOCK_SIZE_Q: return NULLCIPHER_BLOCK;
+        case KEY_LEN_Q   : return 0;
+        default          : return 0;
     }
 }

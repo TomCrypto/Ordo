@@ -37,7 +37,7 @@ int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,
              const struct AES_PARAMS *params)
 {
-    if (aes_query(KEY_LEN, key_len) != key_len)
+    if (aes_query(KEY_LEN_Q, key_len) != key_len)
     {
         return ORDO_KEY_LEN;
     }
@@ -94,9 +94,9 @@ size_t aes_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return AES_BLOCK;
+        case BLOCK_SIZE_Q: return AES_BLOCK;
 
-        case KEY_LEN:
+        case KEY_LEN_Q:
         {
             if (value <= 16) return 16;
             if (value <= 24) return 24;

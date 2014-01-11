@@ -22,13 +22,13 @@ int main()
     for (t = 0; t < block_cipher_count(); ++t)
     {
         const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
-        size_t key_len = block_cipher_query(cipher, KEY_LEN, 0);
+        size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, 0);
 
         printf("Key lengths for %s:\n", block_cipher_name(cipher));
 
         while (1)
         {
-            size_t next = block_cipher_query(cipher, KEY_LEN, key_len + 1);
+            size_t next = block_cipher_query(cipher, KEY_LEN_Q, key_len + 1);
             printf("* %d bits.\n", (int)key_len * 8);
             if (next == key_len) break;
             key_len = next;

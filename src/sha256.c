@@ -115,8 +115,8 @@ size_t sha256_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return SHA256_BLOCK;
-        case DIGEST_LEN: return SHA256_DIGEST;
+        case BLOCK_SIZE_Q: return SHA256_BLOCK;
+        case DIGEST_LEN_Q: return SHA256_DIGEST;
 
         default: return 0;
     }

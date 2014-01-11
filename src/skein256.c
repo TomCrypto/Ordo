@@ -211,9 +211,9 @@ size_t skein256_query(int query, size_t value)
 {
     switch(query)
     {
-        case BLOCK_SIZE: return SKEIN256_BLOCK;
-        case DIGEST_LEN: return SKEIN256_INTERNAL;
-        default        : return 0;
+        case BLOCK_SIZE_Q: return SKEIN256_BLOCK;
+        case DIGEST_LEN_Q: return SKEIN256_INTERNAL;
+        default          : return 0;
     }
 }
 

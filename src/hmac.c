@@ -21,7 +21,7 @@ struct HMAC_CTX
 struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash)
 {
     struct HMAC_CTX *ctx = mem_alloc(sizeof(struct HMAC_CTX));
-    size_t block_size = hash_function_query(hash, BLOCK_SIZE, 0);
+    size_t block_size = hash_function_query(hash, BLOCK_SIZE_Q, 0);
     if (!ctx) goto fail;
 
     if (!(ctx->ctx = digest_alloc(hash))) goto fail;
@@ -39,7 +39,7 @@ int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
               const void *hash_params)
 {
-    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE, 0);
+    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE_Q, 0);
 
     int err = ORDO_SUCCESS;
     size_t t;
@@ -75,7 +75,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     int err = ORDO_SUCCESS;
 
     size_t digest_len = digest_length(ctx->hash);
-    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE, 0);
+    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE_Q, 0);
     size_t t;
 
     digest_final(ctx->ctx, digest);
@@ -111,7 +111,7 @@ void hmac_free(struct HMAC_CTX *ctx)
 
 void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
 {
-    size_t block_size = hash_function_query(dst->hash, BLOCK_SIZE, 0);
+    size_t block_size = hash_function_query(dst->hash, BLOCK_SIZE_Q, 0);
     memcpy(dst->key, src->key, block_size);
     digest_copy(dst->ctx, src->ctx);
 }

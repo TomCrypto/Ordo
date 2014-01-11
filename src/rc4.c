@@ -59,7 +59,7 @@ size_t rc4_query(int query, size_t key_len)
 {
     switch (query)
     {
-        case KEY_LEN:
+        case KEY_LEN_Q:
         {
             if (key_len < bits(40))   return bits(40);
             if (key_len > bits(2048)) return bits(2048);

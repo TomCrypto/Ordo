@@ -61,5 +61,5 @@ void digest_copy(struct DIGEST_CTX *dst,
 
 size_t digest_length(const struct HASH_FUNCTION *hash)
 {
-    return hash_function_query(hash, DIGEST_LEN, 0);
+    return hash_function_query(hash, DIGEST_LEN_Q, 0);
 }

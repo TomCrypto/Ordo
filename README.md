@@ -1,4 +1,4 @@
-Ordo v2.5.0
+Ordo v2.6.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,15 +11,9 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.5.0:
- - better build system
- - got rid of the custom allocator in the generic code path
- - completely revamped and finished public documentation
- - improved header dependencies between headers and source files
- - test driver updated accordingly
- - fixed a few logical errors in the public headers and implementation
- - official MSVC support
- - fixed benchmark sample to only measure throughput, not setup
+What's new in 2.6.0:
+ - changed query codes to end in `_Q` for namespacing (minimal API change)
+ - streaming block modes now admit a nil `outlen` for convenience
 
 Feature Map
 -----------

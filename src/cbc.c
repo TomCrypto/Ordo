@@ -28,7 +28,7 @@ struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
     struct CBC_STATE *state = mem_alloc(sizeof(struct CBC_STATE));
     if (!state) goto fail;
 
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
 
     state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
@@ -51,7 +51,7 @@ int cbc_init(struct CBC_STATE *state,
              int dir,
              const struct CBC_PARAMS *params)
 {
-    if (cbc_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
+    if (cbc_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
     state->direction = dir;
@@ -265,7 +265,7 @@ size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {
-        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
-        default    : return 0;
+        case IV_LEN_Q: return block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+        default      : return 0;
     }
 }

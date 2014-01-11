@@ -102,12 +102,12 @@ void enc_block_copy(struct ENC_BLOCK_CTX *dst,
 size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
                          size_t key_len)
 {
-    return block_cipher_query(cipher, KEY_LEN, key_len);
+    return block_cipher_query(cipher, KEY_LEN_Q, key_len);
 }
 
 size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
                         const struct BLOCK_MODE *mode,
                         size_t iv_len)
 {
-    return block_mode_query(mode, cipher, IV_LEN, iv_len);
+    return block_mode_query(mode, cipher, IV_LEN_Q, iv_len);
 }

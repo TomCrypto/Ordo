@@ -22,7 +22,7 @@ struct CTR_STATE *ctr_alloc(const struct BLOCK_CIPHER *cipher,
     struct CTR_STATE *state = mem_alloc(sizeof(struct CTR_STATE));
     if (!state) goto fail;
 
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE, 0);
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
 
     state->iv = mem_alloc(state->block_size);
     if (!state->iv) goto fail;
@@ -48,7 +48,7 @@ int ctr_init(struct CTR_STATE *state,
 {
     size_t block_size = state->block_size;
 
-    if (ctr_query(cipher, IV_LEN, iv_len) != iv_len) return ORDO_ARG;
+    if (ctr_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     memset(state->iv, 0x00, block_size);
     memcpy(state->iv, iv, iv_len);
@@ -68,7 +68,7 @@ void ctr_update(struct CTR_STATE *state,
                 unsigned char *out,
                 size_t *outlen)
 {
-    *outlen = 0;
+    if (outlen) *outlen = 0;
 
     while (inlen != 0)
     {
@@ -87,8 +87,8 @@ void ctr_update(struct CTR_STATE *state,
 
         if (out != in) memcpy(out, in, process);
         xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
+        if (outlen) (*outlen) += process;
         state->remaining -= process;
-        (*outlen) += process;
         inlen -= process;
         out += process;
         in += process;
@@ -131,7 +131,7 @@ size_t ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
 {
     switch(query)
     {
-        case IV_LEN: return block_cipher_query(cipher, BLOCK_SIZE, 0);
-        default    : return 0;
+        case IV_LEN_Q: return block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+        default      : return 0;
     }
 }
