@@ -20,15 +20,13 @@ extern "C" {
 
 //===----------------------------------------------------------------------===//
 
-/// @struct ORDO_VERSION
+/// @brief Library version information.
 ///
 /// Contains version information for the library.
 struct ORDO_VERSION
 {
     /// The version as an integer of the form XXYYZZ, e.g. 30242 == 3.2.42.
-    ///
-    /// @remarks This field can be used for comparing versions.
-    uint32_t id;
+    unsigned int id;
     
     /// The version e.g. "2.7.0".
     const char *version;
@@ -40,8 +38,6 @@ struct ORDO_VERSION
     const char *arch;
     
     /// A string which contains version, system and architecture.
-    ///
-    /// @remarks Use this when you just need to display the version.
     const char *build;
     
     /// A null-terminated list of targeted features.
