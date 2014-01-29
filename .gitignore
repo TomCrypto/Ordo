@@ -2,7 +2,7 @@ lib
 obj
 doc
 bindings
-testing
+scripts
 
 *.S~
 *.c~
