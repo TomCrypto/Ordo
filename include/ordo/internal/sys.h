@@ -26,7 +26,7 @@ extern "C" {
 
 #if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
     #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
-        #error "This header is internal to the library."
+        #error "This header is internal to the Ordo library."
     #endif
 #endif
 
