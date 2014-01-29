@@ -17,6 +17,10 @@
 #include "ordo/common/interface.h"
 /// @endcond
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //===----------------------------------------------------------------------===//
 
 // tole16  ==  host --> little-endian (16 bits)
@@ -39,5 +43,9 @@ ORDO_PUBLIC uint64_t fmle64(uint64_t x);
 ORDO_PUBLIC uint64_t fmbe64(uint64_t x);
 
 //===----------------------------------------------------------------------===//
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
