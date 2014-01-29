@@ -12,7 +12,7 @@
 
 int os_random(void *buffer, size_t size)
 {
-    FILE* f = fopen("/dev/urandom", "r");
+    FILE *f = fopen("/dev/urandom", "r");
     if (!f) return ORDO_FAIL;
 
     while (size != 0)
