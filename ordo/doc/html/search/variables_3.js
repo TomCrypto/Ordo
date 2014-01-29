@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['reserved',['reserved',['../struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28',1,'SKEIN256_PARAMS']]],
-  ['rounds',['rounds',['../struct_a_e_s___p_a_r_a_m_s.html#a79c090aba458c743cdbf8585f7a058c9',1,'AES_PARAMS']]]
+  ['feature_5flist',['feature_list',['../struct_o_r_d_o___v_e_r_s_i_o_n.html#ad65faa95abe4db16ea1549453867c38a',1,'ORDO_VERSION']]],
+  ['features',['features',['../struct_o_r_d_o___v_e_r_s_i_o_n.html#ad91e189c4cc1d234379486a1ce135e59',1,'ORDO_VERSION']]]
 ];

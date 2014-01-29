@@ -27,6 +27,7 @@ var searchData=
   ['block_5fmode_5fupdate',['block_mode_update',['../block__modes_8h.html#a8623000b40bdfdc5f4a8be4e0dea3f19',1,'block_modes.c']]],
   ['block_5fmodes_2eh',['block_modes.h',['../block__modes_8h.html',1,'']]],
   ['block_5fparams_2eh',['block_params.h',['../block__params_8h.html',1,'']]],
-  ['block_5fsize',['BLOCK_SIZE',['../query_8h.html#a8104fee8c8e05679a17a05b93831fa92a289ec7492eb0ef6bf5285fb142203e11',1,'query.h']]],
+  ['block_5fsize_5fq',['BLOCK_SIZE_Q',['../query_8h.html#a8104fee8c8e05679a17a05b93831fa92a4a27d131f5cc1119892c41daf2bc30c9',1,'query.h']]],
+  ['build',['build',['../struct_o_r_d_o___v_e_r_s_i_o_n.html#ac9a62b6f93dda6f603d46d43bbfc216d',1,'ORDO_VERSION']]],
   ['bytes',['bytes',['../alg_8h.html#a43f0102bb6361b4e8df82a94e0b99c54',1,'alg.h']]]
 ];

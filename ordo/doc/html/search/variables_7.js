@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['version',['version',['../struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225',1,'SKEIN256_PARAMS']]]
+  ['reserved',['reserved',['../struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28',1,'SKEIN256_PARAMS']]],
+  ['rounds',['rounds',['../struct_a_e_s___p_a_r_a_m_s.html#a79c090aba458c743cdbf8585f7a058c9',1,'AES_PARAMS']]]
 ];

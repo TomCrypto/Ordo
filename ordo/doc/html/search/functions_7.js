@@ -10,6 +10,5 @@ var searchData=
   ['md5_5fupdate',['md5_update',['../md5_8h.html#a8280b15b1b583bab8640db3f577cf8c9',1,'md5.c']]],
   ['mem_5falloc',['mem_alloc',['../mem_8h.html#ab9abe4aeb2ef238afed96280d1e8976d',1,'mem.c']]],
   ['mem_5ferase',['mem_erase',['../mem_8h.html#a1ba91de8361ba55e89588c953ecc0057',1,'mem.c']]],
-  ['mem_5ffree',['mem_free',['../mem_8h.html#ab6402611f6f839efb70e7cf45ec7810c',1,'mem.c']]],
-  ['mem_5finit',['mem_init',['../mem_8h.html#ad444adca11bd757c5991f20d407995ae',1,'mem.c']]]
+  ['mem_5ffree',['mem_free',['../mem_8h.html#ab6402611f6f839efb70e7cf45ec7810c',1,'mem.c']]]
 ];

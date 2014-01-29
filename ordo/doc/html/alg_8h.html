@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.5.0</span>
+   &#160;<span id="projectnumber">2.7.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -119,7 +119,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><b>Internal</b>, Utility </p>
-<p>This header provides various utility functions which are used by some library modules and a few convenience macros. It is not to be used outside the library, but this is not enforced (users can include this header and use it freely, but this is not recommended as it is not a public header). </p>
+<p>This header provides various utility functions which are used by some library modules and a few convenience macros. It is not to be used outside the library, and this is enforced by an include guard. If you really must access it, define the <code>ORDO_INTERNAL_ACCESS</code> token before including it.</p>
+<p>Functions in internal headers are not prefixed, be wary of name clashes. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a432491257d14c507f4c4d271a38e416b"></a>
 <div class="memitem">
@@ -153,7 +154,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Converts bytes into bits (as a multiple of 8 bits).</p>
-<dl class="section remark"><dt>Remarks</dt><dd>As an example, <code><a class="el" href="alg_8h.html#a432491257d14c507f4c4d271a38e416b">bits(32)</a></code> returns 256 (bits). </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>As an example, <code><a class="el" href="alg_8h.html#a43f0102bb6361b4e8df82a94e0b99c54">bytes(32)</a></code> returns 256 (bits). </dd></dl>
 
 </div>
 </div>
@@ -314,7 +315,7 @@ The Source and destination buffers may be the same (in which case the buffer wil
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 9 2014 00:31:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 29 2014 20:13:00 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
