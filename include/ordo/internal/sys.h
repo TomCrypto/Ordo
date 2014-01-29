@@ -7,6 +7,8 @@
 /// This header provides system-dependent functionality and is internal to the
 /// library. It probably shouldn't ever be used from outside the library.
 ///
+/// See \c alg.h about internal headers.
+///
 //===----------------------------------------------------------------------===//
 
 #ifndef ORDO_SYS_H
@@ -18,7 +20,11 @@
 
 //===----------------------------------------------------------------------===//
 
-// (currently empty)
+#if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
+    #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
+        #error "This header is internal to the library."
+    #endif
+#endif
 
 //===----------------------------------------------------------------------===//
 

@@ -6,8 +6,8 @@
 ///
 /// This  header provides  various utility  functions which  are used  by some
 /// library modules and a few convenience macros. It is not to be used outside
-/// the  library, but this is not enforced (users can  include this header and
-/// use it freely, but this is not recommended as it is not a public header).
+/// the  library, and this is enforced by an include guard. If you really must
+/// access it, define the `ORDO_INTERNAL_ACCESS` token before including it.
 ///
 //===----------------------------------------------------------------------===//
 
@@ -23,6 +23,12 @@ extern "C" {
 #endif
 
 //===----------------------------------------------------------------------===//
+
+#if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
+    #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
+        #error "This header is internal to the library."
+    #endif
+#endif
 
 ORDO_HIDDEN void swap8_ (uint8_t  *a, uint8_t  *b);
 ORDO_HIDDEN void swap16_(uint16_t *a, uint16_t *b);
@@ -48,7 +54,7 @@ ORDO_HIDDEN uint64_t ror64_(uint64_t x, int n);
 
 /// Converts bytes into bits (as a multiple of 8 bits).
 ///
-/// @remarks As an example, \c bits(32) returns 256 (bits).
+/// @remarks As an example, \c bytes(32) returns 256 (bits).
 #define bytes(n) (n * 8)
 
 /// Computes a byte-based offset.

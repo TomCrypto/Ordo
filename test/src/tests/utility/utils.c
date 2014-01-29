@@ -1,5 +1,7 @@
 #include "tests/utility/utils.h"
 
+#define ORDO_INTERNAL_ACCESS
+
 #include "ordo/internal/alg.h"
 #include "ordo/internal/sys.h"
 

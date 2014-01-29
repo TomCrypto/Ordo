@@ -6,12 +6,12 @@
 ///
 /// Contains the  library's memory manager. The library  relies solely on this
 /// on this interface to allocate  cryptographic  contexts. This header should
-/// not be used outside the library, but this is not  enforced beyond the fact
-/// that the functions are not exported - you can  include this header and use
-/// the memory manager if you are linking statically (but not dynamically).
+/// not be used outside the library, this is enforced by an include guard.
 ///
 /// If you are just trying to  change the allocator used, this is now provided
 /// elsewhere, in the \c ordo.h header - see \c ordo_allocator().
+///
+/// See \c alg.h about internal headers.
 ///
 //===----------------------------------------------------------------------===//
 
@@ -27,6 +27,12 @@ extern "C" {
 #endif
 
 //===----------------------------------------------------------------------===//
+
+#if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
+    #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
+        #error "This header is internal to the library."
+    #endif
+#endif
 
 /// Allocates a memory buffer.
 ///

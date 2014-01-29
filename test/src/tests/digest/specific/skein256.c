@@ -1,5 +1,7 @@
 #include "tests/digest/specific/skein256.h"
 
+#define ORDO_INTERNAL_ACCESS
+
 #include "ordo/internal/alg.h"
 
 struct TEST_VECTOR
