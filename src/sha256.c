@@ -80,7 +80,7 @@ void sha256_final(struct SHA256_STATE *state,
                   void *digest)
 {
     // See the MD5 code for a description of Merkle padding.
-    uint64_t len = htobe64_(bytes(state->msg_len));
+    uint64_t len = tobe64(bytes(state->msg_len));
     uint8_t one = 0x80, zero = 0x00;
     size_t t;
 
@@ -95,7 +95,7 @@ void sha256_final(struct SHA256_STATE *state,
 
     // SHA-256 takes big-endian input, convert it back.
     for (t = 0; t < SHA256_DIGEST / sizeof(uint32_t); ++t)
-        state->digest[t] = be32toh_(state->digest[t]);
+        state->digest[t] = fmbe32(state->digest[t]);
 
     memcpy(digest, state->digest, SHA256_DIGEST);
 }
@@ -162,7 +162,7 @@ void sha256_compress(const uint32_t block[16], uint32_t digest[8])
 
     uint32_t w[64]; // The "message schedule" array.
 
-    for (t = 0; t < 16; ++t) w[t] = htobe32_(block[t]);
+    for (t = 0; t < 16; ++t) w[t] = tobe32(block[t]);
 
     for (t = 16; t < 64; ++t)
     {

@@ -93,10 +93,10 @@ int skein256_init(struct SKEIN256_STATE *state,
         state->out_len = SKEIN256_INTERNAL;
 
         // Configuration block is actually little-endian.
-        state->state[0] = le64toh_(state->state[0]);
-        state->state[1] = le64toh_(state->state[1]);
-        state->state[2] = le64toh_(state->state[2]);
-        state->state[3] = le64toh_(state->state[3]);
+        state->state[0] = fmle64(state->state[0]);
+        state->state[1] = fmle64(state->state[1]);
+        state->state[2] = fmle64(state->state[2]);
+        state->state[3] = fmle64(state->state[3]);
     }
 
     return ORDO_SUCCESS;
@@ -225,8 +225,8 @@ void make_tweak(uint64_t tweak[2],
                 uint64_t first,
                 uint64_t final)
 {
-    tweak[0] = htole64_(position);
-    tweak[1] = htole64_((final << 63) | (first << 62) | (type  << 56));
+    tweak[0] = tole64(position);
+    tweak[1] = tole64((final << 63) | (first << 62) | (type  << 56));
 }
 
 void skein256_compress(const uint64_t *block,

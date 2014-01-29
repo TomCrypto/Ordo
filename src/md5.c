@@ -83,7 +83,7 @@ void md5_update(struct MD5_STATE *state,
 void md5_final(struct MD5_STATE *state,
                void *digest)
 {
-    uint64_t len = htole64_(bytes(state->msg_len));
+    uint64_t len = tole64(bytes(state->msg_len));
     uint8_t one = 0x80, zero = 0x00;
 
     // Merkle padding consists of:
@@ -103,7 +103,7 @@ void md5_final(struct MD5_STATE *state,
     // Digest is in little-endian.
     for (len = 0; len < 4; ++len)
     {
-        state->digest[len] = htole32_(state->digest[len]);
+        state->digest[len] = tole32(state->digest[len]);
     }
 
     // At this point there is no input data left in the state, everything has
@@ -144,7 +144,7 @@ void md5_compress(uint32_t block[16], uint32_t digest[4])
     uint32_t data[16];
     size_t t;
 
-    for (t = 0; t < 16; ++t) data[t] = htole32_(block[t]);
+    for (t = 0; t < 16; ++t) data[t] = tole32(block[t]);
 
     a += data[ 0] + 0xD76AA478 + (d ^ (b & (c ^ d)));
     a = ((a <<  7) | (a >> 25)) + b;

@@ -91,10 +91,10 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
 {
     size_t t;
 
-    block[0] = htole64_(block[0]);
-    block[1] = htole64_(block[1]);
-    block[2] = htole64_(block[2]);
-    block[3] = htole64_(block[3]);
+    block[0] = tole64(block[0]);
+    block[1] = tole64(block[1]);
+    block[2] = tole64(block[2]);
+    block[3] = tole64(block[3]);
 
     block[0] += subkeys[0 * 4 + 0];
     block[1] += subkeys[0 * 4 + 1];
@@ -212,20 +212,20 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] += subkeys[(t * 2 + 2) * 4 + 3];
     }
 
-    block[0] = le64toh_(block[0]);
-    block[1] = le64toh_(block[1]);
-    block[2] = le64toh_(block[2]);
-    block[3] = le64toh_(block[3]);
+    block[0] = fmle64(block[0]);
+    block[1] = fmle64(block[1]);
+    block[2] = fmle64(block[2]);
+    block[3] = fmle64(block[3]);
 }
 
 void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
 {
     size_t t;
 
-    block[0] = htole64_(block[0]);
-    block[1] = htole64_(block[1]);
-    block[2] = htole64_(block[2]);
-    block[3] = htole64_(block[3]);
+    block[0] = tole64(block[0]);
+    block[1] = tole64(block[1]);
+    block[2] = tole64(block[2]);
+    block[3] = tole64(block[3]);
 
     for (t = 9; t > 0; t--)
     {
@@ -343,10 +343,10 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
     block[2] -= subkeys[0 * 4 + 2];
     block[3] -= subkeys[0 * 4 + 3];
 
-    block[0] = le64toh_(block[0]);
-    block[1] = le64toh_(block[1]);
-    block[2] = le64toh_(block[2]);
-    block[3] = le64toh_(block[3]);
+    block[0] = fmle64(block[0]);
+    block[1] = fmle64(block[1]);
+    block[2] = fmle64(block[2]);
+    block[3] = fmle64(block[3]);
 }
 
 #define subkey(n, s0, s1, s2, s3, t0, t1)\
@@ -364,13 +364,13 @@ void threefish256_key_schedule(const uint64_t key[4],
     uint64_t tweak_w[3];
     uint64_t key_w[5];
 
-    key_w[0] = htole64_(key[0]);
-    key_w[1] = htole64_(key[1]);
-    key_w[2] = htole64_(key[2]);
-    key_w[3] = htole64_(key[3]);
+    key_w[0] = tole64(key[0]);
+    key_w[1] = tole64(key[1]);
+    key_w[2] = tole64(key[2]);
+    key_w[3] = tole64(key[3]);
 
-    tweak_w[0] = (tweak ? htole64_(tweak[0]) : 0);
-    tweak_w[1] = (tweak ? htole64_(tweak[1]) : 0);
+    tweak_w[0] = (tweak ? tole64(tweak[0]) : 0);
+    tweak_w[1] = (tweak ? tole64(tweak[1]) : 0);
 
     key_w[4] = key_w[0] ^ key_w[1] ^ key_w[2] ^ key_w[3] ^ K_S;
     tweak_w[2] = tweak_w[0] ^ tweak_w[1];

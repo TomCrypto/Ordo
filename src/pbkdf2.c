@@ -47,7 +47,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 
     for (t = 0; t < t_max + 1; ++t)
     {
-        uint32_t counter = htobe32_((uint32_t)(t + 1)); // Big-endian.
+        uint32_t counter = tobe32((uint32_t)(t + 1)); // Big-endian.
 
         if ((err = hmac_init(ctx,
                              password, password_len,

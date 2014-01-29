@@ -97,13 +97,13 @@ void threefish256_key_schedule(const uint64_t key[4],
     uint64_t tweak_w[3];
     uint64_t key_w[5];
 
-    key_w[0] = htole64_(key[0]);
-    key_w[1] = htole64_(key[1]);
-    key_w[2] = htole64_(key[2]);
-    key_w[3] = htole64_(key[3]);
+    key_w[0] = tole64(key[0]);
+    key_w[1] = tole64(key[1]);
+    key_w[2] = tole64(key[2]);
+    key_w[3] = tole64(key[3]);
 
-    tweak_w[0] = (tweak ? htole64_(tweak[0]) : 0);
-    tweak_w[1] = (tweak ? htole64_(tweak[1]) : 0);
+    tweak_w[0] = (tweak ? tole64(tweak[0]) : 0);
+    tweak_w[1] = (tweak ? tole64(tweak[1]) : 0);
 
     key_w[4] = key_w[0] ^ key_w[1] ^ key_w[2] ^ key_w[3] ^ K_S;
     tweak_w[2] = tweak_w[0] ^ tweak_w[1];
