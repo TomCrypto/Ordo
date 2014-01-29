@@ -14,6 +14,7 @@ Status
 What's new in 2.6.0:
  - changed query codes to end in `_Q` for namespacing (minimal API change)
  - streaming block modes now admit a nil `outlen` for convenience
+ - the endianness API has been made public, from internal
 
 Feature Map
 -----------
