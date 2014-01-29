@@ -18,6 +18,10 @@
 #include "ordo/common/interface.h"
 /// @endcond
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //===----------------------------------------------------------------------===//
 
 #if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
@@ -27,5 +31,9 @@
 #endif
 
 //===----------------------------------------------------------------------===//
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

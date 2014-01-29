@@ -36,15 +36,15 @@
 #ifndef ORDO_DIGEST_H
 #define ORDO_DIGEST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /// @cond
 #include "ordo/common/interface.h"
 /// @endcond
 
 #include "ordo/primitives/hash_functions.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //===----------------------------------------------------------------------===//
 
