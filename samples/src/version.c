@@ -9,7 +9,7 @@ int main(void)
 {
     const struct ORDO_VERSION *version = ordo_version();
     size_t t;
-    
+
     printf("Running %s.\n", version->build);
     printf("  ID          : %u\n", version->id);
     printf("  version     : %s\n", version->version);
@@ -17,9 +17,9 @@ int main(void)
     printf("  architecture: %s\n", version->arch);
     printf("  features    : %s\n", version->feature_list);
     printf("  or as array :\n");
-    
+
     for (t = 0; version->features[t]; ++t)
         printf("  - %s\n", version->features[t]);
-        
+
     return EXIT_SUCCESS;
 }

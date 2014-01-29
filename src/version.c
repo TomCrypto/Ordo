@@ -18,7 +18,7 @@
 #define VERSION STR(MAJ) "." STR(MIN) "." STR(REV)
 #define VERSION_ID (MAJ * 10000 + MIN * 100 + REV)
 
-static const char *const features[] = 
+static const char *const features[] =
 {
     #if defined(ORDO_HAS_FEATURES)
     ORDO_FEATURE_ARRAY
