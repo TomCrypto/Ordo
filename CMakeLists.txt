@@ -141,8 +141,8 @@ SET(IN_FILES
     rc4.c
     sha256.c
     skein256.c
-    stream_ciphers.c
     sys.c
+    stream_ciphers.c
     threefish256.asm
     threefish256.c
     version.c
