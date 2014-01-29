@@ -12,7 +12,7 @@
 int main()
 {
     size_t t;
-
+    
     for (t = 0; t < block_cipher_count(); ++t)
     {
         const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);

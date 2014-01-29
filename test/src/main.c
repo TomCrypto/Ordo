@@ -10,7 +10,9 @@ static void display_header(void)
 {
     char header[MAX_LEN + 1];
 
-    snprintf(header, MAX_LEN, "%s", ordo_build_tag());
+    const struct ORDO_VERSION *v = ordo_version();
+    if (!v->features[0]) snprintf(header, MAX_LEN, "%s", v->build);
+    else snprintf(header, MAX_LEN, "%s [%s]", v->build, v->feature_list);
 
     printf("%s\n", line);
     printf("| %s%-*s%s | %sTest%s |\n",

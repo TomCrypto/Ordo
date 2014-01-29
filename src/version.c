@@ -8,13 +8,48 @@
 
 //===----------------------------------------------------------------------===//
 
-#define VERSION "2.7.0"
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
 
-const char *ordo_build_tag(void)
+#define MAJ 2
+#define MIN 7
+#define REV 0
+
+#define VERSION STR(MAJ) "." STR(MIN) "." STR(REV)
+#define VERSION_ID (MAJ * 10000 + MIN * 100 + REV)
+
+static const char *const features[] = 
 {
-    return "ordo-"VERSION"-"ORDO_SYSTEM"-"ORDO_ARCH
     #if defined(ORDO_HAS_FEATURES)
-    " ["ORDO_FEATURES"]"
+    ORDO_FEATURE_ARRAY
     #endif
-    ;
+    0
+};
+
+static const struct ORDO_VERSION version =
+{
+    VERSION_ID,
+    VERSION,
+    ORDO_SYSTEM,
+    #if defined(ORDO_ARCH)
+    ORDO_ARCH,
+    #else
+    "generic",
+    #endif
+    "ordo-"VERSION"-"ORDO_SYSTEM
+    #if defined(ORDO_ARCH)
+    "-"ORDO_ARCH
+    #endif
+    ,
+    features,
+    #if defined(ORDO_HAS_FEATURES)
+    ORDO_FEATURE_LIST
+    #else
+    ""
+    #endif
+};
+
+const struct ORDO_VERSION *ordo_version(void)
+{
+    return &version;
 }
