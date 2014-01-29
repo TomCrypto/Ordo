@@ -11,8 +11,8 @@ int test_macros(char *output, size_t maxlen, FILE *ext)
     if (bits(256) != 32)  fail("The 'bits' macro has failed.");
     if (bytes(32) != 256) fail("The 'bytes' macro has failed.");
 
-    if (min_(1, 2) != 1) fail("The 'min' macro has failed.");
-    if (max_(1, 2) != 2) fail("The 'max' macro has failed.");
+    if (smin(1, 2) != 1) fail("The 'min' macro has failed.");
+    if (smax(1, 2) != 2) fail("The 'max' macro has failed.");
 
     pass("Utility macros are working.");
 }

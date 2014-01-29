@@ -37,8 +37,8 @@ ORDO_HIDDEN void pswap16(uint16_t *a, uint16_t *b);
 ORDO_HIDDEN void pswap32(uint32_t *a, uint32_t *b);
 ORDO_HIDDEN void pswap64(uint64_t *a, uint64_t *b);
 
-ORDO_HIDDEN size_t min_(size_t a, size_t b);
-ORDO_HIDDEN size_t max_(size_t a, size_t b);
+ORDO_HIDDEN size_t smin(size_t a, size_t b);
+ORDO_HIDDEN size_t smax(size_t a, size_t b);
 
 ORDO_HIDDEN uint16_t rol16(uint16_t x, int n);
 ORDO_HIDDEN uint16_t ror16(uint16_t x, int n);

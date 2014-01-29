@@ -181,7 +181,7 @@ void skein256_final(struct SKEIN256_STATE *state,
     // by (loosely stated) running the Threefish-256 cipher in counter mode.
     while (state->out_len != 0)
     {
-        size_t cpy = min_((size_t)state->out_len, SKEIN256_BLOCK);
+        size_t cpy = smin((size_t)state->out_len, SKEIN256_BLOCK);
 
         state->block[0] = ctr++;
         memcpy(out, state->state, SKEIN256_INTERNAL);
