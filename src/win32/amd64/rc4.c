@@ -91,7 +91,7 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
     for (t = 0; t < 256; ++t)
     {
         state->j = (uint8_t)(state->j + state->s[t] + key[t % key_len]);
-        swap64(&state->s[t], &state->s[state->j]);
+        pswap64(&state->s[t], &state->s[state->j]);
     }
 
     state->j = 0;

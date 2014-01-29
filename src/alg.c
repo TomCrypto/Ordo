@@ -8,10 +8,10 @@
 
 //===----------------------------------------------------------------------===//
 
-void swap8 (uint8_t  *a, uint8_t  *b) { uint8_t  c = *a; *a = *b; *b = c; }
-void swap16(uint16_t *a, uint16_t *b) { uint16_t c = *a; *a = *b; *b = c; }
-void swap32(uint32_t *a, uint32_t *b) { uint32_t c = *a; *a = *b; *b = c; }
-void swap64(uint64_t *a, uint64_t *b) { uint64_t c = *a; *a = *b; *b = c; }
+void pswap8 (uint8_t  *a, uint8_t  *b) { uint8_t  c = *a; *a = *b; *b = c; }
+void pswap16(uint16_t *a, uint16_t *b) { uint16_t c = *a; *a = *b; *b = c; }
+void pswap32(uint32_t *a, uint32_t *b) { uint32_t c = *a; *a = *b; *b = c; }
+void pswap64(uint64_t *a, uint64_t *b) { uint64_t c = *a; *a = *b; *b = c; }
 
 // Some compilers like to define min and max, don't let them
 

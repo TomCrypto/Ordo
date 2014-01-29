@@ -91,7 +91,7 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
     for (t = 0; t < 256; ++t)
     {
         state->j = state->j + state->s[t] + key[t % key_len];
-        swap8(state->s + t, state->s + state->j);
+        pswap8(state->s + t, state->s + state->j);
     }
 
     state->j = 0;
@@ -105,6 +105,6 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
 uint8_t rc4_next(struct RC4_STATE *state)
 {
     state->j += state->s[++state->i];
-    swap8(state->s + state->i, state->s + state->j);
+    pswap8(state->s + state->i, state->s + state->j);
     return state->s[(state->s[state->i] + state->s[state->j]) & 0xFF];
 }
