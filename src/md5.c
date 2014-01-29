@@ -16,7 +16,7 @@ static const uint32_t md5_iv[4] =
     0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 };
 
-static void md5_compress(uint32_t block[16], uint32_t digest[4]) _hot_;
+static void md5_compress(uint32_t block[16], uint32_t digest[4]) HOT_CODE;
 
 //===----------------------------------------------------------------------===//
 

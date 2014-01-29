@@ -17,13 +17,13 @@ struct THREEFISH256_STATE
 
 static void threefish256_key_schedule(const uint64_t key[4],
                                       const uint64_t tweak[2],
-                                      uint64_t *subkeys) _hot_;
+                                      uint64_t *subkeys) HOT_CODE;
 
 static void threefish256_forward_C(uint64_t block[4],
-                                   const uint64_t *subkeys) _hot_;
+                                   const uint64_t *subkeys) HOT_CODE;
 
 static void threefish256_inverse_C(uint64_t block[4],
-                                   const uint64_t *subkeys) _hot_;
+                                   const uint64_t *subkeys) HOT_CODE;
 
 //===----------------------------------------------------------------------===//
 
@@ -106,11 +106,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         uint64_t s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 14);
+        block[1] = rol64(block[1], 14);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 16);
+        block[3] = rol64(block[3], 16);
         block[3] ^= block[2];
 
         s = block[1];
@@ -118,11 +118,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 52);
+        block[1] = rol64(block[1], 52);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 57);
+        block[3] = rol64(block[3], 57);
         block[3] ^= block[2];
 
         s = block[1];
@@ -130,11 +130,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 23);
+        block[1] = rol64(block[1], 23);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 40);
+        block[3] = rol64(block[3], 40);
         block[3] ^= block[2];
 
         s = block[1];
@@ -142,11 +142,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1],  5);
+        block[1] = rol64(block[1],  5);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 37);
+        block[3] = rol64(block[3], 37);
         block[3] ^= block[2];
 
         s = block[1];
@@ -159,11 +159,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] += subkeys[(t * 2 + 1) * 4 + 3];
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 25);
+        block[1] = rol64(block[1], 25);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 33);
+        block[3] = rol64(block[3], 33);
         block[3] ^= block[2];
 
         s = block[1];
@@ -171,11 +171,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 46);
+        block[1] = rol64(block[1], 46);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 12);
+        block[3] = rol64(block[3], 12);
         block[3] ^= block[2];
 
         s = block[1];
@@ -183,11 +183,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 58);
+        block[1] = rol64(block[1], 58);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 22);
+        block[3] = rol64(block[3], 22);
         block[3] ^= block[2];
 
         s = block[1];
@@ -195,11 +195,11 @@ void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[0] += block[1];
-        block[1] = rol64_(block[1], 32);
+        block[1] = rol64(block[1], 32);
         block[1] ^= block[0];
 
         block[2] += block[3];
-        block[3] = rol64_(block[3], 32);
+        block[3] = rol64(block[3], 32);
         block[3] ^= block[2];
 
         s = block[1];
@@ -241,11 +241,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 32);
+        block[1] = ror64(block[1], 32);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 32);
+        block[3] = ror64(block[3], 32);
         block[2] -= block[3];
 
         s = block[1];
@@ -253,11 +253,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 58);
+        block[1] = ror64(block[1], 58);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 22);
+        block[3] = ror64(block[3], 22);
         block[2] -= block[3];
 
         s = block[1];
@@ -265,11 +265,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 46);
+        block[1] = ror64(block[1], 46);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 12);
+        block[3] = ror64(block[3], 12);
         block[2] -= block[3];
 
         s = block[1];
@@ -277,11 +277,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 25);
+        block[1] = ror64(block[1], 25);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 33);
+        block[3] = ror64(block[3], 33);
         block[2] -= block[3];
 
         block[0] -= subkeys[((t - 1) * 2 + 1) * 4 + 0];
@@ -294,11 +294,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1],  5);
+        block[1] = ror64(block[1],  5);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 37);
+        block[3] = ror64(block[3], 37);
         block[2] -= block[3];
 
         s = block[1];
@@ -306,11 +306,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 23);
+        block[1] = ror64(block[1], 23);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 40);
+        block[3] = ror64(block[3], 40);
         block[2] -= block[3];
 
         s = block[1];
@@ -318,11 +318,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 52);
+        block[1] = ror64(block[1], 52);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 57);
+        block[3] = ror64(block[3], 57);
         block[2] -= block[3];
 
         s = block[1];
@@ -330,11 +330,11 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
         block[3] = s;
 
         block[1] ^= block[0];
-        block[1] = ror64_(block[1], 14);
+        block[1] = ror64(block[1], 14);
         block[0] -= block[1];
 
         block[3] ^= block[2];
-        block[3] = ror64_(block[3], 16);
+        block[3] = ror64(block[3], 16);
         block[2] -= block[3];
     }
 

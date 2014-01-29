@@ -19,7 +19,7 @@ struct AES_STATE
 };
 
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds) _hot_;
+                      size_t key_len, size_t rounds) HOT_CODE;
 
 void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);

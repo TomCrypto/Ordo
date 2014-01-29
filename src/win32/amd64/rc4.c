@@ -17,7 +17,7 @@ struct RC4_STATE
 };
 
 static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
-                             const uint8_t *key, size_t key_len) _hot_;
+                             const uint8_t *key, size_t key_len) HOT_CODE;
 
 void rc4_update_ASM(void *state, uint64_t len, void *in, void *out);
 
@@ -91,7 +91,7 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
     for (t = 0; t < 256; ++t)
     {
         state->j = (uint8_t)(state->j + state->s[t] + key[t % key_len]);
-        swap64_(&state->s[t], &state->s[state->j]);
+        swap64(&state->s[t], &state->s[state->j]);
     }
 
     state->j = 0;

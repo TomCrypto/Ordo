@@ -20,7 +20,7 @@ struct SHA256_STATE
 };
 
 static void sha256_compress(const uint32_t block[16],
-                            uint32_t digest[8]) _hot_;
+                            uint32_t digest[8]) HOT_CODE;
 
 static const uint32_t sha256_iv[8] =
 {
@@ -166,8 +166,8 @@ void sha256_compress(const uint32_t block[16], uint32_t digest[8])
 
     for (t = 16; t < 64; ++t)
     {
-        uint32_t r1 = ror32_(w[t -  2], 17) ^ ror32_(w[t -  2], 19);
-        uint32_t r2 = ror32_(w[t - 15],  7) ^ ror32_(w[t - 15], 18);
+        uint32_t r1 = ror32(w[t -  2], 17) ^ ror32(w[t -  2], 19);
+        uint32_t r2 = ror32(w[t - 15],  7) ^ ror32(w[t - 15], 18);
 
         r1 ^= w[t -  2] >> 10;
         r2 ^= w[t - 15] >>  3;
@@ -177,8 +177,8 @@ void sha256_compress(const uint32_t block[16], uint32_t digest[8])
 
     for (t = 0; t < 64; ++t)
     {
-        uint32_t t2 = (ror32_(a, 2) ^ ror32_(a, 13) ^ ror32_(a, 22));
-        uint32_t t1 = (ror32_(e, 6) ^ ror32_(e, 11) ^ ror32_(e, 25));
+        uint32_t t2 = (ror32(a, 2) ^ ror32(a, 13) ^ ror32(a, 22));
+        uint32_t t1 = (ror32(e, 6) ^ ror32(e, 11) ^ ror32(e, 25));
 
         t1 += ch(e, f, g) + h + w[t] + sha256_table[t];
         t2 += ma(a, b, c);

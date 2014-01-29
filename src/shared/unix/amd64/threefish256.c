@@ -17,7 +17,7 @@ struct THREEFISH256_STATE
 
 static void threefish256_key_schedule(const uint64_t key[4],
                                       const uint64_t tweak[2],
-                                      uint64_t *subkeys) _hot_;
+                                      uint64_t *subkeys) HOT_CODE;
 
 void threefish256_forward_ASM(void *block, const void *subkeys);
 void threefish256_inverse_ASM(void *block, const void *subkeys);

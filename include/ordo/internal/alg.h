@@ -9,6 +9,8 @@
 /// the  library, and this is enforced by an include guard. If you really must
 /// access it, define the `ORDO_INTERNAL_ACCESS` token before including it.
 ///
+/// Functions in internal headers are not prefixed, be wary of name clashes.
+///
 //===----------------------------------------------------------------------===//
 
 #ifndef ORDO_ALG_H
@@ -30,22 +32,22 @@ extern "C" {
     #endif
 #endif
 
-ORDO_HIDDEN void swap8_ (uint8_t  *a, uint8_t  *b);
-ORDO_HIDDEN void swap16_(uint16_t *a, uint16_t *b);
-ORDO_HIDDEN void swap32_(uint32_t *a, uint32_t *b);
-ORDO_HIDDEN void swap64_(uint64_t *a, uint64_t *b);
+ORDO_HIDDEN void swap8 (uint8_t  *a, uint8_t  *b);
+ORDO_HIDDEN void swap16(uint16_t *a, uint16_t *b);
+ORDO_HIDDEN void swap32(uint32_t *a, uint32_t *b);
+ORDO_HIDDEN void swap64(uint64_t *a, uint64_t *b);
 
 ORDO_HIDDEN size_t min_(size_t a, size_t b);
 ORDO_HIDDEN size_t max_(size_t a, size_t b);
 
-ORDO_HIDDEN uint16_t rol16_(uint16_t x, int n);
-ORDO_HIDDEN uint16_t ror16_(uint16_t x, int n);
+ORDO_HIDDEN uint16_t rol16(uint16_t x, int n);
+ORDO_HIDDEN uint16_t ror16(uint16_t x, int n);
 
-ORDO_HIDDEN uint32_t rol32_(uint32_t x, int n);
-ORDO_HIDDEN uint32_t ror32_(uint32_t x, int n);
+ORDO_HIDDEN uint32_t rol32(uint32_t x, int n);
+ORDO_HIDDEN uint32_t ror32(uint32_t x, int n);
 
-ORDO_HIDDEN uint64_t rol64_(uint64_t x, int n);
-ORDO_HIDDEN uint64_t ror64_(uint64_t x, int n);
+ORDO_HIDDEN uint64_t rol64(uint64_t x, int n);
+ORDO_HIDDEN uint64_t ror64(uint64_t x, int n);
 
 /// Converts bits into bytes (rounded down to the nearest byte boundary).
 ///

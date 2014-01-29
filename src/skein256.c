@@ -31,12 +31,12 @@ static void make_tweak(uint64_t tweak[2],
                        uint64_t type,
                        uint64_t position,
                        uint64_t first,
-                       uint64_t final) _hot_;
+                       uint64_t final) HOT_CODE;
 
 static void skein256_compress(const uint64_t *block,
                               uint64_t *state,
                               uint64_t *tweak,
-                              void *cipher) _hot_;
+                              void *cipher) HOT_CODE;
 
 //===----------------------------------------------------------------------===//
 

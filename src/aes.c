@@ -20,10 +20,12 @@ struct AES_STATE
 };
 
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds) _hot_;
+                      size_t key_len, size_t rounds) HOT_CODE;
 
-static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds) _hot_;
-static void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds) _hot_;
+static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+HOT_CODE;
+static void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+HOT_CODE;
 
 //===----------------------------------------------------------------------===//
 
