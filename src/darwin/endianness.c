@@ -1,6 +1,6 @@
-//===-- sys.c ------------------------------------------*- darwin -*- C -*-===//
+//===-- endianness.c -----------------------------------*- darwin -*- C -*-===//
 
-#include "ordo/internal/sys.h"
+#include "ordo/misc/endianness.h"
 
 /// @cond
 #include "ordo/internal/implementation.h"

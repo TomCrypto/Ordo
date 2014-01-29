@@ -16,6 +16,7 @@
 #define ORDO_IMPLEMENTATION_H
 
 /// @cond
+#include "ordo/misc/endianness.h"
 #include "ordo/common/error.h"
 #include "ordo/common/query.h"
 #include "ordo/internal/mem.h"

@@ -1,17 +1,17 @@
-//===-- sys.c -----------------------------------*- [net/free]bsd -*- C -*-===//
+//===-- endianness.c ------------------------------------*- linux -*- C -*-===//
 
-#include "ordo/internal/sys.h"
+#include "ordo/misc/endianness.h"
 
 /// @cond
 #include "ordo/internal/implementation.h"
 /// @endcond
 
 #include <sys/types.h>
-#include <sys/endian.h>
+#include <endian.h>
 
 //===----------------------------------------------------------------------===//
 
-// For some reason Free/NetBSD use the BSD header with the Linux notation.
+// On Linux we can just use the endian.h header which has it all built-in.
 
 uint16_t htole16_(uint16_t x) { return htole16(x); }
 uint16_t htobe16_(uint16_t x) { return htobe16(x); }

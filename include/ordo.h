@@ -23,6 +23,10 @@
 ///
 /// @endcode
 ///
+/// Some specialized headers are *not* included by this header - these are the
+/// endianness header & all primitive headers (their parameters are included),
+/// if you need their functionality please include them explicitly.
+///
 //===----------------------------------------------------------------------===//
 
 #ifndef ORDO_ORDO_H

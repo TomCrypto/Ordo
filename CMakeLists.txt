@@ -81,6 +81,7 @@ ENDIF()
 
 SET(INCLUDE_FILES
     include/ordo.h
+    include/ordo/misc/endianness.h
     include/ordo/misc/os_random.h
     include/ordo/enc/enc_block.h
     include/ordo/enc/enc_stream.h
@@ -130,6 +131,7 @@ SET(IN_FILES
     ecb.c
     enc_block.c
     enc_stream.c
+    endianness.c
     error.c
     hash_functions.c
     hash_params.c

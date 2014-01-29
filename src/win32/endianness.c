@@ -1,6 +1,6 @@
-//===-- sys.c -------------------------------------------*- win32 -*- C -*-===//
+//===-- endianness.c ------------------------------------*- win32 -*- C -*-===//
 
-#include "ordo/internal/sys.h"
+#include "ordo/misc/endianness.h"
 
 /// @cond
 #include "ordo/internal/implementation.h"
