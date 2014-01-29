@@ -1,7 +1,7 @@
 //===-- misc/endianness.h -------------------------------*- PUBLIC-*- H -*-===//
 ///
 /// @file
-/// @brief \b Utility
+/// @brief Utility
 ///
 /// This header provides endianness functionality. You may use it freely as it
 /// has a stable API and is public. Only supports little/big endian for now.
