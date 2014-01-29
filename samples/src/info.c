@@ -9,7 +9,7 @@
 
 #include "ordo.h"
 
-int main()
+int main(void)
 {
     size_t t;
     
