@@ -1,3 +1,3 @@
 This directory stores system implementations which are applicable to multiple systems without modifications. Systems, or system groups, in this directory are not intended to be directly added to the build, but are to be symlinked as needed by the proper system implementations. This mechanism greatly reduces code duplication and improves maintainability.
 
-As an example, much of the `unix` directory is referenced from `linux`, `freebsd`, `openbsd` and `netbsd`, as they usually share the same ABI and have many system features in common (such as `/dev/urandom`). An exception is the `sys.c` source file which differs slightly across those systems.
+As an example, much of the `unix` directory is referenced from `linux`, `freebsd`, `openbsd` and `netbsd`, as they usually share the same ABI and have many system features in common (such as `/dev/urandom`). An exception is the `endianness.c` source file which differs slightly across those systems.
