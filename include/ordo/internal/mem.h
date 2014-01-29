@@ -63,20 +63,6 @@ void mem_free(void *ptr);
 ORDO_HIDDEN
 void mem_erase(void *ptr, size_t size);
 
-/// Initializes the default memory allocator.
-///
-/// @return 0 on success, and any  other (not necessarily meaningful) value on
-///         error (the error codes returned may be system-dependent).
-///
-/// @remarks This function is called by \c ordo_init().
-///
-/// @remarks This must be called before any other \c mem_* function is called,
-///          unless the default allocator was overriden (\c ordo_allocator()).
-///
-/// @remarks It is safe to call this function multiples times after success.
-ORDO_HIDDEN
-int mem_init(void);
-
 //===----------------------------------------------------------------------===//
 
 #ifdef __cplusplus

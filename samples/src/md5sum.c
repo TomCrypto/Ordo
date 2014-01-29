@@ -52,12 +52,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (ordo_init())
-    {
-        printf("Failed to initialize Ordo.\n");
-        return EXIT_FAILURE;
-    }
-
     digest_len = digest_length(md5());
     if (!(digest = malloc(digest_len)))
     {

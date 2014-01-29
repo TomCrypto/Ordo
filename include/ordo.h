@@ -53,15 +53,6 @@ extern "C" {
 
 //===----------------------------------------------------------------------===//
 
-/// Initializes the library.
-///
-/// @returns \c #ORDO_SUCCESS on success, else an error code.
-///
-/// @remarks This function must be called prior to using the library, for most
-///          cases, but can be skipped in some specific (documented) cases.
-ORDO_PUBLIC
-int ordo_init(void);
-
 /// Replaces the default library memory allocator with a custom one.
 ///
 /// @param [in]     alloc          The allocation function.

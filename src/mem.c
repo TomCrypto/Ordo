@@ -8,11 +8,6 @@
 
 //===----------------------------------------------------------------------===//
 
-int mem_init(void)
-{
-    return 0;
-}
-
 static void *ordo_mem_alloc(size_t size)
 {
     return malloc(size);

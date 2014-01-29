@@ -395,12 +395,6 @@ static enum ALG_TYPE identify(const char *name)
 
 int main(int argc, char *argv[])
 {
-    if (ordo_init())
-    {
-        printf("Failed to initialize Ordo.\n");
-        return EXIT_FAILURE;
-    }
-
     if (argc < 2)
     {
         benchmark_usage(argc, argv);

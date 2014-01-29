@@ -8,7 +8,7 @@
 
 //===----------------------------------------------------------------------===//
 
-#define VERSION "2.6.0"
+#define VERSION "2.7.0"
 
 const char *ordo_build_tag(void)
 {

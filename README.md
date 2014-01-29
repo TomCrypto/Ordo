@@ -1,4 +1,4 @@
-Ordo v2.6.0
+Ordo v2.7.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,10 +11,9 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.6.0:
- - changed query codes to end in `_Q` for namespacing (minimal API change)
- - streaming block modes now admit a nil `outlen` for convenience
+What's new in 2.7.0:
  - the endianness API has been made public, from internal
+ - all library initialization is now implicit, no more `ordo_init`
 
 Feature Map
 -----------

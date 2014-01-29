@@ -13,12 +13,6 @@ int main()
 {
     size_t t;
 
-    if (ordo_init())
-    {
-        printf("Failed to initialize Ordo.\n");
-        return EXIT_FAILURE;
-    }
-
     for (t = 0; t < block_cipher_count(); ++t)
     {
         const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);

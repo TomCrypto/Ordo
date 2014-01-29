@@ -8,11 +8,6 @@
 
 //===----------------------------------------------------------------------===//
 
-int ordo_init()
-{
-    return mem_init();
-}
-
 int ordo_enc_block(const struct BLOCK_CIPHER *cipher,
                    const void *cipher_params,
                    const struct BLOCK_MODE *mode,
