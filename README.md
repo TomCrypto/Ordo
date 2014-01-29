@@ -54,6 +54,8 @@ For instance, a typical configuration for x86_64 machines with the AES-NI instru
 
     cd build && cmake .. -DARCH=amd64 -DAES_NI=on
 
+The test driver is in the `test` folder, the sample programs are in the `samples` folder.
+
 ### Assembly Support
 
 We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.
