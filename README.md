@@ -14,6 +14,7 @@ Status
 What's new in 2.7.0:
  - the endianness API has been made public, from internal
  - all library initialization is now implicit, no more `ordo_init`
+ - the version code has been improved
 
 Feature Map
 -----------

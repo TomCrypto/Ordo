@@ -8,12 +8,12 @@
 
 //===----------------------------------------------------------------------===//
 
-#define STR_HELPER(x) #x
-#define STR(x) STR_HELPER(x)
-
 #define MAJ 2
 #define MIN 7
 #define REV 0
+
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
 
 #define VERSION STR(MAJ) "." STR(MIN) "." STR(REV)
 #define VERSION_ID (MAJ * 10000 + MIN * 100 + REV)
