@@ -49,9 +49,9 @@ IF(NOT SYSTEM_GENERIC)
 ENDIF()
 
 OPTION(LTO "Link-Time Optimization" ON)
+OPTION(NATIVE "Native Optimization" ON)
 
 IF(NOT COMPILER_MSVC)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
@@ -60,6 +60,10 @@ IF(NOT COMPILER_MSVC)
     
     IF(LTO)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
+    ENDIF()
+    
+    IF(NATIVE)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
     ENDIF()
 ELSE()
     # Disable some overzealous (but harmless) Visual Studio warnings
