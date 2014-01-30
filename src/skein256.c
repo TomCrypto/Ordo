@@ -21,8 +21,8 @@
 // This also represents the default configuration block, to avoid recreating
 // it in case the parameters do not specify a different configuration block.
 static const uint64_t skein256_iv[4] = {
-    0xFC9DA860D048B449, 0x2FCA66479FA7D833,
-    0xB33BC3896656840F, 0x6A54E920FDE8DA69
+    0xFC9DA860D048B449ULL, 0x2FCA66479FA7D833ULL,
+    0xB33BC3896656840FULL, 0x6A54E920FDE8DA69ULL
 };
 
 // Note this assumes "first" and "final" are boolean (0 or 1). The result is a
