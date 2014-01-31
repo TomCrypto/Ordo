@@ -185,7 +185,7 @@ void block_mode_free(const struct BLOCK_MODE *mode,
 /// Performs a deep copy of one state into another.
 ///
 /// @param [in]     mode           A block mode primitive.
-/// @param [in]     primitive      A block cipher primitive.
+/// @param [in]     cipher         A block cipher primitive.
 /// @param [out]    dst            The destination state.
 /// @param [in]     src            The source state.
 ///
