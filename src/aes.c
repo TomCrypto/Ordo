@@ -15,7 +15,7 @@
 
 struct AES_STATE
 {
-    uint8_t *key;
+    unsigned char key[336];
     size_t rounds;
 };
 
@@ -33,10 +33,6 @@ struct AES_STATE *aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
     if (!state) goto fail;
-
-    // Maximum round count/key length.
-    state->key = mem_alloc(key_bytes(20));
-    if (!state->key) goto fail;
 
     return state;
 
@@ -95,8 +91,7 @@ void aes_free(struct AES_STATE *state)
 void aes_copy(struct AES_STATE *dst,
               const struct AES_STATE *src)
 {
-    memcpy(dst->key, src->key, key_bytes(20));
-    dst->rounds = src->rounds;
+    *dst = *src;
 }
 
 size_t aes_query(int query, size_t value)

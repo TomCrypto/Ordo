@@ -203,8 +203,19 @@ void skein256_free(struct SKEIN256_STATE *state)
 void skein256_copy(struct SKEIN256_STATE *dst,
                    const struct SKEIN256_STATE *src)
 {
+    size_t t;
+    
+    for (t = 0; t < 4; ++t)
+    {
+        dst->state[t] = src->state[t];
+        dst->block[t] = src->block[t];
+    }
+    
+    dst->block_len = src->block_len;
+    dst->msg_len = src->msg_len;
+    dst->out_len = src->out_len;
+
     threefish256_copy(dst->cipher, src->cipher);
-    memcpy(dst, src, sizeof(struct SKEIN256_STATE));
 }
 
 size_t skein256_query(int query, size_t value)

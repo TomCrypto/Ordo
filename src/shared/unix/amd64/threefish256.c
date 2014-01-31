@@ -67,7 +67,7 @@ void threefish256_free(struct THREEFISH256_STATE *state)
 void threefish256_copy(struct THREEFISH256_STATE *dst,
                        const struct THREEFISH256_STATE *src)
 {
-    memcpy(dst, src, sizeof(struct THREEFISH256_STATE));
+    *dst = *src;
 }
 
 size_t threefish256_query(int query, size_t value)

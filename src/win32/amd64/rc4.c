@@ -73,7 +73,7 @@ size_t rc4_query(int query, size_t key_len)
 void rc4_copy(struct RC4_STATE *dst,
               const struct RC4_STATE *src)
 {
-    memcpy(dst, src, sizeof(struct RC4_STATE));
+    *dst = *src;
 }
 
 //===----------------------------------------------------------------------===//

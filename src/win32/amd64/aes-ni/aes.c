@@ -14,7 +14,7 @@
 
 struct AES_STATE
 {
-    uint8_t *key;
+    unsigned char key[336];
     size_t rounds;
 };
 
@@ -29,8 +29,13 @@ extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
 struct AES_STATE *aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
-    if (state) state->key = 0;
+    if (!state) goto fail;
+
     return state;
+
+fail:
+    aes_free(state);
+    return 0;
 }
 
 int aes_init(struct AES_STATE *state,
@@ -56,9 +61,6 @@ int aes_init(struct AES_STATE *state,
         else if (key_len == 32) state->rounds = 14;
     }
 
-    state->key = mem_alloc(key_bytes(state->rounds));
-    if (!state->key) return ORDO_ALLOC;
-
     ExpandKey(key, state->key, key_len / 4, state->rounds);
 
     return ORDO_SUCCESS;
@@ -76,7 +78,7 @@ void aes_inverse(const struct AES_STATE *state, uint8_t *block)
 
 void aes_final(struct AES_STATE *state)
 {
-    mem_free(state->key);
+    return;
 }
 
 void aes_free(struct AES_STATE *state)
@@ -87,7 +89,7 @@ void aes_free(struct AES_STATE *state)
 void aes_copy(struct AES_STATE *dst,
               const struct AES_STATE *src)
 {
-    memcpy(dst->key, src->key, key_bytes(dst->rounds));
+    *dst = *src;
 }
 
 size_t aes_query(int query, size_t value)

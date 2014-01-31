@@ -108,7 +108,7 @@ void sha256_free(struct SHA256_STATE *state)
 void sha256_copy(struct SHA256_STATE *dst,
                  const struct SHA256_STATE *src)
 {
-    memcpy(dst, src, sizeof(struct SHA256_STATE));
+    *dst = *src;
 }
 
 size_t sha256_query(int query, size_t value)

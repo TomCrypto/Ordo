@@ -55,7 +55,7 @@ void nullcipher_free(struct NULLCIPHER_STATE *state)
 void nullcipher_copy(struct NULLCIPHER_STATE *dst,
                      const struct NULLCIPHER_STATE *src)
 {
-    dst->dummy = src->dummy; // For example
+    *dst = *src;
 }
 
 size_t nullcipher_query(int query, size_t value)

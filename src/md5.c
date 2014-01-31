@@ -119,7 +119,7 @@ void md5_free(struct MD5_STATE *state)
 void md5_copy(struct MD5_STATE *dst,
               const struct MD5_STATE *src)
 {
-    memcpy(dst, src, sizeof(struct MD5_STATE));
+    *dst = *src;
 }
 
 size_t md5_query(int query, size_t value)
