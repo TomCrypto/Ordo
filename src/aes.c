@@ -22,9 +22,9 @@ struct AES_STATE
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
                       size_t key_len, size_t rounds) HOT_CODE;
 
-static void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
-static void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+static void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
 
 //===----------------------------------------------------------------------===//
@@ -84,7 +84,6 @@ void aes_final(struct AES_STATE *state)
 
 void aes_free(struct AES_STATE *state)
 {
-    if (state) mem_free(state->key);
     mem_free(state);
 }
 
@@ -616,7 +615,7 @@ static void InvMixSubColumns (uint8_t *state)
     for (t = 0; t < 16; ++t) state[t] = ibox[tmp[t]];
 }
 
-static void AddRoundKey (uint8_t *state, uint8_t *key)
+static void AddRoundKey (uint8_t *state, const uint8_t *key)
 {
     size_t t;
 
@@ -667,7 +666,7 @@ void ExpandKey(const uint8_t *key, uint8_t *ext,
     }
 }
 
-void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
+void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
 {
     size_t t;
 
@@ -688,7 +687,7 @@ void aes_forward_C(uint8_t *block, uint8_t *key, size_t rounds)
     }
 }
 
-void aes_inverse_C(uint8_t *block, uint8_t *key, size_t rounds)
+void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
 {
     size_t t;
 
