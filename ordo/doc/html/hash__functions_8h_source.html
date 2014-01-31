@@ -153,22 +153,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ab2f7703ab7b6c6bda140fe67a4ba3438">hash_function_free</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                        <span class="keywordtype">void</span> *state);</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a04d3139084e555d61b3683e84d5bdadb">hash_function_copy</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                        <span class="keywordtype">void</span> *dst,</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                        <span class="keyword">const</span> <span class="keywordtype">void</span> *src);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#ae0dbf373f85b7c19c138a0c573cabcf7">hash_function_query</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                           <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a04d3139084e555d61b3683e84d5bdadb">hash_function_copy</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        <span class="keywordtype">void</span> *dst,</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                        <span class="keyword">const</span> <span class="keywordtype">void</span> *src);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#ae0dbf373f85b7c19c138a0c573cabcf7">hash_function_query</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                           <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="hash__functions_8h_html_a4f848af22b0782c0a0c4d688cd77b33a"><div class="ttname"><a href="hash__functions_8h.html#a4f848af22b0782c0a0c4d688cd77b33a">hash_function_update</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_update(const struct HASH_FUNCTION *primitive, void *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:138</div></div>
 <div class="ttc" id="hash__functions_8h_html_a10528b6fe9c461f4e5c40eeee4204c9d"><div class="ttname"><a href="hash__functions_8h.html#a10528b6fe9c461f4e5c40eeee4204c9d">hash_function_name</a></div><div class="ttdeci">ORDO_PUBLIC const char * hash_function_name(const struct HASH_FUNCTION *primitive)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:40</div></div>
 <div class="ttc" id="hash__functions_8h_html_ad38082f2e0056778ff5c6b6254c50b32"><div class="ttname"><a href="hash__functions_8h.html#ad38082f2e0056778ff5c6b6254c50b32">hash_function_final</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_final(const struct HASH_FUNCTION *primitive, void *state, void *digest)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:146</div></div>
@@ -188,7 +188,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 29 2014 23:32:27 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 31 2014 18:30:29 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

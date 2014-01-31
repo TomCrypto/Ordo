@@ -508,7 +508,7 @@ BLOCK_CIPHER *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Copies a block cipher state to another.</p>
+<p>Performs a deep copy of one state into another.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">primitive</td><td>A block cipher primitive. </td></tr>
@@ -517,7 +517,9 @@ BLOCK_CIPHER *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>Both states must have been initialized with the same block cipher and parameters, or this function's behaviour is undefined. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The destination state must have been allocated, by using the same primitive(s) as the source state, and mustn't be initialized.</dd>
+<dd>
+The source state must be initialized. </dd></dl>
 
 </div>
 </div>
@@ -567,7 +569,7 @@ BLOCK_CIPHER *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 29 2014 23:32:27 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 31 2014 18:30:29 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

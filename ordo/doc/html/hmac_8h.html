@@ -344,14 +344,16 @@ Passing <code>0</code> to this function is valid, and will do nothing. </dd></dl
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>The contexts must have been initialized using the exact same hash function with the exact same parameters, or this function invokes undefined behaviour. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The destination context should have been allocated using the same primitive(s) as the source context, and mustn't be initialized.</dd>
+<dd>
+The source context must be initialized. </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 29 2014 23:32:27 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 31 2014 18:30:29 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
