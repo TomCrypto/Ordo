@@ -1,8 +1,14 @@
-/* Sample: md5sum - calculates the MD5 digest of the file located at argv[1].
+/* Sample for Ordo - md5sum.c
+ * ===============
  *
- * Usage: ./bin/md5sum [path to file]
+ * A program which takes a list of files on the command-line, and outputs their
+ * md5 checksum. This is essentially a clone of the md5sum utility program, but
+ * it only implements the MD5 computation part (no extra features are present).
  *
- * Comments: This is essentially a clone of the md5sum utility program.
+ * Usage: ./bin/md5sum [path to files ...]
+ *
+ * This could easily be extended to any hash function, by changing md5() into a
+ * different algorithm, and adjusting the digest buffer's size, here 16 bytes.
 */
 
 #include <stdlib.h>
@@ -10,82 +16,61 @@
 
 #include "ordo.h"
 
+#define DIGEST_SZ 16
+#define BUFFER_SZ 4096
+
 static int md5_file(FILE *f, struct DIGEST_CTX *ctx, void *digest)
 {
-    static char buffer[4096];
-
-    int err = digest_init(ctx, 0); /* No parameters required. */
+    int err = digest_init(ctx, 0);
     if (err) return err;
 
     while (!feof(f))
     {
+        unsigned char buffer[BUFFER_SZ]; /* Read in by chunks. */
         size_t len = fread(buffer, 1, sizeof(buffer), f);
         if (len) digest_update(ctx, buffer, len);
     }
 
     digest_final(ctx, digest);
-    digest_free(ctx);
+
     return 0;
 }
 
-static void print_output(const char *path,
-                         const unsigned char *digest,
-                         size_t len)
+static void print_output(const char *path, const unsigned char *digest)
 {
-    while (len--) printf("%.2x", *(digest++));
+    size_t t = 0;
+
+    for (t = 0; t < DIGEST_SZ; ++t)
+        printf("%.2x", digest[t]);
+
     printf("  %s\n", path);
 }
 
 int main(int argc, char *argv[])
 {
     struct DIGEST_CTX *ctx;
-    unsigned char *digest;
-    size_t digest_len;
-    FILE *f;
-    int err;
-
-    /* Do some error checking, initialize all resources as needed. */
-
-    if (argc != 2)
-    {
-        printf("No file specified.\n");
-        return EXIT_FAILURE;
-    }
-
-    digest_len = digest_length(md5());
-    if (!(digest = malloc(digest_len)))
-    {
-        printf("Failed to allocate memory.\n");
-        return EXIT_FAILURE;
-    }
 
     if (!(ctx = digest_alloc(md5())))
     {
-        free(digest);
-        printf("Failed to allocate context.\n");
+        printf("Memory error.\n");
         return EXIT_FAILURE;
     }
 
-    f = fopen(argv[1], "rb");
-    if (!f)
+    while (*++argv)
     {
-        free(digest);
-        digest_free(ctx);
-        printf("Failed to open '%s'.\n", argv[1]);
-        return EXIT_FAILURE;
+        FILE *f = fopen(*argv, "rb");
+        if (!f) perror(*argv);
+        else
+        {
+            unsigned char digest[DIGEST_SZ];
+            int err = md5_file(f, ctx, digest);
+            if (!err) print_output(*argv, digest);
+            else printf("Error: %s.\n", ordo_error_msg(err));
+
+            fclose(f);
+        } 
     }
 
-    /* Attempt to calculate the MD5 digest of the file. */
-
-    if ((err = md5_file(f, ctx, digest)))
-    {
-        fclose(f);
-        free(digest);
-        digest_free(ctx);
-        printf("An error occurred: %s.\n", ordo_error_msg(err));
-        return EXIT_FAILURE;
-    }
-
-    print_output(argv[1], digest, digest_len);
+    digest_free(ctx);
     return EXIT_SUCCESS;
 }

@@ -1,4 +1,8 @@
-// Shows how to use the version API.
+/* Sample for Ordo - version.c
+ * ===============
+ *
+ * Shows how to use the version API to get library version information.
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,18 +12,10 @@
 int main(void)
 {
     const struct ORDO_VERSION *version = ordo_version();
-    size_t t;
+    const char *const *features = version->features;
 
-    printf("Running %s.\n", version->build);
-    printf("  ID          : %u\n", version->id);
-    printf("  version     : %s\n", version->version);
-    printf("  system      : %s\n", version->system);
-    printf("  architecture: %s\n", version->arch);
-    printf("  features    : %s\n", version->feature_list);
-    printf("  or as array :\n");
-
-    for (t = 0; version->features[t]; ++t)
-        printf("  - %s\n", version->features[t]);
+    printf("Running %s (%d)\n", version->build, version->id);
+    while (*features) printf("  * %s\n", *features++);
 
     return EXIT_SUCCESS;
 }
