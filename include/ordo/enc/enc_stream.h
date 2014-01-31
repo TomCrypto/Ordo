@@ -81,10 +81,10 @@ void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
 ///
-/// @remarks Both the contexts must have been  allocated  with the same stream
-///          cipher, and  the exact  same  parameters - unless  the  parameter
-///          documentation states otherwise - else this function's behavior is
-///          undefined.
+/// @remarks The destination context should have been allocated using the same
+///          primitive(s) as the source context, and mustn't be initialized.
+///
+/// @remarks The source context must be initialized.
 ORDO_PUBLIC
 void enc_stream_copy(struct ENC_STREAM_CTX *dst,
                      const struct ENC_STREAM_CTX *src);

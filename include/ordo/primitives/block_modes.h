@@ -182,15 +182,17 @@ void block_mode_free(const struct BLOCK_MODE *mode,
                      const struct BLOCK_CIPHER *cipher,
                      const void *cipher_state);
 
-/// Copies a block mode state to another.
+/// Performs a deep copy of one state into another.
 ///
 /// @param [in]     mode           A block mode primitive.
-/// @param [in]     cipher         A block cipher primitive.
+/// @param [in]     primitive      A block cipher primitive.
 /// @param [out]    dst            The destination state.
-/// @param [out]    src            The source state.
+/// @param [in]     src            The source state.
 ///
-/// @remarks Both states must have been  initialized with the same block mode,
-///          block cipher, and parameters (for both).
+/// @remarks The destination state must have been allocated, by using the same
+///          primitive(s) as the source state, and mustn't be initialized.
+///
+/// @remarks The source state must be initialized.
 ORDO_PUBLIC
 void block_mode_copy(const struct BLOCK_MODE *mode,
                      const struct BLOCK_CIPHER *cipher,

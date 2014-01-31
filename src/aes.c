@@ -32,8 +32,17 @@ HOT_CODE;
 struct AES_STATE *aes_alloc(void)
 {
     struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
-    if (state) state->key = 0;
+    if (!state) goto fail;
+
+    // Maximum round count/key length.
+    state->key = mem_alloc(key_bytes(20));
+    if (!state->key) goto fail;
+
     return state;
+
+fail:
+    aes_free(state);
+    return 0;
 }
 
 int aes_init(struct AES_STATE *state,
@@ -41,9 +50,7 @@ int aes_init(struct AES_STATE *state,
              const struct AES_PARAMS *params)
 {
     if (aes_query(KEY_LEN_Q, key_len) != key_len)
-    {
         return ORDO_KEY_LEN;
-    }
 
     if (params)
     {
@@ -58,9 +65,6 @@ int aes_init(struct AES_STATE *state,
         else if (key_len == 24) state->rounds = 12;
         else if (key_len == 32) state->rounds = 14;
     }
-
-    state->key = mem_alloc(key_bytes(state->rounds));
-    if (!state->key) return ORDO_ALLOC;
 
     ExpandKey(key, state->key, key_len / 4, state->rounds);
 
@@ -79,18 +83,20 @@ void aes_inverse(const struct AES_STATE *state, uint8_t *block)
 
 void aes_final(struct AES_STATE *state)
 {
-    mem_free(state->key); // On behalf of aes_init
+    return;
 }
 
 void aes_free(struct AES_STATE *state)
 {
+    if (state) mem_free(state->key);
     mem_free(state);
 }
 
 void aes_copy(struct AES_STATE *dst,
               const struct AES_STATE *src)
 {
-    memcpy(dst->key, src->key, key_bytes(dst->rounds));
+    memcpy(dst->key, src->key, key_bytes(20));
+    dst->rounds = src->rounds;
 }
 
 size_t aes_query(int query, size_t value)

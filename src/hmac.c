@@ -15,7 +15,6 @@ struct HMAC_CTX
     const struct HASH_FUNCTION *hash;
     struct DIGEST_CTX *ctx;
     unsigned char *key;
-    size_t digest_len;
 };
 
 struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash)

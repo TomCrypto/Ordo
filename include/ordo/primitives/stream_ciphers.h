@@ -130,14 +130,16 @@ ORDO_PUBLIC
 void stream_cipher_free(const struct STREAM_CIPHER *primitive,
                         void *state);
 
-/// Copies a stream cipher state to another.
+/// Performs a deep copy of one state into another.
 ///
 /// @param [in]     primitive      A stream cipher primitive.
 /// @param [out]    dst            The destination state.
 /// @param [in]     src            The source state.
 ///
-/// @remarks The states must have been initialized with the same stream cipher
-///          and parameters, or this function's behaviour is undefined.
+/// @remarks The destination state must have been allocated, by using the same
+///          primitive(s) as the source state, and mustn't be initialized.
+///
+/// @remarks The source state must be initialized.
 ORDO_PUBLIC
 void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
                         void *dst,

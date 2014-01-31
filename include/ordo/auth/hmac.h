@@ -100,9 +100,10 @@ void hmac_free(struct HMAC_CTX *ctx);
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
 ///
-/// @remarks The contexts must have been initialized using the exact same hash
-///          function with the exact same parameters, or this function invokes
-///          undefined behaviour.
+/// @remarks The destination context should have been allocated using the same
+///          primitive(s) as the source context, and mustn't be initialized.
+///
+/// @remarks The source context must be initialized.
 ORDO_PUBLIC
 void hmac_copy(struct HMAC_CTX *dst,
                const struct HMAC_CTX *src);

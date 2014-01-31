@@ -130,10 +130,10 @@ void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
 ///
-/// @remarks The contexts must have been allocated with the same block cipher,
-///          block  mode, and the exact same parameters  for both - unless the
-///          parameter  documentation  states otherwise - else this function's
-///          behavior is undefined.
+/// @remarks The destination context should have been allocated using the same
+///          primitive(s) as the source context, and mustn't be initialized.
+///
+/// @remarks The source context must be initialized.
 ORDO_PUBLIC
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                     const struct ENC_BLOCK_CTX *src);

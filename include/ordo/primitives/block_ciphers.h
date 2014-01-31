@@ -144,14 +144,16 @@ ORDO_PUBLIC
 void block_cipher_free(const struct BLOCK_CIPHER *primitive,
                        void *state);
 
-/// Copies a block cipher state to another.
+/// Performs a deep copy of one state into another.
 ///
 /// @param [in]     primitive      A block cipher primitive.
 /// @param [out]    dst            The destination state.
 /// @param [in]     src            The source state.
 ///
-/// @remarks Both states must have been initialized with the same block cipher
-///          and parameters, or this function's behaviour is undefined.
+/// @remarks The destination state must have been allocated, by using the same
+///          primitive(s) as the source state, and mustn't be initialized.
+///
+/// @remarks The source state must be initialized.
 ORDO_PUBLIC
 void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
                        void *dst,
