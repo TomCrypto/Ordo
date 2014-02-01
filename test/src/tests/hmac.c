@@ -1,4 +1,6 @@
-#include "tests/hmac/hmac.h"
+#include "testenv.h"
+#include <string.h>
+#include "ordo.h"
 
 struct TEST_VECTOR
 {
@@ -126,13 +128,12 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
-static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
+static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     const struct HASH_FUNCTION *hash = hash_function_by_name(test.name);
-    if (ext) fprintf(ext, "[*] Test vector #%d '%s'.\n", index, test.name);
     if (!hash)
     {
-        if (ext) fprintf(ext, "[+] Algorithm not found - skipping.\n\n");
+        lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
         return 1; /* If skipping, the test passed by convention. */
     }
     else
@@ -147,47 +148,26 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
 
         if (err)
         {
-            /* If an error occurs, the test failed. */
-            if (ext) fprintf(ext, "[!] FAILED - %s.\n\n",
-                             ordo_error_msg(err));
             return 0;
         }
 
         if (memcmp(test.expected, scratch, check_len))
         {
-            if (ext)
-            {
-                fprintf(ext, "[!] FAILED, computed ");
-                hex(ext, scratch, check_len);
-                fprintf(ext, " (differs from expected output).\n");
-                fprintf(ext, "[!] Test suite failed, aborting.\n\n");
-            }
-
             return 0;
         }
         else
         {
-            if (ext) fprintf(ext, "[+] PASSED!\n\n");
             return 1;
         }
     }
 }
 
-int test_hmac(char *output, size_t maxlen, FILE *ext)
+int test_hmac(void)
 {
     int t;
 
-    if (ext) fprintf(ext, "[*] Beginning HMAC test vectors.\n\n");
-
     for (t = 0; t < vector_count; ++t)
-    {
-        if (!check_test_vector(t, tests[t], ext))
-        {
-            snprintf(output, maxlen, "Test vector for '%s'.", tests[t].name);
-            return 0;
-        }
-    }
+        if (!check_test_vector(t, tests[t])) return 0;
 
-    if (ext) fprintf(ext, "[*] Finished HMAC test vectors.\n\n");
-    pass("Generic HMAC test vectors.");
+    return 1;
 }

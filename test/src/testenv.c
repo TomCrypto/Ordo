@@ -1,85 +1,127 @@
+/* Color configuration, except pass/fail/etc, feel free to edit. */
+
+#define groupname(str) yellow(str)
+#define version(str) cyan(str)
+#define test(str) cyan(str)
+
+/* ---- */
+
 #include "testenv.h"
+#include "tests.h"
 
-#define MAX_TESTS 1024
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <time.h>
 
-static size_t test_index;
-static TEST tests[MAX_TESTS];
+#include "ordo/common/version.h"
 
-void register_test(TEST test)
+static int enable_colors;
+static char *pass_str;
+static char *fail_str;
+static char *warn_str;
+static char *info_str;
+
+static void cleanup(void);
+
+static void init_log(struct DRIVER_OPTIONS opt)
 {
-    tests[test_index++] = test;
-}
-
-size_t test_count(void)
-{
-    return test_index;
-}
-
-TEST test(size_t index)
-{
-    return tests[index];
-}
-
-/* When adding a test, include the relevant header below and add each separate
- * test by using the register_test function. Please do not printf in tests. */
-
-/* These are tests concerning library utilities i.e. not related to crypto. */
-#include "tests/utility/errors.h"
-#include "tests/utility/utils.h"
-
-/* This is for the OS-provided CSPRNG. */
-#include "tests/misc/os_random.h"
-
-/* This tests the digest interface and all hash functions. */
-#include "tests/hmac/hmac.h"
-#include "tests/pbkdf2/pbkdf2.h"
-
-#include "tests/stream/stream.h"
-#include "tests/block/block.h"
-#include "tests/block_modes/block_modes.h"
-
-#include "tests/digest/digest.h"
-#include "tests/digest/specific/skein256.h"
-
-int register_all_tests(void)
-{
-    srand((unsigned)time(0)); /* For tests which need to use randomness. */
-
-    register_test(test_os_random);
-    register_test(test_error_codes);
-    register_test(test_macros);
-    register_test(test_pad_check);
-    register_test(test_xor_buffer);
-    register_test(test_inc_buffer);
-
-    register_test(test_digest);
-    register_test(test_digest_utilities);
-
-    register_test(test_skein256);
-
-    register_test(test_hmac);
-    register_test(test_pbkdf2);
-    register_test(test_stream);
-    register_test(test_stream_utilities);
-
-
-    register_test(test_block);
-    register_test(test_block_utilities);
-
-
-    register_test(test_block_modes);
-    register_test(test_block_modes_utilities);
-
-
-
-    return 0; /* All tests registered. */
-}
-
-void hex(FILE *ext, const unsigned char *buffer, size_t len)
-{
-    if (ext)
+    if ((enable_colors = opt.color))
     {
-        size_t t;
-        for (t = 0; t < len; ++t) fprintf(ext, "%02x", buffer[t]);
+        pass_str = "\x1b[1m[\x1b[0m\x1b[1;32mpass\x1b[0m\x1b[1m]\x1b[0m";
+        fail_str = "\x1b[1m[\x1b[0m\x1b[1;31mfail\x1b[0m\x1b[1m]\x1b[0m";
+        warn_str = "\x1b[1m[\x1b[0m\x1b[1;33mwarn\x1b[0m\x1b[1m]\x1b[0m";
+        info_str = "\x1b[1m[\x1b[0m\x1b[1;36minfo\x1b[0m\x1b[1m]\x1b[0m";
+    }
+    else
+    {
+        pass_str = "[pass]";
+        fail_str = "[fail]";
+        warn_str = "[warn]";
+        info_str = "[info]";
+    }
+    
+    atexit(cleanup);
+}
+
+static char *cache[65536];
+static size_t count = 0;
+
+void cleanup(void)
+{
+    size_t t, len = sizeof(cache) / sizeof(const char *);
+    for (t = 0; t < len; ++t) free(cache[t]);
+}
+
+const char *colorize(const char *str, enum LOG_COLOR color, int bold)
+{
+    if (enable_colors)
+    {
+        cache[count] = malloc(strlen(str) + 13);
+        sprintf(cache[count], "\x1b[%d;3%dm%s\x1b[0m",
+                              bold % 2, color, str);
+        return cache[count++];
+    }
+    
+    return str;
+}
+
+void lprintf(enum LOG_STATUS status, const char *fmt, ...)
+{
+    switch (status)
+    {
+        case PASS: printf("%s ", pass_str); break;
+        case FAIL: printf("%s ", fail_str); break;
+        case WARN: printf("%s ", warn_str); break;
+        case INFO: printf("%s ", info_str); break;
+    }
+
+    {
+        va_list args;
+        va_start(args, fmt);
+        vprintf(fmt, args);
+        va_end(args);
+        printf("\n");
+    }
+}
+
+static int run_test_group(struct TEST_GROUP group)
+{
+    size_t passed = 0, t;
+    for (t = 0; t < group.test_count; ++t)
+    {
+        int retval = group.list[t].run() ? 1 : 0; passed += retval;
+        lprintf(retval ? PASS : FAIL, "%s.", test(group.list[t].name));
+    }
+    
+    return passed == group.test_count;
+}
+
+int run_test_driver(struct DRIVER_OPTIONS opt)
+{
+    init_log(opt);
+    srand((unsigned)time(0));
+    printf("Ordo Test Driver\n");
+    printf("================\n");
+    printf("\n"); /* Let's go! */
+    
+    {
+        const char *f = ordo_version()->feature_list; /* Extra information. */
+        lprintf(INFO, "Library version: %s.", version(ordo_version()->build));
+        if (strlen(f) != 0) lprintf(INFO, "Target features: %s.", version(f));
+    }
+    
+    {
+        size_t passed = 0, t;
+        for (t = 0; t < GROUP_COUNT; ++t)
+        {
+            int retval = run_test_group(tests[t]) ? 1 : 0; passed += retval;
+            lprintf(retval ? PASS : FAIL, "%s.", groupname(tests[t].group));
+        }
+
+        printf("\n================\n");
+        printf("Outcome :: %s!\n", passed == GROUP_COUNT ? bgreen("PASS")
+                                                         : bred  ("FAIL"));
+        return passed == GROUP_COUNT;
     }
 }

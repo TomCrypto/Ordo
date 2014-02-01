@@ -1,6 +1,9 @@
-#include "tests/misc/os_random.h"
+#include "testenv.h"
 
-int test_os_random(char *output, size_t maxlen, FILE *ext)
+#include <string.h>
+#include "ordo.h"
+
+int test_os_random(void)
 {
     uint8_t buffer[1024];
     int t;
@@ -8,15 +11,15 @@ int test_os_random(char *output, size_t maxlen, FILE *ext)
     memset(buffer, 0x00, sizeof(buffer));
     if (os_random(&buffer, sizeof(buffer)))
     {
-        fail("'os_random' reported failure (does OS provide one?)");
+        FAIL("'os_random' reported failure (does OS provide one?)");
     }
 
     /* Just do a rudimentary check that the buffer was actually changed. */
     for (t = 0; t < 1024; ++t)
     {
-        if (buffer[t] != 0) pass("'os_random' appears to be working.");
+        if (buffer[t] != 0) return 1;
     }
 
     /* Chances of a false positive are 256^(-1024) (read: non-existent). */
-    fail("'os_random' reports success but non-random output.");
+    FAIL("'os_random' reports success but non-random output.");
 }

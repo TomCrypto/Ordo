@@ -1,8 +1,6 @@
-#include "tests/digest/specific/skein256.h"
-
-#define ORDO_INTERNAL_ACCESS
-
-#include "ordo/internal/alg.h"
+#include "testenv.h"
+#include <string.h>
+#include "ordo.h"
 
 struct TEST_VECTOR
 {
@@ -85,10 +83,10 @@ static int config_block(void)
 
         if (err)
         {
-            printf("Error: %s.\n", ordo_error_msg(err));
+            return 0;
         }
 
-        if (memcmp(scratch, test.expected, (size_t)bits(params.out_len)))
+        if (memcmp(scratch, test.expected, params.out_len / 8))
         {
             return 0;
         }
@@ -97,9 +95,7 @@ static int config_block(void)
     return 1;
 }
 
-int test_skein256(char *output, size_t maxlen, FILE *ext)
+int test_skein256(void)
 {
-    if (!config_block()) fail("Skein-256 specific test vector failed.");
-
-    pass("Skein-256 tests passed.");
+    return config_block();
 }

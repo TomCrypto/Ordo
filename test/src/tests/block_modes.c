@@ -1,4 +1,6 @@
-#include "tests/block_modes/block_modes.h"
+#include "testenv.h"
+#include <string.h>
+#include "ordo.h"
 
 /* Note the block mode tests are always run against the NullCipher.
  * This is to ensure the underlying block cipher cannot be responsible
@@ -80,13 +82,12 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
-static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
+static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     const struct BLOCK_MODE *mode = block_mode_by_name(test.name);
-    if (ext) fprintf(ext, "[*] Test vector #%d '%s'.\n", index, test.name);
     if (!mode)
     {
-        if (ext) fprintf(ext, "[+] Algorithm not found - skipping.\n\n");
+        lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
         return 1; /* If skipping, the test passed by convention. */
     }
     else
@@ -106,35 +107,16 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
 
         if (err)
         {
-            /* If an error occurs, the test failed. */
-            if (ext) fprintf(ext, "[!] FAILED - %s.\n\n",
-                             ordo_error_msg(err));
             return 0;
         }
 
         if (check_len != (size_t)test.out_len)
         {
-            if (ext)
-            {
-                fprintf(ext, "[!] FAILED, expected %d bytes",
-                        (int)test.out_len);
-                fprintf(ext, ", got %d bytes.\n", (int)check_len);
-                fprintf(ext, "[!] Test suite failed, aborting.\n\n");
-            }
-
             return 0;
         }
 
         if (memcmp(test.expected, scratch, check_len))
         {
-            if (ext)
-            {
-                fprintf(ext, "[!] FAILED - [encryption] computed ");
-                hex(ext, scratch, check_len);
-                fprintf(ext, " (differs from expected output).\n");
-                fprintf(ext, "[!] Test suite failed, aborting.\n\n");
-            }
-
             return 0;
         }
 
@@ -148,80 +130,44 @@ static int check_test_vector(int index, struct TEST_VECTOR test, FILE *ext)
 
         if (err)
         {
-            /* If an error occurs, the test failed. */
-            if (ext) fprintf(ext, "[!] FAILED - %s.\n\n",
-                             ordo_error_msg(err));
             return 0;
         }
 
         if (check_len != (size_t)test.in_len)
         {
-            if (ext)
-            {
-                fprintf(ext, "[!] FAILED, expected %d bytes",
-                        (int)test.in_len);
-                fprintf(ext, ", got %d bytes.\n", (int)check_len);
-                fprintf(ext, "[!] Test suite failed, aborting.\n\n");
-            }
-
             return 0;
         }
 
         if (memcmp(test.input, scratch, check_len))
         {
-            if (ext)
-            {
-                fprintf(ext, "[!] FAILED - [decryption] computed ");
-                hex(ext, scratch, check_len);
-                fprintf(ext, " (differs from expected output).\n");
-                fprintf(ext, "[!] Test suite failed, aborting.\n\n");
-            }
-
             return 0;
         }
         else
         {
-            if (ext) fprintf(ext, "[+] PASSED!\n\n");
             return 1;
         }
     }
 }
 
-int test_block_modes(char *output, size_t maxlen, FILE *ext)
+int test_block_modes(void)
 {
     int t;
 
-    if (ext) fprintf(ext, "[*] Beginning block mode test vectors.\n\n");
-
     for (t = 0; t < vector_count; ++t)
-    {
-        if (!check_test_vector(t, tests[t], ext))
-        {
-            snprintf(output, maxlen, "Test vector for '%s'.", tests[t].name);
-            return 0;
-        }
-    }
+        if (!check_test_vector(t, tests[t])) return 0;
 
-    if (ext) fprintf(ext, "[*] Finished block mode test vectors.\n\n");
-    pass("Generic block mode test vectors.");
+    return 1;
 }
 
-int test_block_modes_utilities(char *output, size_t maxlen, FILE *ext)
+int test_block_modes_utilities(void)
 {
     size_t t, count = block_mode_count();
-
-    if (ext) fprintf(ext, "[*] Detected %d block modes.\n", (int)count);
 
     for (t = 0; t < count; ++t)
     {
         const struct BLOCK_MODE *mode = block_mode_by_index(t);
-        if (!mode)
-        {
-            if (ext) fprintf(ext, "[!] Index %d rejected!\n\n", (int)t);
-            fail("Supposedly valid block mode index is invalid.");
-        }
+        if (!mode) return 0;
     }
 
-    if (ext) fprintf(ext, "[+] All block mode indices are valid.\n\n");
-    pass("Block mode library utilities.");
+    return 1;
 }

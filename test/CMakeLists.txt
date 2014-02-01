@@ -5,32 +5,23 @@ PROJECT(Test C)
 SET(BIN_NAME "test")
 
 SET(INCLUDE_FILES
-    include/tests/utility/errors.h
-    include/tests/utility/utils.h
-    include/tests/stream/stream.h
-    include/tests/misc/os_random.h
-    include/tests/block/block.h
-    include/tests/block_modes/block_modes.h
-    include/tests/digest/specific/skein256.h
-    include/tests/digest/digest.h
-    include/tests/hmac/hmac.h
-    include/tests/pbkdf2/pbkdf2.h
     include/testenv.h
+    include/tests.h
 )
 
 SET(SOURCE_FILES
     src/main.c
     src/testenv.c
-    src/tests/utility/errors.c
-    src/tests/utility/utils.c
-    src/tests/stream/stream.c
-    src/tests/misc/os_random.c
-    src/tests/block/block.c
-    src/tests/block_modes/block_modes.c
-    src/tests/digest/specific/skein256.c
-    src/tests/digest/digest.c
-    src/tests/hmac/hmac.c
-    src/tests/pbkdf2/pbkdf2.c
+    src/tests/misc.c
+    src/tests/internal.c
+    src/tests/stream.c
+    src/tests/os_random.c
+    src/tests/block.c
+    src/tests/block_modes.c
+    src/tests/digest/skein256.c
+    src/tests/digest.c
+    src/tests/hmac.c
+    src/tests/pbkdf2.c
 )
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
