@@ -44,12 +44,10 @@ const char *block_cipher_name(const struct BLOCK_CIPHER *primitive)
 }
 
 #include "ordo/primitives/block_ciphers/nullcipher.h"
-#include "ordo/primitives/block_ciphers/threefish256.h"
-#include "ordo/primitives/block_ciphers/aes.h"
 
-static struct BLOCK_CIPHER primitives[] =
+const struct BLOCK_CIPHER *ordo_nullcipher(void)
 {
-    #define INDEX_NULLCIPHER 0
+    static const struct BLOCK_CIPHER primitive =
     {
         (BLOCK_ALLOC )nullcipher_alloc,
         (BLOCK_INIT  )nullcipher_init,
@@ -60,8 +58,16 @@ static struct BLOCK_CIPHER primitives[] =
         (BLOCK_COPY  )nullcipher_copy,
         (BLOCK_QUERY )nullcipher_query,
         "NullCipher"
-    },
-    #define INDEX_THREEFISH256 1
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_ciphers/threefish256.h"
+
+const struct BLOCK_CIPHER *ordo_threefish256(void)
+{
+    static const struct BLOCK_CIPHER primitive =
     {
         (BLOCK_ALLOC )threefish256_alloc,
         (BLOCK_INIT  )threefish256_init,
@@ -72,8 +78,16 @@ static struct BLOCK_CIPHER primitives[] =
         (BLOCK_COPY  )threefish256_copy,
         (BLOCK_QUERY )threefish256_query,
         "Threefish-256"
-    },
-    #define INDEX_AES 2
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_ciphers/aes.h"
+
+const struct BLOCK_CIPHER *ordo_aes(void)
+{
+    static const struct BLOCK_CIPHER primitive =
     {
         (BLOCK_ALLOC )aes_alloc,
         (BLOCK_INIT  )aes_init,
@@ -84,45 +98,44 @@ static struct BLOCK_CIPHER primitives[] =
         (BLOCK_COPY  )aes_copy,
         (BLOCK_QUERY )aes_query,
         "AES"
-    }
-};
+    };
 
-const struct BLOCK_CIPHER *nullcipher(void)
-{
-    return primitives + INDEX_NULLCIPHER;
-}
-
-const struct BLOCK_CIPHER *threefish256(void)
-{
-    return primitives + INDEX_THREEFISH256;
-}
-
-const struct BLOCK_CIPHER *aes(void)
-{
-    return primitives + INDEX_AES;
+    return &primitive;
 }
 
 //===----------------------------------------------------------------------===//
-
-size_t block_cipher_count(void)
-{
-    return sizeof(primitives) / sizeof(struct BLOCK_CIPHER);
-}
 
 const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
 {
     size_t t;
 
     for (t = 0; t < block_cipher_count(); t++)
-        if (!strcmp(name, primitives[t].name))
-            return primitives + t;
+    {
+        const struct BLOCK_CIPHER *primitive;
+        primitive = block_cipher_by_index(t);
+
+        if (!strcmp(name, primitive->name))
+            return primitive;
+    }
 
     return 0;
 }
 
 const struct BLOCK_CIPHER *block_cipher_by_index(size_t index)
 {
-    return index < block_cipher_count() ? primitives + index : 0;
+    switch (index)
+    {
+        case __COUNTER__: return ordo_nullcipher();
+        case __COUNTER__: return ordo_threefish256();
+        case __COUNTER__: return ordo_aes();
+
+        default: return 0;
+    }
+}
+
+size_t block_cipher_count(void)
+{
+    return __COUNTER__;
 }
 
 //===----------------------------------------------------------------------===//

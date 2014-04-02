@@ -37,23 +37,15 @@ const char *hash_function_name(const struct HASH_FUNCTION *primitive);
 
 /// The SHA-256 hash function.
 ORDO_PUBLIC
-const struct HASH_FUNCTION *sha256(void);
+const struct HASH_FUNCTION *ordo_sha256(void);
 
 /// The MD5 hash function.
 ORDO_PUBLIC
-const struct HASH_FUNCTION *md5(void);
+const struct HASH_FUNCTION *ordo_md5(void);
 
 /// The Skein-256 hash function.
 ORDO_PUBLIC
-const struct HASH_FUNCTION *skein256(void);
-
-/// Exposes the number of hash functions available.
-///
-/// @returns The number of available hash functions (at least one).
-///
-/// @remarks This is for use in enumerating hash functions.
-ORDO_PUBLIC
-size_t hash_function_count(void);
+const struct HASH_FUNCTION *ordo_skein256(void);
 
 /// Returns a hash function primitive from a name.
 ///
@@ -76,6 +68,14 @@ const struct HASH_FUNCTION *hash_function_by_name(const char *name);
 ///          function indices (there will be at least one).
 ORDO_PUBLIC
 const struct HASH_FUNCTION *hash_function_by_index(size_t index);
+
+/// Exposes the number of hash functions available.
+///
+/// @returns The number of available hash functions (at least one).
+///
+/// @remarks This is for use in enumerating hash functions.
+ORDO_PUBLIC
+size_t hash_function_count(void);
 
 //===----------------------------------------------------------------------===//
 

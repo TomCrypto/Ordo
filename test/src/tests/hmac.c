@@ -128,6 +128,8 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
+static unsigned char scratch[1024];
+
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     const struct HASH_FUNCTION *hash = hash_function_by_name(test.name);

@@ -22,7 +22,33 @@ static char *fail_str;
 static char *warn_str;
 static char *info_str;
 
-static void cleanup(void);
+#define CACHE_SIZE 8
+
+static char *cache[CACHE_SIZE];
+static size_t count = 0;
+
+static void cleanup(void)
+{
+    size_t t;
+
+    for (t = 0; t < CACHE_SIZE; ++t)
+        free(cache[t]);
+}
+
+const char *colorize(const char *str, enum LOG_COLOR color, int bold)
+{
+    if (enable_colors)
+    {
+        if (count == CACHE_SIZE) count = 0;
+        if (cache[count]) free(cache[count]);
+        cache[count] = malloc(strlen(str) + 12);
+        sprintf(cache[count], "\x1b[%d;3%dm%s\x1b[0m",
+                              bold == 1, color, str);
+        return cache[count++];
+    }
+
+    return str;
+}
 
 static void init_log(struct DRIVER_OPTIONS opt)
 {
@@ -40,30 +66,8 @@ static void init_log(struct DRIVER_OPTIONS opt)
         warn_str = "[warn]";
         info_str = "[info]";
     }
-    
+
     atexit(cleanup);
-}
-
-static char *cache[65536];
-static size_t count = 0;
-
-void cleanup(void)
-{
-    size_t t, len = sizeof(cache) / sizeof(const char *);
-    for (t = 0; t < len; ++t) free(cache[t]);
-}
-
-const char *colorize(const char *str, enum LOG_COLOR color, int bold)
-{
-    if (enable_colors)
-    {
-        cache[count] = malloc(strlen(str) + 13);
-        sprintf(cache[count], "\x1b[%d;3%dm%s\x1b[0m",
-                              bold % 2, color, str);
-        return cache[count++];
-    }
-    
-    return str;
 }
 
 void lprintf(enum LOG_STATUS status, const char *fmt, ...)
@@ -88,12 +92,13 @@ void lprintf(enum LOG_STATUS status, const char *fmt, ...)
 static int run_test_group(struct TEST_GROUP group)
 {
     size_t passed = 0, t;
+
     for (t = 0; t < group.test_count; ++t)
     {
         int retval = group.list[t].run() ? 1 : 0; passed += retval;
         lprintf(retval ? PASS : FAIL, "%s.", test(group.list[t].name));
     }
-    
+
     return passed == group.test_count;
 }
 
@@ -113,14 +118,15 @@ int run_test_driver(struct DRIVER_OPTIONS opt)
     
     {
         size_t passed = 0, t;
+
         for (t = 0; t < GROUP_COUNT; ++t)
         {
             int retval = run_test_group(tests[t]) ? 1 : 0; passed += retval;
             lprintf(retval ? PASS : FAIL, "%s.", groupname(tests[t].group));
         }
 
-        printf("\n================\n");
-        printf("Outcome :: %s!\n", passed == GROUP_COUNT ? bgreen("PASS")
+        printf("\n================\n"); /* Any failure gets reported. */
+        printf("Outcome => %s!\n", passed == GROUP_COUNT ? bgreen("PASS")
                                                          : bred  ("FAIL"));
         return passed == GROUP_COUNT;
     }

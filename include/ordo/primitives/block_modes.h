@@ -41,31 +41,23 @@ const char *block_mode_name(const struct BLOCK_MODE *mode);
 
 /// The ECB (Electronic CodeBook) block mode of operation.
 ORDO_PUBLIC
-const struct BLOCK_MODE *ecb(void);
+const struct BLOCK_MODE *ordo_ecb(void);
 
 /// The CBC (Ciphertext Block Chaining) block mode of operation.
 ORDO_PUBLIC
-const struct BLOCK_MODE *cbc(void);
+const struct BLOCK_MODE *ordo_cbc(void);
 
 /// The CTR (CounTeR) block mode of operation.
 ORDO_PUBLIC
-const struct BLOCK_MODE *ctr(void);
+const struct BLOCK_MODE *ordo_ctr(void);
 
 /// The CFB (Cipher FeedBack) block mode of operation.
 ORDO_PUBLIC
-const struct BLOCK_MODE *cfb(void);
+const struct BLOCK_MODE *ordo_cfb(void);
 
 /// The OFB (Output FeedBack) block mode of operation.
 ORDO_PUBLIC
-const struct BLOCK_MODE *ofb(void);
-
-/// Exposes the number of block modes available.
-///
-/// @returns The number of available block modes (at least one).
-///
-/// @remarks This is for use in enumerating block modes.
-ORDO_PUBLIC
-size_t block_mode_count(void);
+const struct BLOCK_MODE *ordo_ofb(void);
 
 /// Returns a block mode primitive from a name.
 ///
@@ -88,6 +80,14 @@ const struct BLOCK_MODE *block_mode_by_name(const char* name);
 ///          indices (there will be at least one).
 ORDO_PUBLIC
 const struct BLOCK_MODE *block_mode_by_index(size_t index);
+
+/// Exposes the number of block modes available.
+///
+/// @returns The number of available block modes (at least one).
+///
+/// @remarks This is for use in enumerating block modes.
+ORDO_PUBLIC
+size_t block_mode_count(void);
 
 //===----------------------------------------------------------------------===//
 

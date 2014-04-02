@@ -38,15 +38,7 @@ const char *stream_cipher_name(const struct STREAM_CIPHER *primitive);
 
 /// The RC4 stream cipher.
 ORDO_PUBLIC
-const struct STREAM_CIPHER *rc4(void);
-
-/// Exposes the number of stream ciphers available.
-///
-/// @returns The number of available stream ciphers (at least one).
-///
-/// @remarks This is for use in enumerating stream ciphers.
-ORDO_PUBLIC
-size_t stream_cipher_count(void);
+const struct STREAM_CIPHER *ordo_rc4(void);
 
 /// Returns a stream cipher primitive from a name.
 ///
@@ -69,6 +61,14 @@ const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
 ///          cipher indices (there will be at least one).
 ORDO_PUBLIC
 const struct STREAM_CIPHER *stream_cipher_by_index(size_t index);
+
+/// Exposes the number of stream ciphers available.
+///
+/// @returns The number of available stream ciphers (at least one).
+///
+/// @remarks This is for use in enumerating stream ciphers.
+ORDO_PUBLIC
+size_t stream_cipher_count(void);
 
 //===----------------------------------------------------------------------===//
 

@@ -7,9 +7,7 @@
 
 #define ORDO_INTERNAL_ACCESS
 
-#include "ordo/internal/mem.h"
-#include "ordo/internal/alg.h"
-#include "ordo/internal/sys.h"
+#include "ordo/internal/implementation.h"
 
 #undef ORDO_INTERNAL_ACCESS
 

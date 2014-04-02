@@ -11,13 +11,13 @@
 
 //===----------------------------------------------------------------------===//
 
-int os_random(void *buffer, size_t size)
+int os_random(void *out, size_t len)
 {
     HCRYPTPROV hProv;
     if (CryptAcquireContext(&hProv, 0, 0, PROV_RSA_FULL,
                             CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
     {
-        int err = CryptGenRandom(hProv, (DWORD)size, (BYTE*)buffer)
+        int err = CryptGenRandom(hProv, (DWORD)len, (BYTE*)out)
                 ? ORDO_SUCCESS : ORDO_FAIL;
 
         CryptReleaseContext(hProv, 0);
@@ -25,4 +25,9 @@ int os_random(void *buffer, size_t size)
     }
 
     return ORDO_FAIL;
+}
+
+int os_secure_random(void *out, size_t len)
+{
+    return os_random(out, len);
 }

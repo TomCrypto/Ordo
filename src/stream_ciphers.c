@@ -44,9 +44,9 @@ const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
 
 #include "ordo/primitives/stream_ciphers/rc4.h"
 
-static struct STREAM_CIPHER primitives[] =
+const struct STREAM_CIPHER *ordo_rc4(void)
 {
-    #define INDEX_RC4 0
+    static const struct STREAM_CIPHER primitive =
     {
         (STREAM_ALLOC )rc4_alloc,
         (STREAM_INIT  )rc4_init,
@@ -56,35 +56,42 @@ static struct STREAM_CIPHER primitives[] =
         (STREAM_COPY  )rc4_copy,
         (STREAM_QUERY )rc4_query,
         "RC4"
-    }
-};
+    };
 
-const struct STREAM_CIPHER *rc4(void)
-{
-    return primitives + INDEX_RC4;
+    return &primitive;
 }
 
 //===----------------------------------------------------------------------===//
-
-size_t stream_cipher_count(void)
-{
-    return sizeof(primitives) / sizeof(struct STREAM_CIPHER);
-}
 
 const struct STREAM_CIPHER *stream_cipher_by_name(const char *name)
 {
     size_t t;
 
     for (t = 0; t < stream_cipher_count(); t++)
-        if (!strcmp(name, primitives[t].name))
-            return primitives + t;
+    {
+        const struct STREAM_CIPHER *primitive;
+        primitive = stream_cipher_by_index(t);
+
+        if (!strcmp(name, primitive->name))
+            return primitive;
+    }
 
     return 0;
 }
 
 const struct STREAM_CIPHER *stream_cipher_by_index(size_t index)
 {
-    return index < stream_cipher_count() ? primitives + index : 0;
+    switch (index)
+    {
+        case __COUNTER__: return ordo_rc4();
+
+        default: return 0;
+    }
+}
+
+size_t stream_cipher_count(void)
+{
+    return __COUNTER__;
 }
 
 //===----------------------------------------------------------------------===//

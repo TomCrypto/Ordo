@@ -10,22 +10,45 @@
 
 //===----------------------------------------------------------------------===//
 
-int os_random(void *buffer, size_t size)
+int os_random(void *out, size_t len)
 {
     FILE *f = fopen("/dev/urandom", "r");
     if (!f) return ORDO_FAIL;
 
-    while (size != 0)
+    while (len != 0)
     {
-        size_t len = fread(buffer, 1, size, f);
-        if (len == 0)
+        size_t read = fread(out, 1, len, f);
+        if (read == 0)
         {
             fclose(f);
             return ORDO_FAIL;
         }
 
-        buffer = offset(buffer, len);
-        size -= len;
+        out = offset(out, read);
+        len -= read;
+    }
+
+    fclose(f);
+
+    return ORDO_SUCCESS;
+}
+
+int os_secure_random(void *out, size_t len)
+{
+    FILE *f = fopen("/dev/random", "r");
+    if (!f) return ORDO_FAIL;
+
+    while (len != 0)
+    {
+        size_t read = fread(out, 1, len, f);
+        if (read == 0)
+        {
+            fclose(f);
+            return ORDO_FAIL;
+        }
+
+        out = offset(out, read);
+        len -= read;
     }
 
     fclose(f);

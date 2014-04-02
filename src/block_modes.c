@@ -51,14 +51,10 @@ const char *block_mode_name(const struct BLOCK_MODE *mode)
 }
 
 #include "ordo/primitives/block_modes/ecb.h"
-#include "ordo/primitives/block_modes/cbc.h"
-#include "ordo/primitives/block_modes/ctr.h"
-#include "ordo/primitives/block_modes/cfb.h"
-#include "ordo/primitives/block_modes/ofb.h"
 
-static struct BLOCK_MODE primitives[] =
+const struct BLOCK_MODE *ordo_ecb(void)
 {
-    #define INDEX_ECB 0
+    static const struct BLOCK_MODE primitive =
     {
         (BLOCK_MODE_ALLOC )ecb_alloc,
         (BLOCK_MODE_INIT  )ecb_init,
@@ -68,8 +64,16 @@ static struct BLOCK_MODE primitives[] =
         (BLOCK_MODE_COPY  )ecb_copy,
         (BLOCK_MODE_QUERY )ecb_query,
         "ECB"
-    },
-    #define INDEX_CBC 1
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_modes/cbc.h"
+
+const struct BLOCK_MODE *ordo_cbc(void)
+{
+    static const struct BLOCK_MODE primitive =
     {
         (BLOCK_MODE_ALLOC )cbc_alloc,
         (BLOCK_MODE_INIT  )cbc_init,
@@ -79,8 +83,16 @@ static struct BLOCK_MODE primitives[] =
         (BLOCK_MODE_COPY  )cbc_copy,
         (BLOCK_MODE_QUERY )cbc_query,
         "CBC"
-    },
-    #define INDEX_CTR 2
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_modes/ctr.h"
+
+const struct BLOCK_MODE *ordo_ctr(void)
+{
+    static const struct BLOCK_MODE primitive =
     {
         (BLOCK_MODE_ALLOC )ctr_alloc,
         (BLOCK_MODE_INIT  )ctr_init,
@@ -90,8 +102,16 @@ static struct BLOCK_MODE primitives[] =
         (BLOCK_MODE_COPY  )ctr_copy,
         (BLOCK_MODE_QUERY )ctr_query,
         "CTR"
-    },
-    #define INDEX_CFB 3
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_modes/cfb.h"
+
+const struct BLOCK_MODE *ordo_cfb(void)
+{
+    static const struct BLOCK_MODE primitive =
     {
         (BLOCK_MODE_ALLOC )cfb_alloc,
         (BLOCK_MODE_INIT  )cfb_init,
@@ -101,8 +121,16 @@ static struct BLOCK_MODE primitives[] =
         (BLOCK_MODE_COPY  )cfb_copy,
         (BLOCK_MODE_QUERY )cfb_query,
         "CFB"
-    },
-    #define INDEX_OFB 4
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/block_modes/ofb.h"
+
+const struct BLOCK_MODE *ordo_ofb(void)
+{
+    static const struct BLOCK_MODE primitive =
     {
         (BLOCK_MODE_ALLOC )ofb_alloc,
         (BLOCK_MODE_INIT  )ofb_init,
@@ -112,55 +140,46 @@ static struct BLOCK_MODE primitives[] =
         (BLOCK_MODE_COPY  )ofb_copy,
         (BLOCK_MODE_QUERY )ofb_query,
         "OFB"
-    }
-};
+    };
 
-const struct BLOCK_MODE *ecb(void)
-{
-    return primitives + INDEX_ECB;
-}
-
-const struct BLOCK_MODE *cbc(void)
-{
-    return primitives + INDEX_CBC;
-}
-
-const struct BLOCK_MODE *ctr(void)
-{
-    return primitives + INDEX_CTR;
-}
-
-const struct BLOCK_MODE *cfb(void)
-{
-    return primitives + INDEX_CFB;
-}
-
-const struct BLOCK_MODE *ofb(void)
-{
-    return primitives + INDEX_OFB;
+    return &primitive;
 }
 
 //===----------------------------------------------------------------------===//
-
-size_t block_mode_count(void)
-{
-    return sizeof(primitives) / sizeof(struct BLOCK_MODE);
-}
 
 const struct BLOCK_MODE *block_mode_by_name(const char *name)
 {
     size_t t;
 
     for (t = 0; t < block_mode_count(); t++)
-        if (!strcmp(name, primitives[t].name))
-            return primitives + t;
+    {
+        const struct BLOCK_MODE *primitive;
+        primitive = block_mode_by_index(t);
+
+        if (!strcmp(name, primitive->name))
+            return primitive;
+    }
 
     return 0;
 }
 
 const struct BLOCK_MODE *block_mode_by_index(size_t index)
 {
-    return index < block_mode_count() ? primitives + index : 0;
+    switch (index)
+    {
+        case __COUNTER__: return ordo_ecb();
+        case __COUNTER__: return ordo_cbc();
+        case __COUNTER__: return ordo_ctr();
+        case __COUNTER__: return ordo_cfb();
+        case __COUNTER__: return ordo_ofb();
+
+        default: return 0;
+    }
+}
+
+size_t block_mode_count(void)
+{
+    return __COUNTER__;
 }
 
 //===----------------------------------------------------------------------===//

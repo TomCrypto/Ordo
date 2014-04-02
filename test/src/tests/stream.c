@@ -89,6 +89,8 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
+static unsigned char scratch[1024];
+
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     const struct STREAM_CIPHER *cipher = stream_cipher_by_name(test.name);

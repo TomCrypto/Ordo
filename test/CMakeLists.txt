@@ -5,6 +5,8 @@ PROJECT(Test C)
 SET(BIN_NAME "test")
 
 SET(INCLUDE_FILES
+    include/kat/parser.h
+    include/kat/kats.h
     include/testenv.h
     include/tests.h
 )
@@ -12,6 +14,7 @@ SET(INCLUDE_FILES
 SET(SOURCE_FILES
     src/main.c
     src/testenv.c
+    src/kat/parser.c
     src/tests/misc.c
     src/tests/internal.c
     src/tests/stream.c
@@ -22,6 +25,7 @@ SET(SOURCE_FILES
     src/tests/digest.c
     src/tests/hmac.c
     src/tests/pbkdf2.c
+    src/tests/enc_stream.c
 )
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})

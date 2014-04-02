@@ -107,10 +107,15 @@ static struct TEST tests_kdf[] =
 extern int test_stream(void);
 extern int test_stream_utilities(void);
 
+extern int test_enc_stream_algorithm(void);
+extern int test_enc_stream_interface(void);
+
 static struct TEST tests_stream[] =
 {
     { (TEST_FUNCTION)test_stream, "Stream cipher test vectors" },
     { (TEST_FUNCTION)test_stream_utilities, "Stream cipher utilities" },
+    { (TEST_FUNCTION)test_enc_stream_algorithm, "Stream encryption test vectors" },
+    { (TEST_FUNCTION)test_enc_stream_interface, "Stream encryption module" },
 };
 
 static struct TEST_GROUP tests[] =

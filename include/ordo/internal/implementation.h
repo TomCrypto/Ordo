@@ -15,6 +15,37 @@
 #ifndef ORDO_IMPLEMENTATION_H
 #define ORDO_IMPLEMENTATION_H
 
+//===----------------------------------------------------------------------===//
+
+#if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
+    #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
+        #error "This header is internal to the Ordo library."
+    #endif
+#endif
+
+/* Internal function namespacing to prevent static name conflicts. */
+
+#define rol16 rol16                                         ## _internal_ordo
+#define ror16 ror16                                         ## _internal_ordo
+#define rol32 rol32                                         ## _internal_ordo
+#define ror32 ror32                                         ## _internal_ordo
+#define rol64 rol64                                         ## _internal_ordo
+#define ror64 ror64                                         ## _internal_ordo
+#define smin smin                                           ## _internal_ordo
+#define smax smax                                           ## _internal_ordo
+#define pswap8 pswap8                                       ## _internal_ordo
+#define pswap16 pswap16                                     ## _internal_ordo
+#define pswap32 pswap32                                     ## _internal_ordo
+#define pswap64 pswap64                                     ## _internal_ordo
+#define pad_check pad_check                                 ## _internal_ordo
+#define xor_buffer xor_buffer                               ## _internal_ordo
+#define inc_buffer inc_buffer                               ## _internal_ordo
+#define mem_alloc mem_alloc                                 ## _internal_ordo
+#define mem_free mem_free                                   ## _internal_ordo
+#define mem_erase mem_erase                                 ## _internal_ordo
+
+//===----------------------------------------------------------------------===//
+
 /// @cond
 #include "ordo/misc/endianness.h"
 #include "ordo/common/error.h"
@@ -28,10 +59,6 @@
 /// @endcond
 
 //===----------------------------------------------------------------------===//
-
-#if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
-    #error "This header is reserved for the Ordo library implementation."
-#endif
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__)
     #define ALIGN(x) __attribute__((aligned(x)))

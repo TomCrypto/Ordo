@@ -1,4 +1,4 @@
-Ordo v2.7.0
+Ordo v2.7.1
 ===========
 
 Symmetric Cryptography Library
@@ -11,12 +11,11 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.7.0:
- - the endianness API has been made public, from internal
- - all library initialization is now implicit, no more `ordo_init`
- - the version code has been improved
- - clarified the copy semantics, which were previously misleading
- - fixed a small bug in the AES implementation which contradicted the copy semantics
+What's new in 2.7.1:
+ - the test driver is being reworked (work in progress)
+ - internal functions have been namespaced, so they will no longer cause name conflicts when linking statically
+ - primitive functions like `rc4()` have been prefixed with `ordo_` to prevent name conflicts (e.g. `ordo_ctr()`)
+ - added `os_secure_random()` function, see the documentation for more information
 
 Feature Map
 -----------

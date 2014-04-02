@@ -43,12 +43,10 @@ const char *hash_function_name(const struct HASH_FUNCTION *primitive)
 }
 
 #include "ordo/primitives/hash_functions/md5.h"
-#include "ordo/primitives/hash_functions/sha256.h"
-#include "ordo/primitives/hash_functions/skein256.h"
 
-static struct HASH_FUNCTION primitives[] =
+const struct HASH_FUNCTION *ordo_md5(void)
 {
-    #define INDEX_MD5 0
+    static const struct HASH_FUNCTION primitive =
     {
         (HASH_ALLOC )md5_alloc,
         (HASH_INIT  )md5_init,
@@ -58,8 +56,16 @@ static struct HASH_FUNCTION primitives[] =
         (HASH_COPY  )md5_copy,
         (HASH_QUERY )md5_query,
         "MD5"
-    },
-    #define INDEX_SHA256 1
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/hash_functions/sha256.h"
+
+const struct HASH_FUNCTION *ordo_sha256(void)
+{
+    static const struct HASH_FUNCTION primitive =
     {
         (HASH_ALLOC )sha256_alloc,
         (HASH_INIT  )sha256_init,
@@ -69,8 +75,16 @@ static struct HASH_FUNCTION primitives[] =
         (HASH_COPY  )sha256_copy,
         (HASH_QUERY )sha256_query,
         "SHA-256"
-    },
-    #define INDEX_SKEIN256 2
+    };
+
+    return &primitive;
+}
+
+#include "ordo/primitives/hash_functions/skein256.h"
+
+const struct HASH_FUNCTION *ordo_skein256(void)
+{
+    static const struct HASH_FUNCTION primitive =
     {
         (HASH_ALLOC )skein256_alloc,
         (HASH_INIT  )skein256_init,
@@ -80,45 +94,44 @@ static struct HASH_FUNCTION primitives[] =
         (HASH_COPY  )skein256_copy,
         (HASH_QUERY )skein256_query,
         "Skein-256"
-    }
-};
+    };
 
-const struct HASH_FUNCTION *sha256(void)
-{
-    return primitives + INDEX_SHA256;
-}
-
-const struct HASH_FUNCTION *md5(void)
-{
-    return primitives + INDEX_MD5;
-}
-
-const struct HASH_FUNCTION *skein256(void)
-{
-    return primitives + INDEX_SKEIN256;
+    return &primitive;
 }
 
 //===----------------------------------------------------------------------===//
-
-size_t hash_function_count(void)
-{
-    return sizeof(primitives) / sizeof(struct HASH_FUNCTION);
-}
 
 const struct HASH_FUNCTION *hash_function_by_name(const char *name)
 {
     size_t t;
 
     for (t = 0; t < hash_function_count(); t++)
-        if (!strcmp(name, primitives[t].name))
-            return primitives + t;
+    {
+        const struct HASH_FUNCTION *primitive;
+        primitive = hash_function_by_index(t);
+
+        if (!strcmp(name, primitive->name))
+            return primitive;
+    }
 
     return 0;
 }
 
 const struct HASH_FUNCTION *hash_function_by_index(size_t index)
 {
-    return index < hash_function_count() ? primitives + index : 0;
+    switch (index)
+    {
+        case __COUNTER__: return ordo_md5();
+        case __COUNTER__: return ordo_sha256();
+        case __COUNTER__: return ordo_skein256();
+
+        default: return 0;
+    }
+}
+
+size_t hash_function_count(void)
+{
+    return __COUNTER__;
 }
 
 //===----------------------------------------------------------------------===//

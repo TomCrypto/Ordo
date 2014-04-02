@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 {
     struct DIGEST_CTX *ctx;
 
-    if (!(ctx = digest_alloc(md5())))
+    if (!(ctx = digest_alloc(ordo_md5())))
     {
         printf("Memory error.\n");
         return EXIT_FAILURE;

@@ -38,23 +38,15 @@ const char *block_cipher_name(const struct BLOCK_CIPHER *primitive);
 
 /// The NullCipher block cipher.
 ORDO_PUBLIC
-const struct BLOCK_CIPHER *nullcipher(void);
+const struct BLOCK_CIPHER *ordo_nullcipher(void);
 
 /// The Threefish-256 block cipher.
 ORDO_PUBLIC
-const struct BLOCK_CIPHER *threefish256(void);
+const struct BLOCK_CIPHER *ordo_threefish256(void);
 
 /// The AES block cipher.
 ORDO_PUBLIC
-const struct BLOCK_CIPHER *aes(void);
-
-/// Exposes the number of block ciphers available.
-///
-/// @returns The number of available block ciphers (at least one).
-///
-/// @remarks This is for use in enumerating block ciphers.
-ORDO_PUBLIC
-size_t block_cipher_count(void);
+const struct BLOCK_CIPHER *ordo_aes(void);
 
 /// Returns a block cipher primitive from a name.
 ///
@@ -77,6 +69,14 @@ const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
 ///          indices (there will be at least one).
 ORDO_PUBLIC
 const struct BLOCK_CIPHER *block_cipher_by_index(size_t index);
+
+/// Exposes the number of block ciphers available.
+///
+/// @returns The number of available block ciphers (at least one).
+///
+/// @remarks This is for use in enumerating block ciphers.
+ORDO_PUBLIC
+size_t block_cipher_count(void);
 
 //===----------------------------------------------------------------------===//
 

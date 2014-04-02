@@ -9,8 +9,6 @@
 /// the  library, and this is enforced by an include guard. If you really must
 /// access it, define the `ORDO_INTERNAL_ACCESS` token before including it.
 ///
-/// Functions in internal headers are not prefixed, be wary of name clashes.
-///
 //===----------------------------------------------------------------------===//
 
 #ifndef ORDO_ALG_H
@@ -97,7 +95,7 @@ int pad_check(const unsigned char *buffer, uint8_t padding);
 ///
 /// @remarks This is conceptually equivalent to \c dst \c ^= \c src.
 ///
-/// @remarks The Source and destination buffers may be the same (in which case
+/// @remarks The source and destination buffers may be the same (in which case
 ///          the buffer will contain \c len zeroes), but otherwise they cannot
 ///          overlap.
 ORDO_HIDDEN

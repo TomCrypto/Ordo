@@ -65,6 +65,8 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
+static unsigned char scratch[1024];
+
 static int config_block(void)
 {
     int t;
@@ -77,7 +79,7 @@ static int config_block(void)
         struct TEST_VECTOR test = tests[t];
         int err;
 
-        err = ordo_digest(skein256(), &params,
+        err = ordo_digest(ordo_skein256(), &params,
                           test.input, test.input_len,
                           scratch);
 

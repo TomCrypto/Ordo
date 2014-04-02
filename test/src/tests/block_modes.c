@@ -82,6 +82,8 @@ static struct TEST_VECTOR tests[] = {
 
 static const int vector_count = sizeof(tests) / sizeof(struct TEST_VECTOR);
 
+static unsigned char scratch[1024];
+
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     const struct BLOCK_MODE *mode = block_mode_by_name(test.name);
@@ -98,7 +100,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
         /* We will encrypt in place, for simplicity (this also implicitly
          * tests buffered encryption, by definition). Also note that the
          * NullCipher uses no key, so no need to pass that in. */
-        err = ordo_enc_block(nullcipher(), 0, mode, 0,
+        err = ordo_enc_block(ordo_nullcipher(), 0, mode, 0,
                              1, /* encryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,
@@ -121,7 +123,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
         }
 
         /* Now we decrypt, hoping to get back the original input. */
-        err = ordo_enc_block(nullcipher(), 0, mode, 0,
+        err = ordo_enc_block(ordo_nullcipher(), 0, mode, 0,
                              0, /* decryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,

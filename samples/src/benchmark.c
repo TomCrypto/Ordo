@@ -142,14 +142,14 @@ static void *block_params(const struct BLOCK_CIPHER *cipher)
 
 static void *block_mode_params(const struct BLOCK_MODE *mode)
 {
-    if (mode == ecb())
+    if (mode == ordo_ecb())
     {
         struct ECB_PARAMS *ecb = allocate(sizeof(*ecb));
         ecb->padding = 0;
         return ecb;
     }
 
-    if (mode == cbc())
+    if (mode == ordo_cbc())
     {
         struct CBC_PARAMS *cbc = allocate(sizeof(*cbc));
         cbc->padding = 0;
@@ -161,7 +161,7 @@ static void *block_mode_params(const struct BLOCK_MODE *mode)
 
 static void *stream_params(const struct STREAM_CIPHER *cipher)
 {
-    if (cipher == rc4())
+    if (cipher == ordo_rc4())
     {
         // we don't want to benchmark dropping bytes of RC4
         // as this would heavily penalize the short blocks.

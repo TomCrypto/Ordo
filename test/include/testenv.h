@@ -101,7 +101,4 @@ int run_test_driver(struct DRIVER_OPTIONS opt);
 
 #define random(N) (rand() % N)
 
-
-static unsigned char scratch[1024];
-
 #endif
