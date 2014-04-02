@@ -1,14 +1,14 @@
-//===-- endianness.c ------------------------------------*- win32 -*- C -*-===//
+/*===-- endianness.c ------------------------------------*- win32 -*- C -*-===*/
 
 #include "ordo/misc/endianness.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// Windows is always little-endian, but sadly does not provide endian.h.
+/* Windows is always little-endian, but sadly does not provide endian.h. */
 
 static uint16_t bswap16(uint16_t x)
 {
@@ -36,7 +36,7 @@ static uint64_t bswap64(uint64_t x)
          | ((x & (uint64_t)0x00000000000000FFULL) << 56);
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 uint16_t tole16(uint16_t x) { return x;          }
 uint16_t tobe16(uint16_t x) { return bswap16(x); }

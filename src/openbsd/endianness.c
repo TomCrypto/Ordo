@@ -1,18 +1,19 @@
-//===-- endianness.c ----------------------------------*- openbsd -*- C -*-===//
+/*===-- endianness.c ----------------------------------*- openbsd -*- C -*-===*/
 
 #include "ordo/misc/endianness.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include <sys/types.h>
 #include <sys/endian.h>
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// For most BSD's the header is actually sys/endian.h, and macros are slightly
-// different (they always have the word size at the end, not after "le"/"be").
+/* For most BSD's the header is actually sys/endian.h, and macros are slightly
+ * different (they always have the word size at the end, not after "le"/"be").
+*/
 
 uint16_t tole16(uint16_t x) { return htole16(x); }
 uint16_t tobe16(uint16_t x) { return htobe16(x); }

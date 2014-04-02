@@ -1,5 +1,5 @@
-//===-- enc/block_modes/ecb.h --------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- enc/block_modes/ecb.h --------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Primitive
 ///
@@ -14,15 +14,15 @@
 ///
 /// Note that  the ECB mode  is insecure in almost  all situations and  is not
 /// recommended for general purpose use.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_ECB_MODE_H
 #define ORDO_ECB_MODE_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/primitives/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
@@ -31,16 +31,18 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct ECB_STATE;
 
-/// @see \c block_mode_alloc()
+/** @see \c block_mode_alloc()
+**/
 ORDO_PUBLIC
 struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
                             const void *cipher_state);
 
-/// @see \c block_mode_init()
+/** @see \c block_mode_init()
+**/
 ORDO_PUBLIC
 int ecb_init(struct ECB_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -49,7 +51,8 @@ int ecb_init(struct ECB_STATE *state,
              int dir,
              const struct ECB_PARAMS *params);
 
-/// @see \c block_mode_update()
+/** @see \c block_mode_update()
+**/
 ORDO_PUBLIC
 void ecb_update(struct ECB_STATE *state,
                 const struct BLOCK_CIPHER *cipher,
@@ -57,31 +60,35 @@ void ecb_update(struct ECB_STATE *state,
                 const unsigned char *in, size_t in_len,
                 unsigned char *out, size_t *out_len);
 
-/// @see \c block_mode_final()
+/** @see \c block_mode_final()
+**/
 ORDO_PUBLIC
 int ecb_final(struct ECB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
 
-/// @see \c block_mode_free()
+/** @see \c block_mode_free()
+**/
 ORDO_PUBLIC
 void ecb_free(struct ECB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state);
 
-/// @see \c block_mode_copy()
+/** @see \c block_mode_copy()
+**/
 ORDO_PUBLIC
 void ecb_copy(struct ECB_STATE *dst,
               const struct ECB_STATE *src,
               const struct BLOCK_CIPHER *cipher);
 
-/// @see \c block_mode_query()
+/** @see \c block_mode_query()
+**/
 ORDO_PUBLIC
 size_t ecb_query(const struct BLOCK_CIPHER *cipher,
                  int query, size_t value);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

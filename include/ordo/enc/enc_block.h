@@ -1,5 +1,5 @@
-//===-- enc/enc_block.h --------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- enc/enc_block.h --------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Module
 ///
@@ -17,15 +17,15 @@
 /// (RFC 5652), which appends N bytes of value  \c N, where \c N is the number
 /// of padding  bytes required,  in bytes  (between 1  and the  block cipher's
 /// block size).
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_ENC_BLOCK_H
 #define ORDO_ENC_BLOCK_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/primitives/block_modes.h"
 
@@ -33,22 +33,23 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct ENC_BLOCK_CTX;
 
-/// Allocates a new block encryption context.
+/** Allocates a new block encryption context.
 ///
 /// @param [in]     cipher         The block cipher to use.
 /// @param [in]     mode           The block mode of operation to use.
 ///
 /// @returns The allocated  block encryption context, or \c 0 if an allocation
 ///          error occurred.
+**/
 ORDO_PUBLIC
 struct ENC_BLOCK_CTX *enc_block_alloc(const struct BLOCK_CIPHER *cipher,
                                       const struct BLOCK_MODE *mode);
 
-/// Initializes a block encryption context.
+/** Initializes a block encryption context.
 ///
 /// @param [in,out] ctx            A block encryption context.
 /// @param [in]     key            The cryptographic key to use.
@@ -64,6 +65,7 @@ struct ENC_BLOCK_CTX *enc_block_alloc(const struct BLOCK_CIPHER *cipher,
 /// @remarks The initialization vector may be 0, if the mode of operation does
 ///          not require one - consult the  documentation of the mode to  know
 ///          what it expects.
+**/
 ORDO_PUBLIC
 int enc_block_init(struct ENC_BLOCK_CTX* ctx,
                    const void *key, size_t key_len,
@@ -72,7 +74,7 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx,
                    const void *cipher_params,
                    const void *mode_params);
 
-/// Encrypts or decrypts a data buffer.
+/** Encrypts or decrypts a data buffer.
 ///
 /// @param [in,out] ctx            A block encryption context.
 /// @param [in]     in             The plaintext or ciphertext buffer.
@@ -91,12 +93,13 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx,
 /// @remarks Some modes of  operation always  process all input data, in which
 ///          case they may allow \c out_len to be nil; check the documentation
 //           of the relevant mode of operation.
+**/
 ORDO_PUBLIC
 void enc_block_update(struct ENC_BLOCK_CTX *ctx,
                       const void *in, size_t in_len,
                       void *out, size_t *out_len);
 
-/// Finalizes a block encryption context.
+/** Finalizes a block encryption context.
 ///
 /// @param [in,out] ctx            A block encryption context.
 /// @param [out]    out            The ciphertext or plaintext buffer.
@@ -114,18 +117,20 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
 ///
 /// @remarks Some modes of  operation always  process all input data, in which
 ///          case they may allow \c out_len to be nil; check the documentation
-//           of the relevant mode of operation.
+///          of the relevant mode of operation.
+**/
 ORDO_PUBLIC
 int enc_block_final(struct ENC_BLOCK_CTX *ctx,
                     void *out, size_t *out_len);
 
-/// Frees a block encryption context.
+/** Frees a block encryption context.
 ///
 /// @param [in,out] ctx            A block encryption context.
+**/
 ORDO_PUBLIC
 void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 
-/// Performs a deep copy of one context into another.
+/** Performs a deep copy of one context into another.
 ///
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
@@ -134,33 +139,36 @@ void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 ///          primitive(s) as the source context, and mustn't be initialized.
 ///
 /// @remarks The source context must be initialized.
+**/
 ORDO_PUBLIC
 void enc_block_copy(struct ENC_BLOCK_CTX *dst,
                     const struct ENC_BLOCK_CTX *src);
 
-/// Queries the key length of a block cipher.
+/** Queries the key length of a block cipher.
 ///
 /// @param [in]     cipher         A block cipher primitive.
 /// @param [in]     key_len        A suggested key length.
 ///
 /// @returns An ideal key length to use for this cipher.
+**/
 ORDO_PUBLIC
 size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
                          size_t key_len);
 
-/// Queries the IV length of a block mode and block cipher.
+/** Queries the IV length of a block mode and block cipher.
 ///
 /// @param [in]     cipher         A block cipher primitive.
 /// @param [in]     mode           A block mode primitive.
 /// @param [in]     iv_len         A suggested IV length.
 ///
 /// @returns An ideal IV length to use for this mode and cipher.
+**/
 ORDO_PUBLIC
 size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
                         const struct BLOCK_MODE *mode,
                         size_t iv_len);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

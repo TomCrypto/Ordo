@@ -1,17 +1,17 @@
-//===-- ofb.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- ofb.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_modes/ofb.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct OFB_STATE
 {
     void *iv;
-    size_t remaining; // unused data in the state
+    size_t remaining; /* unused data in the state */
     size_t block_size;
 };
 
@@ -46,11 +46,11 @@ int ofb_init(struct OFB_STATE *state,
 
     if (ofb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
-    // Copy the IV (required) into the context IV
+    /* Copy the IV (required) into the context IV */
     memset(state->iv, 0x00, block_size);
     memcpy(state->iv, iv, iv_len);
 
-    // Compute the initial keystream block
+    /* Compute the initial keystream block */
     block_cipher_forward(cipher, cipher_state, state->iv);
     state->remaining = block_size;
 
@@ -72,7 +72,7 @@ void ofb_update(struct OFB_STATE *state,
         size_t block_size = state->block_size;
         size_t process = 0;
 
-        // Is there data left?
+        /* Is there data left? */
         if (state->remaining == 0)
         {
             block_cipher_forward(cipher, cipher_state, state->iv);

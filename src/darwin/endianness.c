@@ -1,16 +1,16 @@
-//===-- endianness.c -----------------------------------*- darwin -*- C -*-===//
+/*===-- endianness.c -----------------------------------*- darwin -*- C -*-===*/
 
 #include "ordo/misc/endianness.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include <libkern/OSByteOrder.h>
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// OS-X has its own custom header, we just translate them here.
+/* OS-X has its own custom header, we just translate them here. */
 
 uint16_t tole16(uint16_t x) { return OSSwapHostToLittleInt16(x); }
 uint16_t tobe16(uint16_t x) { return OSSwapHostToBigInt16(x);    }

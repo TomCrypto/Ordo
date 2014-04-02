@@ -1,14 +1,14 @@
-//===-- pbkdf2.c --------------------------------------*- generic -*- C -*-===//
+/*===-- pbkdf2.c --------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/kdf/pbkdf2.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/auth/hmac.h"
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 int pbkdf2(const struct HASH_FUNCTION *hash,
             const void *params,
@@ -31,8 +31,8 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
     void *buf = mem_alloc(digest_len);
     void *feedback = mem_alloc(digest_len);
 
-    // The output counter is a 32-bit counter which for some reason starts
-    // at 1, putting an upper bound on the maximum output length allowed.
+    /* The output counter is a 32-bit counter which for some reason starts
+     * at 1, putting an upper bound on the maximum output length allowed. */
     if ((!out_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
     {
         err = ORDO_ARG;
@@ -47,7 +47,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 
     for (t = 0; t < t_max + 1; ++t)
     {
-        uint32_t counter = tobe32((uint32_t)(t + 1)); // Big-endian.
+        uint32_t counter = tobe32((uint32_t)(t + 1)); /* Big-endian. */
 
         if ((err = hmac_init(ctx,
                              password, password_len,
@@ -56,33 +56,33 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
         hmac_update(ctx, salt, salt_len);
         hmac_update(ctx, &counter, sizeof(uint32_t));
 
-        // We copy the first iteration result into the "feedback" buffer which
-        // is used to store the previous iteration result for the next one.
+        /* We copy the first iteration result into the "feedback" buffer which
+         * is used to store the previous iteration result for the next one. */
         if ((err = hmac_final(ctx, feedback))) goto ret;
         memcpy(buf, feedback, digest_len);
 
-        // This HMAC initialization need be done only once, because for each
-        // iteration the key is always the same (the password). Thanks to
-        // the design of HMAC, most of the work can then be precomputed.
+        /* This HMAC initialization need be done only once, because for each
+         * iteration the key is always the same (the password). Thanks to
+         * the design of HMAC, most of the work can then be precomputed. */
         if ((err = hmac_init(cst,
                              password, password_len,
                              params))) goto ret;
 
         for (i = 1; i < iterations; ++i)
         {
-            // Next iteration: Ui+1 = PRF(Ui).
+            /* Next iteration: Ui+1 = PRF(Ui). */
             hmac_copy(ctx, cst);
             hmac_update(ctx, feedback, digest_len);
             if ((err = hmac_final(ctx, feedback))) goto ret;
 
-            // U1 ^ U2 ^ ... ^ Ui accumulation.
+            /* U1 ^ U2 ^ ... ^ Ui accumulation. */
             xor_buffer(buf, feedback, digest_len);
         }
 
-        // Copy this block into the output buffer (handle truncation). Note
-        // this ensures that even if something goes wrong at any point, the
-        // user-provided buffer will only ever contain either indeterminate
-        // data or valid data, and no intermediate, sensitive information.
+        /* Copy this block into the output buffer (handle truncation). Note
+         * this ensures that even if something goes wrong at any point, the
+         * user-provided buffer will only ever contain either indeterminate
+         * data or valid data, and no intermediate, sensitive information. */
         memcpy(offset(out, t * digest_len),
                buf,
                (t == t_max) ? out_len % digest_len : digest_len);

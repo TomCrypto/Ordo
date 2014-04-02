@@ -1,12 +1,12 @@
-//===-- cbc.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- cbc.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_modes/cbc.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct CBC_STATE
 {
@@ -75,7 +75,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
     size_t block_size = state->block_size;
     *out_len = 0;
 
-    // Process all full blocks in the input buffer
+    /* Process all full blocks in the input buffer */
     while (state->available + in_len >= block_size)
     {
         size_t process = block_size - state->available;
@@ -95,7 +95,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
         in += process;
     }
 
-    // Add whatever is left into the temporary buffer
+    /* Add whatever is left into the temporary buffer */
     memcpy(state->block + state->available, in, in_len);
     state->available += in_len;
 }
@@ -111,16 +111,16 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
     size_t block_size = state->block_size;
     *out_len = 0;
 
-    // If padding is disabled, process all blocks. If it is enabled, don't
-    // process the last block (it will be handled in cbc_final).
+    /* If padding is disabled, process all blocks. If it is enabled, don't
+     * process the last block (it will be handled in cbc_final). */
     while (state->available + in_len > block_size - (1 - state->padding))
     {
         size_t process = block_size - state->available;
 
         memcpy(state->block + state->available, in, process);
 
-        // Save current ciphertext to out, needed since upcoming operations
-        // are lossy wrt state.
+        /* Save current ciphertext to out, needed since upcoming operations
+         * are lossy wrt state. */
         memcpy(out, state->block, block_size);
 
         block_cipher_inverse(cipher, cipher_state, state->block);

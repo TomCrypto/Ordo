@@ -1,12 +1,12 @@
-//===-- threefish256.c --------------------------------*- generic -*- C -*-===//
+/*===-- threefish256.c --------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define THREEFISH256_BLOCK (bits(256))
 
@@ -25,7 +25,7 @@ static void threefish256_forward_C(uint64_t block[4],
 static void threefish256_inverse_C(uint64_t block[4],
                                    const uint64_t *subkeys) HOT_CODE;
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct THREEFISH256_STATE *threefish256_alloc(void)
 {
@@ -85,7 +85,7 @@ size_t threefish256_query(int query, size_t value)
     }
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)
 {

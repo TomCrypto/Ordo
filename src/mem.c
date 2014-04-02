@@ -1,12 +1,12 @@
-//===-- mem.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- mem.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/internal/mem.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 static void *ordo_mem_alloc(size_t size)
 {
@@ -18,7 +18,7 @@ static void ordo_mem_free(void *ptr)
     free(ptr);
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 static void *(*mem_alloc_f)(size_t, void *);
 static void (*mem_free_f)(void *, void *);
@@ -58,9 +58,9 @@ void mem_erase(void *ptr, size_t size)
 {
     if (ptr)
     {
-        // The "volatile" keyword forces the compiler to actually erase the
-        // memory (otherwise it would optimize it out if it found that the
-        // memory buffer wouldn't be used after mem_erase is called).
+        /* The "volatile" keyword forces the compiler to actually erase the
+         * memory (otherwise it would optimize it out if it found that the
+         * memory buffer wouldn't be used after mem_erase is called). */
         while (size--) *((unsigned char volatile*)ptr + size) = 0;
     }
 }

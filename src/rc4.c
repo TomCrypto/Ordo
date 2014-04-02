@@ -1,12 +1,12 @@
-//===-- rc4.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- rc4.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/stream_ciphers/rc4.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define RC4_DROP_DEFAULT 2048
 
@@ -21,7 +21,7 @@ static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 static uint8_t rc4_next(struct RC4_STATE *state) HOT_CODE;
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct RC4_STATE *rc4_alloc(void)
 {
@@ -76,7 +76,7 @@ void rc4_copy(struct RC4_STATE *dst,
     *dst = *src;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                       const uint8_t *key, size_t key_len)

@@ -1,5 +1,5 @@
-//===-- digest/digest.h --------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- digest/digest.h --------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Module
 ///
@@ -30,15 +30,15 @@
 ///
 /// digest_free(ctx);
 /// @endcode
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_DIGEST_H
 #define ORDO_DIGEST_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/primitives/hash_functions.h"
 
@@ -46,19 +46,20 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct DIGEST_CTX;
 
-/// Allocates a new \c DIGEST_CTX (digest context).
+/** Allocates a new \c DIGEST_CTX (digest context).
 ///
 /// @param [in]     hash           The hash function primitive to use.
 ///
 /// @returns The allocated digest context, or \c 0 if allocation fails.
+**/
 ORDO_PUBLIC
 struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
 
-/// Initializes a digest context.
+/** Initializes a digest context.
 ///
 /// @param [in,out] ctx            An allocated digest context.
 /// @param [in]     params         Hash function parameters.
@@ -71,10 +72,11 @@ struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
 /// @remarks It  is \b not valid to initialize digest  contexts more than once
 ///          before calling \c digest_final(), this is because some algorithms
 ///          may allocate additional memory depending on the parameters given.
+**/
 ORDO_PUBLIC
 int digest_init(struct DIGEST_CTX *ctx, const void *params);
 
-/// Feeds data into a digest context.
+/** Feeds data into a digest context.
 ///
 /// @param [in,out] ctx            An initialized digest context.
 /// @param [in]     in             The data to feed into the context.
@@ -85,11 +87,12 @@ int digest_init(struct DIGEST_CTX *ctx, const void *params);
 ///
 /// @remarks It is valid to pass a  zero-length  buffer (`in_len == 0`), which
 ///          will do nothing (if this is the case, `in` may be \c 0).
+**/
 ORDO_PUBLIC
 void digest_update(struct DIGEST_CTX *ctx,
                    const void *in, size_t in_len);
 
-/// Finalizes a  digest context, returning the digest of all the data fed into
+/** Finalizes a  digest context, returning the digest of all the data fed into
 /// it through successive \c digest_update() calls.
 ///
 /// @param [in,out] ctx            An initialized digest context.
@@ -108,10 +111,11 @@ void digest_update(struct DIGEST_CTX *ctx,
 ///
 /// @remarks After this  function returns, you may not call \c digest_update()
 ///          again until you reinitialize the context using \c digest_init().
+**/
 ORDO_PUBLIC
 void digest_final(struct DIGEST_CTX *ctx, void *digest);
 
-/// Frees a digest context.
+/** Frees a digest context.
 ///
 /// @param [in]     ctx            The digest context to be freed.
 ///
@@ -119,10 +123,11 @@ void digest_final(struct DIGEST_CTX *ctx, void *digest);
 ///          it must have been finalized before calling this function.
 ///
 /// @remarks Passing \c 0 to this function is valid, and will do nothing.
+**/
 ORDO_PUBLIC
 void digest_free(struct DIGEST_CTX *ctx);
 
-/// Performs a deep copy of one context into another.
+/** Performs a deep copy of one context into another.
 ///
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
@@ -135,21 +140,23 @@ void digest_free(struct DIGEST_CTX *ctx);
 /// @remarks This function is useful when hashing  many messages with a common
 ///          prefix, where the  state of the  digest context after having been
 ///          fed the prefix can be saved and then reused multiple times.
+**/
 ORDO_PUBLIC
 void digest_copy(struct DIGEST_CTX *dst,
                  const struct DIGEST_CTX *src);
 
-/// Returns the default digest length of a hash function.
+/** Returns the default digest length of a hash function.
 ///
 /// @param [in]     hash           A hash function primitive.
 ///
 /// @returns The length of the digest to be written in the \c digest parameter
 ///          of \c digest_final(), if no parameters which affect output length
 ///          were provided to \c digest_init().
+**/
 ORDO_PUBLIC
 size_t digest_length(const struct HASH_FUNCTION *hash);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

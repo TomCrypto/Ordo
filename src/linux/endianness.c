@@ -1,17 +1,17 @@
-//===-- endianness.c ------------------------------------*- linux -*- C -*-===//
+/*===-- endianness.c ------------------------------------*- linux -*- C -*-===*/
 
 #include "ordo/misc/endianness.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include <sys/types.h>
 #include <endian.h>
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// On Linux we can just use the endian.h header which has it all built-in.
+/* On Linux we can just use the endian.h header which has it all built-in. */
 
 uint16_t tole16(uint16_t x) { return htole16(x); }
 uint16_t tobe16(uint16_t x) { return htobe16(x); }

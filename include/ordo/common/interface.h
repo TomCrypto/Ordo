@@ -1,23 +1,23 @@
-//===-- common/interface.h -----------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- common/interface.h -----------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief API
 ///
 /// This header contains  some preprocessor  definitions which try to abstract
 /// compiler-specific features  (such as packing, export  mechanisms, hot code
 /// sections), and will be included in every other header in the library.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_INTERFACE_H
 #define ORDO_INTERFACE_H
 
-/// @cond
+/** @cond **/
 #include <stddef.h>
 #include <stdint.h>
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if defined(BUILDING_ORDO) || defined(BUILDING_ordo)
     #if defined(ORDO_EXPORTS) || defined(ordo_EXPORTS)
@@ -58,6 +58,6 @@
 #undef BUILD_SHARED
 #undef USING_SHARED
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #endif

@@ -1,5 +1,5 @@
-//===-- internal/sys.h --------------------------------*- INTERNAL-*- H -*-===//
-///
+/*===-- internal/sys.h --------------------------------*- INTERNAL-*- H -*-===*/
+/**
 /// @file
 /// @internal
 /// @brief \b Internal, Utility
@@ -8,21 +8,21 @@
 /// library. It probably shouldn't ever be used from outside the library.
 ///
 /// See \c alg.h about internal headers.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_SYS_H
 #define ORDO_SYS_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
     #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
@@ -30,7 +30,7 @@ extern "C" {
     #endif
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

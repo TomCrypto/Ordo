@@ -1,12 +1,12 @@
-//===-- alg.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- alg.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/internal/alg.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void pswap8 (uint8_t  *a, uint8_t  *b) { uint8_t  c = *a; *a = *b; *b = c; }
 void pswap16(uint16_t *a, uint16_t *b) { uint16_t c = *a; *a = *b; *b = c; }
@@ -23,7 +23,7 @@ uint32_t ror32(uint32_t x, int n) { return (x >> n) | (x << (32 - n)); }
 uint64_t rol64(uint64_t x, int n) { return (x << n) | (x >> (64 - n)); }
 uint64_t ror64(uint64_t x, int n) { return (x >> n) | (x << (64 - n)); }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 int pad_check(const unsigned char *buffer, uint8_t padding)
 {

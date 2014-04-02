@@ -1,15 +1,15 @@
-//===-- os_random.c -------------------------------------*- win32 -*- C -*-===//
+/*===-- os_random.c -------------------------------------*- win32 -*- C -*-===*/
 
 #include "ordo/misc/os_random.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include <windows.h>
 #include <wincrypt.h>
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 int os_random(void *out, size_t len)
 {

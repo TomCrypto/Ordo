@@ -1,12 +1,12 @@
-//===-- sha256.c --------------------------------------*- generic -*- C -*-===//
+/*===-- sha256.c --------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/hash_functions/sha256.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define SHA256_DIGEST (bits(256))
 #define SHA256_BLOCK  (bits(512))
@@ -28,7 +28,7 @@ static const uint32_t sha256_iv[8] =
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct SHA256_STATE *sha256_alloc(void)
 {
@@ -79,7 +79,7 @@ void sha256_update(struct SHA256_STATE *state,
 void sha256_final(struct SHA256_STATE *state,
                   void *digest)
 {
-    // See the MD5 code for a description of Merkle padding.
+    /* See the MD5 code for a description of Merkle padding. */
     uint64_t len = tobe64(bytes(state->msg_len));
     uint8_t one = 0x80, zero = 0x00;
     size_t t;
@@ -93,7 +93,7 @@ void sha256_final(struct SHA256_STATE *state,
 
     sha256_update(state, &len, sizeof(len));
 
-    // SHA-256 takes big-endian input, convert it back.
+    /* SHA-256 takes big-endian input, convert it back. */
     for (t = 0; t < SHA256_DIGEST / sizeof(uint32_t); ++t)
         state->digest[t] = fmbe32(state->digest[t]);
 
@@ -122,7 +122,7 @@ size_t sha256_query(int query, size_t value)
     }
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 static const uint32_t sha256_table[64] =
 {
@@ -160,7 +160,7 @@ void sha256_compress(const uint32_t block[16], uint32_t digest[8])
     uint32_t g = digest[6];
     uint32_t h = digest[7];
 
-    uint32_t w[64]; // The "message schedule" array.
+    uint32_t w[64]; /* The "message schedule" array. */
 
     for (t = 0; t < 16; ++t) w[t] = tobe32(block[t]);
 

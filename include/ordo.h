@@ -1,5 +1,5 @@
-//===-- ordo.h -----------------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- ordo.h -----------------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Wrapper
 ///
@@ -26,15 +26,15 @@
 /// Some specialized headers are *not* included by this header - these are the
 /// endianness header & all primitive headers (their parameters are included),
 /// if you need their functionality please include them explicitly.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_ORDO_H
 #define ORDO_ORDO_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/common/version.h"
 #include "ordo/common/error.h"
@@ -51,9 +51,9 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-/// Replaces the default library memory allocator with a custom one.
+/** Replaces the default library memory allocator with a custom one.
 ///
 /// @param [in]     alloc          The allocation function.
 /// @param [in]     free           The deallocation function.
@@ -74,12 +74,13 @@ extern "C" {
 ///
 /// @remarks Calling this function with both arguments equal to \c  0 restores
 ///          the default memory allocator (immediately ready for use).
+**/
 ORDO_PUBLIC
 void ordo_allocator(void *(*alloc)(size_t, void*),
                     void  (*free)(void *, void *),
                     void *data);
 
-/// Encrypts or decrypts data using a block cipher with a mode of operation.
+/** Encrypts or decrypts data using a block cipher with a mode of operation.
 ///
 /// @param [in]     cipher         The block cipher to use.
 /// @param [in]     cipher_params  The block cipher parameters.
@@ -100,6 +101,7 @@ void ordo_allocator(void *(*alloc)(size_t, void*),
 /// @remarks The \c out buffer should be large enough to accomodate the entire
 ///          ciphertext which may be larger than the plaintext if a mode where
 ///          padding is enabled and used, see padding notes in \c enc_block.h.
+**/
 ORDO_PUBLIC
 int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
                    const void *cipher_params,
@@ -111,7 +113,7 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
                    const void *in, size_t in_len,
                    void* out, size_t *out_len);
 
-/// Encrypts or decrypts data using a stream cipher.
+/** Encrypts or decrypts data using a stream cipher.
 ///
 /// @param [in]     cipher         The stream cipher to use.
 /// @param [in]     params         The stream cipher parameters.
@@ -133,12 +135,13 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
 /// @remarks By design, encryption  and decryption are  equivalent for  stream
 ///          ciphers - an implication is that encrypting a message twice using
 ///          the same key yields the original message.
+**/
 ORDO_PUBLIC
 int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
                     const void *key, size_t key_len,
                     void *inout, size_t len);
 
-/// Calculates the digest of a buffer using any hash function.
+/** Calculates the digest of a buffer using any hash function.
 ///
 /// @param [in]     hash           The hash function to use.
 /// @param [in]     params         The hash function parameters.
@@ -147,12 +150,13 @@ int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
 /// @param [out]    digest         The output buffer for the digest.
 ///
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
+**/
 ORDO_PUBLIC
 int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
                 const void *in, size_t in_len,
                 void *digest);
 
-/// Calculates the HMAC fingerprint of a buffer using any hash function.
+/** Calculates the HMAC fingerprint of a buffer using any hash function.
 ///
 /// @param [in]     hash           The hash function to use.
 /// @param [in]     params         The hash function parameters.
@@ -165,13 +169,14 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 ///
 /// @remarks Do not use hash parameters which modify output length.
+**/
 ORDO_PUBLIC
 int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
               const void *key, size_t key_len,
               const void *in, size_t in_len,
               void *fingerprint);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

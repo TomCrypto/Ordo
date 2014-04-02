@@ -1,12 +1,12 @@
-//===-- aes.c ------------------------*- shared/unix/amd64/aes-ni -*- C -*-===//
+/*===-- aes.c ------------------------*- shared/unix/amd64/aes-ni -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers/aes.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define AES_BLOCK (bits(128))
 
@@ -22,7 +22,7 @@ static void ExpandKey(const uint8_t *key, uint8_t *ext,
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct AES_STATE *aes_alloc(void)
 {
@@ -53,7 +53,7 @@ int aes_init(struct AES_STATE *state,
     }
     else
     {
-        // Set the default round numbers.
+        /* Set the default round numbers. */
         if (key_len == 16) state->rounds = 10;
         else if (key_len == 24) state->rounds = 12;
         else if (key_len == 32) state->rounds = 14;
@@ -107,9 +107,9 @@ size_t aes_query(int query, size_t value)
     }
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// This AES implementation was obtained along with the following license:
+/* This AES implementation was obtained along with the following license: */
 
 /* advanced encryption standard
  * author: karl malbrain, malbrain@yahoo.com
@@ -127,8 +127,8 @@ RESULTING FROM THE USE, MODIFICATION, OR
 REDISTRIBUTION OF THIS SOFTWARE.
 */
 
-// This is the only table needed if AES-NI is available,
-// as it is required for the key schedule algorithm.
+/* This is the only table needed if AES-NI is available,
+ * as it is required for the key schedule algorithm. */
 static const uint8_t sbox[256] =
 {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,

@@ -1,19 +1,19 @@
-//===-- enc/enc_stream.h -------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- enc/enc_stream.h -------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Module
 ///
 /// Interface to encrypt plaintext and  decrypt ciphertext with various stream
 /// ciphers.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_ENC_STREAM_H
 #define ORDO_ENC_STREAM_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/primitives/stream_ciphers.h"
 
@@ -21,20 +21,21 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct ENC_STREAM_CTX;
 
-/// Allocates a new stream encryption context.
+/** Allocates a new stream encryption context.
 ///
 /// @param [in]     cipher         The stream cipher to use.
 ///
 /// @returns The allocated stream encryption context, or \c 0 if an allocation
 ///          error occurred.
+**/
 ORDO_PUBLIC
 struct ENC_STREAM_CTX *enc_stream_alloc(const struct STREAM_CIPHER *cipher);
 
-/// Initializes a stream encryption context.
+/** Initializes a stream encryption context.
 ///
 /// @param [in,out] ctx            A stream encryption context.
 /// @param [in]     key            The cryptographic key to use.
@@ -42,13 +43,14 @@ struct ENC_STREAM_CTX *enc_stream_alloc(const struct STREAM_CIPHER *cipher);
 /// @param [in]     params         Stream cipher specific parameters.
 ///
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
+**/
 ORDO_PUBLIC
 int enc_stream_init(struct ENC_STREAM_CTX *ctx,
                     const void *key,
                     size_t key_size,
                     const void *params);
 
-/// Encrypts or decrypts a data buffer.
+/** Encrypts or decrypts a data buffer.
 ///
 /// @param [in,out] ctx            A stream encryption context.
 /// @param [in,out] buffer         The plaintext or ciphertext buffer.
@@ -59,24 +61,27 @@ int enc_stream_init(struct ENC_STREAM_CTX *ctx,
 ///          original data.
 ///
 /// @remarks Stream encryption is always done in place by design.
+**/
 ORDO_PUBLIC
 void enc_stream_update(struct ENC_STREAM_CTX *ctx,
                        void *buffer,
                        size_t len);
 
-/// Finalizes a stream encryption context.
+/** Finalizes a stream encryption context.
 ///
 /// @param [in,out] ctx            A stream encryption context.
+**/
 ORDO_PUBLIC
 void enc_stream_final(struct ENC_STREAM_CTX *ctx);
 
-/// Frees a stream encryption context.
+/** Frees a stream encryption context.
 ///
 /// @param [in,out] ctx            A stream encryption context.
+**/
 ORDO_PUBLIC
 void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 
-/// Performs a deep copy of one context into another.
+/** Performs a deep copy of one context into another.
 ///
 /// @param [out]    dst            The destination context.
 /// @param [in]     src            The source context.
@@ -85,11 +90,12 @@ void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 ///          primitive(s) as the source context, and mustn't be initialized.
 ///
 /// @remarks The source context must be initialized.
+**/
 ORDO_PUBLIC
 void enc_stream_copy(struct ENC_STREAM_CTX *dst,
                      const struct ENC_STREAM_CTX *src);
 
-/// Queries a stream cipher for its key length.
+/** Queries a stream cipher for its key length.
 ///
 /// @param [in]     cipher         The stream cipher to probe.
 /// @param [in]     key_len        A suggested key length.
@@ -99,11 +105,12 @@ void enc_stream_copy(struct ENC_STREAM_CTX *dst,
 ///          length  greater than \c  key_len. However, if  no such key length
 ///          exists, it will  return the  largest key  length  admitted by the
 ///          stream cipher.
+**/
 ORDO_PUBLIC
 size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
                           size_t key_len);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

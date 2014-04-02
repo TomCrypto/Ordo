@@ -1,14 +1,14 @@
-//===-- os_random.c -------------------------------*- shared/unix -*- C -*-===//
+/*===-- os_random.c -------------------------------*- shared/unix -*- C -*-===*/
 
 #include "ordo/misc/os_random.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include <stdio.h>
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 int os_random(void *out, size_t len)
 {

@@ -1,12 +1,12 @@
-//===-- aes.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- aes.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers/aes.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define AES_BLOCK (bits(128))
 
@@ -27,7 +27,7 @@ HOT_CODE;
 static void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct AES_STATE *aes_alloc(void)
 {
@@ -56,7 +56,7 @@ int aes_init(struct AES_STATE *state,
     }
     else
     {
-        // Set the default round numbers.
+        /* Set the default round numbers. */
         if (key_len == 16) state->rounds = 10;
         else if (key_len == 24) state->rounds = 12;
         else if (key_len == 32) state->rounds = 14;
@@ -110,9 +110,9 @@ size_t aes_query(int query, size_t value)
     }
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-// This AES implementation was obtained along with the following license:
+/* This AES implementation was obtained along with the following license: */
 
 /* advanced encryption standard
  * author: karl malbrain, malbrain@yahoo.com
@@ -558,7 +558,6 @@ static void MixSubColumns (uint8_t *state)
     memcpy(state, tmp, sizeof(tmp));
 }
 
-/* Restore and unmix the state. */
 static void InvMixSubColumns (uint8_t *state)
 {
     uint8_t tmp[16];

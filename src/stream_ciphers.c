@@ -1,12 +1,12 @@
-//===-- stream_ciphers.c ------------------------------*- generic -*- C -*-===//
+/*===-- stream_ciphers.c ------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/stream_ciphers.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 typedef void  *(*STREAM_ALLOC)
     (void);
@@ -35,7 +35,7 @@ struct STREAM_CIPHER
     const char   *name;
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
 {
@@ -61,7 +61,7 @@ const struct STREAM_CIPHER *ordo_rc4(void)
     return &primitive;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const struct STREAM_CIPHER *stream_cipher_by_name(const char *name)
 {
@@ -94,7 +94,7 @@ size_t stream_cipher_count(void)
     return __COUNTER__;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
 {

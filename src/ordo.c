@@ -1,12 +1,12 @@
-//===-- ordo.c ----------------------------------------*- generic -*- C -*-===//
+/*===-- ordo.c ----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 int ordo_enc_block(const struct BLOCK_CIPHER *cipher,
                    const void *cipher_params,

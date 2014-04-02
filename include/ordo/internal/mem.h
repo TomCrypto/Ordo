@@ -1,5 +1,5 @@
-//===-- internal/mem.h --------------------------------*- INTERNAL-*- H -*-===//
-///
+/*===-- internal/mem.h --------------------------------*- INTERNAL-*- H -*-===*/
+/**
 /// @file
 /// @internal
 /// @brief \b Internal, Utility
@@ -12,21 +12,21 @@
 /// elsewhere, in the \c ordo.h header - see \c ordo_allocator().
 ///
 /// See \c alg.h about internal headers.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_MEM_H
 #define ORDO_MEM_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
     #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
@@ -34,7 +34,7 @@ extern "C" {
     #endif
 #endif
 
-/// Allocates a memory buffer.
+/** Allocates a memory buffer.
 ///
 /// @param [in]     size           The amount of memory required, in bytes.
 ///
@@ -47,10 +47,11 @@ extern "C" {
 ///          possible uses by the library.
 ///
 /// @remarks This function is thread-safe.
+**/
 ORDO_HIDDEN
 void *mem_alloc(size_t size);
 
-/// Deallocates a memory buffer.
+/** Deallocates a memory buffer.
 ///
 /// @param [in]     ptr            A memory buffer to free.
 ///
@@ -59,17 +60,19 @@ void *mem_alloc(size_t size);
 /// @remarks The memory buffer must have been allocated with \c mem_alloc().
 ///
 /// @remarks This function is thread-safe.
+**/
 ORDO_HIDDEN
 void mem_free(void *ptr);
 
-/// Overwrites a memory buffer with zeroes.
+/** Overwrites a memory buffer with zeroes.
 ///
 /// @param [in,out] ptr            The memory buffer to overwrite.
 /// @param [in]     size           The number of bytes to overwrite.
+**/
 ORDO_HIDDEN
 void mem_erase(void *ptr, size_t size);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

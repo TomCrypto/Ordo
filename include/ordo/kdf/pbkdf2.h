@@ -1,5 +1,5 @@
-//===-- kdf/pbkdf2.h -----------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- kdf/pbkdf2.h -----------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Module
 ///
@@ -12,15 +12,15 @@
 /// the traditional  init/update/final pattern but is  a context-free function
 /// as its inputs are almost always known in advance. As such this module does
 /// not benefit from the use of contexts.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_PBKDF2_H
 #define ORDO_PBKDF2_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/auth/hmac.h"
 
@@ -28,9 +28,9 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-/// Derives a key using PBKDF2.
+/** Derives a key using PBKDF2.
 ///
 /// @param [in]     hash           The hash function to use (the PRF used will
 ///                                be an instantiation of HMAC with it)
@@ -56,6 +56,7 @@ extern "C" {
 ///
 /// @remarks Do not use hash parameters which modify the output length or this
 ///          function's behavior is undefined.
+**/
 ORDO_PUBLIC
 int pbkdf2(const struct HASH_FUNCTION *hash,
            const void *params,
@@ -67,7 +68,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
            void *out,
            size_t out_len);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

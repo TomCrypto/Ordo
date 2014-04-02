@@ -1,5 +1,5 @@
-//===-- enc/block_modes/cbc.h --------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- enc/block_modes/cbc.h --------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Primitive
 ///
@@ -21,15 +21,15 @@
 /// If padding  is disabled, \c outlen  is also required, and  will return the
 /// number of unprocessed plaintext bytes in the context. If this is any value
 /// other than zero, the function will also fail with \c ORDO_LEFTOVER.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_CBC_MODE_H
 #define ORDO_CBC_MODE_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/primitives/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
@@ -38,16 +38,18 @@
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct CBC_STATE;
 
-/// @see \c block_mode_alloc()
+/** @see \c block_mode_alloc()
+**/
 ORDO_PUBLIC
 struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
                             const void *cipher_state);
 
-/// @see \c block_mode_init()
+/** @see \c block_mode_init()
+**/
 ORDO_PUBLIC
 int cbc_init(struct CBC_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -56,7 +58,8 @@ int cbc_init(struct CBC_STATE *state,
              int dir,
              const struct CBC_PARAMS *params);
 
-/// @see \c block_mode_update()
+/** @see \c block_mode_update()
+**/
 ORDO_PUBLIC
 void cbc_update(struct CBC_STATE *state,
                 const struct BLOCK_CIPHER *cipher,
@@ -64,31 +67,35 @@ void cbc_update(struct CBC_STATE *state,
                 const unsigned char *in, size_t in_len,
                 unsigned char *out, size_t *out_len);
 
-/// @see \c block_mode_final()
+/** @see \c block_mode_final()
+**/
 ORDO_PUBLIC
 int cbc_final(struct CBC_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
 
-/// @see \c block_mode_free()
+/** @see \c block_mode_free()
+**/
 ORDO_PUBLIC
 void cbc_free(struct CBC_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state);
 
-/// @see \c block_mode_copy()
+/** @see \c block_mode_copy()
+**/
 ORDO_PUBLIC
 void cbc_copy(struct CBC_STATE *dst,
               const struct CBC_STATE *src,
               const struct BLOCK_CIPHER *cipher);
 
-/// @see \c block_mode_query()
+/** @see \c block_mode_query()
+**/
 ORDO_PUBLIC
 size_t cbc_query(const struct BLOCK_CIPHER *cipher,
                  int query, size_t value);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

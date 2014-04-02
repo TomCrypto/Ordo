@@ -1,5 +1,5 @@
-//===-- common/query.h ---------------------------------*- PUBLIC -*- H -*-===//
-///
+/*===-- common/query.h ---------------------------------*- PUBLIC -*- H -*-===*/
+/**
 /// @file
 /// @brief Utility
 ///
@@ -40,66 +40,71 @@
 /// bits, and not 128 bits (which would lead to part of the key being unused).
 /// This allows software  using the library to dynamically  adjust to whatever
 /// cryptographic primitives are in use without compromising security.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_QUERY_H
 #define ORDO_QUERY_H
 
-/// @cond
+/** @cond **/
 #include "ordo/common/interface.h"
-/// @endcond
+/** @endcond **/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-/// @enum ORDO_QUERY
+/** @enum ORDO_QUERY
 ///
 /// Query codes used by the library. These end in \c _Q.
+**/
 enum ORDO_QUERY
 {
-/// Query code to retrieve a key length.
-///
-/// Applicable to:
-/// - block ciphers
-/// - stream ciphers
+    /** Query code to retrieve a key length.
+    ///
+    /// Applicable to:
+    /// - block ciphers
+    /// - stream ciphers
+    **/
     KEY_LEN_Q,
 
-/// Query code to retrieve a block size.
-///
-/// Applicable to:
-/// - block ciphers
-/// - hash functions
-///
-/// @remarks For hash functions, this is taken to be the input size of the
-///          message block to  the compression function, or, more formally,
-///          the amount of data necessary to trigger a compression function
-///          iteration. This may not be meaningful for all hash functions.
+    /** Query code to retrieve a block size.
+    ///
+    /// Applicable to:
+    /// - block ciphers
+    /// - hash functions
+    ///
+    /// @remarks For hash functions, this is taken to be the input size of the
+    ///          message block to  the compression function or, more formally,
+    ///          the amount of data required to trigger a compression function
+    ///          iteration. This may not be meaningful for all hash functions.
+    **/
     BLOCK_SIZE_Q,
 
-/// Query code to retrieve the default digest length of a hash function.
-///
-/// @remarks The suggested value is ignored for this query code.
-///
-/// Applicable to:
-/// - hash functions
+    /** Query code to retrieve the default digest length of a hash function.
+    ///
+    /// @remarks The suggested value is ignored for this query code.
+    ///
+    /// Applicable to:
+    /// - hash functions
+    **/
     DIGEST_LEN_Q,
 
-/// Query code to retrieve an initialization vector length.
-///
-/// Applicable to:
-/// - block modes
-///
-/// @remarks As the block  mode of operation  primitives use block ciphers
-///          internally, the  returned  initialization vector length might
-///          depend on the block cipher (likely its block size).
+    /** Query code to retrieve an initialization vector length.
+    ///
+    /// Applicable to:
+    /// - block modes
+    ///
+    /// @remarks As the block  mode of operation  primitives use block ciphers
+    ///          internally, the  returned  initialization vector length might
+    ///          depend on the block cipher (likely its block size).
+    **/
     IV_LEN_Q
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
 }

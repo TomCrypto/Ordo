@@ -1,12 +1,12 @@
-//===-- hash_params.c ---------------------------------*- generic -*- C -*-===//
+/*===-- hash_params.c ---------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/hash_functions/hash_params.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct SKEIN256_PARAMS skein256_default(void)
 {

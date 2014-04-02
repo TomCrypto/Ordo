@@ -1,12 +1,12 @@
-//===-- endianness.c ----------------------------------*- generic -*- C -*-===//
+/*===-- endianness.c ----------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/misc/endianness.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if (!defined(ORDO_LITTLE_ENDIAN)) && (!defined(ORDO_BIG_ENDIAN))
     #error "Endianness not defined!"
@@ -38,7 +38,7 @@ static uint64_t bswap64(uint64_t x)
          | ((x & (uint64_t)0x00000000000000FFULL) << 56);
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 uint16_t tole16(uint16_t x)
 {
@@ -123,5 +123,3 @@ uint64_t fmbe64(uint64_t x)
 {
     return tobe64(x);
 }
-
-

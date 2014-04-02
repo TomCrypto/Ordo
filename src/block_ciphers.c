@@ -1,12 +1,12 @@
-//===-- block_ciphers.c -------------------------------*- generic -*- C -*-===//
+/*===-- block_ciphers.c -------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 typedef void  *(*BLOCK_ALLOC)
     (void);
@@ -36,7 +36,7 @@ struct BLOCK_CIPHER
     const char  *name;
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const char *block_cipher_name(const struct BLOCK_CIPHER *primitive)
 {
@@ -103,7 +103,7 @@ const struct BLOCK_CIPHER *ordo_aes(void)
     return &primitive;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const struct BLOCK_CIPHER *block_cipher_by_name(const char *name)
 {
@@ -138,7 +138,7 @@ size_t block_cipher_count(void)
     return __COUNTER__;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
 {

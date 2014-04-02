@@ -1,12 +1,12 @@
-//===-- block_modes.c ---------------------------------*- generic -*- C -*-===//
+/*===-- block_modes.c ---------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_modes.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 typedef void  *(*BLOCK_MODE_ALLOC)
     (const struct BLOCK_CIPHER *, const void *);
@@ -43,7 +43,7 @@ struct BLOCK_MODE
     const char       *name;
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const char *block_mode_name(const struct BLOCK_MODE *mode)
 {
@@ -145,7 +145,7 @@ const struct BLOCK_MODE *ordo_ofb(void)
     return &primitive;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const struct BLOCK_MODE *block_mode_by_name(const char *name)
 {
@@ -182,7 +182,7 @@ size_t block_mode_count(void)
     return __COUNTER__;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void *block_mode_alloc(const struct BLOCK_MODE *mode,
                        const struct BLOCK_CIPHER *cipher,

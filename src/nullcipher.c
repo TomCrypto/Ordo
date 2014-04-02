@@ -1,14 +1,14 @@
-//===-- nullcipher.c ----------------------------------*- generic -*- C -*-===//
+/*===-- nullcipher.c ----------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers/nullcipher.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-#define NULLCIPHER_BLOCK (bits(128)) // This is arbitrary.
+#define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
 
 struct NULLCIPHER_STATE
 {
@@ -17,8 +17,8 @@ struct NULLCIPHER_STATE
 
 struct NULLCIPHER_STATE *nullcipher_alloc(void)
 {
-    // A block cipher always needs to allocate a state (returning nil means
-    // an allocation failed, so we can't use that even for this cipher).
+    /* A block cipher always needs to allocate a state (returning nil means
+     * an allocation failed, so we can't use that even for this cipher). */
     return mem_alloc(sizeof(struct NULLCIPHER_STATE));
 }
 

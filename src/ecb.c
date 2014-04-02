@@ -1,16 +1,15 @@
-//===-- ecb.c -----------------------------------------*- generic -*- C -*-===//
+/*===-- ecb.c -----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/block_modes/ecb.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct ECB_STATE
 {
-    /* Stores pending, incomplete plaintext/ciphertext blocks. */
     unsigned char *block;
     size_t available;
 

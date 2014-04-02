@@ -1,12 +1,12 @@
-//===-- hash_functions.c ------------------------------*- generic -*- C -*-===//
+/*===-- hash_functions.c ------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/primitives/hash_functions.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 typedef void  *(*HASH_ALLOC)
     (void);
@@ -35,7 +35,7 @@ struct HASH_FUNCTION
     const char *name;
 };
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const char *hash_function_name(const struct HASH_FUNCTION *primitive)
 {
@@ -99,7 +99,7 @@ const struct HASH_FUNCTION *ordo_skein256(void)
     return &primitive;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 const struct HASH_FUNCTION *hash_function_by_name(const char *name)
 {
@@ -134,7 +134,7 @@ size_t hash_function_count(void)
     return __COUNTER__;
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 void *hash_function_alloc(const struct HASH_FUNCTION *primitive)
 {

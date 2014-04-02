@@ -1,12 +1,12 @@
-//===-- threefish256.c ----------------------*- shared/unix/amd64 -*- C -*-===//
+/*===-- threefish256.c ----------------------*- shared/unix/amd64 -*- C -*-===*/
 
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define THREEFISH256_BLOCK (bits(256))
 
@@ -22,7 +22,7 @@ static void threefish256_key_schedule(const uint64_t key[4],
 extern void threefish256_forward_ASM(void *block, const void *subkeys);
 extern void threefish256_inverse_ASM(void *block, const void *subkeys);
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct THREEFISH256_STATE *threefish256_alloc(void)
 {
@@ -80,7 +80,7 @@ size_t threefish256_query(int query, size_t value)
     }
 }
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #define subkey(n, s0, s1, s2, s3, t0, t1)\
     subkeys[n * 4 + 0] = key_w[s0]; \

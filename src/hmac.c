@@ -1,14 +1,14 @@
-//===-- hmac.c ----------------------------------------*- generic -*- C -*-===//
+/*===-- hmac.c ----------------------------------------*- generic -*- C -*-===*/
 
 #include "ordo/auth/hmac.h"
 
-/// @cond
+/** @cond **/
 #include "ordo/internal/implementation.h"
-/// @endcond
+/** @endcond **/
 
 #include "ordo/digest/digest.h"
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 struct HMAC_CTX
 {
@@ -24,7 +24,7 @@ struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash)
     if (!ctx) goto fail;
 
     if (!(ctx->ctx = digest_alloc(hash))) goto fail;
-    ctx->hash = hash; // Save the hash primitive
+    ctx->hash = hash; /* Save the hash primitive */
 
     if (!(ctx->key = mem_alloc(block_size))) goto fail;
     return ctx;
@@ -43,11 +43,11 @@ int hmac_init(struct HMAC_CTX *ctx,
     int err = ORDO_SUCCESS;
     size_t t;
 
-    // The key may be smaller than the hash's block size, pad with zeroes.
+    /* The key may be smaller than the hash's block size, pad with zeroes. */
     memset(ctx->key, 0x00, block_size);
 
-    // If the key is larger than the hash function's block size, it needs to
-    // be reduced. This is done by hashing it once, as per RFC 2104.
+    /* If the key is larger than the hash function's block size, it needs to
+     * be reduced. This is done by hashing it once, as per RFC 2104. */
     if (key_len > block_size)
     {
         if ((err = digest_init(ctx->ctx, 0))) return err;
@@ -79,13 +79,13 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 
     digest_final(ctx->ctx, digest);
 
-    // This will implicitly go from inner mask to outer mask.
+    /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
     if ((err = digest_init(ctx->ctx, 0)))
     {
-        // Here "digest" (user-provided pointer) contains sensitive data.
-        // Erase this information before returning if a failure occurred.
+        /* Here "digest" (user-provided pointer) contains sensitive data.
+         * Erase this information before returning if a failure occurred. */
         mem_erase(digest, digest_len);
         return err;
     }

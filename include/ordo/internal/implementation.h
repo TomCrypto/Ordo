@@ -1,5 +1,5 @@
-//===-- internal/implementation.h----------------------*- INTERNAL-*- H -*-===//
-///
+/*===-- internal/implementation.h----------------------*- INTERNAL-*- H -*-===*/
+/**
 /// @file
 /// @internal
 /// @brief \b Internal, API
@@ -9,13 +9,13 @@
 /// error to include this header in any code outside the Ordo implementation.
 ///
 /// Every source file will include this header.
-///
-//===----------------------------------------------------------------------===//
+**/
+/*===----------------------------------------------------------------------===*/
 
 #ifndef ORDO_IMPLEMENTATION_H
 #define ORDO_IMPLEMENTATION_H
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if !(defined(ORDO_INTERNAL_ACCESS) && defined(ORDO_STATIC_LIB))
     #if !(defined(BUILDING_ORDO) || defined(BUILDING_ordo))
@@ -44,9 +44,9 @@
 #define mem_free mem_free                                   ## _internal_ordo
 #define mem_erase mem_erase                                 ## _internal_ordo
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
-/// @cond
+/** @cond **/
 #include "ordo/misc/endianness.h"
 #include "ordo/common/error.h"
 #include "ordo/common/query.h"
@@ -56,9 +56,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-/// @endcond
+/** @endcond **/
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__)
     #define ALIGN(x) __attribute__((aligned(x)))
@@ -74,7 +74,7 @@
                        + __GNUC_MINOR__ * 100 \
                        + __GNUC_PATCHLEVEL__)
 
-    #if GCC_VERSION >= 40300 // >= v4.3 support needed
+    #if GCC_VERSION >= 40300 /* >= v4.3 support needed */
         #define HOT_CODE __attribute__((hot))
         #define COLD_CODE __attribute__((cold))
     #else
@@ -88,6 +88,6 @@
     #define COLD_CODE
 #endif
 
-//===----------------------------------------------------------------------===//
+/*===----------------------------------------------------------------------===*/
 
 #endif
