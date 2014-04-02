@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['sha256',['sha256',['../hash__functions_8h.html#a4e1eac957e25bc289bf5ebb82f3cdfd8',1,'hash_functions.c']]],
   ['sha256_5falloc',['sha256_alloc',['../sha256_8h.html#a0fab778aa0352a01a21ee42b5d1324d8',1,'sha256.c']]],
   ['sha256_5fcopy',['sha256_copy',['../sha256_8h.html#a4fac7c7e812df5f50d3f1803e81e50be',1,'sha256.c']]],
   ['sha256_5ffinal',['sha256_final',['../sha256_8h.html#a2525f27711a3ec54be774816d29b27b2',1,'sha256.c']]],
@@ -8,7 +7,6 @@ var searchData=
   ['sha256_5finit',['sha256_init',['../sha256_8h.html#a2e4fbe0ac655cb0016a9b96131af5d77',1,'sha256.c']]],
   ['sha256_5fquery',['sha256_query',['../sha256_8h.html#af0fa5e6e28aa33d80d49cbaf324d6f1f',1,'sha256.c']]],
   ['sha256_5fupdate',['sha256_update',['../sha256_8h.html#a40f7f23d41a50ff99d8c538947af243d',1,'sha256.c']]],
-  ['skein256',['skein256',['../hash__functions_8h.html#a0708a0d7a2b173196e0528df36f66fcf',1,'hash_functions.c']]],
   ['skein256_5falloc',['skein256_alloc',['../skein256_8h.html#a1ea6ffaa8cda164b4a00915dbe517a77',1,'skein256.c']]],
   ['skein256_5fcopy',['skein256_copy',['../skein256_8h.html#a9e9943a56952ccd7da1180b54139b69f',1,'skein256.c']]],
   ['skein256_5fdefault',['skein256_default',['../hash__params_8h.html#af39e987fe81d0da7b9209c7b02c36c63',1,'hash_params.c']]],

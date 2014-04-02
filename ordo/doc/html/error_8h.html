@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/common/error.h File Reference</title>
+<title>Ordo: /ssd/Ordo/include/ordo/common/error.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_d103d6802619b1ccb3f7bb5e4656153d.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_3fe948eabb9fcb35afed81796c2d9321.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -99,9 +99,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="error_8h__dep__incl.png" border="0" usemap="#_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2common_2error_8hdep" alt=""/></div>
-<map name="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2common_2error_8hdep" id="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2common_2error_8hdep">
-<area shape="rect" id="node3" href="ordo_8h.html" title="Wrapper. " alt="" coords="8,131,147,207"/></map>
+<div class="center"><img src="error_8h__dep__incl.png" border="0" usemap="#_2ssd_2_ordo_2include_2ordo_2common_2error_8hdep" alt=""/></div>
+<map name="_2ssd_2_ordo_2include_2ordo_2common_2error_8hdep" id="_2ssd_2_ordo_2include_2ordo_2common_2error_8hdep">
+<area shape="rect" id="node3" href="ordo_8h.html" title="Wrapper. " alt="" coords="5,110,168,143"/></map>
 </div>
 </div>
 <p><a href="error_8h_source.html">Go to the source code of this file.</a></p>
@@ -142,72 +142,39 @@ Functions</h2></td></tr>
 <p>Error codes used by the library. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129"></a>ORDO_SUCCESS</em>&#160;</td><td class="fielddoc">
-<p>The function succeeded. </p>
-<pre class="fragment">@remarks This is always  defined as zero and is returned if a function
-         encountered no error, unless specified otherwise.  </pre> </td></tr>
+<p>The function succeeded.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This is always defined as zero and is returned if a function encountered no error, unless specified otherwise. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3a085e33c510c0246e0cb48968f3a3c580"></a>ORDO_FAIL</em>&#160;</td><td class="fielddoc">
-<p>The function failed due to an external error. </p>
-<pre class="fragment">@remarks This often indicates  failure of an  external component, such
-         as the pseudorandom number generator  provided by the OS (see
-         #os_random). The library is not responsible for this error.  </pre> </td></tr>
+<p>The function failed due to an external error.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This often indicates failure of an external component, such as the pseudorandom number generator provided by the OS (see <a class="el" href="os__random_8h.html#aac038e0b2b3eab7fb72a90e42bfb2d01">os_random</a>). The library is not responsible for this error. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3a68146dcf5237899792ec7a9490f18d12"></a>ORDO_LEFTOVER</em>&#160;</td><td class="fielddoc">
-<p>User input was left over unprocessed. </p>
-<pre class="fragment">@remarks This applies  to block  cipher modes  of operation  for which
-         padding has been  disabled. If the input  plaintext length is
-         not a multiple of the cipher's block size, then the remaining
-         incomplete block cannot be  handled without padding, which is
-         an error  as it generally  leads to inconsistent  behavior on
-         the part of the user.  </pre> </td></tr>
+<p>User input was left over unprocessed.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This applies to block cipher modes of operation for which padding has been disabled. If the input plaintext length is not a multiple of the cipher's block size, then the remaining incomplete block cannot be handled without padding, which is an error as it generally leads to inconsistent behavior on the part of the user. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3ae3111d7993a8dd20ca8474681751c3a9"></a>ORDO_KEY_LEN</em>&#160;</td><td class="fielddoc">
-<p>The key length provided is invalid. </p>
-<pre class="fragment">@remarks This occurs if  you provide a key of an  invalid length, such
-         as  passing a  128-bit  key  into a  cipher  which expects  a
-         192-bit key. Primitives  either have a range  of possible key
-         lengths  (often characterized  by a  minimum and  maximum key
-         length,  but  this  varies  among  algorithms)  or  only  one
-         specific key length.  If you need to  accept arbitrary length
-         keys, you  should consider hashing  your key in  some fashion
-         before using it for encryption, for instance using a KDF.
-
-@remarks The \c  block_cipher_query() function  can be used  to select
-         a  suitable  key   length  for  a  given   block  cipher  via
-         the  \c  #KEY_LEN query  code.  For  stream ciphers,  use  \c
-         stream_cipher_query().  </pre> </td></tr>
+<p>The key length provided is invalid.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This occurs if you provide a key of an invalid length, such as passing a 128-bit key into a cipher which expects a 192-bit key. Primitives either have a range of possible key lengths (often characterized by a minimum and maximum key length, but this varies among algorithms) or only one specific key length. If you need to accept arbitrary length keys, you should consider hashing your key in some fashion before using it for encryption, for instance using a KDF.</dd>
+<dd>
+The <code><a class="el" href="block__ciphers_8h.html#aa0a75e4d1648c91660b289abdd515140">block_cipher_query()</a></code> function can be used to select a suitable key length for a given block cipher via the <code>#KEY_LEN</code> query code. For stream ciphers, use <code><a class="el" href="stream__ciphers_8h.html#ae5debc682c415378899b6c91fe6a291e">stream_cipher_query()</a></code>. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5"></a>ORDO_PADDING</em>&#160;</td><td class="fielddoc">
-<p>The padding was not recognized and decryption could not be completed. </p>
-<pre class="fragment">@remarks This  applies to  block  cipher modes  for  which padding  is
-         enabled. If the last  block containing padding information is
-         malformed,  the  padding  will generally  be  unreadable  and
-         the  correct  message  length  cannot  be  retrieved,  making
-         correct decryption impossible. Note this is not guaranteed to
-         occur  if the  padding block  is corrupted.  In other  words,
-         if  \c  #ORDO_PADDING  is  returned,  the  padding  block  is
-         certainly  corrupted, however  it may  still be  even if  the
-         library returns success (the  returned plaintext will then be
-         incorrect). If you \b must  ensure the plaintext is decrypted
-         correctly - and you probably should  - you will want to use a
-         MAC (Message  Authentication Code) along with  encryption, or
-         an authenticated block cipher mode of operation.  </pre> </td></tr>
+<p>The padding was not recognized and decryption could not be completed.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This applies to block cipher modes for which padding is enabled. If the last block containing padding information is malformed, the padding will generally be unreadable and the correct message length cannot be retrieved, making correct decryption impossible. Note this is not guaranteed to occur if the padding block is corrupted. In other words, if <code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5">ORDO_PADDING</a></code> is returned, the padding block is certainly corrupted, however it may still be even if the library returns success (the returned plaintext will then be incorrect). If you <b>must</b> ensure the plaintext is decrypted correctly - and you probably should - you will want to use a MAC (Message Authentication Code) along with encryption, or an authenticated block cipher mode of operation. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3af89d5264e888dffb7f57194370ba45cb"></a>ORDO_ALLOC</em>&#160;</td><td class="fielddoc">
-<p>An attempt to allocate memory failed. </p>
-<pre class="fragment">@remarks This  occurs when  the  library's memory  subsystem fails  to
-         allocate memory, and shouldn't occur during normal operation.
-
-@remarks This likely indicates  a memory leak in your  code, though it
-         may  also  be  symptomatic  of  an  error  in  the  library's
-         allocator (the  default allocator uses malloc/free,  but this
-         can be overriden)  or your own, if you  changed the library's
-         allocator at runtime.  </pre> </td></tr>
+<p>An attempt to allocate memory failed.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This occurs when the library's memory subsystem fails to allocate memory, and shouldn't occur during normal operation.</dd>
+<dd>
+This likely indicates a memory leak in your code, though it may also be symptomatic of an error in the library's allocator (the default allocator uses malloc/free, but this can be overriden) or your own, if you changed the library's allocator at runtime. </dd></dl>
+</td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7e07095466ca14dd043a75140b9874a3a2fdf7332be97bd5376dda7c5810125ea"></a>ORDO_ARG</em>&#160;</td><td class="fielddoc">
-<p>An invalid argument was passed to a function. </p>
-<pre class="fragment">@remarks This is  a generic error  which is returned when  the library
-         finds an invalid parameter  which would lead to inconsistent,
-         undefined, or  profoundly insecure  behavior. Make  sure your
-         arguments are correct and do not contradict one another.
-
-@remarks Keep in mind  that the library cannot possibly catch all such
-         errors, and you  should still read the  documentation  if you
-         are not sure what you are doing is valid.  </pre> </td></tr>
+<p>An invalid argument was passed to a function.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>This is a generic error which is returned when the library finds an invalid parameter which would lead to inconsistent, undefined, or profoundly insecure behavior. Make sure your arguments are correct and do not contradict one another.</dd>
+<dd>
+Keep in mind that the library cannot possibly catch all such errors, and you should still read the documentation if you are not sure what you are doing is valid. </dd></dl>
+</td></tr>
 </table>
 
 </div>
@@ -241,7 +208,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

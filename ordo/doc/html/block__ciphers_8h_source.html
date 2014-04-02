@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/primitives/block_ciphers.h Source File</title>
+<title>Ordo: /ssd/Ordo/include/ordo/primitives/block_ciphers.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_7ab082df77894271436dc1ec132901b9.html">primitives</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_462de7c1e1b35dcbd41187fa92c0aa0f.html">primitives</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -111,22 +111,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="block__ciphers_8h.html#a6dec5c4ec4e843da5629fdb8a8ac051b">block_cipher_name</a>(<span class="keyword">const</span> <span class="keyword">struct</span> BLOCK_CIPHER *primitive);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a96edfd59a448d9f7e6e33a4945ea5630">nullcipher</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#acc687d87aebd985b46101ee8675ca4a4">ordo_nullcipher</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a385cf1855bea5c34afc2c9f2fbd66fe0">threefish256</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a57c8c3d265062a4e413aed8fbd37b7f8">ordo_threefish256</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a0e0347e6a6c4834c40bf5519c2c36271">aes</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a9771349c4c7105e0152953bcd535c9de">ordo_aes</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="block__ciphers_8h.html#ad15018b4bd39b24641b99d08771f7ef8">block_cipher_count</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a0b108d6b0203c7b586cf0e115e527bf6">block_cipher_by_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#a0b108d6b0203c7b586cf0e115e527bf6">block_cipher_by_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#abee2aaf18da9bdc4c3b92bb26482e82d">block_cipher_by_index</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>BLOCK_CIPHER *<a class="code" href="block__ciphers_8h.html#abee2aaf18da9bdc4c3b92bb26482e82d">block_cipher_by_index</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="block__ciphers_8h.html#ad15018b4bd39b24641b99d08771f7ef8">block_cipher_count</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
@@ -174,27 +174,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="block__ciphers_8h_html_a623c1d3fc875af57e7c81a8d8a42cd67"><div class="ttname"><a href="block__ciphers_8h.html#a623c1d3fc875af57e7c81a8d8a42cd67">block_cipher_forward</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_forward(const struct BLOCK_CIPHER *primitive, const void *state, void *block)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:144</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a96edfd59a448d9f7e6e33a4945ea5630"><div class="ttname"><a href="block__ciphers_8h.html#a96edfd59a448d9f7e6e33a4945ea5630">nullcipher</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * nullcipher(void)</div><div class="ttdoc">The NullCipher block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:90</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a0e0347e6a6c4834c40bf5519c2c36271"><div class="ttname"><a href="block__ciphers_8h.html#a0e0347e6a6c4834c40bf5519c2c36271">aes</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * aes(void)</div><div class="ttdoc">The AES block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:100</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a1a916a1af600eb47ad4b770bc4029dbe"><div class="ttname"><a href="block__ciphers_8h.html#a1a916a1af600eb47ad4b770bc4029dbe">block_cipher_alloc</a></div><div class="ttdeci">ORDO_PUBLIC void * block_cipher_alloc(const struct BLOCK_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:130</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a623c1d3fc875af57e7c81a8d8a42cd67"><div class="ttname"><a href="block__ciphers_8h.html#a623c1d3fc875af57e7c81a8d8a42cd67">block_cipher_forward</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_forward(const struct BLOCK_CIPHER *primitive, const void *state, void *block)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:157</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a1a916a1af600eb47ad4b770bc4029dbe"><div class="ttname"><a href="block__ciphers_8h.html#a1a916a1af600eb47ad4b770bc4029dbe">block_cipher_alloc</a></div><div class="ttdeci">ORDO_PUBLIC void * block_cipher_alloc(const struct BLOCK_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:143</div></div>
 <div class="ttc" id="block__ciphers_8h_html_a6dec5c4ec4e843da5629fdb8a8ac051b"><div class="ttname"><a href="block__ciphers_8h.html#a6dec5c4ec4e843da5629fdb8a8ac051b">block_cipher_name</a></div><div class="ttdeci">ORDO_PUBLIC const char * block_cipher_name(const struct BLOCK_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:41</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a0b108d6b0203c7b586cf0e115e527bf6"><div class="ttname"><a href="block__ciphers_8h.html#a0b108d6b0203c7b586cf0e115e527bf6">block_cipher_by_name</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * block_cipher_by_name(const char *name)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:112</div></div>
-<div class="ttc" id="block__ciphers_8h_html_aa0a75e4d1648c91660b289abdd515140"><div class="ttname"><a href="block__ciphers_8h.html#aa0a75e4d1648c91660b289abdd515140">block_cipher_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t block_cipher_query(const struct BLOCK_CIPHER *primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:177</div></div>
-<div class="ttc" id="block__ciphers_8h_html_aa434d8bc01352acd4ed13ff8a2274d13"><div class="ttname"><a href="block__ciphers_8h.html#aa434d8bc01352acd4ed13ff8a2274d13">block_cipher_free</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_free(const struct BLOCK_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:164</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a220facd49743279f5f0d876f882c7c39"><div class="ttname"><a href="block__ciphers_8h.html#a220facd49743279f5f0d876f882c7c39">block_cipher_copy</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_copy(const struct BLOCK_CIPHER *primitive, void *dst, const void *src)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:170</div></div>
-<div class="ttc" id="block__ciphers_8h_html_aaf793dc9d61880f98d61784ecbb2546b"><div class="ttname"><a href="block__ciphers_8h.html#aaf793dc9d61880f98d61784ecbb2546b">block_cipher_inverse</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_inverse(const struct BLOCK_CIPHER *primitive, const void *state, void *block)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:151</div></div>
-<div class="ttc" id="block__ciphers_8h_html_ad15018b4bd39b24641b99d08771f7ef8"><div class="ttname"><a href="block__ciphers_8h.html#ad15018b4bd39b24641b99d08771f7ef8">block_cipher_count</a></div><div class="ttdeci">ORDO_PUBLIC size_t block_cipher_count(void)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:107</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a9f6de8681ebbdb99c6574af8a59f094a"><div class="ttname"><a href="block__ciphers_8h.html#a9f6de8681ebbdb99c6574af8a59f094a">block_cipher_final</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_final(const struct BLOCK_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:158</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a0b108d6b0203c7b586cf0e115e527bf6"><div class="ttname"><a href="block__ciphers_8h.html#a0b108d6b0203c7b586cf0e115e527bf6">block_cipher_by_name</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * block_cipher_by_name(const char *name)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:108</div></div>
+<div class="ttc" id="block__ciphers_8h_html_aa0a75e4d1648c91660b289abdd515140"><div class="ttname"><a href="block__ciphers_8h.html#aa0a75e4d1648c91660b289abdd515140">block_cipher_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t block_cipher_query(const struct BLOCK_CIPHER *primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:190</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a57c8c3d265062a4e413aed8fbd37b7f8"><div class="ttname"><a href="block__ciphers_8h.html#a57c8c3d265062a4e413aed8fbd37b7f8">ordo_threefish256</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * ordo_threefish256(void)</div><div class="ttdoc">The Threefish-256 block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:68</div></div>
+<div class="ttc" id="block__ciphers_8h_html_aa434d8bc01352acd4ed13ff8a2274d13"><div class="ttname"><a href="block__ciphers_8h.html#aa434d8bc01352acd4ed13ff8a2274d13">block_cipher_free</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_free(const struct BLOCK_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:177</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a220facd49743279f5f0d876f882c7c39"><div class="ttname"><a href="block__ciphers_8h.html#a220facd49743279f5f0d876f882c7c39">block_cipher_copy</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_copy(const struct BLOCK_CIPHER *primitive, void *dst, const void *src)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:183</div></div>
+<div class="ttc" id="block__ciphers_8h_html_aaf793dc9d61880f98d61784ecbb2546b"><div class="ttname"><a href="block__ciphers_8h.html#aaf793dc9d61880f98d61784ecbb2546b">block_cipher_inverse</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_inverse(const struct BLOCK_CIPHER *primitive, const void *state, void *block)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:164</div></div>
+<div class="ttc" id="block__ciphers_8h_html_ad15018b4bd39b24641b99d08771f7ef8"><div class="ttname"><a href="block__ciphers_8h.html#ad15018b4bd39b24641b99d08771f7ef8">block_cipher_count</a></div><div class="ttdeci">ORDO_PUBLIC size_t block_cipher_count(void)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:136</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a9f6de8681ebbdb99c6574af8a59f094a"><div class="ttname"><a href="block__ciphers_8h.html#a9f6de8681ebbdb99c6574af8a59f094a">block_cipher_final</a></div><div class="ttdeci">ORDO_PUBLIC void block_cipher_final(const struct BLOCK_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:171</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="block__ciphers_8h_html_a230abca88157de5b87cf7ac7f20e975b"><div class="ttname"><a href="block__ciphers_8h.html#a230abca88157de5b87cf7ac7f20e975b">block_cipher_init</a></div><div class="ttdeci">ORDO_PUBLIC int block_cipher_init(const struct BLOCK_CIPHER *primitive, void *state, const void *key, size_t key_len, const void *params)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:135</div></div>
-<div class="ttc" id="block__ciphers_8h_html_a385cf1855bea5c34afc2c9f2fbd66fe0"><div class="ttname"><a href="block__ciphers_8h.html#a385cf1855bea5c34afc2c9f2fbd66fe0">threefish256</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * threefish256(void)</div><div class="ttdoc">The Threefish-256 block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:95</div></div>
-<div class="ttc" id="block__ciphers_8h_html_abee2aaf18da9bdc4c3b92bb26482e82d"><div class="ttname"><a href="block__ciphers_8h.html#abee2aaf18da9bdc4c3b92bb26482e82d">block_cipher_by_index</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * block_cipher_by_index(size_t index)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:123</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a230abca88157de5b87cf7ac7f20e975b"><div class="ttname"><a href="block__ciphers_8h.html#a230abca88157de5b87cf7ac7f20e975b">block_cipher_init</a></div><div class="ttdeci">ORDO_PUBLIC int block_cipher_init(const struct BLOCK_CIPHER *primitive, void *state, const void *key, size_t key_len, const void *params)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:148</div></div>
+<div class="ttc" id="block__ciphers_8h_html_abee2aaf18da9bdc4c3b92bb26482e82d"><div class="ttname"><a href="block__ciphers_8h.html#abee2aaf18da9bdc4c3b92bb26482e82d">block_cipher_by_index</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * block_cipher_by_index(size_t index)</div><div class="ttdef"><b>Definition:</b> block_ciphers.c:124</div></div>
 <div class="ttc" id="block__params_8h_html"><div class="ttname"><a href="block__params_8h.html">block_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
+<div class="ttc" id="block__ciphers_8h_html_acc687d87aebd985b46101ee8675ca4a4"><div class="ttname"><a href="block__ciphers_8h.html#acc687d87aebd985b46101ee8675ca4a4">ordo_nullcipher</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * ordo_nullcipher(void)</div><div class="ttdoc">The NullCipher block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:48</div></div>
+<div class="ttc" id="block__ciphers_8h_html_a9771349c4c7105e0152953bcd535c9de"><div class="ttname"><a href="block__ciphers_8h.html#a9771349c4c7105e0152953bcd535c9de">ordo_aes</a></div><div class="ttdeci">ORDO_PUBLIC const struct BLOCK_CIPHER * ordo_aes(void)</div><div class="ttdoc">The AES block cipher. </div><div class="ttdef"><b>Definition:</b> block_ciphers.c:88</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

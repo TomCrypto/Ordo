@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/primitives/stream_ciphers.h Source File</title>
+<title>Ordo: /ssd/Ordo/include/ordo/primitives/stream_ciphers.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_7ab082df77894271436dc1ec132901b9.html">primitives</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_462de7c1e1b35dcbd41187fa92c0aa0f.html">primitives</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -111,16 +111,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="stream__ciphers_8h.html#ade952abccd5264182cf41d686ace826a">stream_cipher_name</a>(<span class="keyword">const</span> <span class="keyword">struct</span> STREAM_CIPHER *primitive);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#afbfe19d48ecc973943290bf4456ee443">rc4</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#aed0470ec5d5712b53f610b927e646619">ordo_rc4</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="stream__ciphers_8h.html#ad3133dbe12148d44fe33979ebf58f441">stream_cipher_count</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#a4ab80a34e401fae1bce57a29b1f1e686">stream_cipher_by_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#a4ab80a34e401fae1bce57a29b1f1e686">stream_cipher_by_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#aee01ef2fe2aeb9e613b7721272b69f64">stream_cipher_by_index</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>STREAM_CIPHER *<a class="code" href="stream__ciphers_8h.html#aee01ef2fe2aeb9e613b7721272b69f64">stream_cipher_by_index</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="stream__ciphers_8h.html#ad3133dbe12148d44fe33979ebf58f441">stream_cipher_count</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
@@ -165,23 +165,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="stream__ciphers_8h_html_ade952abccd5264182cf41d686ace826a"><div class="ttname"><a href="stream__ciphers_8h.html#ade952abccd5264182cf41d686ace826a">stream_cipher_name</a></div><div class="ttdeci">ORDO_PUBLIC const char * stream_cipher_name(const struct STREAM_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:40</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_aee01ef2fe2aeb9e613b7721272b69f64"><div class="ttname"><a href="stream__ciphers_8h.html#aee01ef2fe2aeb9e613b7721272b69f64">stream_cipher_by_index</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * stream_cipher_by_index(size_t index)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:85</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_ab634c6c0cf01d77f301272e0e5005869"><div class="ttname"><a href="stream__ciphers_8h.html#ab634c6c0cf01d77f301272e0e5005869">stream_cipher_free</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_free(const struct STREAM_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:120</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_ae5debc682c415378899b6c91fe6a291e"><div class="ttname"><a href="stream__ciphers_8h.html#ae5debc682c415378899b6c91fe6a291e">stream_cipher_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t stream_cipher_query(const struct STREAM_CIPHER *primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:133</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_aee01ef2fe2aeb9e613b7721272b69f64"><div class="ttname"><a href="stream__ciphers_8h.html#aee01ef2fe2aeb9e613b7721272b69f64">stream_cipher_by_index</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * stream_cipher_by_index(size_t index)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:82</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_ab634c6c0cf01d77f301272e0e5005869"><div class="ttname"><a href="stream__ciphers_8h.html#ab634c6c0cf01d77f301272e0e5005869">stream_cipher_free</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_free(const struct STREAM_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:127</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_ae5debc682c415378899b6c91fe6a291e"><div class="ttname"><a href="stream__ciphers_8h.html#ae5debc682c415378899b6c91fe6a291e">stream_cipher_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t stream_cipher_query(const struct STREAM_CIPHER *primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:140</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="stream__ciphers_8h_html_af74930ab5297446d0fae0c8a033d966d"><div class="ttname"><a href="stream__ciphers_8h.html#af74930ab5297446d0fae0c8a033d966d">stream_cipher_update</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_update(const struct STREAM_CIPHER *primitive, void *state, void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:106</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_ac2b1576ac268c90367a7f2cd8991b72c"><div class="ttname"><a href="stream__ciphers_8h.html#ac2b1576ac268c90367a7f2cd8991b72c">stream_cipher_init</a></div><div class="ttdeci">ORDO_PUBLIC int stream_cipher_init(const struct STREAM_CIPHER *primitive, void *state, const void *key, size_t key_len, const void *params)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:97</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_ad3133dbe12148d44fe33979ebf58f441"><div class="ttname"><a href="stream__ciphers_8h.html#ad3133dbe12148d44fe33979ebf58f441">stream_cipher_count</a></div><div class="ttdeci">ORDO_PUBLIC size_t stream_cipher_count(void)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:69</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_a994816d888697c365da769d46870c676"><div class="ttname"><a href="stream__ciphers_8h.html#a994816d888697c365da769d46870c676">stream_cipher_final</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_final(const struct STREAM_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:114</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_a79c94d013f063935dbeeeef9921e2f7c"><div class="ttname"><a href="stream__ciphers_8h.html#a79c94d013f063935dbeeeef9921e2f7c">stream_cipher_copy</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_copy(const struct STREAM_CIPHER *primitive, void *dst, const void *src)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:126</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_a4ab80a34e401fae1bce57a29b1f1e686"><div class="ttname"><a href="stream__ciphers_8h.html#a4ab80a34e401fae1bce57a29b1f1e686">stream_cipher_by_name</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * stream_cipher_by_name(const char *name)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:74</div></div>
-<div class="ttc" id="stream__ciphers_8h_html_afbfe19d48ecc973943290bf4456ee443"><div class="ttname"><a href="stream__ciphers_8h.html#afbfe19d48ecc973943290bf4456ee443">rc4</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * rc4(void)</div><div class="ttdoc">The RC4 stream cipher. </div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:62</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_af74930ab5297446d0fae0c8a033d966d"><div class="ttname"><a href="stream__ciphers_8h.html#af74930ab5297446d0fae0c8a033d966d">stream_cipher_update</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_update(const struct STREAM_CIPHER *primitive, void *state, void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:113</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_ac2b1576ac268c90367a7f2cd8991b72c"><div class="ttname"><a href="stream__ciphers_8h.html#ac2b1576ac268c90367a7f2cd8991b72c">stream_cipher_init</a></div><div class="ttdeci">ORDO_PUBLIC int stream_cipher_init(const struct STREAM_CIPHER *primitive, void *state, const void *key, size_t key_len, const void *params)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:104</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_ad3133dbe12148d44fe33979ebf58f441"><div class="ttname"><a href="stream__ciphers_8h.html#ad3133dbe12148d44fe33979ebf58f441">stream_cipher_count</a></div><div class="ttdeci">ORDO_PUBLIC size_t stream_cipher_count(void)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:92</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_a994816d888697c365da769d46870c676"><div class="ttname"><a href="stream__ciphers_8h.html#a994816d888697c365da769d46870c676">stream_cipher_final</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_final(const struct STREAM_CIPHER *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:121</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_a79c94d013f063935dbeeeef9921e2f7c"><div class="ttname"><a href="stream__ciphers_8h.html#a79c94d013f063935dbeeeef9921e2f7c">stream_cipher_copy</a></div><div class="ttdeci">ORDO_PUBLIC void stream_cipher_copy(const struct STREAM_CIPHER *primitive, void *dst, const void *src)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:133</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_a4ab80a34e401fae1bce57a29b1f1e686"><div class="ttname"><a href="stream__ciphers_8h.html#a4ab80a34e401fae1bce57a29b1f1e686">stream_cipher_by_name</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * stream_cipher_by_name(const char *name)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:66</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_aed0470ec5d5712b53f610b927e646619"><div class="ttname"><a href="stream__ciphers_8h.html#aed0470ec5d5712b53f610b927e646619">ordo_rc4</a></div><div class="ttdeci">ORDO_PUBLIC const struct STREAM_CIPHER * ordo_rc4(void)</div><div class="ttdoc">The RC4 stream cipher. </div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:47</div></div>
 <div class="ttc" id="stream__params_8h_html"><div class="ttname"><a href="stream__params_8h.html">stream_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
-<div class="ttc" id="stream__ciphers_8h_html_a72b93a8f2f63d28f6d6ebd0b5a9c3fa6"><div class="ttname"><a href="stream__ciphers_8h.html#a72b93a8f2f63d28f6d6ebd0b5a9c3fa6">stream_cipher_alloc</a></div><div class="ttdeci">ORDO_PUBLIC void * stream_cipher_alloc(const struct STREAM_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:92</div></div>
+<div class="ttc" id="stream__ciphers_8h_html_a72b93a8f2f63d28f6d6ebd0b5a9c3fa6"><div class="ttname"><a href="stream__ciphers_8h.html#a72b93a8f2f63d28f6d6ebd0b5a9c3fa6">stream_cipher_alloc</a></div><div class="ttdeci">ORDO_PUBLIC void * stream_cipher_alloc(const struct STREAM_CIPHER *primitive)</div><div class="ttdef"><b>Definition:</b> stream_ciphers.c:99</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['threefish256',['threefish256',['../block__ciphers_8h.html#a385cf1855bea5c34afc2c9f2fbd66fe0',1,'block_ciphers.c']]],
   ['threefish256_5falloc',['threefish256_alloc',['../threefish256_8h.html#aa3e971515283ca423fee917076a2d88c',1,'threefish256.c']]],
   ['threefish256_5fcopy',['threefish256_copy',['../threefish256_8h.html#ac90eb528da9ccda0c97a4f3621aa962a',1,'threefish256.c']]],
   ['threefish256_5ffinal',['threefish256_final',['../threefish256_8h.html#a87432b281cba5f8b274190084ced3382',1,'threefish256.c']]],

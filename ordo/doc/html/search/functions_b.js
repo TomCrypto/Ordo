@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rc4',['rc4',['../stream__ciphers_8h.html#afbfe19d48ecc973943290bf4456ee443',1,'stream_ciphers.c']]],
   ['rc4_5falloc',['rc4_alloc',['../rc4_8h.html#acba828ec04caacec9f4918301a3daf0d',1,'rc4.c']]],
   ['rc4_5fcopy',['rc4_copy',['../rc4_8h.html#a1c870606ab06e8cea33346356f90c8f4',1,'rc4.c']]],
   ['rc4_5ffinal',['rc4_final',['../rc4_8h.html#a4ce31f65c9eec889907cdf7930738141',1,'rc4.c']]],

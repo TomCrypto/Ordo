@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ofb',['ofb',['../block__modes_8h.html#a3f2498262fcb9086b0658c75cc781ec9',1,'block_modes.c']]],
   ['ofb_5falloc',['ofb_alloc',['../ofb_8h.html#a9100e8e29c5032a9236d231055e93e3f',1,'ofb.c']]],
   ['ofb_5fcopy',['ofb_copy',['../ofb_8h.html#a0cd676906b5dc3b9fd5768ad8d66e394',1,'ofb.c']]],
   ['ofb_5ffinal',['ofb_final',['../ofb_8h.html#aac0b527564aa6ef4234f945f6b577f54',1,'ofb.c']]],
@@ -8,12 +7,25 @@ var searchData=
   ['ofb_5finit',['ofb_init',['../ofb_8h.html#a1670a9aa334deaf302fc0763c4800f58',1,'ofb.c']]],
   ['ofb_5fquery',['ofb_query',['../ofb_8h.html#a91501ac4178b5a357733bc583d369ba4',1,'ofb.c']]],
   ['ofb_5fupdate',['ofb_update',['../ofb_8h.html#aa27131e03b2e1e49caff769679853164',1,'ofb.c']]],
+  ['ordo_5faes',['ordo_aes',['../block__ciphers_8h.html#a9771349c4c7105e0152953bcd535c9de',1,'block_ciphers.c']]],
   ['ordo_5fallocator',['ordo_allocator',['../ordo_8h.html#a716bdd47e46105f2ca04ac77d4445d8b',1,'mem.c']]],
+  ['ordo_5fcbc',['ordo_cbc',['../block__modes_8h.html#a687c0335a3b02c76013a94ada9c0dfcc',1,'block_modes.c']]],
+  ['ordo_5fcfb',['ordo_cfb',['../block__modes_8h.html#a0337b29026d1579631fc511ea910fa65',1,'block_modes.c']]],
+  ['ordo_5fctr',['ordo_ctr',['../block__modes_8h.html#aea345b20e2af021219c56fddf11d0996',1,'block_modes.c']]],
   ['ordo_5fdigest',['ordo_digest',['../ordo_8h.html#a2380d744da2353a4dbefaf0d15267921',1,'ordo.c']]],
+  ['ordo_5fecb',['ordo_ecb',['../block__modes_8h.html#a865d00bd873f7381a7d3b9ab4a6e0b7c',1,'block_modes.c']]],
   ['ordo_5fenc_5fblock',['ordo_enc_block',['../ordo_8h.html#a6887d9682d41ce528ee30161678ba220',1,'ordo.c']]],
   ['ordo_5fenc_5fstream',['ordo_enc_stream',['../ordo_8h.html#a2354fbb277a68f22bebc211ccc3030fd',1,'ordo.c']]],
   ['ordo_5ferror_5fmsg',['ordo_error_msg',['../error_8h.html#a720eb73dee3d9bea09cc0cba1d7db13a',1,'error.c']]],
   ['ordo_5fhmac',['ordo_hmac',['../ordo_8h.html#a4fbee67e4e302c7a004c05868c69d3df',1,'ordo.c']]],
+  ['ordo_5fmd5',['ordo_md5',['../hash__functions_8h.html#a45274ebe55f3ec6d02a1dfcf871be8b9',1,'hash_functions.c']]],
+  ['ordo_5fnullcipher',['ordo_nullcipher',['../block__ciphers_8h.html#acc687d87aebd985b46101ee8675ca4a4',1,'block_ciphers.c']]],
+  ['ordo_5fofb',['ordo_ofb',['../block__modes_8h.html#a24dcd528b26c3d0c5d087023a717f06b',1,'block_modes.c']]],
+  ['ordo_5frc4',['ordo_rc4',['../stream__ciphers_8h.html#aed0470ec5d5712b53f610b927e646619',1,'stream_ciphers.c']]],
+  ['ordo_5fsha256',['ordo_sha256',['../hash__functions_8h.html#a0fca1da54aaf7a82d2b49d8bb8bfda83',1,'hash_functions.c']]],
+  ['ordo_5fskein256',['ordo_skein256',['../hash__functions_8h.html#a014a766b21ba6180668cb933cc257781',1,'hash_functions.c']]],
+  ['ordo_5fthreefish256',['ordo_threefish256',['../block__ciphers_8h.html#a57c8c3d265062a4e413aed8fbd37b7f8',1,'block_ciphers.c']]],
   ['ordo_5fversion',['ordo_version',['../version_8h.html#aa64cf9e2cfba4e8f155d94633c178c6d',1,'version.c']]],
-  ['os_5frandom',['os_random',['../os__random_8h.html#aac038e0b2b3eab7fb72a90e42bfb2d01',1,'os_random.c']]]
+  ['os_5frandom',['os_random',['../os__random_8h.html#aac038e0b2b3eab7fb72a90e42bfb2d01',1,'os_random.c']]],
+  ['os_5fsecure_5frandom',['os_secure_random',['../os__random_8h.html#aa663c74f31554d41701784241e8e4704',1,'os_random.c']]]
 ];

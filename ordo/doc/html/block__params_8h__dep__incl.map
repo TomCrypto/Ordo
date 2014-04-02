@@ -1,5 +1,5 @@
-<map id="/home/tom/Projects/github/Ordo/include/ordo/primitives/block_ciphers/block_params.h" name="/home/tom/Projects/github/Ordo/include/ordo/primitives/block_ciphers/block_params.h">
-<area shape="rect" id="node3" href="$aes_8h.html" title="Primitive. " alt="" coords="5,153,152,250"/>
-<area shape="rect" id="node5" href="$nullcipher_8h.html" title="Primitive. " alt="" coords="176,153,323,250"/>
-<area shape="rect" id="node7" href="$threefish256_8h.html" title="Primitive. " alt="" coords="347,153,504,250"/>
+<map id="/ssd/Ordo/include/ordo/primitives/block_ciphers/block_params.h" name="/ssd/Ordo/include/ordo/primitives/block_ciphers/block_params.h">
+<area shape="rect" id="node3" href="$aes_8h.html" title="Primitive. " alt="" coords="5,142,208,197"/>
+<area shape="rect" id="node5" href="$nullcipher_8h.html" title="Primitive. " alt="" coords="232,131,397,207"/>
+<area shape="rect" id="node7" href="$threefish256_8h.html" title="Primitive. " alt="" coords="421,131,587,207"/>
 </map>

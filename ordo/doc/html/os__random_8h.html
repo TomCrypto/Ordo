@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/misc/os_random.h File Reference</title>
+<title>Ordo: /ssd/Ordo/include/ordo/misc/os_random.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_2e97b979449bc21d090f44c91ac33c6f.html">misc</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_698ba7437d20544f57197cec70ca0a8c.html">misc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -98,9 +98,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="os__random_8h__dep__incl.png" border="0" usemap="#_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2misc_2os__random_8hdep" alt=""/></div>
-<map name="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2misc_2os__random_8hdep" id="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2misc_2os__random_8hdep">
-<area shape="rect" id="node3" href="ordo_8h.html" title="Wrapper. " alt="" coords="17,131,156,207"/></map>
+<div class="center"><img src="os__random_8h__dep__incl.png" border="0" usemap="#_2ssd_2_ordo_2include_2ordo_2misc_2os__random_8hdep" alt=""/></div>
+<map name="_2ssd_2_ordo_2include_2ordo_2misc_2os__random_8hdep" id="_2ssd_2_ordo_2include_2ordo_2misc_2os__random_8hdep">
+<area shape="rect" id="node3" href="ordo_8h.html" title="Wrapper. " alt="" coords="5,110,168,143"/></map>
 </div>
 </div>
 <p><a href="os__random_8h_source.html">Go to the source code of this file.</a></p>
@@ -109,14 +109,12 @@ This graph shows which files directly or indirectly include this file:</div>
 Functions</h2></td></tr>
 <tr class="memitem:aac038e0b2b3eab7fb72a90e42bfb2d01"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="os__random_8h.html#aac038e0b2b3eab7fb72a90e42bfb2d01">os_random</a> (void *out, size_t len)</td></tr>
 <tr class="separator:aac038e0b2b3eab7fb72a90e42bfb2d01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa663c74f31554d41701784241e8e4704"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="os__random_8h.html#aa663c74f31554d41701784241e8e4704">os_secure_random</a> (void *out, size_t len)</td></tr>
+<tr class="separator:aa663c74f31554d41701784241e8e4704"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Module. </p>
-<p>Exposes the OS CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface, which is basically a cross-platform wrapper to the OS-provided entropy pool.</p>
-<ul>
-<li><b>Linux:</b> Reads from <code>/dev/urandom</code>.</li>
-<li><b>Windows:</b> Acquires a CSP token and calls CryptGenRandom. </li>
-</ul>
+<p>Exposes the OS CSPRNG (Cryptographically Secure PseudoRandom Number Generator) interface, which is basically a cross-platform wrapper to the OS-provided entropy pool. To learn more about how it is implemented, go to the source code or find out what facilities your operating system provides for entropy gathering. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aac038e0b2b3eab7fb72a90e42bfb2d01"></a>
 <div class="memitem">
@@ -156,10 +154,48 @@ If the platform does not provide this feature, this function will always fail wi
 
 </div>
 </div>
+<a class="anchor" id="aa663c74f31554d41701784241e8e4704"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ORDO_PUBLIC int os_secure_random </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Generates cryptographically secure pseudorandom numbers, the function will make a best effort attempt to access the operating system entropy pool and so, ideally, should return exactly <code>len</code> bytes of entropy, whereas the <code>os_random</code> function need only return <em>enough</em> entropy for the output stream to be computationally indistinguishable from a non-random stream. However, keep in mind that this function is <b>not required</b> to behave as such.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">out</td><td>The destination buffer. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The number of bytes to generate.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129">ORDO_SUCCESS</a></code> on success, else an error code.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>If your platform doesn't provide this feature, this function will fall back to <code><a class="el" href="os__random_8h.html#aac038e0b2b3eab7fb72a90e42bfb2d01">os_random()</a></code> (there is no way to know whether this feature is available, this is by design).</dd>
+<dd>
+You should not need to know whether this feature is available, as this function will make a "best effort" attempt to obtain entropy from the operating system - you should use this function for high security uses such as generating private keys (it has a high cost so don't use it for e.g. nonces and initialization vectors). </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/internal/alg.h File Reference</title>
+<title>Ordo: /ssd/Ordo/include/ordo/internal/alg.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_b30972e45105c03e74a01b79acb6bbe0.html">internal</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_8e6ec748580dd820e43a2bce0fa100d0.html">internal</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -119,8 +119,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><b>Internal</b>, Utility </p>
-<p>This header provides various utility functions which are used by some library modules and a few convenience macros. It is not to be used outside the library, and this is enforced by an include guard. If you really must access it, define the <code>ORDO_INTERNAL_ACCESS</code> token before including it.</p>
-<p>Functions in internal headers are not prefixed, be wary of name clashes. </p>
+<p>This header provides various utility functions which are used by some library modules and a few convenience macros. It is not to be used outside the library, and this is enforced by an include guard. If you really must access it, define the <code>ORDO_INTERNAL_ACCESS</code> token before including it. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a432491257d14c507f4c4d271a38e416b"></a>
 <div class="memitem">
@@ -273,7 +272,7 @@ This implies the buffer must be at least <code>padding</code> bytes long. </dd><
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This is conceptually equivalent to <code>dst</code> <code>^=</code> <code>src</code>.</dd>
 <dd>
-The Source and destination buffers may be the same (in which case the buffer will contain <code>len</code> zeroes), but otherwise they cannot overlap. </dd></dl>
+The source and destination buffers may be the same (in which case the buffer will contain <code>len</code> zeroes), but otherwise they cannot overlap. </dd></dl>
 
 </div>
 </div>
@@ -315,7 +314,7 @@ The Source and destination buffers may be the same (in which case the buffer wil
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

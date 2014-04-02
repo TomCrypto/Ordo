@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /home/tom/Projects/github/Ordo/include/ordo/digest/digest.h File Reference</title>
+<title>Ordo: /ssd/Ordo/include/ordo/digest/digest.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.0</span>
+   &#160;<span id="projectnumber">2.7.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_bb41de19206075f5906c8dbb9301a9ac.html">digest</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_ad6c8fd641def44bed72afaa5991b9dc.html">digest</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -99,16 +99,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for digest.h:</div>
 <div class="dyncontent">
-<div class="center"><img src="digest_8h__incl.png" border="0" usemap="#_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8h" alt=""/></div>
-<map name="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8h" id="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8h">
-<area shape="rect" id="node3" href="hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="5,131,144,186"/></map>
+<div class="center"><img src="digest_8h__incl.png" border="0" usemap="#_2ssd_2_ordo_2include_2ordo_2digest_2digest_8h" alt=""/></div>
+<map name="_2ssd_2_ordo_2include_2ordo_2digest_2digest_8h" id="_2ssd_2_ordo_2include_2ordo_2digest_2digest_8h">
+<area shape="rect" id="node3" href="hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="12,110,151,165"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="digest_8h__dep__incl.png" border="0" usemap="#_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8hdep" alt=""/></div>
-<map name="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8hdep" id="_2home_2tom_2_projects_2github_2_ordo_2include_2ordo_2digest_2digest_8hdep">
-<area shape="rect" id="node3" href="hmac_8h.html" title="Module. " alt="" coords="5,131,144,207"/><area shape="rect" id="node5" href="pbkdf2_8h.html" title="Module. " alt="" coords="5,257,144,333"/><area shape="rect" id="node7" href="ordo_8h.html" title="Wrapper. " alt="" coords="5,382,144,458"/></map>
+<div class="center"><img src="digest_8h__dep__incl.png" border="0" usemap="#_2ssd_2_ordo_2include_2ordo_2digest_2digest_8hdep" alt=""/></div>
+<map name="_2ssd_2_ordo_2include_2ordo_2digest_2digest_8hdep" id="_2ssd_2_ordo_2include_2ordo_2digest_2digest_8hdep">
+<area shape="rect" id="node3" href="hmac_8h.html" title="Module. " alt="" coords="11,110,163,165"/><area shape="rect" id="node5" href="pbkdf2_8h.html" title="Module. " alt="" coords="11,214,163,269"/><area shape="rect" id="node7" href="ordo_8h.html" title="Wrapper. " alt="" coords="5,318,168,351"/></map>
 </div>
 </div>
 <p><a href="digest_8h_source.html">Go to the source code of this file.</a></p>
@@ -135,7 +135,7 @@ Functions</h2></td></tr>
 <p>Module to compute cryptographic digests, using cryptographic hash function primitives (as a pointer to a <code>HASH_FUNCTION</code> structure).</p>
 <p>The advantage of using this digest module instead of the hash function abstraction layer is this keeps track of the hash function primitive for you within an opaque <code>DIGEST_CTX</code> context structure, simplifying code and making it less error-prone.</p>
 <p>Usage snippet:</p>
-<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *hash = <a class="code" href="hash__functions_8h.html#a4e1eac957e25bc289bf5ebb82f3cdfd8">sha256</a>();</div>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *hash = sha256();</div>
 <div class="line"><span class="keyword">struct </span>DIGEST_CTX *ctx = <a class="code" href="digest_8h.html#ab228ed0c0f76eb732f9be0147adcd921">digest_alloc</a>(hash);</div>
 <div class="line"><span class="keywordflow">if</span> (!ctx) printf(<span class="stringliteral">&quot;Failed to allocate ctx!&quot;</span>);</div>
 <div class="line"></div>
@@ -388,7 +388,7 @@ This function is useful when hashing many messages with a common prefix, where t
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 31 2014 18:31:16 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

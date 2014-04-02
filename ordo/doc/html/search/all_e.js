@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['readme',['README',['../md__home_tom__projects_github__ordo_src_shared__r_e_a_d_m_e.html',1,'']]],
-  ['rc4',['rc4',['../stream__ciphers_8h.html#afbfe19d48ecc973943290bf4456ee443',1,'stream_ciphers.c']]],
+  ['readme',['README',['../md__ssd__ordo_src_shared__r_e_a_d_m_e.html',1,'']]],
   ['rc4_2eh',['rc4.h',['../rc4_8h.html',1,'']]],
   ['rc4_5falloc',['rc4_alloc',['../rc4_8h.html#acba828ec04caacec9f4918301a3daf0d',1,'rc4.c']]],
   ['rc4_5fcopy',['rc4_copy',['../rc4_8h.html#a1c870606ab06e8cea33346356f90c8f4',1,'rc4.c']]],

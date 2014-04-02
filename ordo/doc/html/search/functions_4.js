@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ecb',['ecb',['../block__modes_8h.html#a94d67e49acf1e80d7d803b7121cfa43a',1,'block_modes.c']]],
   ['ecb_5falloc',['ecb_alloc',['../ecb_8h.html#a481ba90712684a3063050a3aad5d1579',1,'ecb.c']]],
   ['ecb_5fcopy',['ecb_copy',['../ecb_8h.html#ae3b78f2a85bc82f73f315a34de7e91f8',1,'ecb.c']]],
   ['ecb_5ffinal',['ecb_final',['../ecb_8h.html#a71cbe6c9fccb62e699baf29795954586',1,'ecb.c']]],
