@@ -53,33 +53,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-/** Replaces the default library memory allocator with a custom one.
-///
-/// @param [in]     alloc          The allocation function.
-/// @param [in]     free           The deallocation function.
-/// @param [in]     data           Custom data passed to the above.
-///
-/// @remarks After this  function returns, all  memory allocations done by the
-///          library will go through these functions instead.
-///
-/// @remarks Do \b not use this function when the library has memory allocated
-///          with the current allocator, for obvious reasons. As a result this
-///          function should only be used at the start of the program, or at a
-///          point where you know the library to not be allocating any memory,
-///          e.g. there are no active contexts.
-///
-/// @remarks Please ensure  your allocator returns memory suitably aligned for
-///          the library  to use - a 32-byte alignment is ideal, but a 16-byte
-///          alignment should suffice for most architectures.
-///
-/// @remarks Calling this function with both arguments equal to \c  0 restores
-///          the default memory allocator (immediately ready for use).
-**/
-ORDO_PUBLIC
-void ordo_allocator(void *(*alloc)(size_t, void*),
-                    void  (*free)(void *, void *),
-                    void *data);
-
 /** Encrypts or decrypts data using a block cipher with a mode of operation.
 ///
 /// @param [in]     cipher         The block cipher to use.

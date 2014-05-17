@@ -29,11 +29,6 @@ extern "C" {
 
 struct THREEFISH256_STATE;
 
-/** @see \c block_cipher_alloc()
-**/
-ORDO_PUBLIC
-struct THREEFISH256_STATE *threefish256_alloc(void);
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).
@@ -59,17 +54,6 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state,
 **/
 ORDO_PUBLIC
 void threefish256_final(struct THREEFISH256_STATE *state);
-
-/** @see \c block_cipher_free()
-**/
-ORDO_PUBLIC
-void threefish256_free(struct THREEFISH256_STATE *state);
-
-/** @see \c block_cipher_copy()
-**/
-ORDO_PUBLIC
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src);
 
 /** @see \c block_cipher_query()
 **/

@@ -38,12 +38,6 @@ extern "C" {
 
 struct CTR_STATE;
 
-/** @see \c block_mode_alloc()
-**/
-ORDO_PUBLIC
-struct CTR_STATE *ctr_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state);
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
@@ -70,20 +64,6 @@ int ctr_final(struct CTR_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
-
-/** @see \c block_mode_free()
-**/
-ORDO_PUBLIC
-void ctr_free(struct CTR_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state);
-
-/** @see \c block_mode_copy()
-**/
-ORDO_PUBLIC
-void ctr_copy(struct CTR_STATE *dst,
-              const struct CTR_STATE *src,
-              const struct BLOCK_CIPHER *cipher);
 
 /** @see \c block_mode_query()
 **/

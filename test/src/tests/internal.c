@@ -11,50 +11,6 @@
 
 #undef ORDO_INTERNAL_ACCESS
 
-static void *test_alloc(size_t size, void *counter)
-{
-    (*(int*)counter)++;
-    return malloc(size);
-}
-
-static void test_free(void *ptr, void *counter)
-{
-    (*(int*)counter)++;
-    free(ptr);
-}
-
-static int test_mem_allocator(void)
-{
-    void *ptr;
-    int counter = 0;
-    
-    ordo_allocator(test_alloc, test_free, &counter);
-    ASSERT(ptr = mem_alloc(32), "Custom allocator failure.");
-    ASSERT(counter == 1, "Custom allocator was not called.");
-    mem_free(ptr);
-    ASSERT(counter == 2, "Custom deallocator was not called.");
-    
-    return 1;
-}
-
-int test_mem(void)
-{
-    int retval;
-    void *ptr;
-    
-    ASSERT(ptr = mem_alloc(32), "Small allocation failure."); mem_free(ptr);
-    ASSERT(ptr = mem_alloc(4096), "Big allocation failure."); mem_free(ptr);
-    
-    lprintf(INFO, "Hot-swapping library allocator.");
-    
-    retval = test_mem_allocator();
-    ordo_allocator(0, 0, 0);
-    
-    lprintf(INFO, "Restored default allocator.");
-    
-    return retval;
-}
-
 int test_alg(void)
 {
     return 1;

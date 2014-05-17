@@ -26,22 +26,17 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
     size_t i, t, t_max = out_len / digest_len;
 
     struct HMAC_CTX ctx, cst;
-
-    void *buf = mem_alloc(digest_len);
-    void *feedback = mem_alloc(digest_len);
+    
+    // TODO: TEMPORARY - digest length buffer max size = 2048 bytes
+    unsigned char buf[2048];
+    unsigned char feedback[2048];
 
     /* The output counter is a 32-bit counter which for some reason starts
      * at 1, putting an upper bound on the maximum output length allowed. */
     if ((!out_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
     {
         err = ORDO_ARG;
-        goto ret;
-    }
-
-    if ((!buf) || (!feedback))
-    {
-        err = ORDO_ALLOC;
-        goto ret;
+        return err;
     }
 
     for (t = 0; t < t_max + 1; ++t)
@@ -50,14 +45,14 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 
         if ((err = hmac_init(&ctx,
                              password, password_len,
-                             hash, params))) goto ret;
+                             hash, params))) return err;
 
         hmac_update(&ctx, salt, salt_len);
         hmac_update(&ctx, &counter, sizeof(uint32_t));
 
         /* We copy the first iteration result into the "feedback" buffer which
          * is used to store the previous iteration result for the next one. */
-        if ((err = hmac_final(&ctx, feedback))) goto ret;
+        if ((err = hmac_final(&ctx, feedback))) return err;
         memcpy(buf, feedback, digest_len);
 
         /* This HMAC initialization need be done only once, because for each
@@ -65,14 +60,14 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
          * the design of HMAC, most of the work can then be precomputed. */
         if ((err = hmac_init(&cst,
                              password, password_len,
-                             hash, params))) goto ret;
+                             hash, params))) return err;
 
         for (i = 1; i < iterations; ++i)
         {
             /* Next iteration: Ui+1 = PRF(Ui). */
             hmac_copy(&ctx, &cst);
             hmac_update(&ctx, feedback, digest_len);
-            if ((err = hmac_final(&ctx, feedback))) goto ret;
+            if ((err = hmac_final(&ctx, feedback))) return err;
 
             /* U1 ^ U2 ^ ... ^ Ui accumulation. */
             xor_buffer(buf, feedback, digest_len);
@@ -86,9 +81,6 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
                buf,
                (t == t_max) ? out_len % digest_len : digest_len);
     }
-
-ret:
-    mem_free(feedback);
-    mem_free(buf);
+    
     return err;
 }

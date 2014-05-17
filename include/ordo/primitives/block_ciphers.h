@@ -87,15 +87,6 @@ size_t block_cipher_count(void);
 
 /*===----------------------------------------------------------------------===*/
 
-/** Allocates a block cipher state.
-///
-/// @param [in]     primitive      A block cipher primitive.
-///
-/// @returns An allocated block cipher state, or \c 0 on error.
-**/
-ORDO_PUBLIC
-void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive);
-
 /** Initializes a block cipher state.
 ///
 /// @param [in]     primitive      A block cipher primitive.
@@ -147,31 +138,6 @@ void block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
 ORDO_PUBLIC
 void block_cipher_final(const struct BLOCK_CIPHER *primitive,
                         void *state);
-
-/** Frees a block cipher state.
-///
-/// @param [in]     primitive      A block cipher primitive.
-/// @param [in,out] state          A block cipher state.
-**/
-ORDO_PUBLIC
-void block_cipher_free(const struct BLOCK_CIPHER *primitive,
-                       void *state);
-
-/** Performs a deep copy of one state into another.
-///
-/// @param [in]     primitive      A block cipher primitive.
-/// @param [out]    dst            The destination state.
-/// @param [in]     src            The source state.
-///
-/// @remarks The destination state must have been allocated, by using the same
-///          primitive(s) as the source state, and mustn't be initialized.
-///
-/// @remarks The source state must be initialized.
-**/
-ORDO_PUBLIC
-void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
-                       void *dst,
-                       const void *src);
 
 /** Queries a block cipher for suitable parameters.
 ///

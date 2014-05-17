@@ -77,15 +77,6 @@ size_t stream_cipher_count(void);
 
 /*===----------------------------------------------------------------------===*/
 
-/** Allocates a stream cipher state.
-///
-/// @param [in]     primitive      A stream cipher primitive.
-///
-/// @returns An allocated stream cipher state, or \c 0 on error.
-**/
-ORDO_PUBLIC
-void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive);
-
 /** Initializes a stream cipher state.
 ///
 /// @param [in]     primitive      A stream cipher primitive.
@@ -130,15 +121,6 @@ void stream_cipher_update(const struct STREAM_CIPHER *primitive,
 ORDO_PUBLIC
 void stream_cipher_final(const struct STREAM_CIPHER *primitive,
                          void* state);
-
-/** Frees a stream cipher state.
-///
-/// @param [in]     primitive      A stream cipher primitive.
-/// @param [in,out] state          A stream cipher state.
-**/
-ORDO_PUBLIC
-void stream_cipher_free(const struct STREAM_CIPHER *primitive,
-                        void *state);
 
 /** Performs a deep copy of one state into another.
 ///

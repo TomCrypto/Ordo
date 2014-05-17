@@ -190,12 +190,12 @@ static double hash_speed(const struct HASH_FUNCTION *hash,
 
         digest_init(&ctx, hash, params);
 
-        start = now(); // begin
+        start = now();
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
             digest_update(&ctx, buffer, block);
 
-        elapsed = get_elapsed(start); // end
+        elapsed = get_elapsed(start);
 
         digest_final(&ctx, buffer);
         free(params);
@@ -207,12 +207,12 @@ static double hash_speed(const struct HASH_FUNCTION *hash,
 static double stream_speed(const struct STREAM_CIPHER *cipher,
                            uint64_t block)
 {
-    struct ENC_STREAM_CTX *ctx = enc_stream_alloc(cipher);
+    
     os_random(buffer, sizeof(buffer));
 
-    if (ctx)
     {
         void *params = stream_params(cipher);
+        struct ENC_STREAM_CTX ctx;
 
         size_t key_len = stream_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
 
@@ -222,39 +222,33 @@ static double stream_speed(const struct STREAM_CIPHER *cipher,
         double elapsed;
         my_time start;
 
-        enc_stream_init(ctx, key, key_len, params);
+        enc_stream_init(&ctx, key, key_len, cipher, params);
 
-        start = now(); // begin
+        start = now();
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
-            enc_stream_update(ctx, buffer, block);
+            enc_stream_update(&ctx, buffer, block);
 
-        elapsed = get_elapsed(start); // end
+        elapsed = get_elapsed(start);
 
-        enc_stream_final(ctx);
-        enc_stream_free(ctx);
+        enc_stream_final(&ctx);
         free(params);
         free(key);
 
         return speed_MiB(block * iterations, elapsed);
     }
-
-    printf("\t* Context allocation failed!\n");
-    printf("\nAn error occurred.\n");
-    exit(EXIT_FAILURE);
 }
 
 static double block_speed(const struct BLOCK_CIPHER *cipher,
                           const struct BLOCK_MODE *mode,
                           uint64_t block)
 {
-    struct ENC_BLOCK_CTX *ctx = enc_block_alloc(cipher, mode);
     os_random(buffer, sizeof(buffer));
 
-    if (ctx)
     {
         void *cipher_params = block_params(cipher);
         void *mode_params = block_mode_params(mode);
+        struct ENC_BLOCK_CTX ctx;
 
         size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
         size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
@@ -267,18 +261,17 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
         my_time start;
         size_t out;
 
-        enc_block_init(ctx, key, key_len, iv, iv_len,
-                       1, cipher_params, mode_params);
+        enc_block_init(&ctx, key, key_len, iv, iv_len,
+                       1, cipher, cipher_params, mode, mode_params);
 
-        start = now(); // begin
+        start = now();
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
-            enc_block_update(ctx, buffer, block, buffer, &out);
+            enc_block_update(&ctx, buffer, block, buffer, &out);
 
-        elapsed = get_elapsed(start); // end
+        elapsed = get_elapsed(start);
 
-        enc_block_final(ctx, buffer, &out);
-        enc_block_free(ctx);
+        enc_block_final(&ctx, buffer, &out);
         free(cipher_params);
         free(mode_params);
         free(key);
@@ -286,10 +279,6 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
 
         return speed_MiB(block * iterations, elapsed);
     }
-
-    printf("\t* Context allocation failed!\n");
-    printf("\nAn error occurred.\n");
-    exit(EXIT_FAILURE);
 }
 
 /***                          HIGH-LEVEL BENCHMARK                          ***/

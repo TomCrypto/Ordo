@@ -35,12 +35,6 @@ extern "C" {
 
 struct ECB_STATE;
 
-/** @see \c block_mode_alloc()
-**/
-ORDO_PUBLIC
-struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state);
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
@@ -67,20 +61,6 @@ int ecb_final(struct ECB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
-
-/** @see \c block_mode_free()
-**/
-ORDO_PUBLIC
-void ecb_free(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state);
-
-/** @see \c block_mode_copy()
-**/
-ORDO_PUBLIC
-void ecb_copy(struct ECB_STATE *dst,
-              const struct ECB_STATE *src,
-              const struct BLOCK_CIPHER *cipher);
 
 /** @see \c block_mode_query()
 **/

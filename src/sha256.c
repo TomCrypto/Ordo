@@ -30,11 +30,6 @@ static const uint32_t sha256_iv[8] =
 
 /*===----------------------------------------------------------------------===*/
 
-struct SHA256_STATE *sha256_alloc(void)
-{
-    return mem_alloc(sizeof(struct SHA256_STATE));
-}
-
 int sha256_init(struct SHA256_STATE *state,
                 const void *params)
 {
@@ -98,17 +93,6 @@ void sha256_final(struct SHA256_STATE *state,
         state->digest[t] = fmbe32(state->digest[t]);
 
     memcpy(digest, state->digest, SHA256_DIGEST);
-}
-
-void sha256_free(struct SHA256_STATE *state)
-{
-    mem_free(state);
-}
-
-void sha256_copy(struct SHA256_STATE *dst,
-                 const struct SHA256_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t sha256_query(int query, size_t value)

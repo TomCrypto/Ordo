@@ -50,7 +50,6 @@
 #include "ordo/misc/endianness.h"
 #include "ordo/common/error.h"
 #include "ordo/common/query.h"
-#include "ordo/internal/mem.h"
 #include "ordo/internal/alg.h"
 #include "ordo/internal/sys.h"
 

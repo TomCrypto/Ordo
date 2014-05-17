@@ -28,11 +28,6 @@ extern "C" {
 
 struct RC4_STATE;
 
-/** @see \c stream_cipher_alloc()
-**/
-ORDO_PUBLIC
-struct RC4_STATE *rc4_alloc(void);
-
 /** @see \c stream_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length was less than 40 bits (5 bytes) or
@@ -56,17 +51,6 @@ void rc4_update(struct RC4_STATE *state,
 **/
 ORDO_PUBLIC
 void rc4_final(struct RC4_STATE *state);
-
-/** @see \c stream_cipher_free()
-**/
-ORDO_PUBLIC
-void rc4_free(struct RC4_STATE *state);
-
-/** @see \c stream_cipher_copy()
-**/
-ORDO_PUBLIC
-void rc4_copy(struct RC4_STATE *dst,
-              const struct RC4_STATE *src);
 
 /** @see \c stream_cipher_query()
 **/

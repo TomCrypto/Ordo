@@ -47,31 +47,14 @@ struct SKEIN256_STATE
     uint64_t block_len;
     uint64_t msg_len;
     uint64_t out_len;
-    struct THREEFISH256_STATE *cipher;
+    unsigned char cipher[2048];
 };
-
-struct SKEIN256_STATE *skein256_alloc(void)
-{
-    struct SKEIN256_STATE *state = mem_alloc(sizeof(*state));
-    if (!state) goto fail;
-
-    state->cipher = threefish256_alloc();
-    if (!state->cipher) goto fail;
-
-    return state;
-
-fail:
-    skein256_free(state);
-    return 0;
-}
 
 int skein256_init(struct SKEIN256_STATE *state,
                   const struct SKEIN256_PARAMS *params)
 {
     state->block_len = 0;
     state->msg_len = 0;
-    
-    state->cipher = threefish256_alloc();
 
     if (params)
     {
@@ -194,33 +177,6 @@ void skein256_final(struct SKEIN256_STATE *state,
         memcpy(offset(digest, (ctr - 1) * SKEIN256_BLOCK), out, cpy);
         state->out_len -= cpy; /* Will always reach zero, see above. */
     }
-    
-    // TEMPORARY
-    threefish256_free(state->cipher);
-}
-
-void skein256_free(struct SKEIN256_STATE *state)
-{
-    if (state) threefish256_free(state->cipher);
-    mem_free(state);
-}
-
-void skein256_copy(struct SKEIN256_STATE *dst,
-                   const struct SKEIN256_STATE *src)
-{
-    size_t t;
-    
-    for (t = 0; t < 4; ++t)
-    {
-        dst->state[t] = src->state[t];
-        dst->block[t] = src->block[t];
-    }
-    
-    dst->block_len = src->block_len;
-    dst->msg_len = src->msg_len;
-    dst->out_len = src->out_len;
-
-    threefish256_copy(dst->cipher, src->cipher);
 }
 
 size_t skein256_query(int query, size_t value)

@@ -10,34 +10,12 @@
 
 struct CFB_STATE
 {
-    void *iv;
-    void *tmp;
+    unsigned char iv[2048];
+    unsigned char tmp[2048];
     size_t remaining;
     size_t block_size;
     int direction;
 };
-
-struct CFB_STATE *cfb_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-    struct CFB_STATE *state = mem_alloc(sizeof(struct CFB_STATE));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->iv = mem_alloc(state->block_size);
-    if (!state->iv) goto fail;
-
-    state->tmp = mem_alloc(state->block_size);
-    if (!state->tmp) goto fail;
-
-    state->remaining = 0;
-    return state;
-
-fail:
-    cfb_free(state, cipher, cipher_state);
-    return 0;
-}
 
 int cfb_init(struct CFB_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -47,7 +25,9 @@ int cfb_init(struct CFB_STATE *state,
              int dir,
              const void *params)
 {
-    size_t block_size = state->block_size;
+    size_t block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+    state->block_size = block_size;
+    state->remaining = 0;
 
     if (cfb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
@@ -152,29 +132,6 @@ int cfb_final(struct CFB_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-void cfb_free(struct CFB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state)
-    {
-        mem_free(state->tmp);
-        mem_free(state->iv);
-    }
-
-    mem_free(state);
-}
-
-void cfb_copy(struct CFB_STATE *dst,
-              const struct CFB_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->tmp, src->tmp, dst->block_size);
-    memcpy(dst->iv, src->iv, dst->block_size);
-    dst->remaining = src->remaining;
-    dst->direction = src->direction;
 }
 
 size_t cfb_query(const struct BLOCK_CIPHER *cipher,

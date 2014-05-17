@@ -27,11 +27,6 @@ static void threefish256_inverse_C(uint64_t block[4],
 
 /*===----------------------------------------------------------------------===*/
 
-struct THREEFISH256_STATE *threefish256_alloc(void)
-{
-    return mem_alloc(sizeof(struct THREEFISH256_STATE));
-}
-
 int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
@@ -62,17 +57,6 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state,
 void threefish256_final(struct THREEFISH256_STATE *state)
 {
     return;
-}
-
-void threefish256_free(struct THREEFISH256_STATE *state)
-{
-    mem_free(state);
-}
-
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t threefish256_query(int query, size_t value)

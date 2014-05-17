@@ -34,11 +34,6 @@ extern "C" {
 
 struct SKEIN256_STATE;
 
-/** @see \c hash_function_alloc()
-**/
-ORDO_PUBLIC
-struct SKEIN256_STATE *skein256_alloc(void);
-
 /** @see \c hash_function_init()
 ///
 /// @retval #ORDO_ARG if parameters were  provided, but  requested  an  output
@@ -66,17 +61,6 @@ void skein256_update(struct SKEIN256_STATE *state,
 ORDO_PUBLIC
 void skein256_final(struct SKEIN256_STATE *state,
                     void *digest);
-
-/** @see \c hash_function_free()
-**/
-ORDO_PUBLIC
-void skein256_free(struct SKEIN256_STATE *state);
-
-/** @see \c hash_function_copy()
-**/
-ORDO_PUBLIC
-void skein256_copy(struct SKEIN256_STATE *dst,
-                   const struct SKEIN256_STATE *src);
 
 /** @see \c hash_function_query()
 **/

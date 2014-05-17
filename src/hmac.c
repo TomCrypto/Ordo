@@ -59,13 +59,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    if ((err = digest_init(&ctx->ctx, ctx->hash, 0)))
-    {
-        /* Here "digest" (user-provided pointer) contains sensitive data.
-         * Erase this information before returning if a failure occurred. */
-        mem_erase(digest, digest_len);
-        return err;
-    }
+    if ((err = digest_init(&ctx->ctx, ctx->hash, 0))) return err;
 
     digest_update(&ctx->ctx, ctx->key, block_size);
     digest_update(&ctx->ctx, digest, digest_len);

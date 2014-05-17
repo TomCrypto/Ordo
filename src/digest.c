@@ -28,7 +28,7 @@ void digest_final(struct DIGEST_CTX *ctx, void *digest)
 void digest_copy(struct DIGEST_CTX *dst,
                  const struct DIGEST_CTX *src)
 {
-    hash_function_copy(dst->hash, dst->state, src->state);
+    *dst = *src;
 }
 
 size_t digest_length(const struct HASH_FUNCTION *hash)

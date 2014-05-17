@@ -10,33 +10,11 @@
 
 struct CTR_STATE
 {
-    void *iv;
-    unsigned char *counter;
+    unsigned char iv[2048];
+    unsigned char counter[2048];
     size_t remaining;
     size_t block_size;
 };
-
-struct CTR_STATE *ctr_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-    struct CTR_STATE *state = mem_alloc(sizeof(struct CTR_STATE));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->iv = mem_alloc(state->block_size);
-    if (!state->iv) goto fail;
-
-    state->counter = mem_alloc(state->block_size);
-    if (!state->counter) goto fail;
-
-    state->remaining = 0;
-    return state;
-
-fail:
-    ctr_free(state, cipher, cipher_state);
-    return 0;
-}
 
 int ctr_init(struct CTR_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -46,7 +24,9 @@ int ctr_init(struct CTR_STATE *state,
              int dir,
              const void *params)
 {
-    size_t block_size = state->block_size;
+    size_t block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+    state->block_size = block_size;
+    state->remaining = 0;
 
     if (ctr_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
@@ -103,28 +83,6 @@ int ctr_final(struct CTR_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-void ctr_free(struct CTR_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state)
-    {
-        mem_free(state->counter);
-        mem_free(state->iv);
-    }
-
-    mem_free(state);
-}
-
-void ctr_copy(struct CTR_STATE *dst,
-              const struct CTR_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->counter, src->counter, dst->block_size);
-    memcpy(dst->iv, src->iv, dst->block_size);
-    dst->remaining = src->remaining;
 }
 
 size_t ctr_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)

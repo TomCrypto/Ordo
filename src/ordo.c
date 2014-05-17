@@ -18,29 +18,25 @@ int ordo_enc_block(const struct BLOCK_CIPHER *cipher,
                    const void *in,size_t in_len,
                    void* out, size_t *out_len)
 {
-    int err = ORDO_ALLOC;
+    int err = ORDO_SUCCESS;
     size_t end_pos = 0;
+    struct ENC_BLOCK_CTX ctx;
 
-    struct ENC_BLOCK_CTX *ctx = enc_block_alloc(cipher, mode);
-    if (!ctx) goto fail;
-
-    if ((err = enc_block_init(ctx,
+    if ((err = enc_block_init(&ctx,
                               key, key_len,
                               iv, iv_len,
                               direction,
-                              cipher_params,
-                              mode_params))) goto fail;
+                              cipher, cipher_params,
+                              mode, mode_params))) return err;
 
-    enc_block_update(ctx, in, in_len, out, out_len);
+    enc_block_update(&ctx, in, in_len, out, out_len);
     end_pos += *out_len;
 
-    if ((err = enc_block_final(ctx,
+    if ((err = enc_block_final(&ctx,
                                offset(out, end_pos),
-                               out_len))) goto fail;
+                               out_len))) return err;
     *out_len += end_pos;
 
-fail:
-    enc_block_free(ctx);
     return err;
 }
 
@@ -48,17 +44,15 @@ int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
                     const void *key, size_t key_len,
                     void *buffer, size_t len)
 {
-    int err = ORDO_ALLOC;
+    int err = ORDO_SUCCESS;
+    struct ENC_STREAM_CTX ctx;
 
-    struct ENC_STREAM_CTX *ctx = enc_stream_alloc(cipher);
-    if (!ctx) goto fail;
+    if (!(err = enc_stream_init(&ctx, key, key_len, cipher, params)))
+    {
+        enc_stream_update(&ctx, buffer, len);
+        enc_stream_final(&ctx);
+    }
 
-    if ((err = enc_stream_init(ctx, key, key_len, params))) goto fail;
-    enc_stream_update(ctx, buffer, len);
-    enc_stream_final(ctx);
-
-fail:
-    enc_stream_free(ctx);
     return err;
 }
 

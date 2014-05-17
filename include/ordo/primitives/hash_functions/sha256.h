@@ -24,11 +24,6 @@ extern "C" {
 
 struct SHA256_STATE;
 
-/** @see \c hash_function_alloc()
-**/
-ORDO_PUBLIC
-struct SHA256_STATE *sha256_alloc(void);
-
 /** @see \c hash_function_init()
 ///
 /// @remarks The \c params parameter is ignored.
@@ -49,17 +44,6 @@ void sha256_update(struct SHA256_STATE *state,
 ORDO_PUBLIC
 void sha256_final(struct SHA256_STATE *state,
                   void *digest);
-
-/** @see \c hash_function_free()
-**/
-ORDO_PUBLIC
-void sha256_free(struct SHA256_STATE *state);
-
-/** @see \c hash_function_copy()
-**/
-ORDO_PUBLIC
-void sha256_copy(struct SHA256_STATE *dst,
-                 const struct SHA256_STATE *src);
 
 /** @see \c hash_function_query()
 **/

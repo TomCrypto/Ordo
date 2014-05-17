@@ -10,8 +10,8 @@
 
 struct CBC_STATE
 {
-    void *iv;
-    unsigned char *block;
+    unsigned char iv[2048];
+    unsigned char block[2048];
     size_t available;
 
     size_t block_size;
@@ -19,29 +19,6 @@ struct CBC_STATE
     size_t padding;
     int direction;
 };
-
-struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-
-
-    struct CBC_STATE *state = mem_alloc(sizeof(struct CBC_STATE));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->iv = mem_alloc(state->block_size);
-    if (!state->iv) goto fail;
-
-    state->block = mem_alloc(state->block_size);
-    if (!state->block) goto fail;
-
-    return state;
-
-fail:
-    cbc_free(state, cipher, cipher_state);
-    return 0;
-}
 
 int cbc_init(struct CBC_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -51,6 +28,8 @@ int cbc_init(struct CBC_STATE *state,
              int dir,
              const struct CBC_PARAMS *params)
 {
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+
     if (cbc_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
@@ -235,30 +214,6 @@ int cbc_final(struct CBC_STATE *state,
     return (state->direction
             ? cbc_encrypt_final(state, cipher, cipher_state, out, out_len)
             : cbc_decrypt_final(state, cipher, cipher_state, out, out_len));
-}
-
-void cbc_free(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state)
-    {
-        mem_free(state->block);
-        mem_free(state->iv);
-    }
-
-    mem_free(state);
-}
-
-void cbc_copy(struct CBC_STATE *dst,
-              const struct CBC_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->block, src->block, dst->block_size);
-    memcpy(dst->iv, src->iv, dst->block_size);
-    dst->direction = src->direction;
-    dst->available = src->available;
-    dst->padding = src->padding;
 }
 
 size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)

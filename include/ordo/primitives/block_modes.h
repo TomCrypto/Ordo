@@ -100,19 +100,6 @@ size_t block_mode_count(void);
 
 /*===----------------------------------------------------------------------===*/
 
-/** Allocates a block mode state.
-///
-/// @param [in]     mode           A block mode primitive.
-/// @param [in]     cipher         A block cipher primitive.
-/// @param [in]     cipher_state   An allocated block cipher state.
-///
-/// @returns An allocated block mode state, or \c 0 on error.
-**/
-ORDO_PUBLIC
-void *block_mode_alloc(const struct BLOCK_MODE *mode,
-                       const struct BLOCK_CIPHER *cipher,
-                       const void *cipher_state);
-
 /** Initializes a block mode state.
 ///
 /// @param [in]     mode           A block mode primitive.
@@ -182,37 +169,6 @@ int block_mode_final(const struct BLOCK_MODE *mode,
                      const struct BLOCK_CIPHER *cipher,
                      const void* cipher_state,
                      void *out, size_t *out_len);
-
-/** Frees a block mode state.
-///
-/// @param [in]     mode           A block mode primitive.
-/// @param [in,out] state          A block mode state.
-/// @param [in]     cipher         A block cipher primitive.
-/// @param [in]     cipher_state   A block cipher state.
-**/
-ORDO_PUBLIC
-void block_mode_free(const struct BLOCK_MODE *mode,
-                     void *state,
-                     const struct BLOCK_CIPHER *cipher,
-                     const void *cipher_state);
-
-/** Performs a deep copy of one state into another.
-///
-/// @param [in]     mode           A block mode primitive.
-/// @param [in]     cipher         A block cipher primitive.
-/// @param [out]    dst            The destination state.
-/// @param [in]     src            The source state.
-///
-/// @remarks The destination state must have been allocated, by using the same
-///          primitive(s) as the source state, and mustn't be initialized.
-///
-/// @remarks The source state must be initialized.
-**/
-ORDO_PUBLIC
-void block_mode_copy(const struct BLOCK_MODE *mode,
-                     const struct BLOCK_CIPHER *cipher,
-                     void *dst,
-                     const void *src);
 
 /** Queries a block mode for suitable parameters.
 ///

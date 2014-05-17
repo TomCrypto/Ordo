@@ -164,42 +164,26 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
     else
     {
         size_t check_len = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-        void *state;
+        unsigned char state[2048]; // TODO: TEMPORARY!
         int err;
 
         /* We can't use ordo_enc_block, since we are testing the block
          * cipher's permutation functions - fall back to a lower level. */
-        state = block_cipher_alloc(cipher);
-        if (!state)
-        {
-            return 0;
-        }
-
         err = block_cipher_init(cipher, state,
                                 test.key, test.key_len,
                                 0);
 
-        if (err)
-        {
-            block_cipher_free(cipher, state);
-            return 0;
-        }
+        if (err) return 0;
 
         memcpy(scratch, test.input, check_len);
         block_cipher_forward(cipher, state,
                              scratch);
 
-        if (memcmp(test.expected, scratch, check_len))
-        {
-            block_cipher_free(cipher, state);
-            return 0;
-        }
+        if (memcmp(test.expected, scratch, check_len)) return 0;
 
         /* Now try to decrypt and see if we get back the input. */
         block_cipher_inverse(cipher, state,
                              scratch);
-
-        block_cipher_free(cipher, state);
 
         if (memcmp(test.input, scratch, check_len))
         {
@@ -210,11 +194,6 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
             return 1;
         }
     }
-}
-
-void ror64(int x)
-{
-    return;
 }
 
 int test_block(void)

@@ -24,11 +24,6 @@ extern "C" {
 
 struct MD5_STATE;
 
-/** @see \c hash_function_alloc()
-**/
-ORDO_PUBLIC
-struct MD5_STATE *md5_alloc(void);
-
 /** @see \c hash_function_init()
 ///
 /// @remarks The \c params parameter is ignored.
@@ -49,17 +44,6 @@ void md5_update(struct MD5_STATE *state,
 ORDO_PUBLIC
 void md5_final(struct MD5_STATE *state,
                void *digest);
-
-/** @see \c hash_function_free()
-**/
-ORDO_PUBLIC
-void md5_free(struct MD5_STATE *state);
-
-/** @see \c hash_function_copy()
-**/
-ORDO_PUBLIC
-void md5_copy(struct MD5_STATE *dst,
-             const struct MD5_STATE *src);
 
 /** @see \c hash_function_query()
 **/

@@ -30,11 +30,6 @@ struct MD5_STATE
     uint64_t msg_len;
 };
 
-struct MD5_STATE *md5_alloc(void)
-{
-    return mem_alloc(sizeof(struct MD5_STATE));
-}
-
 int md5_init(struct MD5_STATE *state,
              const void *params)
 {
@@ -109,17 +104,6 @@ void md5_final(struct MD5_STATE *state,
     /* At this point there is no input data left in the state, everything has
      * been processed into the digest, which we can now return to the user. */
     memcpy(digest, state->digest, MD5_DIGEST);
-}
-
-void md5_free(struct MD5_STATE *state)
-{
-    mem_free(state);
-}
-
-void md5_copy(struct MD5_STATE *dst,
-              const struct MD5_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t md5_query(int query, size_t value)

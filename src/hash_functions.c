@@ -8,29 +8,20 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef void  *(*HASH_ALLOC)
-    (void);
 typedef  int   (*HASH_INIT)
     (void *, const void *);
 typedef void   (*HASH_UPDATE)
     (void *, const void *, size_t);
 typedef void   (*HASH_FINAL)
     (void *, void *);
-typedef void   (*HASH_FREE)
-    (void *);
-typedef void   (*HASH_COPY)
-    (void *, const void *);
 typedef size_t (*HASH_QUERY)
     (int, size_t);
 
 struct HASH_FUNCTION
 {
-    HASH_ALLOC  alloc;
     HASH_INIT   init;
     HASH_UPDATE update;
     HASH_FINAL  final;
-    HASH_FREE   free;
-    HASH_COPY   copy;
     HASH_QUERY  query;
     const char *name;
 };
@@ -48,12 +39,9 @@ const struct HASH_FUNCTION *ordo_md5(void)
 {
     static const struct HASH_FUNCTION primitive =
     {
-        (HASH_ALLOC )md5_alloc,
         (HASH_INIT  )md5_init,
         (HASH_UPDATE)md5_update,
         (HASH_FINAL )md5_final,
-        (HASH_FREE  )md5_free,
-        (HASH_COPY  )md5_copy,
         (HASH_QUERY )md5_query,
         "MD5"
     };
@@ -67,12 +55,9 @@ const struct HASH_FUNCTION *ordo_sha256(void)
 {
     static const struct HASH_FUNCTION primitive =
     {
-        (HASH_ALLOC )sha256_alloc,
         (HASH_INIT  )sha256_init,
         (HASH_UPDATE)sha256_update,
         (HASH_FINAL )sha256_final,
-        (HASH_FREE  )sha256_free,
-        (HASH_COPY  )sha256_copy,
         (HASH_QUERY )sha256_query,
         "SHA-256"
     };
@@ -86,12 +71,9 @@ const struct HASH_FUNCTION *ordo_skein256(void)
 {
     static const struct HASH_FUNCTION primitive =
     {
-        (HASH_ALLOC )skein256_alloc,
         (HASH_INIT  )skein256_init,
         (HASH_UPDATE)skein256_update,
         (HASH_FINAL )skein256_final,
-        (HASH_FREE  )skein256_free,
-        (HASH_COPY  )skein256_copy,
         (HASH_QUERY )skein256_query,
         "Skein-256"
     };
@@ -156,13 +138,6 @@ void hash_function_final(const struct HASH_FUNCTION *primitive,
                          void *digest)
 {
     primitive->final(state, digest);
-}
-
-void hash_function_copy(const struct HASH_FUNCTION *primitive,
-                        void *dst,
-                        const void *src)
-{
-    primitive->copy(dst, src);
 }
 
 size_t hash_function_query(const struct HASH_FUNCTION *primitive,

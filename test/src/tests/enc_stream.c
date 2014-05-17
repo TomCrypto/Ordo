@@ -50,29 +50,27 @@ int test_enc_stream_interface(void)
     for (t = 0; t < stream_cipher_count(); ++t)
     {
         const struct STREAM_CIPHER *cipher = stream_cipher_by_index(t);
-        struct ENC_STREAM_CTX *ctx = enc_stream_alloc(cipher);
-        struct ENC_STREAM_CTX *cp1 = enc_stream_alloc(cipher);
-        struct ENC_STREAM_CTX *cp2 = enc_stream_alloc(cipher);
         size_t key_size = enc_stream_key_len(cipher, 0);
         const char *name = stream_cipher_name(cipher);
+        struct ENC_STREAM_CTX ctx, cp1, cp2;
         
         memset(key,  0xAA, sizeof(key));
         memset(buf0, 0xBB, sizeof(buf0));
         memset(buf1, 0xBB, sizeof(buf1));
         memset(buf2, 0xBB, sizeof(buf2));
         
-        enc_stream_init(ctx, key, key_size, 0); // ctx initialized
+        enc_stream_init(&ctx, key, key_size, cipher, 0); // ctx initialized
         
-        enc_stream_copy(cp1, ctx); // cp1 initialized
+        enc_stream_copy(&cp1, &ctx); // cp1 initialized
         
-        enc_stream_update(ctx, buf0, 16); // ctx at 16 bytes
-        enc_stream_update(cp1, buf1, 16); // cp1 at 16 bytes
+        enc_stream_update(&ctx, buf0, 16); // ctx at 16 bytes
+        enc_stream_update(&cp1, buf1, 16); // cp1 at 16 bytes
         
-        enc_stream_copy(cp2, cp1); // cp2 at 16 bytes
+        enc_stream_copy(&cp2, &cp1); // cp2 at 16 bytes
         
-        enc_stream_update(ctx, buf0 + 16, 16); // ctx at 32 bytes
-        enc_stream_update(cp1, buf1 + 16, 16); // cp1 at 32 bytes
-        enc_stream_update(cp2, buf2 + 16, 16); // cp2 at 32 bytes
+        enc_stream_update(&ctx, buf0 + 16, 16); // ctx at 32 bytes
+        enc_stream_update(&cp1, buf1 + 16, 16); // cp1 at 32 bytes
+        enc_stream_update(&cp2, buf2 + 16, 16); // cp2 at 32 bytes
         
         // now buf0[0..15] == buf1[0..15]
         // and buf0[16..31] == buf1[16..31] == buf2[16..31]
@@ -82,13 +80,9 @@ int test_enc_stream_interface(void)
         ASSERT(!memcmp(buf0 + 16, buf2 + 16, 16),
                "Context copy error for %s.", cyan(name));
         
-        enc_stream_final(ctx);
-        enc_stream_final(cp1);
-        enc_stream_final(cp2);
-        
-        enc_stream_free(ctx);
-        enc_stream_free(cp1);
-        enc_stream_free(cp2);
+        enc_stream_final(&ctx);
+        enc_stream_final(&cp1);
+        enc_stream_final(&cp2);
     }
     
     return 1;

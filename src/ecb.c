@@ -10,7 +10,7 @@
 
 struct ECB_STATE
 {
-    unsigned char *block;
+    unsigned char block[2048];
     size_t available;
 
     size_t block_size;
@@ -18,24 +18,6 @@ struct ECB_STATE
     size_t padding;
     int direction;
 };
-
-struct ECB_STATE *ecb_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-    struct ECB_STATE* state = mem_alloc(sizeof(*state));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->block = mem_alloc(state->block_size);
-    if (!state->block) goto fail;
-
-    return state;
-
-fail:
-    ecb_free(state, cipher, cipher_state);
-    return 0;
-}
 
 int ecb_init(struct ECB_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -45,6 +27,8 @@ int ecb_init(struct ECB_STATE *state,
              int direction,
              const struct ECB_PARAMS *params)
 {
+    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+
     /* ECB accepts no IV - it is an error to pass it one. Note for consistency
      * only the iv_len parameter is checked - iv itself is in fact ignored. */
     if (ecb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
@@ -183,27 +167,6 @@ int ecb_final(struct ECB_STATE *state,
     return (state->direction
             ? ecb_encrypt_final(state, cipher, cipher_state, out, out_len)
             : ecb_decrypt_final(state, cipher, cipher_state, out, out_len));
-}
-
-void ecb_free(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state)
-    {
-        mem_free(state->block);
-        mem_free(state);
-    }
-}
-
-void ecb_copy(struct ECB_STATE *dst,
-              const struct ECB_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->block, src->block, dst->block_size);
-    dst->available = src->available;
-    dst->direction = src->direction;
-    dst->padding = src->padding;
 }
 
 size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)

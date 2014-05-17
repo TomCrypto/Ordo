@@ -8,30 +8,21 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef void  *(*BLOCK_ALLOC)
-    (void);
 typedef  int   (*BLOCK_INIT)
     (void *, const void *, size_t, const void *);
 typedef void   (*BLOCK_UPDATE)
     (const void *, void *);
 typedef void   (*BLOCK_FINAL)
     (void *);
-typedef void   (*BLOCK_FREE)
-    (void *);
-typedef void   (*BLOCK_COPY)
-    (void *, const void *);
 typedef size_t (*BLOCK_QUERY)
     (int, size_t);
 
 struct BLOCK_CIPHER
 {
-    BLOCK_ALLOC  alloc;
     BLOCK_INIT   init;
     BLOCK_UPDATE forward;
     BLOCK_UPDATE inverse;
     BLOCK_FINAL  final;
-    BLOCK_FREE   free;
-    BLOCK_COPY   copy;
     BLOCK_QUERY  query;
     const char  *name;
 };
@@ -49,13 +40,10 @@ const struct BLOCK_CIPHER *ordo_nullcipher(void)
 {
     static const struct BLOCK_CIPHER primitive =
     {
-        (BLOCK_ALLOC )nullcipher_alloc,
         (BLOCK_INIT  )nullcipher_init,
         (BLOCK_UPDATE)nullcipher_forward,
         (BLOCK_UPDATE)nullcipher_inverse,
         (BLOCK_FINAL )nullcipher_final,
-        (BLOCK_FREE  )nullcipher_free,
-        (BLOCK_COPY  )nullcipher_copy,
         (BLOCK_QUERY )nullcipher_query,
         "NullCipher"
     };
@@ -69,13 +57,10 @@ const struct BLOCK_CIPHER *ordo_threefish256(void)
 {
     static const struct BLOCK_CIPHER primitive =
     {
-        (BLOCK_ALLOC )threefish256_alloc,
         (BLOCK_INIT  )threefish256_init,
         (BLOCK_UPDATE)threefish256_forward,
         (BLOCK_UPDATE)threefish256_inverse,
         (BLOCK_FINAL )threefish256_final,
-        (BLOCK_FREE  )threefish256_free,
-        (BLOCK_COPY  )threefish256_copy,
         (BLOCK_QUERY )threefish256_query,
         "Threefish-256"
     };
@@ -89,13 +74,10 @@ const struct BLOCK_CIPHER *ordo_aes(void)
 {
     static const struct BLOCK_CIPHER primitive =
     {
-        (BLOCK_ALLOC )aes_alloc,
         (BLOCK_INIT  )aes_init,
         (BLOCK_UPDATE)aes_forward,
         (BLOCK_UPDATE)aes_inverse,
         (BLOCK_FINAL )aes_final,
-        (BLOCK_FREE  )aes_free,
-        (BLOCK_COPY  )aes_copy,
         (BLOCK_QUERY )aes_query,
         "AES"
     };
@@ -140,11 +122,6 @@ size_t block_cipher_count(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void *block_cipher_alloc(const struct BLOCK_CIPHER *primitive)
-{
-    return primitive->alloc();
-}
-
 int block_cipher_init(const struct BLOCK_CIPHER *primitive,
                       void *state,
                       const void *key,
@@ -172,19 +149,6 @@ void block_cipher_final(const struct BLOCK_CIPHER *primitive,
                         void *state)
 {
     primitive->final(state);
-}
-
-void block_cipher_free(const struct BLOCK_CIPHER *primitive,
-                       void *state)
-{
-    primitive->free(state);
-}
-
-void block_cipher_copy(const struct BLOCK_CIPHER *primitive,
-                       void *dst,
-                       const void *src)
-{
-    primitive->copy(dst, src);
 }
 
 size_t block_cipher_query(const struct BLOCK_CIPHER *primitive,

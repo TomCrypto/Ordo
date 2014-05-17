@@ -27,11 +27,6 @@ extern "C" {
 
 struct NULLCIPHER_STATE;
 
-/** @see \c block_cipher_alloc()
-**/
-ORDO_PUBLIC
-struct NULLCIPHER_STATE *nullcipher_alloc(void);
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not zero.
@@ -57,17 +52,6 @@ void nullcipher_inverse(const struct NULLCIPHER_STATE *state,
 **/
 ORDO_PUBLIC
 void nullcipher_final(struct NULLCIPHER_STATE *state);
-
-/** @see \c block_cipher_free()
-**/
-ORDO_PUBLIC
-void nullcipher_free(struct NULLCIPHER_STATE *state);
-
-/** @see \c block_cipher_copy()
-**/
-ORDO_PUBLIC
-void nullcipher_copy(struct NULLCIPHER_STATE *dst,
-                     const struct NULLCIPHER_STATE *src);
 
 /** @see \c block_cipher_query()
 **/

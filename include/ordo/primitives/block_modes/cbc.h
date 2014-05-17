@@ -42,12 +42,6 @@ extern "C" {
 
 struct CBC_STATE;
 
-/** @see \c block_mode_alloc()
-**/
-ORDO_PUBLIC
-struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state);
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
@@ -74,20 +68,6 @@ int cbc_final(struct CBC_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
-
-/** @see \c block_mode_free()
-**/
-ORDO_PUBLIC
-void cbc_free(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state);
-
-/** @see \c block_mode_copy()
-**/
-ORDO_PUBLIC
-void cbc_copy(struct CBC_STATE *dst,
-              const struct CBC_STATE *src,
-              const struct BLOCK_CIPHER *cipher);
 
 /** @see \c block_mode_query()
 **/

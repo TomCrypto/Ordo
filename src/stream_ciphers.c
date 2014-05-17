@@ -8,29 +8,20 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef void  *(*STREAM_ALLOC)
-    (void);
 typedef  int   (*STREAM_INIT)
     (void *, const void *, size_t, const void *);
 typedef void   (*STREAM_UPDATE)
     (void *, void *, size_t);
 typedef void   (*STREAM_FINAL)
     (void *);
-typedef void   (*STREAM_FREE)
-    (void *);
-typedef void   (*STREAM_COPY)
-    (void *, const void *);
 typedef size_t (*STREAM_QUERY)
     (int, size_t);
 
 struct STREAM_CIPHER
 {
-    STREAM_ALLOC  alloc;
     STREAM_INIT   init;
     STREAM_UPDATE update;
     STREAM_FINAL  final;
-    STREAM_FREE   free;
-    STREAM_COPY   copy;
     STREAM_QUERY  query;
     const char   *name;
 };
@@ -48,12 +39,9 @@ const struct STREAM_CIPHER *ordo_rc4(void)
 {
     static const struct STREAM_CIPHER primitive =
     {
-        (STREAM_ALLOC )rc4_alloc,
         (STREAM_INIT  )rc4_init,
         (STREAM_UPDATE)rc4_update,
         (STREAM_FINAL )rc4_final,
-        (STREAM_FREE  )rc4_free,
-        (STREAM_COPY  )rc4_copy,
         (STREAM_QUERY )rc4_query,
         "RC4"
     };
@@ -96,11 +84,6 @@ size_t stream_cipher_count(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
-{
-    return primitive->alloc();
-}
-
 int stream_cipher_init(const struct STREAM_CIPHER *primitive,
                        void *state,
                        const void *key,
@@ -122,19 +105,6 @@ void stream_cipher_final(const struct STREAM_CIPHER *primitive,
                          void *state)
 {
     primitive->final(state);
-}
-
-void stream_cipher_free(const struct STREAM_CIPHER *primitive,
-                        void *state)
-{
-    primitive->free(state);
-}
-
-void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
-                        void *dst,
-                        const void *src)
-{
-    primitive->copy(dst, src);
 }
 
 size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,

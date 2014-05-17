@@ -29,18 +29,6 @@ HOT_CODE;
 
 /*===----------------------------------------------------------------------===*/
 
-struct AES_STATE *aes_alloc(void)
-{
-    struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
-    if (!state) goto fail;
-
-    return state;
-
-fail:
-    aes_free(state);
-    return 0;
-}
-
 int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,
              const struct AES_PARAMS *params)
@@ -80,17 +68,6 @@ void aes_inverse(const struct AES_STATE *state, uint8_t *block)
 void aes_final(struct AES_STATE *state)
 {
     return;
-}
-
-void aes_free(struct AES_STATE *state)
-{
-    mem_free(state);
-}
-
-void aes_copy(struct AES_STATE *dst,
-              const struct AES_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t aes_query(int query, size_t value)

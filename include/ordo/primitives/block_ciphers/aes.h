@@ -27,11 +27,6 @@ extern "C" {
 
 struct AES_STATE;
 
-/** @see \c block_cipher_alloc()
-**/
-ORDO_PUBLIC
-struct AES_STATE *aes_alloc(void);
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not 16, 24, or 32 (bytes).
@@ -59,17 +54,6 @@ void aes_inverse(const struct AES_STATE *state,
 **/
 ORDO_PUBLIC
 void aes_final(struct AES_STATE *state);
-
-/** @see \c block_cipher_free()
-**/
-ORDO_PUBLIC
-void aes_free(struct AES_STATE *state);
-
-/** @see \c block_cipher_copy()
-**/
-ORDO_PUBLIC
-void aes_copy(struct AES_STATE *dst,
-              const struct AES_STATE *src);
 
 /** @see \c block_cipher_query()
 **/

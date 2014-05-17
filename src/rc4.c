@@ -23,11 +23,6 @@ static uint8_t rc4_next(struct RC4_STATE *state) HOT_CODE;
 
 /*===----------------------------------------------------------------------===*/
 
-struct RC4_STATE *rc4_alloc(void)
-{
-    return mem_alloc(sizeof(struct RC4_STATE));
-}
-
 int rc4_init(struct RC4_STATE *state,
              const uint8_t *key, size_t key_len,
              const struct RC4_PARAMS *params)
@@ -50,11 +45,6 @@ void rc4_final(struct RC4_STATE *state)
     return;
 }
 
-void rc4_free(struct RC4_STATE *state)
-{
-    mem_free(state);
-}
-
 size_t rc4_query(int query, size_t key_len)
 {
     switch (query)
@@ -68,12 +58,6 @@ size_t rc4_query(int query, size_t key_len)
 
         default: return 0;
     }
-}
-
-void rc4_copy(struct RC4_STATE *dst,
-              const struct RC4_STATE *src)
-{
-    *dst = *src;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -96,10 +80,7 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
 
     state->j = 0;
 
-    {
-        while (drop--) rc4_update(state, &tmp, sizeof(uint8_t));
-        mem_erase(&tmp, sizeof(uint8_t));
-    }
+    while (drop--) rc4_update(state, &tmp, sizeof(uint8_t));
 }
 
 uint8_t rc4_next(struct RC4_STATE *state)

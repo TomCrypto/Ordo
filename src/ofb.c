@@ -10,29 +10,10 @@
 
 struct OFB_STATE
 {
-    void *iv;
+    unsigned char iv[2048];
     size_t remaining; /* unused data in the state */
     size_t block_size;
 };
-
-struct OFB_STATE *ofb_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-    struct OFB_STATE *state = mem_alloc(sizeof(struct OFB_STATE));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->iv = mem_alloc(state->block_size);
-    if (!state->iv) goto fail;
-
-    state->remaining = 0;
-    return state;
-
-fail:
-    ofb_free(state, cipher, cipher_state);
-    return 0;
-}
 
 int ofb_init(struct OFB_STATE *state,
              const struct BLOCK_CIPHER *cipher,
@@ -42,7 +23,8 @@ int ofb_init(struct OFB_STATE *state,
              int dir,
              const void *params)
 {
-    size_t block_size = state->block_size;
+    size_t block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+    state->block_size = block_size;
 
     if (ofb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
@@ -99,22 +81,6 @@ int ofb_final(struct OFB_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-void ofb_free(struct OFB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state) mem_free(state->iv);
-    mem_free(state);
-}
-
-void ofb_copy(struct OFB_STATE *dst,
-              const struct OFB_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->iv, src->iv, dst->block_size);
-    dst->remaining = src->remaining;
 }
 
 size_t ofb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)

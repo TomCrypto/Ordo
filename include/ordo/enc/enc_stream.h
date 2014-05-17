@@ -23,17 +23,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct ENC_STREAM_CTX;
+// TMP: max cipher state 2048 bytes
 
-/** Allocates a new stream encryption context.
-///
-/// @param [in]     cipher         The stream cipher to use.
-///
-/// @returns The allocated stream encryption context, or \c 0 if an allocation
-///          error occurred.
-**/
-ORDO_PUBLIC
-struct ENC_STREAM_CTX *enc_stream_alloc(const struct STREAM_CIPHER *cipher);
+struct ENC_STREAM_CTX
+{
+    const struct STREAM_CIPHER *cipher;
+    unsigned char state[2048];
+};
 
 /** Initializes a stream encryption context.
 ///
@@ -48,6 +44,7 @@ ORDO_PUBLIC
 int enc_stream_init(struct ENC_STREAM_CTX *ctx,
                     const void *key,
                     size_t key_size,
+                    const struct STREAM_CIPHER *cipher,
                     const void *params);
 
 /** Encrypts or decrypts a data buffer.
@@ -73,13 +70,6 @@ void enc_stream_update(struct ENC_STREAM_CTX *ctx,
 **/
 ORDO_PUBLIC
 void enc_stream_final(struct ENC_STREAM_CTX *ctx);
-
-/** Frees a stream encryption context.
-///
-/// @param [in,out] ctx            A stream encryption context.
-**/
-ORDO_PUBLIC
-void enc_stream_free(struct ENC_STREAM_CTX *ctx);
 
 /** Performs a deep copy of one context into another.
 ///

@@ -35,19 +35,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct ENC_BLOCK_CTX;
-
-/** Allocates a new block encryption context.
-///
-/// @param [in]     cipher         The block cipher to use.
-/// @param [in]     mode           The block mode of operation to use.
-///
-/// @returns The allocated  block encryption context, or \c 0 if an allocation
-///          error occurred.
-**/
-ORDO_PUBLIC
-struct ENC_BLOCK_CTX *enc_block_alloc(const struct BLOCK_CIPHER *cipher,
-                                      const struct BLOCK_MODE *mode);
+struct ENC_BLOCK_CTX
+{
+    const struct BLOCK_CIPHER *cipher;
+    const struct BLOCK_MODE *mode;
+    unsigned char cipher_state[2048];
+    unsigned char mode_state[2048];
+};
 
 /** Initializes a block encryption context.
 ///
@@ -71,7 +65,9 @@ int enc_block_init(struct ENC_BLOCK_CTX* ctx,
                    const void *key, size_t key_len,
                    const void *iv, size_t iv_len,
                    int direction,
+                   const struct BLOCK_CIPHER *cipher,
                    const void *cipher_params,
+                   const struct BLOCK_MODE *mode,
                    const void *mode_params);
 
 /** Encrypts or decrypts a data buffer.
@@ -122,13 +118,6 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
 ORDO_PUBLIC
 int enc_block_final(struct ENC_BLOCK_CTX *ctx,
                     void *out, size_t *out_len);
-
-/** Frees a block encryption context.
-///
-/// @param [in,out] ctx            A block encryption context.
-**/
-ORDO_PUBLIC
-void enc_block_free(struct ENC_BLOCK_CTX *ctx);
 
 /** Performs a deep copy of one context into another.
 ///

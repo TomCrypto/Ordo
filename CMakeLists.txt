@@ -92,7 +92,6 @@ SET(INCLUDE_FILES
     include/ordo/auth/hmac.h
     include/ordo/internal/alg.h
     include/ordo/internal/implementation.h
-    include/ordo/internal/mem.h
     include/ordo/internal/sys.h
     include/ordo/digest/digest.h
     include/ordo/primitives/stream_ciphers/rc4.h
@@ -136,7 +135,6 @@ SET(IN_FILES
     hash_params.c
     hmac.c
     md5.c
-    mem.c
     nullcipher.c
     ofb.c
     ordo.c

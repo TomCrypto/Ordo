@@ -36,12 +36,6 @@ extern "C" {
 
 struct CFB_STATE;
 
-/** @see \c block_mode_alloc()
-**/
-ORDO_PUBLIC
-struct CFB_STATE *cfb_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state);
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
@@ -68,20 +62,6 @@ int cfb_final(struct CFB_STATE *state,
               const struct BLOCK_CIPHER *cipher,
               const void *cipher_state,
               unsigned char *out, size_t *out_len);
-
-/** @see \c block_mode_free()
-**/
-ORDO_PUBLIC
-void cfb_free(struct CFB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state);
-
-/** @see \c block_mode_copy()
-**/
-ORDO_PUBLIC
-void cfb_copy(struct CFB_STATE *dst,
-              const struct CFB_STATE *src,
-              const struct BLOCK_CIPHER *cipher);
 
 /** @see \c block_mode_query()
 **/
