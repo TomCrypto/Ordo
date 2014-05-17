@@ -39,8 +39,8 @@ struct ENC_BLOCK_CTX
 {
     const struct BLOCK_CIPHER *cipher;
     const struct BLOCK_MODE *mode;
-    unsigned char cipher_state[2048];
-    unsigned char mode_state[2048];
+    unsigned char cipher_state[2048 * 2];
+    unsigned char mode_state[2048 * 8]; // oh god I need to fix this
 };
 
 /** Initializes a block encryption context.

@@ -96,8 +96,6 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
     {
         size_t check_len = test.in_len;
         int err;
-        
-        lprintf(INFO, "Running test vector for %s.", test.name);
 
         /* We will encrypt in place, for simplicity (this also implicitly
          * tests buffered encryption, by definition). Also note that the
