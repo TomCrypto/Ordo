@@ -70,6 +70,8 @@ int skein256_init(struct SKEIN256_STATE *state,
 {
     state->block_len = 0;
     state->msg_len = 0;
+    
+    state->cipher = threefish256_alloc();
 
     if (params)
     {
@@ -192,6 +194,9 @@ void skein256_final(struct SKEIN256_STATE *state,
         memcpy(offset(digest, (ctr - 1) * SKEIN256_BLOCK), out, cpy);
         state->out_len -= cpy; /* Will always reach zero, see above. */
     }
+    
+    // TEMPORARY
+    threefish256_free(state->cipher);
 }
 
 void skein256_free(struct SKEIN256_STATE *state)

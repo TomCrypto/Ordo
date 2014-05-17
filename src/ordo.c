@@ -66,18 +66,15 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
                 const void *in, size_t len,
                 void *digest)
 {
-    int err = ORDO_ALLOC;
+    int err = ORDO_SUCCESS;
+    struct DIGEST_CTX ctx;
 
-    struct DIGEST_CTX *ctx = digest_alloc(hash);
-    if (!ctx) goto fail;
+    if (!(err = digest_init(&ctx, hash, params)))
+    {
+        digest_update(&ctx, in, len);
+        digest_final(&ctx, digest);
+    }
 
-    if ((err = digest_init(ctx, params))) goto fail;
-
-    digest_update(ctx, in, len);
-    digest_final(ctx, digest);
-
-fail:
-    digest_free(ctx);
     return err;
 }
 
@@ -86,18 +83,14 @@ int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
               const void *in, size_t len,
               void *fingerprint)
 {
-    int err = ORDO_ALLOC;
+    int err = ORDO_SUCCESS;
+    struct HMAC_CTX ctx;
 
-    struct HMAC_CTX *ctx = hmac_alloc(hash);
-    if (!ctx) goto fail;
+    if (!(err = hmac_init(&ctx, key, key_len, hash, params)))
+    {
+        hmac_update(&ctx, in, len);
+        err = hmac_final(&ctx, fingerprint);
+    }
 
-    if ((err = hmac_init(ctx, key, key_len, params))) goto fail;
-
-    hmac_update(ctx, in, len);
-
-    err = hmac_final(ctx, fingerprint);
-
-fail:
-    hmac_free(ctx);
     return err;
 }

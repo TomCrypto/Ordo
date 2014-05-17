@@ -86,15 +86,6 @@ size_t hash_function_count(void);
 
 /*===----------------------------------------------------------------------===*/
 
-/** Allocates a hash function state.
-///
-/// @param [in]     primitive      A hash function primitive.
-///
-/// @returns An allocated hash function state, or \c 0 on error.
-**/
-ORDO_PUBLIC
-void *hash_function_alloc(const struct HASH_FUNCTION *primitive);
-
 /** Initializes a hash function state.
 ///
 /// @param [in]     primitive      A hash function primitive.
@@ -139,15 +130,6 @@ ORDO_PUBLIC
 void hash_function_final(const struct HASH_FUNCTION *primitive,
                          void *state,
                          void *digest);
-
-/** Frees a hash function state.
-///
-/// @param [in]     primitive      A hash function primitive.
-/// @param [in,out] state          A hash function state.
-**/
-ORDO_PUBLIC
-void hash_function_free(const struct HASH_FUNCTION *primitive,
-                        void *state);
 
 /** Performs a deep copy of one state into another.
 ///

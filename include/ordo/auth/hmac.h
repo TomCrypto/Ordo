@@ -24,23 +24,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct HMAC_CTX;
+// TMP: max hash function block size 2048 bytes
 
-/** Allocates a new HMAC context.
-///
-/// @param [in]     hash           The hash function to use.
-///
-/// @return The allocated HMAC context, or \c 0 if allocation fails.
-///
-/// @remarks The PRF used for the HMAC will be the hash function as it behaves
-///          with default parameters. It is not  possible to use hash function
-///          extensions (e.g. Skein in specialized HMAC mode) via this module,
-///          though if you intend to use a specific hash function you can just
-///          skip this abstraction layer and directly use whatever features it
-///          provides to compute message authentication codes.
-**/
-ORDO_PUBLIC
-struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
+struct HMAC_CTX
+{
+    const struct HASH_FUNCTION *hash;
+    struct DIGEST_CTX ctx;
+    unsigned char key[2048];
+};
 
 /** Initializes an HMAC context, provided optional parameters.
 ///
@@ -60,6 +51,7 @@ struct HMAC_CTX *hmac_alloc(const struct HASH_FUNCTION *hash);
 ORDO_PUBLIC
 int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
+              const struct HASH_FUNCTION *hash,
               const void *params);
 
 /** Updates an HMAC context, feeding more data into it.
@@ -87,18 +79,6 @@ void hmac_update(struct HMAC_CTX *ctx,
 **/
 ORDO_PUBLIC
 int hmac_final(struct HMAC_CTX *ctx, void *fingerprint);
-
-/** Frees a digest context.
-///
-/// @param [in]     ctx            The HMAC context to be freed.
-///
-/// @remarks The  context need  not have been initialized, but if it has been,
-///          it must have been finalized before calling this function.
-///
-/// @remarks Passing \c 0 to this function is valid, and will do nothing.
-**/
-ORDO_PUBLIC
-void hmac_free(struct HMAC_CTX *ctx);
 
 /** Performs a deep copy of one context into another.
 ///

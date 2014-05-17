@@ -136,11 +136,6 @@ size_t hash_function_count(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void *hash_function_alloc(const struct HASH_FUNCTION *primitive)
-{
-    return primitive->alloc();
-}
-
 int hash_function_init(const struct HASH_FUNCTION *primitive,
                        void *state,
                        const void *params)
@@ -161,12 +156,6 @@ void hash_function_final(const struct HASH_FUNCTION *primitive,
                          void *digest)
 {
     primitive->final(state, digest);
-}
-
-void hash_function_free(const struct HASH_FUNCTION *primitive,
-                        void *state)
-{
-    primitive->free(state);
 }
 
 void hash_function_copy(const struct HASH_FUNCTION *primitive,

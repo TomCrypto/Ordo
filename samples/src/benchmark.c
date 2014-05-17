@@ -178,36 +178,30 @@ static void *stream_params(const struct STREAM_CIPHER *cipher)
 static double hash_speed(const struct HASH_FUNCTION *hash,
                          uint64_t block)
 {
-    struct DIGEST_CTX *ctx = digest_alloc(hash);
     os_random(buffer, sizeof(buffer));
 
-    if (ctx)
     {
         void *params = hash_params(hash);
+        struct DIGEST_CTX ctx;
 
         uint64_t iterations = 0;
         double elapsed;
         my_time start;
 
-        digest_init(ctx, params);
+        digest_init(&ctx, hash, params);
 
         start = now(); // begin
 
         while (++iterations && (get_elapsed(start) < INTERVAL))
-            digest_update(ctx, buffer, block);
+            digest_update(&ctx, buffer, block);
 
         elapsed = get_elapsed(start); // end
 
-        digest_final(ctx, buffer);
-        digest_free(ctx);
+        digest_final(&ctx, buffer);
         free(params);
 
         return speed_MiB(block * iterations, elapsed);
     }
-
-    printf("\t* Context allocation failed!\n");
-    printf("\nAn error occurred.\n");
-    exit(EXIT_FAILURE);
 }
 
 static double stream_speed(const struct STREAM_CIPHER *cipher,

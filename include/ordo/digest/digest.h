@@ -48,16 +48,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct DIGEST_CTX;
+// TMP: max digest state size = 2048 bytes
 
-/** Allocates a new \c DIGEST_CTX (digest context).
-///
-/// @param [in]     hash           The hash function primitive to use.
-///
-/// @returns The allocated digest context, or \c 0 if allocation fails.
-**/
-ORDO_PUBLIC
-struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
+struct DIGEST_CTX
+{
+    const struct HASH_FUNCTION *hash;
+    unsigned char state[2048];
+};
 
 /** Initializes a digest context.
 ///
@@ -74,7 +71,8 @@ struct DIGEST_CTX *digest_alloc(const struct HASH_FUNCTION *hash);
 ///          may allocate additional memory depending on the parameters given.
 **/
 ORDO_PUBLIC
-int digest_init(struct DIGEST_CTX *ctx, const void *params);
+int digest_init(struct DIGEST_CTX *ctx, const struct HASH_FUNCTION *hash,
+                                        const void *params);
 
 /** Feeds data into a digest context.
 ///

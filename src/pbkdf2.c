@@ -25,8 +25,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
     const size_t digest_len = digest_length(hash);
     size_t i, t, t_max = out_len / digest_len;
 
-    struct HMAC_CTX *ctx = hmac_alloc(hash);
-    struct HMAC_CTX *cst = hmac_alloc(hash);
+    struct HMAC_CTX ctx, cst;
 
     void *buf = mem_alloc(digest_len);
     void *feedback = mem_alloc(digest_len);
@@ -39,7 +38,7 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
         goto ret;
     }
 
-    if ((!ctx) || (!cst) || (!buf) || (!feedback))
+    if ((!buf) || (!feedback))
     {
         err = ORDO_ALLOC;
         goto ret;
@@ -49,31 +48,31 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
     {
         uint32_t counter = tobe32((uint32_t)(t + 1)); /* Big-endian. */
 
-        if ((err = hmac_init(ctx,
+        if ((err = hmac_init(&ctx,
                              password, password_len,
-                             params))) goto ret;
+                             hash, params))) goto ret;
 
-        hmac_update(ctx, salt, salt_len);
-        hmac_update(ctx, &counter, sizeof(uint32_t));
+        hmac_update(&ctx, salt, salt_len);
+        hmac_update(&ctx, &counter, sizeof(uint32_t));
 
         /* We copy the first iteration result into the "feedback" buffer which
          * is used to store the previous iteration result for the next one. */
-        if ((err = hmac_final(ctx, feedback))) goto ret;
+        if ((err = hmac_final(&ctx, feedback))) goto ret;
         memcpy(buf, feedback, digest_len);
 
         /* This HMAC initialization need be done only once, because for each
          * iteration the key is always the same (the password). Thanks to
          * the design of HMAC, most of the work can then be precomputed. */
-        if ((err = hmac_init(cst,
+        if ((err = hmac_init(&cst,
                              password, password_len,
-                             params))) goto ret;
+                             hash, params))) goto ret;
 
         for (i = 1; i < iterations; ++i)
         {
             /* Next iteration: Ui+1 = PRF(Ui). */
-            hmac_copy(ctx, cst);
-            hmac_update(ctx, feedback, digest_len);
-            if ((err = hmac_final(ctx, feedback))) goto ret;
+            hmac_copy(&ctx, &cst);
+            hmac_update(&ctx, feedback, digest_len);
+            if ((err = hmac_final(&ctx, feedback))) goto ret;
 
             /* U1 ^ U2 ^ ... ^ Ui accumulation. */
             xor_buffer(buf, feedback, digest_len);
@@ -91,7 +90,5 @@ int pbkdf2(const struct HASH_FUNCTION *hash,
 ret:
     mem_free(feedback);
     mem_free(buf);
-    hmac_free(ctx);
-    hmac_free(cst);
     return err;
 }

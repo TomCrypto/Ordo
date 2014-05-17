@@ -21,7 +21,7 @@
 
 static int md5_file(FILE *f, struct DIGEST_CTX *ctx, void *digest)
 {
-    int err = digest_init(ctx, 0);
+    int err = digest_init(ctx, ordo_md5(), 0);
     if (err) return err;
 
     while (!feof(f))
@@ -48,13 +48,7 @@ static void print_output(const char *path, const unsigned char *digest)
 
 int main(int argc, char *argv[])
 {
-    struct DIGEST_CTX *ctx;
-
-    if (!(ctx = digest_alloc(ordo_md5())))
-    {
-        printf("Memory error.\n");
-        return EXIT_FAILURE;
-    }
+    struct DIGEST_CTX ctx;
 
     while (*++argv)
     {
@@ -63,7 +57,7 @@ int main(int argc, char *argv[])
         else
         {
             unsigned char digest[DIGEST_SZ];
-            int err = md5_file(f, ctx, digest);
+            int err = md5_file(f, &ctx, digest);
             if (!err) print_output(*argv, digest);
             else printf("Error: %s.\n", ordo_error_msg(err));
 
@@ -71,6 +65,5 @@ int main(int argc, char *argv[])
         } 
     }
 
-    digest_free(ctx);
     return EXIT_SUCCESS;
 }
