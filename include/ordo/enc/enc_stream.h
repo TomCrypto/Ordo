@@ -28,7 +28,7 @@ extern "C" {
 struct ENC_STREAM_CTX
 {
     const struct STREAM_CIPHER *cipher;
-    unsigned char state[2048];
+    unsigned char state[2048 * 8];
 };
 
 /** Initializes a stream encryption context.
