@@ -130,7 +130,7 @@ static double speed_MiB(uint64_t throughput, double elapsed)
 
 /***                        PARAMETERIZED UTILITIES                         ***/
 
-static void *hash_params(const struct HASH_FUNCTION *hash)
+static void *hash_params(enum HASH_FUNCTION hash)
 {
     return 0;
 }
@@ -159,12 +159,12 @@ static void *block_mode_params(const struct BLOCK_MODE *mode)
     return 0;
 }
 
-static void *stream_params(const struct STREAM_CIPHER *cipher)
+static void *stream_params(enum STREAM_CIPHER cipher)
 {
-    if (cipher == ordo_rc4())
+    if (cipher == STREAM_RC4)
     {
-        // we don't want to benchmark dropping bytes of RC4
-        // as this would heavily penalize the short blocks.
+        /* we don't want to benchmark dropping bytes of RC4
+         * as this would heavily penalize the short blocks. */
         struct RC4_PARAMS *rc4 = allocate(sizeof(*rc4));
         rc4->drop = 0;
         return rc4;
@@ -175,7 +175,7 @@ static void *stream_params(const struct STREAM_CIPHER *cipher)
 
 /***                          LOW-LEVEL BENCHMARKS                          ***/
 
-static double hash_speed(const struct HASH_FUNCTION *hash,
+static double hash_speed(enum HASH_FUNCTION hash,
                          uint64_t block)
 {
     os_random(buffer, sizeof(buffer));
@@ -204,7 +204,7 @@ static double hash_speed(const struct HASH_FUNCTION *hash,
     }
 }
 
-static double stream_speed(const struct STREAM_CIPHER *cipher,
+static double stream_speed(enum STREAM_CIPHER cipher,
                            uint64_t block)
 {
     
@@ -283,7 +283,7 @@ static double block_speed(const struct BLOCK_CIPHER *cipher,
 
 /***                          HIGH-LEVEL BENCHMARK                          ***/
 
-static int benchmark_hash_function(const struct HASH_FUNCTION *hash,
+static int benchmark_hash_function(enum HASH_FUNCTION hash,
                                    int argc, char * const argv[])
 {
     const char *name = hash_function_name(hash);
@@ -305,7 +305,7 @@ static int benchmark_hash_function(const struct HASH_FUNCTION *hash,
     return EXIT_SUCCESS;
 }
 
-static int benchmark_stream_cipher(const struct STREAM_CIPHER *cipher,
+static int benchmark_stream_cipher(enum STREAM_CIPHER cipher,
                                    int argc, char * const argv[])
 {
     const char *name = stream_cipher_name(cipher);
@@ -368,8 +368,8 @@ enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
 
 static enum ALG_TYPE identify(const char *name)
 {
-    if (hash_function_by_name(name) != 0) return ALG_HASH;
-    if (stream_cipher_by_name(name) != 0) return ALG_STREAM;
+    if (hash_function_by_name(name) != HASH_UNKNOWN) return ALG_HASH;
+    if (stream_cipher_by_name(name) != STREAM_UNKNOWN) return ALG_STREAM;
     if (block_cipher_by_name(name)  != 0) return ALG_BLOCK;
     return ALG_NONE;
 }
@@ -388,14 +388,14 @@ int main(int argc, char *argv[])
     {
         case ALG_HASH:
         {
-            const struct HASH_FUNCTION *p = hash_function_by_name(argv[1]);
-            return benchmark_hash_function(p, argc, argv);
+            enum HASH_FUNCTION hash = hash_function_by_name(argv[1]);
+            return benchmark_hash_function(hash, argc, argv);
         }
 
         case ALG_STREAM:
         {
-            const struct STREAM_CIPHER *p = stream_cipher_by_name(argv[1]);
-            return benchmark_stream_cipher(p, argc, argv);
+            enum STREAM_CIPHER cipher = stream_cipher_by_name(argv[1]);
+            return benchmark_stream_cipher(cipher, argc, argv);
         }
 
         case ALG_BLOCK:

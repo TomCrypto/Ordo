@@ -19,6 +19,10 @@
 
 /*===----------------------------------------------------------------------===*/
 
+#include "ordo/platform.h"
+
+/*===----------------------------------------------------------------------===*/
+
 #if defined(BUILDING_ORDO) || defined(BUILDING_ordo)
     #if defined(ORDO_EXPORTS) || defined(ordo_EXPORTS)
         #define BUILD_SHARED

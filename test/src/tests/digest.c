@@ -182,8 +182,8 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct HASH_FUNCTION *hash = hash_function_by_name(test.name);
-    if (!hash)
+    enum HASH_FUNCTION hash = hash_function_by_name(test.name);
+    if (hash == HASH_UNKNOWN)
     {
         lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
         return 1; /* If skipping, the test passed by convention. */
@@ -197,19 +197,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
                           test.input, test.input_len,
                           scratch);
 
-        if (err)
-        {
-            return 0;
-        }
-
-        if (memcmp(test.expected, scratch, check_len))
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        return err ? 0 : !memcmp(test.expected, scratch, check_len);
     }
 }
 
@@ -229,8 +217,8 @@ int test_digest_utilities(void)
 
     for (t = 0; t < count; ++t)
     {
-        const struct HASH_FUNCTION *hash = hash_function_by_index(t);
-        if (!hash) return 0;
+        enum HASH_FUNCTION hash = hash_function_by_index(t);
+        if (hash == HASH_UNKNOWN) return 0;
     }
 
     return 1;

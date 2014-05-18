@@ -58,6 +58,10 @@ IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
+    
+    IF(COMPILER_GNU)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized")
+    ENDIF()
 
     IF(LTO)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")

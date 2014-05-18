@@ -48,12 +48,9 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-// TMP: max digest state size = 2048 bytes
-
 struct DIGEST_CTX
 {
-    const struct HASH_FUNCTION *hash;
-    unsigned char state[2048];
+    struct HASH_STATE state;
 };
 
 /** Initializes a digest context.
@@ -71,7 +68,7 @@ struct DIGEST_CTX
 ///          may allocate additional memory depending on the parameters given.
 **/
 ORDO_PUBLIC
-int digest_init(struct DIGEST_CTX *ctx, const struct HASH_FUNCTION *hash,
+int digest_init(struct DIGEST_CTX *ctx, enum HASH_FUNCTION hash,
                                         const void *params);
 
 /** Feeds data into a digest context.
@@ -152,7 +149,7 @@ void digest_copy(struct DIGEST_CTX *dst,
 ///          were provided to \c digest_init().
 **/
 ORDO_PUBLIC
-size_t digest_length(const struct HASH_FUNCTION *hash);
+size_t digest_length(enum HASH_FUNCTION hash);
 
 /*===----------------------------------------------------------------------===*/
 

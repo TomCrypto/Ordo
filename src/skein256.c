@@ -40,16 +40,6 @@ static void skein256_compress(const uint64_t *block,
 
 /*===----------------------------------------------------------------------===*/
 
-struct SKEIN256_STATE
-{
-    uint64_t state[4];
-    uint64_t block[4];
-    uint64_t block_len;
-    uint64_t msg_len;
-    uint64_t out_len;
-    unsigned char cipher[2048];
-};
-
 int skein256_init(struct SKEIN256_STATE *state,
                   const struct SKEIN256_PARAMS *params)
 {

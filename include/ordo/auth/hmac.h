@@ -28,7 +28,6 @@ extern "C" {
 
 struct HMAC_CTX
 {
-    const struct HASH_FUNCTION *hash;
     struct DIGEST_CTX ctx;
     unsigned char key[2048];
 };
@@ -51,7 +50,7 @@ struct HMAC_CTX
 ORDO_PUBLIC
 int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
-              const struct HASH_FUNCTION *hash,
+              enum HASH_FUNCTION hash,
               const void *params);
 
 /** Updates an HMAC context, feeding more data into it.

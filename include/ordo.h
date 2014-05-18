@@ -110,7 +110,7 @@ int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
 ///          the same key yields the original message.
 **/
 ORDO_PUBLIC
-int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
+int ordo_enc_stream(enum STREAM_CIPHER cipher, const void *params,
                     const void *key, size_t key_len,
                     void *inout, size_t len);
 
@@ -125,7 +125,7 @@ int ordo_enc_stream(const struct STREAM_CIPHER *cipher, const void *params,
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
+int ordo_digest(enum HASH_FUNCTION hash, const void *params,
                 const void *in, size_t in_len,
                 void *digest);
 
@@ -144,7 +144,7 @@ int ordo_digest(const struct HASH_FUNCTION *hash, const void *params,
 /// @remarks Do not use hash parameters which modify output length.
 **/
 ORDO_PUBLIC
-int ordo_hmac(const struct HASH_FUNCTION *hash, const void *params,
+int ordo_hmac(enum HASH_FUNCTION hash, const void *params,
               const void *key, size_t key_len,
               const void *in, size_t in_len,
               void *fingerprint);

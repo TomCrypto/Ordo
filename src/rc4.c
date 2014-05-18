@@ -10,13 +10,6 @@
 
 #define RC4_DROP_DEFAULT 2048
 
-struct RC4_STATE
-{
-    uint8_t i;
-    uint8_t j;
-    uint8_t s[256];
-};
-
 static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 static uint8_t rc4_next(struct RC4_STATE *state) HOT_CODE;

@@ -12,10 +12,10 @@
 
 int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
-              const struct HASH_FUNCTION *hash,
+              enum HASH_FUNCTION hash,
               const void *hash_params)
 {
-    size_t block_size = hash_function_query(ctx->hash = hash, BLOCK_SIZE_Q, 0);
+    size_t block_size = hash_function_query(hash, BLOCK_SIZE_Q, 0);
 
     int err = ORDO_SUCCESS;
     size_t t;
@@ -27,14 +27,14 @@ int hmac_init(struct HMAC_CTX *ctx,
      * be reduced. This is done by hashing it once, as per RFC 2104. */
     if (key_len > block_size)
     {
-        if ((err = digest_init(&ctx->ctx, ctx->hash, 0))) return err;
+        if ((err = digest_init(&ctx->ctx, hash, 0))) return err;
         digest_update(&ctx->ctx, key, key_len);
         digest_final(&ctx->ctx, ctx->key);
     }
     else memcpy(ctx->key, key, key_len);
 
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x36;
-    if ((err = digest_init(&ctx->ctx, ctx->hash, hash_params))) return err;
+    if ((err = digest_init(&ctx->ctx, hash, hash_params))) return err;
     digest_update(&ctx->ctx, ctx->key, block_size);
 
     return err;
@@ -50,8 +50,8 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
     int err = ORDO_SUCCESS;
 
-    size_t digest_len = digest_length(ctx->hash);
-    size_t block_size = hash_function_query(ctx->hash, BLOCK_SIZE_Q, 0);
+    size_t digest_len = digest_length(ctx->ctx.state.hash);
+    size_t block_size = hash_function_query(ctx->ctx.state.hash, BLOCK_SIZE_Q, 0);
     size_t t;
 
     digest_final(&ctx->ctx, digest);
@@ -59,7 +59,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    if ((err = digest_init(&ctx->ctx, ctx->hash, 0))) return err;
+    if ((err = digest_init(&ctx->ctx, ctx->ctx.state.hash, 0))) return err;
 
     digest_update(&ctx->ctx, ctx->key, block_size);
     digest_update(&ctx->ctx, digest, digest_len);
@@ -70,7 +70,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 
 void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
 {
-    size_t block_size = hash_function_query(dst->hash, BLOCK_SIZE_Q, 0);
+    size_t block_size = hash_function_query(dst->ctx.state.hash, BLOCK_SIZE_Q, 0);
     memcpy(dst->key, src->key, block_size);
     digest_copy(&dst->ctx, &src->ctx);
 }

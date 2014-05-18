@@ -79,7 +79,7 @@ static int config_block(void)
         struct TEST_VECTOR test = tests[t];
         int err;
 
-        err = ordo_digest(ordo_skein256(), &params,
+        err = ordo_digest(HASH_SKEIN256, &params,
                           test.input, test.input_len,
                           scratch);
 

@@ -5,7 +5,7 @@
 ///
 /// This abstraction layer declares all the stream ciphers and also makes them
 /// available to higher level modules. This does not actually do encryption at
-/// all, but only abstracts stream cipher permutations, the encryption modules
+/// all but simply abstracts the stream cipher primitives - encryption modules
 /// are in the \c enc folder: \c enc_stream.h.
 **/
 /*===----------------------------------------------------------------------===*/
@@ -24,7 +24,23 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct STREAM_CIPHER;
+enum STREAM_CIPHER
+{
+    STREAM_UNKNOWN           = -1,
+    STREAM_RC4               =  0,
+    
+    STREAM_COUNT
+};
+
+struct STREAM_STATE
+{
+    enum STREAM_CIPHER cipher;
+    
+    union
+    {
+        struct RC4_STATE rc4;
+    } jmp;
+};
 
 /** Returns the name of a stream cipher primitive.
 ///
@@ -35,12 +51,7 @@ struct STREAM_CIPHER;
 /// @remarks This name can then be used in \c stream_cipher_by_name().
 **/
 ORDO_PUBLIC
-const char *stream_cipher_name(const struct STREAM_CIPHER *primitive);
-
-/** The RC4 stream cipher.
-**/
-ORDO_PUBLIC
-const struct STREAM_CIPHER *ordo_rc4(void);
+const char *stream_cipher_name(enum STREAM_CIPHER cipher);
 
 /** Returns a stream cipher primitive from a name.
 ///
@@ -48,10 +59,10 @@ const struct STREAM_CIPHER *ordo_rc4(void);
 ///
 /// @returns The stream cipher such that the following is true:
 ///          @code stream_cipher_name(retval) = name @endcode
-///          or \c 0 if no such stream cipher exists.
+///          or \c STREAM_UNKNOWN if no such stream cipher exists.
 **/
 ORDO_PUBLIC
-const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
+enum STREAM_CIPHER stream_cipher_by_name(const char *name);
 
 /** Returns a stream cipher primitive from an index.
 ///
@@ -64,7 +75,7 @@ const struct STREAM_CIPHER *stream_cipher_by_name(const char *name);
 ///          cipher indices (there will be at least one).
 **/
 ORDO_PUBLIC
-const struct STREAM_CIPHER *stream_cipher_by_index(size_t index);
+enum STREAM_CIPHER stream_cipher_by_index(size_t index);
 
 /** Exposes the number of stream ciphers available.
 ///
@@ -88,10 +99,10 @@ size_t stream_cipher_count(void);
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int stream_cipher_init(const struct STREAM_CIPHER *primitive,
-                       void* state,
+int stream_cipher_init(struct STREAM_STATE *state,
                        const void *key,
                        size_t key_len,
+                       enum STREAM_CIPHER cipher,
                        const void *params);
 
 /** Encrypts or decrypts a buffer using a stream cipher state.
@@ -108,8 +119,7 @@ int stream_cipher_init(const struct STREAM_CIPHER *primitive,
 ///          deterministic permutations.
 **/
 ORDO_PUBLIC
-void stream_cipher_update(const struct STREAM_CIPHER *primitive,
-                          void* state,
+void stream_cipher_update(struct STREAM_STATE *state,
                           void *buffer,
                           size_t len);
 
@@ -119,8 +129,7 @@ void stream_cipher_update(const struct STREAM_CIPHER *primitive,
 /// @param [in,out] state          A stream cipher state.
 **/
 ORDO_PUBLIC
-void stream_cipher_final(const struct STREAM_CIPHER *primitive,
-                         void* state);
+void stream_cipher_final(struct STREAM_STATE *state);
 
 /** Performs a deep copy of one state into another.
 ///
@@ -134,9 +143,8 @@ void stream_cipher_final(const struct STREAM_CIPHER *primitive,
 /// @remarks The source state must be initialized.
 **/
 ORDO_PUBLIC
-void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
-                        void *dst,
-                        const void *src);
+void stream_cipher_copy(struct STREAM_STATE *dst,
+                        const struct STREAM_STATE *src);
 
 /** Queries a stream cipher for suitable parameters.
 ///
@@ -149,7 +157,7 @@ void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,
+size_t stream_cipher_query(enum STREAM_CIPHER cipher,
                            int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

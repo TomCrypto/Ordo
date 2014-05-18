@@ -58,7 +58,7 @@ extern "C" {
 ///          function's behavior is undefined.
 **/
 ORDO_PUBLIC
-int pbkdf2(const struct HASH_FUNCTION *hash,
+int pbkdf2(enum HASH_FUNCTION hash,
            const void *params,
            const void *password,
            size_t password_len,

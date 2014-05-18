@@ -21,7 +21,7 @@
 
 static int md5_file(FILE *f, struct DIGEST_CTX *ctx, void *digest)
 {
-    int err = digest_init(ctx, ordo_md5(), 0);
+    int err = digest_init(ctx, HASH_MD5, 0);
     if (err) return err;
 
     while (!feof(f))

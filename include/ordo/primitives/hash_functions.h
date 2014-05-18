@@ -23,7 +23,27 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct HASH_FUNCTION;
+enum HASH_FUNCTION
+{
+    HASH_UNKNOWN             = -1,
+    HASH_MD5                 =  0,
+    HASH_SHA256              =  1,
+    HASH_SKEIN256            =  2,
+    
+    HASH_COUNT
+};
+
+struct HASH_STATE
+{
+    enum HASH_FUNCTION hash;
+    
+    union
+    {
+        struct MD5_STATE md5;
+        struct SHA256_STATE sha256;
+        struct SKEIN256_STATE skein256;
+    } jmp;
+};
 
 /** Returns the name of a hash function primitive.
 ///
@@ -34,22 +54,7 @@ struct HASH_FUNCTION;
 /// @remarks This name can then be used in \c hash_function_by_name().
 **/
 ORDO_PUBLIC
-const char *hash_function_name(const struct HASH_FUNCTION *primitive);
-
-/** The SHA-256 hash function.
-**/
-ORDO_PUBLIC
-const struct HASH_FUNCTION *ordo_sha256(void);
-
-/** The MD5 hash function.
-**/
-ORDO_PUBLIC
-const struct HASH_FUNCTION *ordo_md5(void);
-
-/** The Skein-256 hash function.
-**/
-ORDO_PUBLIC
-const struct HASH_FUNCTION *ordo_skein256(void);
+const char *hash_function_name(enum HASH_FUNCTION primitive);
 
 /** Returns a hash function primitive from a name.
 ///
@@ -60,7 +65,7 @@ const struct HASH_FUNCTION *ordo_skein256(void);
 ///          or \c 0 if no such hash function exists.
 **/
 ORDO_PUBLIC
-const struct HASH_FUNCTION *hash_function_by_name(const char *name);
+enum HASH_FUNCTION hash_function_by_name(const char *name);
 
 /** Returns a hash function primitive from an index.
 ///
@@ -73,7 +78,7 @@ const struct HASH_FUNCTION *hash_function_by_name(const char *name);
 ///          function indices (there will be at least one).
 **/
 ORDO_PUBLIC
-const struct HASH_FUNCTION *hash_function_by_index(size_t index);
+enum HASH_FUNCTION hash_function_by_index(size_t index);
 
 /** Exposes the number of hash functions available.
 ///
@@ -95,8 +100,8 @@ size_t hash_function_count(void);
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int hash_function_init(const struct HASH_FUNCTION *primitive,
-                       void *state,
+int hash_function_init(struct HASH_STATE *state,
+                       enum HASH_FUNCTION hash,
                        const void *params);
 
 /** Updates a hash  function state by  appending a buffer to the  message this
@@ -112,8 +117,7 @@ int hash_function_init(const struct HASH_FUNCTION *primitive,
 ///          concatenation.
 **/
 ORDO_PUBLIC
-void hash_function_update(const struct HASH_FUNCTION *primitive,
-                          void *state,
+void hash_function_update(struct HASH_STATE *state,
                           const void *buffer,
                           size_t len);
 
@@ -127,8 +131,7 @@ void hash_function_update(const struct HASH_FUNCTION *primitive,
 ///          digest length (unless you changed it via custom parameters).
 **/
 ORDO_PUBLIC
-void hash_function_final(const struct HASH_FUNCTION *primitive,
-                         void *state,
+void hash_function_final(struct HASH_STATE *state,
                          void *digest);
 
 /** Performs a deep copy of one state into another.
@@ -143,9 +146,8 @@ void hash_function_final(const struct HASH_FUNCTION *primitive,
 /// @remarks The source state must be initialized.
 **/
 ORDO_PUBLIC
-void hash_function_copy(const struct HASH_FUNCTION *primitive,
-                        void *dst,
-                        const void *src);
+void hash_function_copy(struct HASH_STATE *dst,
+                        const struct HASH_STATE *src);
 
 /** Queries a hash function for suitable parameters.
 ///
@@ -158,7 +160,7 @@ void hash_function_copy(const struct HASH_FUNCTION *primitive,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t hash_function_query(const struct HASH_FUNCTION *primitive,
+size_t hash_function_query(enum HASH_FUNCTION hash,
                            int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

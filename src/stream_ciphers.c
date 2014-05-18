@@ -8,107 +8,98 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef  int   (*STREAM_INIT)
-    (void *, const void *, size_t, const void *);
-typedef void   (*STREAM_UPDATE)
-    (void *, void *, size_t);
-typedef void   (*STREAM_FINAL)
-    (void *);
-typedef size_t (*STREAM_QUERY)
-    (int, size_t);
-
-struct STREAM_CIPHER
+const char *stream_cipher_name(enum STREAM_CIPHER cipher)
 {
-    STREAM_INIT   init;
-    STREAM_UPDATE update;
-    STREAM_FINAL  final;
-    STREAM_QUERY  query;
-    const char   *name;
-};
-
-/*===----------------------------------------------------------------------===*/
-
-const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
-{
-    return primitive->name;
-}
-
-#include "ordo/primitives/stream_ciphers/rc4.h"
-
-const struct STREAM_CIPHER *ordo_rc4(void)
-{
-    static const struct STREAM_CIPHER primitive =
+    switch (cipher)
     {
-        (STREAM_INIT  )rc4_init,
-        (STREAM_UPDATE)rc4_update,
-        (STREAM_FINAL )rc4_final,
-        (STREAM_QUERY )rc4_query,
-        "RC4"
-    };
-
-    return &primitive;
+        case STREAM_RC4:
+            return "RC4";
+        case STREAM_UNKNOWN: default:
+            return 0;
+    }
 }
 
 /*===----------------------------------------------------------------------===*/
 
-const struct STREAM_CIPHER *stream_cipher_by_name(const char *name)
+enum STREAM_CIPHER stream_cipher_by_name(const char *name)
 {
-    size_t t;
-
-    for (t = 0; t < stream_cipher_count(); t++)
-    {
-        const struct STREAM_CIPHER *primitive;
-        primitive = stream_cipher_by_index(t);
-
-        if (!strcmp(name, primitive->name))
-            return primitive;
-    }
-
-    return 0;
+    if (!strcmp(name, "RC4"))
+        return STREAM_RC4;
+    else
+        return STREAM_UNKNOWN;
 }
 
-const struct STREAM_CIPHER *stream_cipher_by_index(size_t index)
+enum STREAM_CIPHER stream_cipher_by_index(size_t index)
 {
-    switch (index)
-    {
-        case __COUNTER__: return ordo_rc4();
-
-        default: return 0;
-    }
+    return index;
 }
 
 size_t stream_cipher_count(void)
 {
-    return __COUNTER__;
+    return STREAM_COUNT;
 }
 
 /*===----------------------------------------------------------------------===*/
 
-int stream_cipher_init(const struct STREAM_CIPHER *primitive,
-                       void *state,
+#include "ordo/primitives/stream_ciphers/rc4.h"
+
+int stream_cipher_init(struct STREAM_STATE *state,
                        const void *key,
                        size_t key_len,
+                       enum STREAM_CIPHER cipher,
                        const void *params)
 {
-    return primitive->init(state, key, key_len, params);
+    switch (state->cipher = cipher)
+    {
+        case STREAM_RC4:
+            return rc4_init(&state->jmp.rc4, key, key_len, params);
+        
+        case STREAM_UNKNOWN: default:
+            return ORDO_FAIL;
+    }
 }
 
-void stream_cipher_update(const struct STREAM_CIPHER *primitive,
-                          void *state,
+void stream_cipher_update(struct STREAM_STATE *state,
                           void *buffer,
                           size_t len)
 {
-    primitive->update(state, buffer, len);
+    switch (state->cipher)
+    {
+        case STREAM_RC4:
+            rc4_update(&state->jmp.rc4, buffer, len);
+
+        case STREAM_UNKNOWN: default:
+            return;
+    }
 }
 
-void stream_cipher_final(const struct STREAM_CIPHER *primitive,
-                         void *state)
+void stream_cipher_final(struct STREAM_STATE *state)
 {
-    primitive->final(state);
+    switch (state->cipher)
+    {
+        case STREAM_RC4:
+            rc4_final(&state->jmp.rc4);
+
+        case STREAM_UNKNOWN: default:
+            return;
+    }
 }
 
-size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,
+void stream_cipher_copy(struct STREAM_STATE *dst,
+                        const struct STREAM_STATE *src)
+{
+    *dst = *src;
+}
+
+size_t stream_cipher_query(enum STREAM_CIPHER cipher,
                            int query, size_t value)
 {
-    return primitive->query(query, value);
+    switch (cipher)
+    {
+        case STREAM_RC4:
+            return rc4_query(query, value);
+        
+        case STREAM_UNKNOWN: default:
+            return (size_t)-1;
+    }
 }

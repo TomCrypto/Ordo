@@ -11,13 +11,7 @@
 #define SHA256_DIGEST (bits(256))
 #define SHA256_BLOCK  (bits(512))
 
-struct SHA256_STATE
-{
-    uint32_t digest[8];
-    uint32_t block[16];
-    uint64_t block_len;
-    uint64_t msg_len;
-};
+
 
 static void sha256_compress(const uint32_t block[16],
                             uint32_t digest[8]) HOT_CODE;

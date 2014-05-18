@@ -27,8 +27,7 @@ extern "C" {
 
 struct ENC_STREAM_CTX
 {
-    const struct STREAM_CIPHER *cipher;
-    unsigned char state[2048 * 8];
+    struct STREAM_STATE state;
 };
 
 /** Initializes a stream encryption context.
@@ -44,7 +43,7 @@ ORDO_PUBLIC
 int enc_stream_init(struct ENC_STREAM_CTX *ctx,
                     const void *key,
                     size_t key_size,
-                    const struct STREAM_CIPHER *cipher,
+                    enum STREAM_CIPHER cipher,
                     const void *params);
 
 /** Encrypts or decrypts a data buffer.
@@ -97,7 +96,7 @@ void enc_stream_copy(struct ENC_STREAM_CTX *dst,
 ///          stream cipher.
 **/
 ORDO_PUBLIC
-size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher,
+size_t enc_stream_key_len(enum STREAM_CIPHER cipher,
                           size_t key_len);
 
 /*===----------------------------------------------------------------------===*/

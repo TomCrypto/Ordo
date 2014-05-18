@@ -8,140 +8,119 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef  int   (*HASH_INIT)
-    (void *, const void *);
-typedef void   (*HASH_UPDATE)
-    (void *, const void *, size_t);
-typedef void   (*HASH_FINAL)
-    (void *, void *);
-typedef size_t (*HASH_QUERY)
-    (int, size_t);
-
-struct HASH_FUNCTION
+const char *hash_function_name(enum HASH_FUNCTION primitive)
 {
-    HASH_INIT   init;
-    HASH_UPDATE update;
-    HASH_FINAL  final;
-    HASH_QUERY  query;
-    const char *name;
-};
-
-/*===----------------------------------------------------------------------===*/
-
-const char *hash_function_name(const struct HASH_FUNCTION *primitive)
-{
-    return primitive->name;
-}
-
-#include "ordo/primitives/hash_functions/md5.h"
-
-const struct HASH_FUNCTION *ordo_md5(void)
-{
-    static const struct HASH_FUNCTION primitive =
+    switch (primitive)
     {
-        (HASH_INIT  )md5_init,
-        (HASH_UPDATE)md5_update,
-        (HASH_FINAL )md5_final,
-        (HASH_QUERY )md5_query,
-        "MD5"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/hash_functions/sha256.h"
-
-const struct HASH_FUNCTION *ordo_sha256(void)
-{
-    static const struct HASH_FUNCTION primitive =
-    {
-        (HASH_INIT  )sha256_init,
-        (HASH_UPDATE)sha256_update,
-        (HASH_FINAL )sha256_final,
-        (HASH_QUERY )sha256_query,
-        "SHA-256"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/hash_functions/skein256.h"
-
-const struct HASH_FUNCTION *ordo_skein256(void)
-{
-    static const struct HASH_FUNCTION primitive =
-    {
-        (HASH_INIT  )skein256_init,
-        (HASH_UPDATE)skein256_update,
-        (HASH_FINAL )skein256_final,
-        (HASH_QUERY )skein256_query,
-        "Skein-256"
-    };
-
-    return &primitive;
+        case HASH_MD5:
+            return "MD5";
+        case HASH_SHA256:
+            return "SHA-256";
+        case HASH_SKEIN256:
+            return "Skein-256";
+        case HASH_UNKNOWN: default:
+            return 0;
+    }
 }
 
 /*===----------------------------------------------------------------------===*/
 
-const struct HASH_FUNCTION *hash_function_by_name(const char *name)
+enum HASH_FUNCTION hash_function_by_name(const char *name)
 {
-    size_t t;
-
-    for (t = 0; t < hash_function_count(); t++)
-    {
-        const struct HASH_FUNCTION *primitive;
-        primitive = hash_function_by_index(t);
-
-        if (!strcmp(name, primitive->name))
-            return primitive;
-    }
-
-    return 0;
+    if (!strcmp(name, "MD5"))
+        return HASH_MD5;
+    else if (!strcmp(name, "SHA-256"))
+        return HASH_SHA256;
+    else if (!strcmp(name, "Skein-256"))
+        return HASH_SKEIN256;
+    else
+        return HASH_UNKNOWN;
 }
 
-const struct HASH_FUNCTION *hash_function_by_index(size_t index)
+enum HASH_FUNCTION hash_function_by_index(size_t index)
 {
-    switch (index)
-    {
-        case __COUNTER__: return ordo_md5();
-        case __COUNTER__: return ordo_sha256();
-        case __COUNTER__: return ordo_skein256();
-
-        default: return 0;
-    }
+    return index;
 }
 
 size_t hash_function_count(void)
 {
-    return __COUNTER__;
+    return HASH_COUNT;
 }
 
 /*===----------------------------------------------------------------------===*/
 
-int hash_function_init(const struct HASH_FUNCTION *primitive,
-                       void *state,
+#include "ordo/primitives/hash_functions/md5.h"
+#include "ordo/primitives/hash_functions/sha256.h"
+#include "ordo/primitives/hash_functions/skein256.h"
+
+int hash_function_init(struct HASH_STATE *state,
+                       enum HASH_FUNCTION hash,
                        const void *params)
 {
-    return primitive->init(state, params);
+    switch (state->hash = hash)
+    {
+        case HASH_MD5:
+            return md5_init(&state->jmp.md5, params);
+        case HASH_SHA256:
+            return sha256_init(&state->jmp.sha256, params);
+        case HASH_SKEIN256:
+            return skein256_init(&state->jmp.skein256, params);
+        case HASH_UNKNOWN: default:
+            return ORDO_FAIL;
+    }
 }
 
-void hash_function_update(const struct HASH_FUNCTION *primitive,
-                          void *state,
+void hash_function_update(struct HASH_STATE *state,
                           const void *buffer,
                           size_t len)
 {
-    primitive->update(state, buffer, len);
+    switch (state->hash)
+    {
+        case HASH_MD5:
+            return md5_update(&state->jmp.md5, buffer, len);
+        case HASH_SHA256:
+            return sha256_update(&state->jmp.sha256, buffer, len);
+        case HASH_SKEIN256:
+            return skein256_update(&state->jmp.skein256, buffer, len);
+        case HASH_UNKNOWN: default:
+            return;
+    }
 }
 
-void hash_function_final(const struct HASH_FUNCTION *primitive,
-                         void *state,
+void hash_function_final(struct HASH_STATE *state,
                          void *digest)
 {
-    primitive->final(state, digest);
+    switch (state->hash)
+    {
+        case HASH_MD5:
+            return md5_final(&state->jmp.md5, digest);
+        case HASH_SHA256:
+            return sha256_final(&state->jmp.sha256, digest);
+        case HASH_SKEIN256:
+            return skein256_final(&state->jmp.skein256, digest);
+        case HASH_UNKNOWN: default:
+            return;
+    }
 }
 
-size_t hash_function_query(const struct HASH_FUNCTION *primitive,
+void hash_function_copy(struct HASH_STATE *dst,
+                        const struct HASH_STATE *src)
+{
+    *dst = *src;
+}
+
+size_t hash_function_query(enum HASH_FUNCTION hash,
                            int query, size_t value)
 {
-    return primitive->query(query, value);
+    switch (hash)
+    {
+        case HASH_MD5:
+            return md5_query(query, value);
+        case HASH_SHA256:
+            return sha256_query(query, value);
+        case HASH_SKEIN256:
+            return skein256_query(query, value);
+        case HASH_UNKNOWN: default:
+            return (size_t)-1;
+    }
 }

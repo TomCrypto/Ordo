@@ -14,7 +14,7 @@
 
 int kat_func(struct KAT_RECORD r)
 {
-    const struct STREAM_CIPHER *cipher = stream_cipher_by_name(r.name);
+    enum STREAM_CIPHER cipher = stream_cipher_by_name(r.name);
 
     int retval;
     unsigned char buf[1024];
@@ -49,7 +49,7 @@ int test_enc_stream_interface(void)
     
     for (t = 0; t < stream_cipher_count(); ++t)
     {
-        const struct STREAM_CIPHER *cipher = stream_cipher_by_index(t);
+        enum STREAM_CIPHER cipher = stream_cipher_by_index(t);
         size_t key_size = enc_stream_key_len(cipher, 0);
         const char *name = stream_cipher_name(cipher);
         struct ENC_STREAM_CTX ctx, cp1, cp2;
