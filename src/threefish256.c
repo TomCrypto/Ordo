@@ -10,11 +10,6 @@
 
 #define THREEFISH256_BLOCK (bits(256))
 
-struct THREEFISH256_STATE
-{
-    uint64_t subkey[19 * 4];
-};
-
 static void threefish256_key_schedule(const uint64_t key[4],
                                       const uint64_t tweak[2],
                                       uint64_t *subkeys) HOT_CODE;
@@ -24,6 +19,13 @@ static void threefish256_forward_C(uint64_t block[4],
 
 static void threefish256_inverse_C(uint64_t block[4],
                                    const uint64_t *subkeys) HOT_CODE;
+
+/* #if annotation */
+struct THREEFISH256_STATE
+{
+    uint64_t subkey[19 * 4];
+};
+/* #endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

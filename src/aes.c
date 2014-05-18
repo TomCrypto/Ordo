@@ -13,12 +13,6 @@
 /* Key length in bytes from number of rounds. */
 #define key_bytes(rounds) (16 * ((rounds) + 1))
 
-struct AES_STATE
-{
-    unsigned char key[336];
-    size_t rounds;
-};
-
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
                       size_t key_len, size_t rounds) HOT_CODE;
 
@@ -26,6 +20,14 @@ static void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
 static void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
+
+/* #if annotation */
+struct AES_STATE
+{
+    unsigned char key[336];
+    size_t rounds;
+};
+/* #endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

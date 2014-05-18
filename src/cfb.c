@@ -8,6 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
+/* #if annotation */
 struct CFB_STATE
 {
     unsigned char iv[2048];
@@ -16,6 +17,9 @@ struct CFB_STATE
     size_t block_size;
     int direction;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int cfb_init(struct CFB_STATE *state,
              const struct BLOCK_CIPHER *cipher,

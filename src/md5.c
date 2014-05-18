@@ -18,6 +18,18 @@ static const uint32_t md5_iv[4] =
 
 static void md5_compress(uint32_t block[16], uint32_t digest[4]) HOT_CODE;
 
+#if annotation
+struct MD5_STATE
+{
+    /* Here block_len is used to track incomplete input blocks, whereas
+     * msg_len stores the total message length so far (for padding). */
+    uint32_t digest[4];
+    uint32_t block[16];
+    uint64_t block_len;
+    uint64_t msg_len;
+};
+#endif /* annotation */
+
 /*===----------------------------------------------------------------------===*/
 
 int md5_init(struct MD5_STATE *state,

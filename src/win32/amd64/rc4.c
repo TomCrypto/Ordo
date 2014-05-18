@@ -10,16 +10,18 @@
 
 #define RC4_DROP_DEFAULT 2048
 
+static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
+                             const uint8_t *key, size_t key_len) HOT_CODE;
+
+extern void rc4_update_ASM(void *state, uint64_t len, void *in, void *out);
+
+#if annotation
 struct RC4_STATE
 {
     uint64_t i, j;
     uint64_t s[256];
 };
-
-static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
-                             const uint8_t *key, size_t key_len) HOT_CODE;
-
-extern void rc4_update_ASM(void *state, uint64_t len, void *in, void *out);
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

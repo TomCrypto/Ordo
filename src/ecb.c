@@ -8,6 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
+/* #if annotation */
 struct ECB_STATE
 {
     unsigned char block[2048];
@@ -18,6 +19,9 @@ struct ECB_STATE
     size_t padding;
     int direction;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int ecb_init(struct ECB_STATE *state,
              const struct BLOCK_CIPHER *cipher,

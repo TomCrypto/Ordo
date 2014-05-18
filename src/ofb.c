@@ -8,12 +8,16 @@
 
 /*===----------------------------------------------------------------------===*/
 
+/* #if annotation */
 struct OFB_STATE
 {
     unsigned char iv[2048];
     size_t remaining; /* unused data in the state */
     size_t block_size;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int ofb_init(struct OFB_STATE *state,
              const struct BLOCK_CIPHER *cipher,

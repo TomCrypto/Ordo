@@ -8,6 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
+/* #if annotation */
 struct CBC_STATE
 {
     unsigned char iv[2048];
@@ -19,6 +20,9 @@ struct CBC_STATE
     size_t padding;
     int direction;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int cbc_init(struct CBC_STATE *state,
              const struct BLOCK_CIPHER *cipher,

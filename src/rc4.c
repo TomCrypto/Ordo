@@ -14,6 +14,15 @@ static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 static uint8_t rc4_next(struct RC4_STATE *state) HOT_CODE;
 
+#if annotation
+struct RC4_STATE
+{
+    uint8_t i;
+    uint8_t j;
+    uint8_t s[256];
+};
+#endif /* annotation */
+
 /*===----------------------------------------------------------------------===*/
 
 int rc4_init(struct RC4_STATE *state,

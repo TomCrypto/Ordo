@@ -10,10 +10,14 @@
 
 #define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
 
+/* #if annotation */
 struct NULLCIPHER_STATE
 {
     uint8_t dummy;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void *key, size_t key_len,

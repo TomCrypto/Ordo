@@ -38,6 +38,18 @@ static void skein256_compress(const uint64_t *block,
                               uint64_t *tweak,
                               void *cipher) HOT_CODE;
 
+#if annotation
+struct SKEIN256_STATE
+{
+    uint64_t state[4];
+    uint64_t block[4];
+    uint64_t block_len;
+    uint64_t msg_len;
+    uint64_t out_len;
+    unsigned char cipher[2048];
+};
+#endif /* annotation */
+
 /*===----------------------------------------------------------------------===*/
 
 int skein256_init(struct SKEIN256_STATE *state,

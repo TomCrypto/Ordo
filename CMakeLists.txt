@@ -199,6 +199,11 @@ ENDIF()
 
 PROCESS(${SRC_PATH})
 
+# Here work out which primitives were used and pull out their struct definitions
+
+execute_process(COMMAND ./script.py ${SOURCE_FILES}
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
 SOURCE_GROUP("Source" FILES ${SOURCE_FILES})
 

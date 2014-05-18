@@ -8,6 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
+/* #if annotation */
 struct CTR_STATE
 {
     unsigned char iv[2048];
@@ -15,6 +16,9 @@ struct CTR_STATE
     size_t remaining;
     size_t block_size;
 };
+/* #endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int ctr_init(struct CTR_STATE *state,
              const struct BLOCK_CIPHER *cipher,
