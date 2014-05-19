@@ -133,7 +133,7 @@ static unsigned char scratch[1024];
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     enum HASH_FUNCTION hash = hash_function_by_name(test.name);
-    if (hash == HASH_UNKNOWN)
+    if (!hash)
     {
         lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
         return 1; /* If skipping, the test passed by convention. */

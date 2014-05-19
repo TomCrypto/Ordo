@@ -12,13 +12,19 @@ const char *hash_function_name(enum HASH_FUNCTION primitive)
 {
     switch (primitive)
     {
+#ifdef USING_MD5
         case HASH_MD5:
             return "MD5";
+#endif
+#ifdef USING_SHA256
         case HASH_SHA256:
             return "SHA-256";
+#endif
+#ifdef USING_SKEIN256
         case HASH_SKEIN256:
             return "Skein-256";
-        case HASH_UNKNOWN: default:
+#endif
+        default:
             return 0;
     }
 }
@@ -27,31 +33,58 @@ const char *hash_function_name(enum HASH_FUNCTION primitive)
 
 enum HASH_FUNCTION hash_function_by_name(const char *name)
 {
+#ifdef USING_MD5
     if (!strcmp(name, "MD5"))
         return HASH_MD5;
-    else if (!strcmp(name, "SHA-256"))
+#endif
+
+#ifdef USING_SHA256
+    if (!strcmp(name, "SHA-256"))
         return HASH_SHA256;
-    else if (!strcmp(name, "Skein-256"))
+#endif
+
+#ifdef USING_SKEIN256
+    if (!strcmp(name, "Skein-256"))
         return HASH_SKEIN256;
-    else
-        return HASH_UNKNOWN;
+#endif
+
+    return 0;
 }
 
 enum HASH_FUNCTION hash_function_by_index(size_t index)
 {
-    return index;
+    switch (index)
+    {
+#ifdef USING_MD5
+        case __COUNTER__: return HASH_MD5;
+#endif
+#ifdef USING_SHA256
+        case __COUNTER__: return HASH_SHA256;
+#endif
+#ifdef USING_SKEIN256
+        case __COUNTER__: return HASH_SKEIN256;
+#endif
+
+        default:          return 0;
+    }
 }
 
 size_t hash_function_count(void)
 {
-    return HASH_COUNT;
+    return __COUNTER__;
 }
 
 /*===----------------------------------------------------------------------===*/
 
-#include "ordo/primitives/hash_functions/md5.h"
-#include "ordo/primitives/hash_functions/sha256.h"
-#include "ordo/primitives/hash_functions/skein256.h"
+#ifdef USING_MD5
+    #include "ordo/primitives/hash_functions/md5.h"
+#endif
+#ifdef USING_SHA256
+    #include "ordo/primitives/hash_functions/sha256.h"
+#endif
+#ifdef USING_SKEIN256
+    #include "ordo/primitives/hash_functions/skein256.h"
+#endif
 
 int hash_function_init(struct HASH_STATE *state,
                        enum HASH_FUNCTION hash,
@@ -59,15 +92,21 @@ int hash_function_init(struct HASH_STATE *state,
 {
     switch (state->hash = hash)
     {
+#ifdef USING_MD5
         case HASH_MD5:
             return md5_init(&state->jmp.md5, params);
+#endif
+#ifdef USING_SHA256
         case HASH_SHA256:
             return sha256_init(&state->jmp.sha256, params);
+#endif
+#ifdef USING_SKEIN256
         case HASH_SKEIN256:
             return skein256_init(&state->jmp.skein256, params);
-        case HASH_UNKNOWN: default:
-            return ORDO_FAIL;
+#endif
     }
+    
+    return ORDO_FAIL;
 }
 
 void hash_function_update(struct HASH_STATE *state,
@@ -76,14 +115,18 @@ void hash_function_update(struct HASH_STATE *state,
 {
     switch (state->hash)
     {
+#ifdef USING_MD5
         case HASH_MD5:
             return md5_update(&state->jmp.md5, buffer, len);
+#endif
+#ifdef USING_SHA256
         case HASH_SHA256:
             return sha256_update(&state->jmp.sha256, buffer, len);
+#endif
+#ifdef USING_SKEIN256
         case HASH_SKEIN256:
             return skein256_update(&state->jmp.skein256, buffer, len);
-        case HASH_UNKNOWN: default:
-            return;
+#endif
     }
 }
 
@@ -92,14 +135,18 @@ void hash_function_final(struct HASH_STATE *state,
 {
     switch (state->hash)
     {
+#ifdef USING_MD5
         case HASH_MD5:
             return md5_final(&state->jmp.md5, digest);
+#endif
+#ifdef USING_SHA256
         case HASH_SHA256:
             return sha256_final(&state->jmp.sha256, digest);
+#endif
+#ifdef USING_SKEIN256
         case HASH_SKEIN256:
             return skein256_final(&state->jmp.skein256, digest);
-        case HASH_UNKNOWN: default:
-            return;
+#endif
     }
 }
 
@@ -114,13 +161,19 @@ size_t hash_function_query(enum HASH_FUNCTION hash,
 {
     switch (hash)
     {
+#ifdef USING_MD5
         case HASH_MD5:
             return md5_query(query, value);
+#endif
+#ifdef USING_SHA256
         case HASH_SHA256:
             return sha256_query(query, value);
+#endif
+#ifdef USING_SKEIN256
         case HASH_SKEIN256:
             return skein256_query(query, value);
-        case HASH_UNKNOWN: default:
-            return (size_t)-1;
+#endif
     }
+    
+    return (size_t)-1;
 }

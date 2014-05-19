@@ -24,24 +24,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-enum STREAM_CIPHER
-{
-    STREAM_UNKNOWN           = -1,
-    STREAM_RC4               =  0,
-    
-    STREAM_COUNT
-};
-
-struct STREAM_STATE
-{
-    enum STREAM_CIPHER cipher;
-    
-    union
-    {
-        struct RC4_STATE rc4;
-    } jmp;
-};
-
 /** Returns the name of a stream cipher primitive.
 ///
 /// @param [in]     primitive      A stream cipher primitive.

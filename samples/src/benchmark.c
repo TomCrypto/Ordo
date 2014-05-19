@@ -368,8 +368,8 @@ enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
 
 static enum ALG_TYPE identify(const char *name)
 {
-    if (hash_function_by_name(name) != HASH_UNKNOWN) return ALG_HASH;
-    if (stream_cipher_by_name(name) != STREAM_UNKNOWN) return ALG_STREAM;
+    if (hash_function_by_name(name) != 0) return ALG_HASH;
+    if (stream_cipher_by_name(name) != 0) return ALG_STREAM;
     if (block_cipher_by_name(name)  != 0) return ALG_BLOCK;
     return ALG_NONE;
 }

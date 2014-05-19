@@ -12,9 +12,11 @@ const char *stream_cipher_name(enum STREAM_CIPHER cipher)
 {
     switch (cipher)
     {
+#ifdef USING_RC4
         case STREAM_RC4:
             return "RC4";
-        case STREAM_UNKNOWN: default:
+#endif
+        default:
             return 0;
     }
 }
@@ -23,20 +25,27 @@ const char *stream_cipher_name(enum STREAM_CIPHER cipher)
 
 enum STREAM_CIPHER stream_cipher_by_name(const char *name)
 {
+#ifdef USING_RC4
     if (!strcmp(name, "RC4"))
         return STREAM_RC4;
-    else
-        return STREAM_UNKNOWN;
+#endif
+    return 0;
 }
 
 enum STREAM_CIPHER stream_cipher_by_index(size_t index)
 {
-    return index;
+    switch (index)
+    {
+#ifdef USING_RC4
+        case __COUNTER__: return STREAM_RC4;
+#endif
+        default:          return 0;
+    }
 }
 
 size_t stream_cipher_count(void)
 {
-    return STREAM_COUNT;
+    return __COUNTER__;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -51,12 +60,13 @@ int stream_cipher_init(struct STREAM_STATE *state,
 {
     switch (state->cipher = cipher)
     {
+#ifdef USING_RC4
         case STREAM_RC4:
             return rc4_init(&state->jmp.rc4, key, key_len, params);
-        
-        case STREAM_UNKNOWN: default:
-            return ORDO_FAIL;
+#endif
     }
+    
+    return ORDO_FAIL;
 }
 
 void stream_cipher_update(struct STREAM_STATE *state,
@@ -65,11 +75,10 @@ void stream_cipher_update(struct STREAM_STATE *state,
 {
     switch (state->cipher)
     {
+#ifdef USING_RC4
         case STREAM_RC4:
             rc4_update(&state->jmp.rc4, buffer, len);
-
-        case STREAM_UNKNOWN: default:
-            return;
+#endif
     }
 }
 
@@ -77,11 +86,10 @@ void stream_cipher_final(struct STREAM_STATE *state)
 {
     switch (state->cipher)
     {
+#ifdef USING_RC4
         case STREAM_RC4:
             rc4_final(&state->jmp.rc4);
-
-        case STREAM_UNKNOWN: default:
-            return;
+#endif
     }
 }
 
@@ -96,10 +104,11 @@ size_t stream_cipher_query(enum STREAM_CIPHER cipher,
 {
     switch (cipher)
     {
+#ifdef USING_RC4
         case STREAM_RC4:
             return rc4_query(query, value);
-        
-        case STREAM_UNKNOWN: default:
-            return (size_t)-1;
+#endif
     }
+    
+    return (size_t)-1;
 }

@@ -23,28 +23,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-enum HASH_FUNCTION
-{
-    HASH_UNKNOWN             = -1,
-    HASH_MD5                 =  0,
-    HASH_SHA256              =  1,
-    HASH_SKEIN256            =  2,
-    
-    HASH_COUNT
-};
-
-struct HASH_STATE
-{
-    enum HASH_FUNCTION hash;
-    
-    union
-    {
-        struct MD5_STATE md5;
-        struct SHA256_STATE sha256;
-        struct SKEIN256_STATE skein256;
-    } jmp;
-};
-
 /** Returns the name of a hash function primitive.
 ///
 /// @param [in]     primitive      A hash function primitive.

@@ -94,7 +94,7 @@ static unsigned char scratch[1024];
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     enum STREAM_CIPHER cipher = stream_cipher_by_name(test.name);
-    if (cipher == STREAM_UNKNOWN)
+    if (!cipher)
     {
         lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
         return 1; /* If skipping, the test passed by convention. */
@@ -147,7 +147,7 @@ int test_stream_utilities(void)
     for (t = 0; t < count; ++t)
     {
         enum STREAM_CIPHER cipher = stream_cipher_by_index(t);
-        if (cipher == STREAM_UNKNOWN) return 0;
+        if (!cipher) return 0;
     }
 
     return 1;
