@@ -27,9 +27,8 @@ int pbkdf2(enum HASH_FUNCTION hash,
 
     struct HMAC_CTX ctx, cst;
     
-    // TODO: TEMPORARY - digest length buffer max size = 2048 bytes
-    unsigned char buf[2048];
-    unsigned char feedback[2048];
+    unsigned char buf[HASH_DIGEST_LEN];
+    unsigned char feedback[HASH_DIGEST_LEN];
 
     /* The output counter is a 32-bit counter which for some reason starts
      * at 1, putting an upper bound on the maximum output length allowed. */

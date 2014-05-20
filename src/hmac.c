@@ -22,6 +22,7 @@ int hmac_init(struct HMAC_CTX *ctx,
 
     /* The key may be smaller than the hash's block size, pad with zeroes. */
     memset(ctx->key, 0x00, block_size);
+    ctx->primitive = hash;
 
     /* If the key is larger than the hash function's block size, it needs to
      * be reduced. This is done by hashing it once, as per RFC 2104. */
@@ -50,8 +51,8 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
     int err = ORDO_SUCCESS;
 
-    size_t digest_len = digest_length(ctx->ctx.state.hash);
-    size_t block_size = hash_function_query(ctx->ctx.state.hash, BLOCK_SIZE_Q, 0);
+    size_t digest_len = digest_length(ctx->primitive);
+    size_t block_size = hash_function_query(ctx->primitive, BLOCK_SIZE_Q, 0);
     size_t t;
 
     digest_final(&ctx->ctx, digest);
@@ -59,7 +60,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    if ((err = digest_init(&ctx->ctx, ctx->ctx.state.hash, 0))) return err;
+    if ((err = digest_init(&ctx->ctx, ctx->primitive, 0))) return err;
 
     digest_update(&ctx->ctx, ctx->key, block_size);
     digest_update(&ctx->ctx, digest, digest_len);
@@ -70,7 +71,7 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 
 void hmac_copy(struct HMAC_CTX *dst, const struct HMAC_CTX *src)
 {
-    size_t block_size = hash_function_query(dst->ctx.state.hash, BLOCK_SIZE_Q, 0);
+    size_t block_size = hash_function_query(dst->primitive, BLOCK_SIZE_Q, 0);
     memcpy(dst->key, src->key, block_size);
     digest_copy(&dst->ctx, &src->ctx);
 }

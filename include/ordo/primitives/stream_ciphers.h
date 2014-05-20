@@ -33,7 +33,7 @@ extern "C" {
 /// @remarks This name can then be used in \c stream_cipher_by_name().
 **/
 ORDO_PUBLIC
-const char *stream_cipher_name(enum STREAM_CIPHER cipher);
+const char *stream_cipher_name(enum STREAM_CIPHER primitive);
 
 /** Returns a stream cipher primitive from a name.
 ///
@@ -139,7 +139,7 @@ void stream_cipher_copy(struct STREAM_STATE *dst,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t stream_cipher_query(enum STREAM_CIPHER cipher,
+size_t stream_cipher_query(enum STREAM_CIPHER primitive,
                            int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

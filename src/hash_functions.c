@@ -87,10 +87,10 @@ size_t hash_function_count(void)
 #endif
 
 int hash_function_init(struct HASH_STATE *state,
-                       enum HASH_FUNCTION hash,
+                       enum HASH_FUNCTION primitive,
                        const void *params)
 {
-    switch (state->hash = hash)
+    switch (state->primitive = primitive)
     {
 #ifdef USING_MD5
         case HASH_MD5:
@@ -113,7 +113,7 @@ void hash_function_update(struct HASH_STATE *state,
                           const void *buffer,
                           size_t len)
 {
-    switch (state->hash)
+    switch (state->primitive)
     {
 #ifdef USING_MD5
         case HASH_MD5:
@@ -133,7 +133,7 @@ void hash_function_update(struct HASH_STATE *state,
 void hash_function_final(struct HASH_STATE *state,
                          void *digest)
 {
-    switch (state->hash)
+    switch (state->primitive)
     {
 #ifdef USING_MD5
         case HASH_MD5:
@@ -156,10 +156,10 @@ void hash_function_copy(struct HASH_STATE *dst,
     *dst = *src;
 }
 
-size_t hash_function_query(enum HASH_FUNCTION hash,
+size_t hash_function_query(enum HASH_FUNCTION primitive,
                            int query, size_t value)
 {
-    switch (hash)
+    switch (primitive)
     {
 #ifdef USING_MD5
         case HASH_MD5:

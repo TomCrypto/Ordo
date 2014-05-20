@@ -79,7 +79,7 @@ size_t hash_function_count(void);
 **/
 ORDO_PUBLIC
 int hash_function_init(struct HASH_STATE *state,
-                       enum HASH_FUNCTION hash,
+                       enum HASH_FUNCTION primitive,
                        const void *params);
 
 /** Updates a hash  function state by  appending a buffer to the  message this
@@ -138,7 +138,7 @@ void hash_function_copy(struct HASH_STATE *dst,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t hash_function_query(enum HASH_FUNCTION hash,
+size_t hash_function_query(enum HASH_FUNCTION primitive,
                            int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

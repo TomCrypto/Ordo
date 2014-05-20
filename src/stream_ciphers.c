@@ -55,10 +55,10 @@ size_t stream_cipher_count(void)
 int stream_cipher_init(struct STREAM_STATE *state,
                        const void *key,
                        size_t key_len,
-                       enum STREAM_CIPHER cipher,
+                       enum STREAM_CIPHER primitive,
                        const void *params)
 {
-    switch (state->cipher = cipher)
+    switch (state->primitive = primitive)
     {
 #ifdef USING_RC4
         case STREAM_RC4:
@@ -73,7 +73,7 @@ void stream_cipher_update(struct STREAM_STATE *state,
                           void *buffer,
                           size_t len)
 {
-    switch (state->cipher)
+    switch (state->primitive)
     {
 #ifdef USING_RC4
         case STREAM_RC4:
@@ -84,7 +84,7 @@ void stream_cipher_update(struct STREAM_STATE *state,
 
 void stream_cipher_final(struct STREAM_STATE *state)
 {
-    switch (state->cipher)
+    switch (state->primitive)
     {
 #ifdef USING_RC4
         case STREAM_RC4:
@@ -99,10 +99,10 @@ void stream_cipher_copy(struct STREAM_STATE *dst,
     *dst = *src;
 }
 
-size_t stream_cipher_query(enum STREAM_CIPHER cipher,
+size_t stream_cipher_query(enum STREAM_CIPHER primitive,
                            int query, size_t value)
 {
-    switch (cipher)
+    switch (primitive)
     {
 #ifdef USING_RC4
         case STREAM_RC4:

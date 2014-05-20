@@ -24,12 +24,11 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-// TMP: max hash function block size 2048 bytes
-
 struct HMAC_CTX
 {
+    enum HASH_FUNCTION primitive;
     struct DIGEST_CTX ctx;
-    unsigned char key[2048];
+    unsigned char key[HASH_BLOCK_LEN];
 };
 
 /** Initializes an HMAC context, provided optional parameters.
