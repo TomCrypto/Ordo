@@ -109,7 +109,7 @@ if __name__ == "__main__":
     
     platform += "\n#endif"
     
-    with open('include/ordo/platform.h', 'w') as f:
+    with open('include/ordo/definitions.h', 'w') as f:
         f.write(platform)
     
     # done!

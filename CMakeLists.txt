@@ -84,6 +84,7 @@ ENDIF()
 
 SET(INCLUDE_FILES
     include/ordo.h
+    include/ordo/definitions.h
     include/ordo/misc/endianness.h
     include/ordo/misc/os_random.h
     include/ordo/enc/enc_block.h
