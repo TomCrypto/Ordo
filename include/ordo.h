@@ -76,9 +76,9 @@ extern "C" {
 ///          padding is enabled and used, see padding notes in \c enc_block.h.
 **/
 ORDO_PUBLIC
-int ordo_enc_block(const struct BLOCK_CIPHER* cipher,
+int ordo_enc_block(enum BLOCK_CIPHER cipher,
                    const void *cipher_params,
-                   const struct BLOCK_MODE* mode,
+                   enum BLOCK_MODE mode,
                    const void *mode_params,
                    int direction,
                    const void *key, size_t key_len,

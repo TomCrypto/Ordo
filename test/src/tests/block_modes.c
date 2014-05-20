@@ -86,7 +86,7 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct BLOCK_MODE *mode = block_mode_by_name(test.name);
+    enum BLOCK_MODE mode = block_mode_by_name(test.name);
     if (!mode)
     {
         lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
@@ -100,54 +100,31 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
         /* We will encrypt in place, for simplicity (this also implicitly
          * tests buffered encryption, by definition). Also note that the
          * NullCipher uses no key, so no need to pass that in. */
-        err = ordo_enc_block(ordo_nullcipher(), 0, mode, 0,
+        err = ordo_enc_block(BLOCK_NULLCIPHER, 0, mode, 0,
                              1, /* encryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,
                              test.input, check_len,
                              scratch, &check_len);
 
-        if (err)
-        {
+        if (err || (check_len != (size_t)test.out_len))
             return 0;
-        }
-
-        if (check_len != (size_t)test.out_len)
-        {
-            return 0;
-        }
 
         if (memcmp(test.expected, scratch, check_len))
-        {
             return 0;
-        }
 
         /* Now we decrypt, hoping to get back the original input. */
-        err = ordo_enc_block(ordo_nullcipher(), 0, mode, 0,
+        err = ordo_enc_block(BLOCK_NULLCIPHER, 0, mode, 0,
                              0, /* decryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,
                              scratch, check_len,
                              scratch, &check_len);
 
-        if (err)
-        {
+        if (err || (check_len != (size_t)test.in_len))
             return 0;
-        }
-
-        if (check_len != (size_t)test.in_len)
-        {
-            return 0;
-        }
-
-        if (memcmp(test.input, scratch, check_len))
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        
+        return !memcmp(test.input, scratch, check_len);
     }
 }
 
@@ -167,7 +144,7 @@ int test_block_modes_utilities(void)
 
     for (t = 0; t < count; ++t)
     {
-        const struct BLOCK_MODE *mode = block_mode_by_index(t);
+        enum BLOCK_MODE mode = block_mode_by_index(t);
         if (!mode) return 0;
     }
 

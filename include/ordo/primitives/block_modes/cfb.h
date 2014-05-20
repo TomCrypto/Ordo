@@ -34,14 +34,11 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct CFB_STATE;
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
 int cfb_init(struct CFB_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
+             struct BLOCK_STATE *cipher_state,
              const void *iv, size_t iv_len,
              int dir,
              const void *params);
@@ -50,8 +47,7 @@ int cfb_init(struct CFB_STATE *state,
 **/
 ORDO_PUBLIC
 void cfb_update(struct CFB_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
+                struct BLOCK_STATE *cipher_state,
                 const unsigned char *in, size_t in_len,
                 unsigned char *out, size_t *out_len);
 
@@ -59,14 +55,13 @@ void cfb_update(struct CFB_STATE *state,
 **/
 ORDO_PUBLIC
 int cfb_final(struct CFB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
+              struct BLOCK_STATE *cipher_state,
               unsigned char *out, size_t *out_len);
 
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cfb_query(const struct BLOCK_CIPHER *cipher,
+size_t cfb_query(enum BLOCK_CIPHER cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

@@ -37,10 +37,8 @@ extern "C" {
 
 struct ENC_BLOCK_CTX
 {
-    const struct BLOCK_CIPHER *cipher;
-    const struct BLOCK_MODE *mode;
-    unsigned char cipher_state[2048 * 2];
-    unsigned char mode_state[2048 * 8]; // oh god I need to fix this
+    struct BLOCK_STATE cipher;
+    struct BLOCK_MODE_STATE mode;
 };
 
 /** Initializes a block encryption context.
@@ -61,13 +59,13 @@ struct ENC_BLOCK_CTX
 ///          what it expects.
 **/
 ORDO_PUBLIC
-int enc_block_init(struct ENC_BLOCK_CTX* ctx,
+int enc_block_init(struct ENC_BLOCK_CTX *ctx,
                    const void *key, size_t key_len,
                    const void *iv, size_t iv_len,
                    int direction,
-                   const struct BLOCK_CIPHER *cipher,
+                   enum BLOCK_CIPHER cipher,
                    const void *cipher_params,
-                   const struct BLOCK_MODE *mode,
+                   enum BLOCK_MODE mode,
                    const void *mode_params);
 
 /** Encrypts or decrypts a data buffer.
@@ -141,7 +139,7 @@ void enc_block_copy(struct ENC_BLOCK_CTX *dst,
 /// @returns An ideal key length to use for this cipher.
 **/
 ORDO_PUBLIC
-size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
+size_t enc_block_key_len(enum BLOCK_CIPHER cipher,
                          size_t key_len);
 
 /** Queries the IV length of a block mode and block cipher.
@@ -153,8 +151,8 @@ size_t enc_block_key_len(const struct BLOCK_CIPHER *cipher,
 /// @returns An ideal IV length to use for this mode and cipher.
 **/
 ORDO_PUBLIC
-size_t enc_block_iv_len(const struct BLOCK_CIPHER *cipher,
-                        const struct BLOCK_MODE *mode,
+size_t enc_block_iv_len(enum BLOCK_CIPHER cipher,
+                        enum BLOCK_MODE mode,
                         size_t iv_len);
 
 /*===----------------------------------------------------------------------===*/

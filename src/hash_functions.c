@@ -117,15 +117,18 @@ void hash_function_update(struct HASH_STATE *state,
     {
 #ifdef USING_MD5
         case HASH_MD5:
-            return md5_update(&state->jmp.md5, buffer, len);
+            md5_update(&state->jmp.md5, buffer, len);
+            break;
 #endif
 #ifdef USING_SHA256
         case HASH_SHA256:
-            return sha256_update(&state->jmp.sha256, buffer, len);
+            sha256_update(&state->jmp.sha256, buffer, len);
+            break;
 #endif
 #ifdef USING_SKEIN256
         case HASH_SKEIN256:
-            return skein256_update(&state->jmp.skein256, buffer, len);
+            skein256_update(&state->jmp.skein256, buffer, len);
+            break;
 #endif
     }
 }
@@ -137,15 +140,18 @@ void hash_function_final(struct HASH_STATE *state,
     {
 #ifdef USING_MD5
         case HASH_MD5:
-            return md5_final(&state->jmp.md5, digest);
+            md5_final(&state->jmp.md5, digest);
+            break;
 #endif
 #ifdef USING_SHA256
         case HASH_SHA256:
-            return sha256_final(&state->jmp.sha256, digest);
+            sha256_final(&state->jmp.sha256, digest);
+            break;
 #endif
 #ifdef USING_SKEIN256
         case HASH_SKEIN256:
-            return skein256_final(&state->jmp.skein256, digest);
+            skein256_final(&state->jmp.skein256, digest);
+            break;
 #endif
     }
 }

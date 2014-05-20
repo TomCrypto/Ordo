@@ -22,8 +22,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct MD5_STATE;
-
 /** @see \c hash_function_init()
 ///
 /// @remarks The \c params parameter is ignored.

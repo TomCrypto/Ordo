@@ -12,17 +12,26 @@
 from sys import argv
 
 class Primitive:
-    def __init__(self, name, prefix, ptype, block_len, digest_len):
+    def __init__(self, name, prefix, ptype, block_len = 0, digest_len = 0):
         self.name = name
         self.prefix = prefix
         self.ptype = ptype
         self.block_len = block_len
         self.digest_len = digest_len
 
-primitives = [Primitive("rc4.c", "RC4", "STREAM", block_len = 0, digest_len = 0),
+primitives = [Primitive("rc4.c", "RC4", "STREAM"),
               Primitive("md5.c", "MD5", "HASH", block_len = 64, digest_len = 16),
               Primitive("sha256.c", "SHA256", "HASH", block_len = 64, digest_len = 32),
-              Primitive("skein256.c", "SKEIN256", "HASH", block_len = 32, digest_len = 32)]
+              Primitive("skein256.c", "SKEIN256", "HASH", block_len = 32, digest_len = 32),
+              Primitive("aes.c", "AES", "BLOCK", block_len = 16),
+              Primitive("threefish256.c", "THREEFISH256", "BLOCK", block_len = 32),
+              Primitive("nullcipher.c", "NULLCIPHER", "BLOCK", block_len = 16),
+              Primitive("ecb.c", "ECB", "BLOCK_MODE"),
+              Primitive("cbc.c", "CBC", "BLOCK_MODE"),
+              Primitive("cfb.c", "CFB", "BLOCK_MODE"),
+              Primitive("ofb.c", "OFB", "BLOCK_MODE"),
+              Primitive("ctr.c", "CTR", "BLOCK_MODE"),
+              ]
 
 def extract_struct(path, prim):
     with open(path, "r") as f:
@@ -53,7 +62,10 @@ def gen_polymorphic_struct(prims, ptype):
         buf += "    enum HASH_FUNCTION primitive;\n"
     elif ptype == "STREAM":
         buf += "    enum STREAM_CIPHER primitive;\n"
-    # elif...
+    elif ptype == "BLOCK":
+        buf += "    enum BLOCK_CIPHER primitive;\n"
+    elif ptype == "BLOCK_MODE":
+        buf += "    enum BLOCK_MODE primitive;\n"
     
     buf += "\n    union\n"
     buf += "    {\n"
@@ -100,12 +112,15 @@ if __name__ == "__main__":
     platform += "\n"
     platform += "#define HASH_BLOCK_LEN {0}\n".format(calc_block_len(in_use, "HASH"))
     platform += "#define HASH_DIGEST_LEN {0}\n".format(calc_digest_len(in_use, "HASH"))
+    platform += "#define BLOCK_BLOCK_LEN {0}\n".format(calc_block_len(in_use, "BLOCK"))
     
     for (path, prim) in in_use:
         platform += "\n" + extract_struct(path, prim)
     
+    platform += "\n" + gen_polymorphic_struct(in_use, "BLOCK")
     platform += "\n" + gen_polymorphic_struct(in_use, "HASH")
     platform += "\n" + gen_polymorphic_struct(in_use, "STREAM")
+    platform += "\n" + gen_polymorphic_struct(in_use, "BLOCK_MODE")
     
     platform += "\n#endif"
     

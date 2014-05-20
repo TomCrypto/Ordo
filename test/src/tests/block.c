@@ -155,7 +155,7 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct BLOCK_CIPHER *cipher = block_cipher_by_name(test.name);
+    enum BLOCK_CIPHER cipher = block_cipher_by_name(test.name);
     if (!cipher)
     {
         lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
@@ -164,35 +164,26 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
     else
     {
         size_t check_len = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-        unsigned char state[2048]; // TODO: TEMPORARY!
+        struct BLOCK_STATE state;
         int err;
-
+        
         /* We can't use ordo_enc_block, since we are testing the block
          * cipher's permutation functions - fall back to a lower level. */
-        err = block_cipher_init(cipher, state,
+        err = block_cipher_init(&state,
                                 test.key, test.key_len,
-                                0);
+                                cipher, 0);
 
         if (err) return 0;
 
         memcpy(scratch, test.input, check_len);
-        block_cipher_forward(cipher, state,
-                             scratch);
+        block_cipher_forward(&state, scratch);
 
         if (memcmp(test.expected, scratch, check_len)) return 0;
 
         /* Now try to decrypt and see if we get back the input. */
-        block_cipher_inverse(cipher, state,
-                             scratch);
+        block_cipher_inverse(&state, scratch);
 
-        if (memcmp(test.input, scratch, check_len))
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        return !memcmp(test.input, scratch, check_len);
     }
 }
 
@@ -212,7 +203,7 @@ int test_block_utilities(void)
 
     for (t = 0; t < count; ++t)
     {
-        const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
+        enum BLOCK_CIPHER cipher = block_cipher_by_index(t);
         if (!cipher) return 0;
     }
 

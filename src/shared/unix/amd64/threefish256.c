@@ -17,12 +17,12 @@ static void threefish256_key_schedule(const uint64_t key[4],
 extern void threefish256_forward_ASM(void *block, const void *subkeys);
 extern void threefish256_inverse_ASM(void *block, const void *subkeys);
 
-/* #if annotation */
+#if annotation
 struct THREEFISH256_STATE
 {
     uint64_t subkey[19 * 4];
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

@@ -8,10 +8,10 @@
 
 /*===----------------------------------------------------------------------===*/
 
-/* #if annotation */
+#if annotation
 struct ECB_STATE
 {
-    unsigned char block[2048];
+    unsigned char block[BLOCK_BLOCK_LEN];
     size_t available;
 
     size_t block_size;
@@ -19,23 +19,22 @@ struct ECB_STATE
     size_t padding;
     int direction;
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 
 int ecb_init(struct ECB_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
+             struct BLOCK_STATE *cipher_state,
              const void *iv,
              size_t iv_len,
              int direction,
              const struct ECB_PARAMS *params)
 {
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+    state->block_size = block_cipher_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
 
     /* ECB accepts no IV - it is an error to pass it one. Note for consistency
      * only the iv_len parameter is checked - iv itself is in fact ignored. */
-    if (ecb_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
+    if (ecb_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
     state->direction = direction;
@@ -45,8 +44,7 @@ int ecb_init(struct ECB_STATE *state,
 }
 
 void ecb_update(struct ECB_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
+                struct BLOCK_STATE *cipher_state,
                 const unsigned char *in,
                 size_t in_len,
                 unsigned char *out,
@@ -67,11 +65,11 @@ void ecb_update(struct ECB_STATE *state,
 
         if (state->direction)
         {
-            block_cipher_forward(cipher, cipher_state, state->block);
+            block_cipher_forward(cipher_state, state->block);
         }
         else
         {
-            block_cipher_inverse(cipher, cipher_state, state->block);
+            block_cipher_inverse(cipher_state, state->block);
         }
 
         memcpy(out, state->block, block_size);
@@ -88,8 +86,7 @@ void ecb_update(struct ECB_STATE *state,
 }
 
 static int ecb_encrypt_final(struct ECB_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
+                             struct BLOCK_STATE *cipher_state,
                              unsigned char *out,
                              size_t *out_len)
 {
@@ -109,7 +106,7 @@ static int ecb_encrypt_final(struct ECB_STATE *state,
         padding = (uint8_t)(block_size - state->available % block_size);
 
         memset(state->block + state->available, padding, padding);
-        block_cipher_forward(cipher, cipher_state, state->block);
+        block_cipher_forward(cipher_state, state->block);
 
         memcpy(out, state->block, block_size);
         *out_len = block_size;
@@ -119,8 +116,7 @@ static int ecb_encrypt_final(struct ECB_STATE *state,
 }
 
 static int ecb_decrypt_final(struct ECB_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
+                             struct BLOCK_STATE *cipher_state,
                              unsigned char *out,
                              size_t *out_len)
 {
@@ -134,7 +130,7 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
         size_t block_size = state->block_size;
         uint8_t padding;
 
-        block_cipher_inverse(cipher, cipher_state, state->block);
+        block_cipher_inverse(cipher_state, state->block);
 
         /* Fetch the padding byte at the end of the block, and verify. */
         padding = (uint8_t)(*(state->block + block_size - 1));
@@ -163,17 +159,16 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
 }
 
 int ecb_final(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
+              struct BLOCK_STATE *cipher_state,
               unsigned char *out,
               size_t *out_len)
 {
     return (state->direction
-            ? ecb_encrypt_final(state, cipher, cipher_state, out, out_len)
-            : ecb_decrypt_final(state, cipher, cipher_state, out, out_len));
+            ? ecb_encrypt_final(state, cipher_state, out, out_len)
+            : ecb_decrypt_final(state, cipher_state, out, out_len));
 }
 
-size_t ecb_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t ecb_query(enum BLOCK_CIPHER cipher, int query, size_t value)
 {
     switch(query)
     {

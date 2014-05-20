@@ -26,8 +26,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct RC4_STATE;
-
 /** @see \c stream_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length was less than 40 bits (5 bytes) or

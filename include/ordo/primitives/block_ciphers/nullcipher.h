@@ -25,8 +25,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct NULLCIPHER_STATE;
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not zero.

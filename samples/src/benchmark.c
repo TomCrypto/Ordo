@@ -135,21 +135,21 @@ static void *hash_params(enum HASH_FUNCTION hash)
     return 0;
 }
 
-static void *block_params(const struct BLOCK_CIPHER *cipher)
+static void *block_params(enum BLOCK_CIPHER cipher)
 {
     return 0;
 }
 
-static void *block_mode_params(const struct BLOCK_MODE *mode)
+static void *block_mode_params(enum BLOCK_MODE mode)
 {
-    if (mode == ordo_ecb())
+    if (mode == BLOCK_MODE_ECB)
     {
         struct ECB_PARAMS *ecb = allocate(sizeof(*ecb));
         ecb->padding = 0;
         return ecb;
     }
 
-    if (mode == ordo_cbc())
+    if (mode == BLOCK_MODE_CBC)
     {
         struct CBC_PARAMS *cbc = allocate(sizeof(*cbc));
         cbc->padding = 0;
@@ -239,8 +239,8 @@ static double stream_speed(enum STREAM_CIPHER cipher,
     }
 }
 
-static double block_speed(const struct BLOCK_CIPHER *cipher,
-                          const struct BLOCK_MODE *mode,
+static double block_speed(enum BLOCK_CIPHER cipher,
+                          enum BLOCK_MODE mode,
                           uint64_t block)
 {
     os_random(buffer, sizeof(buffer));
@@ -327,11 +327,11 @@ static int benchmark_stream_cipher(enum STREAM_CIPHER cipher,
     return EXIT_SUCCESS;
 }
 
-static int benchmark_block_cipher(const struct BLOCK_CIPHER *cipher,
+static int benchmark_block_cipher(enum BLOCK_CIPHER cipher,
                                    int argc, char * const argv[])
 {
     const char *name = block_cipher_name(cipher);
-    const struct BLOCK_MODE *mode;
+    enum BLOCK_MODE mode;
 
     if (argc == 2)
     {
@@ -388,20 +388,20 @@ int main(int argc, char *argv[])
     {
         case ALG_HASH:
         {
-            enum HASH_FUNCTION hash = hash_function_by_name(argv[1]);
-            return benchmark_hash_function(hash, argc, argv);
+            enum HASH_FUNCTION primitive = hash_function_by_name(argv[1]);
+            return benchmark_hash_function(primitive, argc, argv);
         }
 
         case ALG_STREAM:
         {
-            enum STREAM_CIPHER cipher = stream_cipher_by_name(argv[1]);
-            return benchmark_stream_cipher(cipher, argc, argv);
+            enum STREAM_CIPHER primitive = stream_cipher_by_name(argv[1]);
+            return benchmark_stream_cipher(primitive, argc, argv);
         }
 
         case ALG_BLOCK:
         {
-            const struct BLOCK_CIPHER *p = block_cipher_by_name(argv[1]);
-            return benchmark_block_cipher(p, argc, argv);
+            enum BLOCK_CIPHER primitive = block_cipher_by_name(argv[1]);
+            return benchmark_block_cipher(primitive, argc, argv);
         }
 
         case ALG_NONE:

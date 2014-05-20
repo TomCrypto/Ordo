@@ -124,6 +124,8 @@ SET(INCLUDE_FILES
 SET(IN_FILES
     aes.asm
     aes.c
+    threefish256.asm
+    threefish256.c
     alg.c
     block_ciphers.c
     block_modes.c
@@ -150,8 +152,6 @@ SET(IN_FILES
     sha256.c
     skein256.c
     stream_ciphers.c
-    threefish256.asm
-    threefish256.c
     version.c
 )
 

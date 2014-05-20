@@ -8,146 +8,55 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef int    (*BLOCK_MODE_INIT)
-    (void *, const struct BLOCK_CIPHER *, const void *,
-     const void *, size_t, int, const void *);
-
-typedef void   (*BLOCK_MODE_UPDATE)
-    (void *, const struct BLOCK_CIPHER *, const void *,
-     const void *, size_t, void *, size_t *);
-
-typedef int    (*BLOCK_MODE_FINAL)
-    (void *, const struct BLOCK_CIPHER *, const void *, void *, size_t *);
-
-typedef size_t (*BLOCK_MODE_QUERY)
-    (const struct BLOCK_CIPHER *, int, size_t);
-
-struct BLOCK_MODE
+const char *block_mode_name(enum BLOCK_MODE mode)
 {
-    BLOCK_MODE_INIT   init;
-    BLOCK_MODE_UPDATE update;
-    BLOCK_MODE_FINAL  final;
-    BLOCK_MODE_QUERY  query;
-    const char       *name;
-};
-
-/*===----------------------------------------------------------------------===*/
-
-const char *block_mode_name(const struct BLOCK_MODE *mode)
-{
-    return mode->name;
-}
-
-#include "ordo/primitives/block_modes/ecb.h"
-
-const struct BLOCK_MODE *ordo_ecb(void)
-{
-    static const struct BLOCK_MODE primitive =
+    switch (mode)
     {
-        (BLOCK_MODE_INIT  )ecb_init,
-        (BLOCK_MODE_UPDATE)ecb_update,
-        (BLOCK_MODE_FINAL )ecb_final,
-        (BLOCK_MODE_QUERY )ecb_query,
-        "ECB"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/block_modes/cbc.h"
-
-const struct BLOCK_MODE *ordo_cbc(void)
-{
-    static const struct BLOCK_MODE primitive =
-    {
-        (BLOCK_MODE_INIT  )cbc_init,
-        (BLOCK_MODE_UPDATE)cbc_update,
-        (BLOCK_MODE_FINAL )cbc_final,
-        (BLOCK_MODE_QUERY )cbc_query,
-        "CBC"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/block_modes/ctr.h"
-
-const struct BLOCK_MODE *ordo_ctr(void)
-{
-    static const struct BLOCK_MODE primitive =
-    {
-        (BLOCK_MODE_INIT  )ctr_init,
-        (BLOCK_MODE_UPDATE)ctr_update,
-        (BLOCK_MODE_FINAL )ctr_final,
-        (BLOCK_MODE_QUERY )ctr_query,
-        "CTR"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/block_modes/cfb.h"
-
-const struct BLOCK_MODE *ordo_cfb(void)
-{
-    static const struct BLOCK_MODE primitive =
-    {
-        (BLOCK_MODE_INIT  )cfb_init,
-        (BLOCK_MODE_UPDATE)cfb_update,
-        (BLOCK_MODE_FINAL )cfb_final,
-        (BLOCK_MODE_QUERY )cfb_query,
-        "CFB"
-    };
-
-    return &primitive;
-}
-
-#include "ordo/primitives/block_modes/ofb.h"
-
-const struct BLOCK_MODE *ordo_ofb(void)
-{
-    static const struct BLOCK_MODE primitive =
-    {
-        (BLOCK_MODE_INIT  )ofb_init,
-        (BLOCK_MODE_UPDATE)ofb_update,
-        (BLOCK_MODE_FINAL )ofb_final,
-        (BLOCK_MODE_QUERY )ofb_query,
-        "OFB"
-    };
-
-    return &primitive;
-}
-
-/*===----------------------------------------------------------------------===*/
-
-const struct BLOCK_MODE *block_mode_by_name(const char *name)
-{
-    size_t t;
-
-    for (t = 0; t < block_mode_count(); t++)
-    {
-        const struct BLOCK_MODE *primitive;
-        primitive = block_mode_by_index(t);
-
-        if (!strcmp(name, primitive->name))
-            return primitive;
+        case BLOCK_MODE_ECB:
+            return "ECB";
+        case BLOCK_MODE_CBC:
+            return "CBC";
+        case BLOCK_MODE_CTR:
+            return "CTR";
+        case BLOCK_MODE_CFB:
+            return "CFB";
+        case BLOCK_MODE_OFB:
+            return "OFB";
     }
 
     return 0;
 }
 
-const struct BLOCK_MODE *block_mode_by_index(size_t index)
+/*===----------------------------------------------------------------------===*/
+
+enum BLOCK_MODE block_mode_by_name(const char *name)
+{
+    if (!strcmp(name, "ECB"))
+        return BLOCK_MODE_ECB;
+    if (!strcmp(name, "CBC"))
+        return BLOCK_MODE_CBC;
+    if (!strcmp(name, "CTR"))
+        return BLOCK_MODE_CTR;
+    if (!strcmp(name, "CFB"))
+        return BLOCK_MODE_CFB;
+    if (!strcmp(name, "OFB"))
+        return BLOCK_MODE_OFB;
+
+    return 0;
+}
+
+enum BLOCK_MODE block_mode_by_index(size_t index)
 {
     switch (index)
     {
-        case __COUNTER__: return ordo_ecb();
-        case __COUNTER__: return ordo_cbc();
-        case __COUNTER__: return ordo_ctr();
-        case __COUNTER__: return ordo_cfb();
-        case __COUNTER__: return ordo_ofb();
-
-        default: return 0;
+        case __COUNTER__: return BLOCK_MODE_ECB;
+        case __COUNTER__: return BLOCK_MODE_CBC;
+        case __COUNTER__: return BLOCK_MODE_CTR;
+        case __COUNTER__: return BLOCK_MODE_CFB;
+        case __COUNTER__: return BLOCK_MODE_OFB;
     }
+    
+    return 0;
 }
 
 size_t block_mode_count(void)
@@ -157,43 +66,99 @@ size_t block_mode_count(void)
 
 /*===----------------------------------------------------------------------===*/
 
-int block_mode_init(const struct BLOCK_MODE *mode,
-                    void *state,
-                    const struct BLOCK_CIPHER *cipher,
-                    const void *cipher_state,
+#include "ordo/primitives/block_modes/ecb.h"
+#include "ordo/primitives/block_modes/cbc.h"
+#include "ordo/primitives/block_modes/ctr.h"
+#include "ordo/primitives/block_modes/cfb.h"
+#include "ordo/primitives/block_modes/ofb.h"
+
+int block_mode_init(struct BLOCK_MODE_STATE *state,
+                    struct BLOCK_STATE *cipher_state,
                     const void *iv, size_t iv_len,
                     int direction,
+                    enum BLOCK_MODE primitive,
                     const void *params)
 {
-    return mode->init(state,
-                      cipher, cipher_state,
-                      iv, iv_len,
-                      direction,
-                      params);
+    switch (state->primitive = primitive)
+    {
+        case BLOCK_MODE_ECB:
+            return ecb_init(&state->jmp.ecb, cipher_state, iv, iv_len, direction, params);
+        case BLOCK_MODE_CBC:
+            return cbc_init(&state->jmp.cbc, cipher_state, iv, iv_len, direction, params);
+        case BLOCK_MODE_CTR:
+            return ctr_init(&state->jmp.ctr, cipher_state, iv, iv_len, direction, params);
+        case BLOCK_MODE_CFB:
+            return cfb_init(&state->jmp.cfb, cipher_state, iv, iv_len, direction, params);
+        case BLOCK_MODE_OFB:
+            return ofb_init(&state->jmp.ofb, cipher_state, iv, iv_len, direction, params);
+    }
+    
+    return ORDO_FAIL;
 }
 
-void block_mode_update(const struct BLOCK_MODE *mode,
-                       void *state,
-                       const struct BLOCK_CIPHER *cipher,
-                       const void *cipher_state,
+void block_mode_update(struct BLOCK_MODE_STATE *state,
+                       struct BLOCK_STATE *cipher_state,
                        const void *in, size_t in_len,
                        void *out, size_t *out_len)
 {
-    mode->update(state, cipher, cipher_state, in, in_len, out, out_len);
+    switch (state->primitive)
+    {
+        case BLOCK_MODE_ECB:
+            ecb_update(&state->jmp.ecb, cipher_state, in, in_len, out, out_len);
+            break;
+        case BLOCK_MODE_CBC:
+            cbc_update(&state->jmp.cbc, cipher_state, in, in_len, out, out_len);
+            break;
+        case BLOCK_MODE_CTR:
+            ctr_update(&state->jmp.ctr, cipher_state, in, in_len, out, out_len);
+            break;
+        case BLOCK_MODE_CFB:
+            cfb_update(&state->jmp.cfb, cipher_state, in, in_len, out, out_len);
+            break;
+        case BLOCK_MODE_OFB:
+            ofb_update(&state->jmp.ofb, cipher_state, in, in_len, out, out_len);
+            break;
+    }
 }
 
-int block_mode_final(const struct BLOCK_MODE *mode,
-                     void *state,
-                     const struct BLOCK_CIPHER *cipher,
-                     const void *cipher_state,
+int block_mode_final(struct BLOCK_MODE_STATE *state,
+                     struct BLOCK_STATE *cipher_state,
                      void *out, size_t *out_len)
 {
-    return mode->final(state, cipher, cipher_state, out, out_len);
+    switch (state->primitive)
+    {
+        case BLOCK_MODE_ECB:
+            return ecb_final(&state->jmp.ecb, cipher_state, out, out_len);
+        case BLOCK_MODE_CBC:
+            return cbc_final(&state->jmp.cbc, cipher_state, out, out_len);
+        case BLOCK_MODE_CTR:
+            return ctr_final(&state->jmp.ctr, cipher_state, out, out_len);
+        case BLOCK_MODE_CFB:
+            return cfb_final(&state->jmp.cfb, cipher_state, out, out_len);
+        case BLOCK_MODE_OFB:
+            return ofb_final(&state->jmp.ofb, cipher_state, out, out_len);
+    }
+
+    return ORDO_FAIL;
 }
 
-size_t block_mode_query(const struct BLOCK_MODE *mode,
-                        const struct BLOCK_CIPHER *cipher,
+size_t block_mode_query(enum BLOCK_MODE mode,
+                        enum BLOCK_CIPHER cipher,
                         int query, size_t value)
 {
-    return mode->query(cipher, query, value);
+    switch (mode)
+    {
+        case BLOCK_MODE_ECB:
+            return ecb_query(cipher, query, value);
+        case BLOCK_MODE_CBC:
+            return cbc_query(cipher, query, value);
+        case BLOCK_MODE_CTR:
+            return ctr_query(cipher, query, value);
+        case BLOCK_MODE_CFB:
+            return cfb_query(cipher, query, value);
+        case BLOCK_MODE_OFB:
+            return ofb_query(cipher, query, value);
+    }
+    
+    return (size_t)-1;
 }

@@ -25,8 +25,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct AES_STATE;
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not 16, 24, or 32 (bytes).

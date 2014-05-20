@@ -33,14 +33,11 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct ECB_STATE;
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
 int ecb_init(struct ECB_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
+             struct BLOCK_STATE *cipher_state,
              const void *iv, size_t iv_len,
              int dir,
              const struct ECB_PARAMS *params);
@@ -49,8 +46,7 @@ int ecb_init(struct ECB_STATE *state,
 **/
 ORDO_PUBLIC
 void ecb_update(struct ECB_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
+                struct BLOCK_STATE *cipher_state,
                 const unsigned char *in, size_t in_len,
                 unsigned char *out, size_t *out_len);
 
@@ -58,14 +54,13 @@ void ecb_update(struct ECB_STATE *state,
 **/
 ORDO_PUBLIC
 int ecb_final(struct ECB_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
+              struct BLOCK_STATE *cipher_state,
               unsigned char *out, size_t *out_len);
 
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ecb_query(const struct BLOCK_CIPHER *cipher,
+size_t ecb_query(enum BLOCK_CIPHER cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

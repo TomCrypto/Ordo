@@ -20,7 +20,7 @@ int main(void)
 
     for (t = 0; t < block_cipher_count(); ++t)
     {
-        const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
+        enum BLOCK_CIPHER cipher = block_cipher_by_index(t);
         size_t key_len, last_len = (size_t)(-1);
 
         printf("%s:\n", block_cipher_name(cipher));

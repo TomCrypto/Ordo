@@ -16,9 +16,9 @@ const char *stream_cipher_name(enum STREAM_CIPHER cipher)
         case STREAM_RC4:
             return "RC4";
 #endif
-        default:
-            return 0;
     }
+    
+    return 0;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -39,8 +39,9 @@ enum STREAM_CIPHER stream_cipher_by_index(size_t index)
 #ifdef USING_RC4
         case __COUNTER__: return STREAM_RC4;
 #endif
-        default:          return 0;
     }
+    
+    return 0;
 }
 
 size_t stream_cipher_count(void)
@@ -78,6 +79,7 @@ void stream_cipher_update(struct STREAM_STATE *state,
 #ifdef USING_RC4
         case STREAM_RC4:
             rc4_update(&state->jmp.rc4, buffer, len);
+            break;
 #endif
     }
 }
@@ -89,6 +91,7 @@ void stream_cipher_final(struct STREAM_STATE *state)
 #ifdef USING_RC4
         case STREAM_RC4:
             rc4_final(&state->jmp.rc4);
+            break;
 #endif
     }
 }

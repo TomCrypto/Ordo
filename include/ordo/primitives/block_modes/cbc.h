@@ -40,14 +40,11 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct CBC_STATE;
-
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC
 int cbc_init(struct CBC_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
+             struct BLOCK_STATE *cipher_state,
              const void *iv, size_t iv_len,
              int dir,
              const struct CBC_PARAMS *params);
@@ -56,8 +53,7 @@ int cbc_init(struct CBC_STATE *state,
 **/
 ORDO_PUBLIC
 void cbc_update(struct CBC_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
+                struct BLOCK_STATE *cipher_state,
                 const unsigned char *in, size_t in_len,
                 unsigned char *out, size_t *out_len);
 
@@ -65,14 +61,13 @@ void cbc_update(struct CBC_STATE *state,
 **/
 ORDO_PUBLIC
 int cbc_final(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
+              struct BLOCK_STATE *cipher_state,
               unsigned char *out, size_t *out_len);
 
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cbc_query(const struct BLOCK_CIPHER *cipher,
+size_t cbc_query(enum BLOCK_CIPHER cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

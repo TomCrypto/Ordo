@@ -21,13 +21,13 @@ HOT_CODE;
 static void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
 HOT_CODE;
 
-/* #if annotation */
+#if annotation
 struct AES_STATE
 {
     unsigned char key[336];
     size_t rounds;
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

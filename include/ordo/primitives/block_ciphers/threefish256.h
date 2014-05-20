@@ -27,8 +27,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct THREEFISH256_STATE;
-
 /** @see \c block_cipher_init()
 ///
 /// @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).

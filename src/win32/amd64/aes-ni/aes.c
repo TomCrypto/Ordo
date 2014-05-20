@@ -18,13 +18,13 @@ static void ExpandKey(const uint8_t *key, uint8_t *ext,
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
 
-/* #if annotation */
+#if annotation
 struct AES_STATE
 {
     unsigned char key[336];
     size_t rounds;
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

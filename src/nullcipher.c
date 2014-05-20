@@ -10,12 +10,12 @@
 
 #define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
 
-/* #if annotation */
+#if annotation
 struct NULLCIPHER_STATE
 {
     uint8_t dummy;
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

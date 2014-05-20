@@ -22,8 +22,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct SHA256_STATE;
-
 /** @see \c hash_function_init()
 ///
 /// @remarks The \c params parameter is ignored.

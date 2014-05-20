@@ -20,12 +20,12 @@ static void threefish256_forward_C(uint64_t block[4],
 static void threefish256_inverse_C(uint64_t block[4],
                                    const uint64_t *subkeys) HOT_CODE;
 
-/* #if annotation */
+#if annotation
 struct THREEFISH256_STATE
 {
     uint64_t subkey[19 * 4];
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 

@@ -28,8 +28,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct BLOCK_MODE;
-
 /** Returns the name of a block mode primitive.
 ///
 /// @param [in]     mode           A block mode primitive.
@@ -39,32 +37,7 @@ struct BLOCK_MODE;
 /// @remarks This name can then be used in \c block_mode_by_name().
 **/
 ORDO_PUBLIC
-const char *block_mode_name(const struct BLOCK_MODE *mode);
-
-/** The ECB (Electronic CodeBook) block mode of operation.
-**/
-ORDO_PUBLIC
-const struct BLOCK_MODE *ordo_ecb(void);
-
-/** The CBC (Ciphertext Block Chaining) block mode of operation.
-**/
-ORDO_PUBLIC
-const struct BLOCK_MODE *ordo_cbc(void);
-
-/** The CTR (CounTeR) block mode of operation.
-**/
-ORDO_PUBLIC
-const struct BLOCK_MODE *ordo_ctr(void);
-
-/** The CFB (Cipher FeedBack) block mode of operation.
-**/
-ORDO_PUBLIC
-const struct BLOCK_MODE *ordo_cfb(void);
-
-/** The OFB (Output FeedBack) block mode of operation.
-**/
-ORDO_PUBLIC
-const struct BLOCK_MODE *ordo_ofb(void);
+const char *block_mode_name(enum BLOCK_MODE mode);
 
 /** Returns a block mode primitive from a name.
 ///
@@ -75,7 +48,7 @@ const struct BLOCK_MODE *ordo_ofb(void);
 ///          or \c 0 if no such block mode exists.
 **/
 ORDO_PUBLIC
-const struct BLOCK_MODE *block_mode_by_name(const char* name);
+enum BLOCK_MODE block_mode_by_name(const char* name);
 
 /** Returns a block cipher mode from an index.
 ///
@@ -88,7 +61,7 @@ const struct BLOCK_MODE *block_mode_by_name(const char* name);
 ///          indices (there will be at least one).
 **/
 ORDO_PUBLIC
-const struct BLOCK_MODE *block_mode_by_index(size_t index);
+enum BLOCK_MODE block_mode_by_index(size_t index);
 
 /** Exposes the number of block modes available.
 ///
@@ -115,12 +88,11 @@ size_t block_mode_count(void);
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int block_mode_init(const struct BLOCK_MODE *mode,
-                    void *state,
-                    const struct BLOCK_CIPHER *cipher,
-                    const void *cipher_state,
+int block_mode_init(struct BLOCK_MODE_STATE *state,
+                    struct BLOCK_STATE *cipher_state,
                     const void *iv, size_t iv_len,
                     int direction,
+                    enum BLOCK_MODE primitive,
                     const void *params);
 
 /** Encrypts or decrypts a buffer.
@@ -142,10 +114,8 @@ int block_mode_init(const struct BLOCK_MODE *mode,
 ///          out) may not be supported by \c mode, check the documentation.
 **/
 ORDO_PUBLIC
-void block_mode_update(const struct BLOCK_MODE *mode,
-                       void *state,
-                       const struct BLOCK_CIPHER *cipher,
-                       const void *cipher_state,
+void block_mode_update(struct BLOCK_MODE_STATE *state,
+                       struct BLOCK_STATE *cipher_state,
                        const void *in, size_t in_len,
                        void *out, size_t *out_len);
 
@@ -165,10 +135,8 @@ void block_mode_update(const struct BLOCK_MODE *mode,
 ///          by calls to \c block_mode_update() (in the correct order).
 **/
 ORDO_PUBLIC
-int block_mode_final(const struct BLOCK_MODE *mode,
-                     void *state,
-                     const struct BLOCK_CIPHER *cipher,
-                     const void* cipher_state,
+int block_mode_final(struct BLOCK_MODE_STATE *state,
+                     struct BLOCK_STATE *cipher_state,
                      void *out, size_t *out_len);
 
 /** Queries a block mode for suitable parameters.
@@ -183,8 +151,8 @@ int block_mode_final(const struct BLOCK_MODE *mode,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t block_mode_query(const struct BLOCK_MODE *mode,
-                        const struct BLOCK_CIPHER *cipher,
+size_t block_mode_query(enum BLOCK_MODE mode,
+                        enum BLOCK_CIPHER cipher,
                         int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

@@ -32,8 +32,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct SKEIN256_STATE;
-
 /** @see \c hash_function_init()
 ///
 /// @retval #ORDO_ARG if parameters were  provided, but  requested  an  output

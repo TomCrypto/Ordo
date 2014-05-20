@@ -8,11 +8,11 @@
 
 /*===----------------------------------------------------------------------===*/
 
-/* #if annotation */
+#if annotation
 struct CBC_STATE
 {
-    unsigned char iv[2048];
-    unsigned char block[2048];
+    unsigned char iv[BLOCK_BLOCK_LEN];
+    unsigned char block[BLOCK_BLOCK_LEN];
     size_t available;
 
     size_t block_size;
@@ -20,21 +20,20 @@ struct CBC_STATE
     size_t padding;
     int direction;
 };
-/* #endif /* annotation */
+#endif /* annotation */
 
 /*===----------------------------------------------------------------------===*/
 
 int cbc_init(struct CBC_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
+             struct BLOCK_STATE *cipher_state,
              const void *iv,
              size_t iv_len,
              int dir,
              const struct CBC_PARAMS *params)
 {
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+    state->block_size = block_cipher_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
 
-    if (cbc_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
+    if (cbc_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
 
     state->available = 0;
     state->direction = dir;
@@ -48,8 +47,7 @@ int cbc_init(struct CBC_STATE *state,
 }
 
 static void cbc_encrypt_update(struct CBC_STATE *state,
-                               const struct BLOCK_CIPHER *cipher,
-                               const void *cipher_state,
+                               struct BLOCK_STATE *cipher_state,
                                const unsigned char *in,
                                size_t in_len,
                                unsigned char *out,
@@ -66,7 +64,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
         memcpy(state->block + state->available, in, process);
 
         xor_buffer(state->block, state->iv, block_size);
-        block_cipher_forward(cipher, cipher_state, state->block);
+        block_cipher_forward(cipher_state, state->block);
         memcpy(state->iv, state->block, block_size);
 
         memcpy(out, state->block, block_size);
@@ -84,8 +82,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
 }
 
 static void cbc_decrypt_update(struct CBC_STATE *state,
-                               const struct BLOCK_CIPHER *cipher,
-                               const void *cipher_state,
+                               struct BLOCK_STATE *cipher_state,
                                const unsigned char *in,
                                size_t in_len,
                                unsigned char *out,
@@ -106,7 +103,7 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
          * are lossy wrt state. */
         memcpy(out, state->block, block_size);
 
-        block_cipher_inverse(cipher, cipher_state, state->block);
+        block_cipher_inverse(cipher_state, state->block);
         xor_buffer(state->block, state->iv, block_size);
         memcpy(state->iv, out, block_size);
 
@@ -124,8 +121,7 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
 }
 
 static int cbc_encrypt_final(struct CBC_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
+                             struct BLOCK_STATE *cipher_state,
                              unsigned char *out,
                              size_t *out_len)
 {
@@ -143,7 +139,7 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
 
         memset(state->block + state->available, padding, padding);
         xor_buffer(state->block, state->iv, block_size);
-        block_cipher_forward(cipher, cipher_state, state->block);
+        block_cipher_forward(cipher_state, state->block);
 
         memcpy(out, state->block, block_size);
         *out_len = block_size;
@@ -153,8 +149,7 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
 }
 
 static int cbc_decrypt_final(struct CBC_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
+                             struct BLOCK_STATE *cipher_state,
                              unsigned char *out,
                              size_t *out_len)
 {
@@ -168,7 +163,7 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
         size_t block_size = state->block_size;
         uint8_t padding;
 
-        block_cipher_inverse(cipher, cipher_state, state->block);
+        block_cipher_inverse(cipher_state, state->block);
         xor_buffer(state->block, state->iv, block_size);
 
         padding = (uint8_t)(*(state->block + block_size - 1));
@@ -195,32 +190,30 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
 }
 
 void cbc_update(struct CBC_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
+                struct BLOCK_STATE *cipher_state,
                 const unsigned char *in,
                 size_t in_len,
                 unsigned char *out,
                 size_t *out_len)
 {
     (state->direction
-     ? cbc_encrypt_update(state, cipher, cipher_state,
+     ? cbc_encrypt_update(state, cipher_state,
                           in, in_len, out, out_len)
-     : cbc_decrypt_update(state, cipher, cipher_state,
+     : cbc_decrypt_update(state, cipher_state,
                           in, in_len, out, out_len));
 }
 
 int cbc_final(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
+              struct BLOCK_STATE *cipher_state,
               unsigned char *out,
               size_t *out_len)
 {
     return (state->direction
-            ? cbc_encrypt_final(state, cipher, cipher_state, out, out_len)
-            : cbc_decrypt_final(state, cipher, cipher_state, out, out_len));
+            ? cbc_encrypt_final(state, cipher_state, out, out_len)
+            : cbc_decrypt_final(state, cipher_state, out, out_len));
 }
 
-size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t cbc_query(enum BLOCK_CIPHER cipher, int query, size_t value)
 {
     switch(query)
     {

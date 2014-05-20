@@ -24,8 +24,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct BLOCK_CIPHER;
-
 /** Returns the name of a block cipher primitive.
 ///
 /// @param [in]     primitive      A block cipher primitive.
@@ -35,22 +33,7 @@ struct BLOCK_CIPHER;
 /// @remarks This name can then be used in \c block_cipher_by_name().
 **/
 ORDO_PUBLIC
-const char *block_cipher_name(const struct BLOCK_CIPHER *primitive);
-
-/** The NullCipher block cipher.
-**/
-ORDO_PUBLIC
-const struct BLOCK_CIPHER *ordo_nullcipher(void);
-
-/** The Threefish-256 block cipher.
-**/
-ORDO_PUBLIC
-const struct BLOCK_CIPHER *ordo_threefish256(void);
-
-/** The AES block cipher.
-**/
-ORDO_PUBLIC
-const struct BLOCK_CIPHER *ordo_aes(void);
+const char *block_cipher_name(enum BLOCK_CIPHER primitive);
 
 /** Returns a block cipher primitive from a name.
 ///
@@ -61,7 +44,7 @@ const struct BLOCK_CIPHER *ordo_aes(void);
 ///          or \c 0 if no such block cipher exists.
 **/
 ORDO_PUBLIC
-const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
+enum BLOCK_CIPHER block_cipher_by_name(const char *name);
 
 /** Returns a block cipher primitive from an index.
 ///
@@ -74,7 +57,7 @@ const struct BLOCK_CIPHER *block_cipher_by_name(const char *name);
 ///          indices (there will be at least one).
 **/
 ORDO_PUBLIC
-const struct BLOCK_CIPHER *block_cipher_by_index(size_t index);
+enum BLOCK_CIPHER block_cipher_by_index(size_t index);
 
 /** Exposes the number of block ciphers available.
 ///
@@ -98,10 +81,10 @@ size_t block_cipher_count(void);
 /// @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int block_cipher_init(const struct BLOCK_CIPHER *primitive,
-                      void *state,
+int block_cipher_init(struct BLOCK_STATE *state,
                       const void *key,
                       size_t key_len,
+                      enum BLOCK_CIPHER primitive,
                       const void *params);
 
 /** Applies a block cipher's forward permutation.
@@ -113,8 +96,7 @@ int block_cipher_init(const struct BLOCK_CIPHER *primitive,
 /// @remarks The block should be the size of the block cipher's block size.
 **/
 ORDO_PUBLIC
-void block_cipher_forward(const struct BLOCK_CIPHER *primitive,
-                          const void *state,
+void block_cipher_forward(const struct BLOCK_STATE *state,
                           void *block);
 
 /** Applies a block cipher's inverse permutation.
@@ -126,8 +108,7 @@ void block_cipher_forward(const struct BLOCK_CIPHER *primitive,
 /// @remarks The block should be the size of the block cipher's block size.
 **/
 ORDO_PUBLIC
-void block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
-                          const void *state,
+void block_cipher_inverse(const struct BLOCK_STATE *state,
                           void *block);
 
 /** Finalizes a block cipher state.
@@ -136,8 +117,11 @@ void block_cipher_inverse(const struct BLOCK_CIPHER *primitive,
 /// @param [in,out] state          A block cipher state.
 **/
 ORDO_PUBLIC
-void block_cipher_final(const struct BLOCK_CIPHER *primitive,
-                        void *state);
+void block_cipher_final(struct BLOCK_STATE *state);
+
+ORDO_PUBLIC
+void block_cipher_copy(struct BLOCK_STATE *dst,
+                       const struct BLOCK_STATE *src);
 
 /** Queries a block cipher for suitable parameters.
 ///
@@ -150,7 +134,7 @@ void block_cipher_final(const struct BLOCK_CIPHER *primitive,
 /// @see query.h
 **/
 ORDO_PUBLIC
-size_t block_cipher_query(const struct BLOCK_CIPHER *primitive,
+size_t block_cipher_query(enum BLOCK_CIPHER primitive,
                           int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/
