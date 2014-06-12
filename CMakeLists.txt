@@ -61,6 +61,10 @@ IF(NOT COMPILER_MSVC)
 
     IF(LTO)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
+
+        IF(COMPILER_GNU)
+            SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffat-lto-objects")
+        ENDIF()
     ENDIF()
 
     IF(NATIVE)
