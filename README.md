@@ -43,12 +43,14 @@ We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are n
 
 - `LTO`: use link-time optimization, this should be enabled for optimal performance.
 - `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
+- `NATIVE`: tune the build for the current hardware (e.g. `-march` for GCC).
+- `COMPAT`: remove some advanced compiler settings for older compiler versions (for GCC only, if this is enabled `LTO` has no effect)
 
 Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know).
 
 If you are not using the `cmake-gui` utility, the command-line options to configure the library are:
 
-    cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off]
+    cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off] [-DNATIVE=off] [-DCOMPAT=on]
 
 For instance, a typical configuration for x86_64 machines with the AES-NI instructions could be:
 
@@ -67,7 +69,7 @@ If you wish to link statically to the library, please define the `ORDO_STATIC_LI
 Compatibility
 -------------
 
-The library will run everywhere a C89 compiler (with `stdint.h`) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
+The library will run everywhere a near-C89 compiler (i.e. with `stdint.h` and `long long` support) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
 
 The test driver requires partial C99 support (WIP), the build system requires CMake and Python (WIP)
 
