@@ -330,7 +330,7 @@ static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
         return EXIT_FAILURE;
     }
 
-	mode = prim_from_name(argv[2]);
+    mode = prim_from_name(argv[2]);
 
     if (!prim_is_type(mode, PRIM_TYPE_BLOCK_MODE))
     {
