@@ -50,6 +50,7 @@ ENDIF()
 
 OPTION(LTO "Link-Time Optimization" ON)
 OPTION(NATIVE "Native Optimization" ON)
+OPTION(COMPAT "For Older Compilers" OFF)
 
 IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
@@ -60,11 +61,11 @@ IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
     
-    IF(COMPILER_GNU)
+    IF(COMPILER_GNU AND NOT COMPAT)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized")
     ENDIF()
 
-    IF(LTO)
+    IF(LTO AND NOT COMPAT)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
 
         IF(COMPILER_GNU)
