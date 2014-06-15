@@ -89,36 +89,36 @@ static void benchmark_usage(int argc, char * const argv[])
 #define INTERVAL 3.0 /* seconds */
 
 #if defined(_WIN32) || defined(_WIN64)
-    typedef int64_t my_time;
-    #include <windows.h>
+typedef int64_t my_time;
+#include <windows.h>
 
-    static my_time now()
-    {
-        LARGE_INTEGER t;
-        QueryPerformanceCounter(&t);
-        return t.QuadPart;
-    }
+static my_time now()
+{
+    LARGE_INTEGER t;
+    QueryPerformanceCounter(&t);
+    return t.QuadPart;
+}
 
-    static double get_elapsed(my_time start)
-    {
-        LARGE_INTEGER t, f;
-        QueryPerformanceFrequency(&f);
-        QueryPerformanceCounter(&t);
+static double get_elapsed(my_time start)
+{
+    LARGE_INTEGER t, f;
+    QueryPerformanceFrequency(&f);
+    QueryPerformanceCounter(&t);
 
-        return (double)(t.QuadPart - start) / f.QuadPart;
-    }
+    return (double)(t.QuadPart - start) / f.QuadPart;
+}
 #else
-    typedef double my_time;
+typedef double my_time;
 
-    static my_time now()
-    {
-        return (double)clock() / CLOCKS_PER_SEC;
-    }
+static my_time now()
+{
+    return (double)clock() / CLOCKS_PER_SEC;
+}
 
-    static double get_elapsed(my_time start)
-    {
-        return now() - start;
-    }
+static double get_elapsed(my_time start)
+{
+    return now() - start;
+}
 #endif
 
 static double speed_MiB(uint64_t throughput, double elapsed)
@@ -203,7 +203,6 @@ static double hash_speed(int hash, uint64_t block)
 
 static double stream_speed(int cipher, uint64_t block)
 {
-    
     os_random(buffer, sizeof(buffer));
 
     {
@@ -331,7 +330,9 @@ static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
         return EXIT_FAILURE;
     }
 
-    if (!(mode = prim_is_type(prim_from_name(argv[2]), PRIM_TYPE_BLOCK_MODE)))
+	mode = prim_from_name(argv[2]);
+
+    if (!prim_is_type(mode, PRIM_TYPE_BLOCK_MODE))
     {
         printf("Unrecognized mode of operation '%s'.\n", argv[2]);
         return EXIT_FAILURE;

@@ -210,7 +210,7 @@ PROCESS(${SRC_PATH})
 
 # Here work out which primitives were used and pull out their struct definitions
 
-execute_process(COMMAND python ./script.py ${SOURCE_FILES}
+EXECUTE_PROCESS(COMMAND python ./script.py ${SOURCE_FILES}
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
