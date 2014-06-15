@@ -59,8 +59,9 @@ IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-long-long") # shut up!
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
-    
+
     IF(COMPILER_GNU AND NOT COMPAT)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized")
     ENDIF()
