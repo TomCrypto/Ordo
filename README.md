@@ -13,7 +13,7 @@ Status
 
 What's new in 3.0.0:
  - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
- - renamed a few functions to reduce verbosity (e.g. `hash_function_init` becomes `ordo_hash_init`)
+ - renamed a few functions to reduce verbosity and namespace pollution (e.g. `hash_function_init` becomes `ordo_hash_init`) [WIP]
  - the test driver is being reworked (work in progress)
 
 Feature Map
