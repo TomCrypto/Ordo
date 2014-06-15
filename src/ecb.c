@@ -168,7 +168,7 @@ int ecb_final(struct ECB_STATE *state,
             : ecb_decrypt_final(state, cipher_state, out, out_len));
 }
 
-size_t ecb_query(enum BLOCK_CIPHER cipher, int query, size_t value)
+size_t ecb_query(int cipher, int query, size_t value)
 {
     switch(query)
     {

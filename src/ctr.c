@@ -86,7 +86,7 @@ int ctr_final(struct CTR_STATE *state,
     return ORDO_SUCCESS;
 }
 
-size_t ctr_query(enum BLOCK_CIPHER cipher, int query, size_t value)
+size_t ctr_query(int cipher, int query, size_t value)
 {
     switch(query)
     {

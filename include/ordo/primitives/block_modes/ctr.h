@@ -1,22 +1,22 @@
 /*===-- enc/block_modes/ctr.h --------------------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The  CTR mode  generates a  keystream by  repeatedly encrypting  a counter
-/// starting  from some  initialization  vector, effectively  turning a  block
-/// cipher into  a stream cipher. As  such, CTR mode requires  no padding, and
-/// outlen will always be equal to inlen.
-///
-/// Note that the  CTR keystream is independent of the  plaintext, and is also
-/// spatially  coherent (using  a given  initialization vector  on a  len-byte
-/// message will "use up" len bytes of the keystream) so care must be taken to
-/// avoid  reusing the  initialization vector  in an  insecure way.  This also
-/// means the block cipher's inverse permutation is never used.
-///
-/// \c ctr_final() accepts 0 as an argument for \c outlen, since by design the
-/// CTR mode of operation does not produce any final data. However, if a valid
-/// pointer is passed, its value will be set to zero as expected.
+*** @file
+*** @brief Primitive
+***
+*** The  CTR mode  generates a  keystream by  repeatedly encrypting  a counter
+*** starting  from some  initialization  vector, effectively  turning a  block
+*** cipher into  a stream cipher. As  such, CTR mode requires  no padding, and
+*** outlen will always be equal to inlen.
+***
+*** Note that the  CTR keystream is independent of the  plaintext, and is also
+*** spatially  coherent (using  a given  initialization vector  on a  len-byte
+*** message will "use up" len bytes of the keystream) so care must be taken to
+*** avoid  reusing the  initialization vector  in an  insecure way.  This also
+*** means the block cipher's inverse permutation is never used.
+***
+*** \c ctr_final() accepts 0 as an argument for \c outlen, since by design the
+*** CTR mode of operation does not produce any final data. However, if a valid
+*** pointer is passed, its value will be set to zero as expected.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -63,7 +63,7 @@ int ctr_final(struct CTR_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ctr_query(enum BLOCK_CIPHER cipher,
+size_t ctr_query(int cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

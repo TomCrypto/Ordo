@@ -1,14 +1,14 @@
 /*===-- internal/implementation.h----------------------*- INTERNAL-*- H -*-===*/
 /**
-/// @file
-/// @internal
-/// @brief \b Internal, API
-///
-/// This header contains some compiler-dependent macros, for  defining various
-/// semantics  which the users of this  library should not depend on. It is an
-/// error to include this header in any code outside the Ordo implementation.
-///
-/// Every source file will include this header.
+*** @file
+*** @internal
+*** @brief \b Internal, API
+***
+*** This header contains some compiler-dependent macros, for  defining various
+*** semantics  which the users of this  library should not depend on. It is an
+*** error to include this header in any code outside the Ordo implementation.
+***
+*** Every source file will include this header.
 **/
 /*===----------------------------------------------------------------------===*/
 

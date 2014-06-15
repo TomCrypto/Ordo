@@ -1,9 +1,9 @@
 /*===-- primitives/hash_functions/sha256.h -------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The SHA-256 hash function, which produces a 256-bit digest.
+*** @file
+*** @brief Primitive
+***
+*** The SHA-256 hash function, which produces a 256-bit digest.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -23,8 +23,8 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 /** @see \c hash_function_init()
-///
-/// @remarks The \c params parameter is ignored.
+***
+*** @remarks The \c params parameter is ignored.
 **/
 ORDO_PUBLIC
 int sha256_init(struct SHA256_STATE *state,

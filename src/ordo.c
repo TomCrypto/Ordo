@@ -8,10 +8,8 @@
 
 /*===----------------------------------------------------------------------===*/
 
-int ordo_enc_block(enum BLOCK_CIPHER cipher,
-                   const void *cipher_params,
-                   enum BLOCK_MODE mode,
-                   const void *mode_params,
+int ordo_enc_block(prim_t cipher, const void *cipher_params,
+                   prim_t mode, const void *mode_params,
                    int direction,
                    const void *key, size_t key_len,
                    const void *iv, size_t iv_len,
@@ -40,7 +38,7 @@ int ordo_enc_block(enum BLOCK_CIPHER cipher,
     return err;
 }
 
-int ordo_enc_stream(enum STREAM_CIPHER cipher, const void *params,
+int ordo_enc_stream(prim_t cipher, const void *params,
                     const void *key, size_t key_len,
                     void *buffer, size_t len)
 {
@@ -56,7 +54,7 @@ int ordo_enc_stream(enum STREAM_CIPHER cipher, const void *params,
     return err;
 }
 
-int ordo_digest(enum HASH_FUNCTION hash, const void *params,
+int ordo_digest(prim_t hash, const void *params,
                 const void *in, size_t len,
                 void *digest)
 {
@@ -72,7 +70,7 @@ int ordo_digest(enum HASH_FUNCTION hash, const void *params,
     return err;
 }
 
-int ordo_hmac(enum HASH_FUNCTION hash, const void *params,
+int ordo_hmac(prim_t hash, const void *params,
               const void *key, size_t key_len,
               const void *in, size_t len,
               void *fingerprint)

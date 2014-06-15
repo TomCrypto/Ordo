@@ -15,5 +15,5 @@ int os_random(void *out, size_t len)
 
 int os_secure_random(void *out, size_t len)
 {
-    return os_random(out, len);
+    return ORDO_FAIL;
 }

@@ -10,8 +10,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
-int pbkdf2(enum HASH_FUNCTION hash,
-           const void *params,
+int pbkdf2(prim_t hash, const void *params,
            const void *password,
            size_t password_len,
            const void *salt,
@@ -64,7 +63,7 @@ int pbkdf2(enum HASH_FUNCTION hash,
         for (i = 1; i < iterations; ++i)
         {
             /* Next iteration: Ui+1 = PRF(Ui). */
-            hmac_copy(&ctx, &cst);
+            ctx = cst;
             hmac_update(&ctx, feedback, digest_len);
             if ((err = hmac_final(&ctx, feedback))) return err;
 

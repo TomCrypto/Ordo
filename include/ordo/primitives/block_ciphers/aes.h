@@ -1,12 +1,12 @@
 /*===-- primitives/block_ciphers/aes.h -----------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// AES (Advanced  Encryption Standard) is  a block  cipher. It has  a 128-bit
-/// block size and three possible key sizes,  namely 128, 192 and 256 bits. It
-/// is  based  on  the  Rijndael  cipher and  was  selected  as  the  official
-/// encryption standard on November 2001 (FIPS 197).
+*** @file
+*** @brief Primitive
+***
+*** AES (Advanced  Encryption Standard) is  a block  cipher. It has  a 128-bit
+*** block size and three possible key sizes,  namely 128, 192 and 256 bits. It
+*** is  based  on  the  Rijndael  cipher and  was  selected  as  the  official
+*** encryption standard on November 2001 (FIPS 197).
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -26,10 +26,10 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 /** @see \c block_cipher_init()
-///
-/// @retval #ORDO_KEY_LEN if the key length is not 16, 24, or 32 (bytes).
-/// @retval #ORDO_ARG if parameters were provided and requested zero rounds or
-///                   more than 20 rounds.
+***
+*** @retval #ORDO_KEY_LEN if the key length is not 16, 24, or 32 (bytes).
+*** @retval #ORDO_ARG if parameters were provided and requested zero rounds or
+***                   more than 20 rounds.
 **/
 ORDO_PUBLIC
 int aes_init(struct AES_STATE *state,

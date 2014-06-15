@@ -1,14 +1,14 @@
 /*===-- primitives/block_ciphers/threefish256.h --------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// Threefish-256 is  a block cipher with  a 256-bit block size  and a 256-bit
-/// key size. It also has an optional  128-bit tweak, which can be set through
-/// the cipher parameters.
-///
-/// The Threefish  ciphers were originally designed  to be used as  a building
-/// block for the Skein hash function family.
+*** @file
+*** @brief Primitive
+***
+*** Threefish-256 is  a block cipher with  a 256-bit block size  and a 256-bit
+*** key size. It also has an optional  128-bit tweak, which can be set through
+*** the cipher parameters.
+***
+*** The Threefish  ciphers were originally designed  to be used as  a building
+*** block for the Skein hash function family.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -28,8 +28,8 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 /** @see \c block_cipher_init()
-///
-/// @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).
+***
+*** @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).
 **/
 ORDO_PUBLIC
 int threefish256_init(struct THREEFISH256_STATE *state,

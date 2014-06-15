@@ -41,12 +41,14 @@ int threefish256_init(struct THREEFISH256_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void threefish256_forward(const struct THREEFISH256_STATE *state, uint64_t *block)
+void threefish256_forward(const struct THREEFISH256_STATE *state,
+                          uint64_t *block)
 {
     threefish256_forward_ASM(block, state->subkey);
 }
 
-void threefish256_inverse(const struct THREEFISH256_STATE *state, uint64_t *block)
+void threefish256_inverse(const struct THREEFISH256_STATE *state,
+                          uint64_t *block)
 {
     threefish256_inverse_ASM(block, state->subkey);
 }
@@ -74,7 +76,7 @@ size_t threefish256_query(int query, size_t value)
     subkeys[n * 4 + 2] = key_w[s2] + tweak_w[t1]; \
     subkeys[n * 4 + 3] = key_w[s3] + n; \
 
-#define K_S (0x1BD11BDAA9FC1A22ULL)
+#define K_S (UINT64_C(0x1BD11BDAA9FC1A22))
 
 void threefish256_key_schedule(const uint64_t key[4],
                                const uint64_t tweak[2],

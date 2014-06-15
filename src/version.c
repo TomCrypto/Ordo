@@ -8,9 +8,9 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#define MAJ 2
-#define MIN 7
-#define REV 1
+#define MAJ 3
+#define MIN 0
+#define REV 0
 
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)

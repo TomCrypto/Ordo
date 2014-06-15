@@ -1,12 +1,12 @@
 /*===-- misc/endianness.h -------------------------------*- PUBLIC-*- H -*-===*/
 /**
-/// @file
-/// @brief Utility
-///
-/// This header provides endianness functionality. You may use it freely as it
-/// has a stable API and is public. Only supports little/big endian for now.
-///
-/// The functions in this header are not prefixed, be wary of name clashes.
+*** @file
+*** @brief Utility
+***
+*** This header provides endianness functionality. You may use it freely as it
+*** has a stable API and is public. Only supports little/big endian for now.
+***
+*** The functions in this header are not prefixed, be wary of name clashes.
 **/
 /*===----------------------------------------------------------------------===*/
 

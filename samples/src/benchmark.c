@@ -15,6 +15,7 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
@@ -46,6 +47,7 @@ static void *allocate(size_t size)
 static void benchmark_usage(int argc, char * const argv[])
 {
     size_t t, count;
+    const int *p;
 
     printf("Usage:\n\n");
     printf("\t%s [hash function]\n", argv[0]);
@@ -53,42 +55,38 @@ static void benchmark_usage(int argc, char * const argv[])
     printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
 
     printf("\nAvailable hash functions:\n\n\t");
-    count = hash_function_count();
-    for (t = 0; t < count; ++t)
+    for (p = prim_type(PRIM_TYPE_HASH); *p; ++p)
     {
-        printf("%s", hash_function_name(hash_function_by_index(t)));
-        if (t != count - 1) printf(", "); else printf("\n");
+        printf("%s", prim_name(*p));
+        if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable stream ciphers:\n\n\t");
-    count = stream_cipher_count();
-    for (t = 0; t < count; ++t)
+    for (p = prim_type(PRIM_TYPE_STREAM); *p; ++p)
     {
-        printf("%s", stream_cipher_name(stream_cipher_by_index(t)));
-        if (t != count - 1) printf(", "); else printf("\n");
+        printf("%s", prim_name(*p));
+        if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable block ciphers:\n\n\t");
-    count = block_cipher_count();
-    for (t = 0; t < count; ++t)
+    for (p = prim_type(PRIM_TYPE_BLOCK); *p; ++p)
     {
-        printf("%s", block_cipher_name(block_cipher_by_index(t)));
-        if (t != count - 1) printf(", "); else printf("\n");
+        printf("%s", prim_name(*p));
+        if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable modes of operation:\n\n\t");
-    count = block_mode_count();
-    for (t = 0; t < count; ++t)
+    for (p = prim_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
     {
-        printf("%s", block_mode_name(block_mode_by_index(t)));
-        if (t != count - 1) printf(", "); else printf("\n");
+        printf("%s", prim_name(*p));
+        if (*(p + 1)) printf(", "); else printf("\n");
     }
 
 }
 
 /***                         TIME UTILITY FUNCTIONS                         ***/
 
-#define INTERVAL 3.0 // seconds
+#define INTERVAL 3.0 /* seconds */
 
 #if defined(_WIN32) || defined(_WIN64)
     typedef int64_t my_time;
@@ -130,17 +128,17 @@ static double speed_MiB(uint64_t throughput, double elapsed)
 
 /***                        PARAMETERIZED UTILITIES                         ***/
 
-static void *hash_params(enum HASH_FUNCTION hash)
+static void *hash_params(int hash)
 {
     return 0;
 }
 
-static void *block_params(enum BLOCK_CIPHER cipher)
+static void *block_params(int cipher)
 {
     return 0;
 }
 
-static void *block_mode_params(enum BLOCK_MODE mode)
+static void *block_mode_params(int mode)
 {
     if (mode == BLOCK_MODE_ECB)
     {
@@ -159,7 +157,7 @@ static void *block_mode_params(enum BLOCK_MODE mode)
     return 0;
 }
 
-static void *stream_params(enum STREAM_CIPHER cipher)
+static void *stream_params(int cipher)
 {
     if (cipher == STREAM_RC4)
     {
@@ -175,8 +173,7 @@ static void *stream_params(enum STREAM_CIPHER cipher)
 
 /***                          LOW-LEVEL BENCHMARKS                          ***/
 
-static double hash_speed(enum HASH_FUNCTION hash,
-                         uint64_t block)
+static double hash_speed(int hash, uint64_t block)
 {
     os_random(buffer, sizeof(buffer));
 
@@ -204,8 +201,7 @@ static double hash_speed(enum HASH_FUNCTION hash,
     }
 }
 
-static double stream_speed(enum STREAM_CIPHER cipher,
-                           uint64_t block)
+static double stream_speed(int cipher, uint64_t block)
 {
     
     os_random(buffer, sizeof(buffer));
@@ -239,9 +235,7 @@ static double stream_speed(enum STREAM_CIPHER cipher,
     }
 }
 
-static double block_speed(enum BLOCK_CIPHER cipher,
-                          enum BLOCK_MODE mode,
-                          uint64_t block)
+static double block_speed(int cipher, int mode, uint64_t block)
 {
     os_random(buffer, sizeof(buffer));
 
@@ -283,18 +277,15 @@ static double block_speed(enum BLOCK_CIPHER cipher,
 
 /***                          HIGH-LEVEL BENCHMARK                          ***/
 
-static int benchmark_hash_function(enum HASH_FUNCTION hash,
-                                   int argc, char * const argv[])
+static int benchmark_hash_function(int hash, int argc, char * const argv[])
 {
-    const char *name = hash_function_name(hash);
-
     if (argc > 2)
     {
         printf("Unrecognized argument '%s'.\n", argv[2]);
         return EXIT_FAILURE;
     }
 
-    printf("Benchmarking hash function %s:\n\n", name);
+    printf("Benchmarking hash function %s:\n\n", argv[1]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(hash,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(hash,   256));
     printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(hash,  1024));
@@ -305,18 +296,15 @@ static int benchmark_hash_function(enum HASH_FUNCTION hash,
     return EXIT_SUCCESS;
 }
 
-static int benchmark_stream_cipher(enum STREAM_CIPHER cipher,
-                                   int argc, char * const argv[])
+static int benchmark_stream_cipher(int cipher, int argc, char * const argv[])
 {
-    const char *name = stream_cipher_name(cipher);
-
     if (argc != 2)
     {
         printf("Unrecognized argument '%s'.\n", argv[2]);
         return EXIT_FAILURE;
     }
 
-    printf("Benchmarking stream cipher %s:\n\n", name);
+    printf("Benchmarking stream cipher %s:\n\n", argv[1]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(cipher,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(cipher,   256));
     printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(cipher,  1024));
@@ -327,11 +315,9 @@ static int benchmark_stream_cipher(enum STREAM_CIPHER cipher,
     return EXIT_SUCCESS;
 }
 
-static int benchmark_block_cipher(enum BLOCK_CIPHER cipher,
-                                   int argc, char * const argv[])
+static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
 {
-    const char *name = block_cipher_name(cipher);
-    enum BLOCK_MODE mode;
+    int mode;
 
     if (argc == 2)
     {
@@ -345,13 +331,13 @@ static int benchmark_block_cipher(enum BLOCK_CIPHER cipher,
         return EXIT_FAILURE;
     }
 
-    if (!(mode = block_mode_by_name(argv[2])))
+    if (!(mode = prim_is_type(prim_from_name(argv[2]), PRIM_TYPE_BLOCK_MODE)))
     {
         printf("Unrecognized mode of operation '%s'.\n", argv[2]);
         return EXIT_FAILURE;
     }
 
-    printf("Benchmarking block cipher %s in %s mode:\n\n", name, argv[2]);
+    printf("Benchmarking block cipher %s in %s mode:\n\n", argv[1], argv[2]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,   256));
     printf("\t*  1024 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,  1024));
@@ -368,9 +354,11 @@ enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
 
 static enum ALG_TYPE identify(const char *name)
 {
-    if (hash_function_by_name(name) != 0) return ALG_HASH;
-    if (stream_cipher_by_name(name) != 0) return ALG_STREAM;
-    if (block_cipher_by_name(name)  != 0) return ALG_BLOCK;
+    int prim = prim_from_name(name);
+
+    if (prim_is_type(prim, PRIM_TYPE_HASH))   return ALG_HASH;
+    if (prim_is_type(prim, PRIM_TYPE_STREAM)) return ALG_STREAM;
+    if (prim_is_type(prim, PRIM_TYPE_BLOCK))  return ALG_BLOCK;
     return ALG_NONE;
 }
 
@@ -387,23 +375,11 @@ int main(int argc, char *argv[])
     switch (identify(argv[1]))
     {
         case ALG_HASH:
-        {
-            enum HASH_FUNCTION primitive = hash_function_by_name(argv[1]);
-            return benchmark_hash_function(primitive, argc, argv);
-        }
-
+            return benchmark_hash_function(prim_from_name(argv[1]), argc, argv);
         case ALG_STREAM:
-        {
-            enum STREAM_CIPHER primitive = stream_cipher_by_name(argv[1]);
-            return benchmark_stream_cipher(primitive, argc, argv);
-        }
-
+            return benchmark_stream_cipher(prim_from_name(argv[1]), argc, argv);
         case ALG_BLOCK:
-        {
-            enum BLOCK_CIPHER primitive = block_cipher_by_name(argv[1]);
-            return benchmark_block_cipher(primitive, argc, argv);
-        }
-
+            return benchmark_block_cipher(prim_from_name(argv[1]), argc, argv);
         case ALG_NONE:
         {
             printf("Unrecognized argument '%s'.\n", argv[1]);

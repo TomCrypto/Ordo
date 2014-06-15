@@ -84,7 +84,7 @@ int ofb_final(struct OFB_STATE *state,
     return ORDO_SUCCESS;
 }
 
-size_t ofb_query(enum BLOCK_CIPHER cipher, int query, size_t value)
+size_t ofb_query(int cipher, int query, size_t value)
 {
     switch(query)
     {

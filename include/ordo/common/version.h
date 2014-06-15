@@ -1,9 +1,9 @@
 /*===-- common/version.h -------------------------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Utility
-///
-/// This header exposes functionality relating to the library's version.
+*** @file
+*** @brief Utility
+***
+*** This header exposes functionality relating to the library's version.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -21,8 +21,8 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 /** @brief Library version information.
-///
-/// Contains version information for the library.
+***
+*** Contains version information for the library.
 **/
 struct ORDO_VERSION
 {
@@ -55,9 +55,10 @@ struct ORDO_VERSION
     const char *feature_list;
 };
 
-/** Returns an \c ORDO_VERSION structure for this library.
+/** Returns an \c ORDO_VERSION structure for this library build.
 **/
-ORDO_PUBLIC const struct ORDO_VERSION *ordo_version(void);
+ORDO_PUBLIC
+const struct ORDO_VERSION *ordo_version(void);
 
 /*===----------------------------------------------------------------------===*/
 

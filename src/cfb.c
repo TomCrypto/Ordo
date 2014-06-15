@@ -133,7 +133,7 @@ int cfb_final(struct CFB_STATE *state,
     return ORDO_SUCCESS;
 }
 
-size_t cfb_query(enum BLOCK_CIPHER cipher,
+size_t cfb_query(int cipher,
                  int query, size_t value)
 {
     switch(query)

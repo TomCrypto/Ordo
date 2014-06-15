@@ -53,6 +53,7 @@ OPTION(NATIVE "Native Optimization" ON)
 
 IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
@@ -138,6 +139,7 @@ SET(IN_FILES
     enc_stream.c
     endianness.c
     error.c
+    identification.c
     hash_functions.c
     hash_params.c
     hmac.c
@@ -202,7 +204,7 @@ PROCESS(${SRC_PATH})
 
 # Here work out which primitives were used and pull out their struct definitions
 
-execute_process(COMMAND ./script.py ${SOURCE_FILES}
+execute_process(COMMAND python ./script.py ${SOURCE_FILES}
                 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
@@ -270,7 +272,7 @@ ADD_SUBDIRECTORY(samples)
 FIND_PACKAGE(Doxygen)
 
 IF(DOXYGEN_FOUND)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
                    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     ADD_CUSTOM_TARGET(doc
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile

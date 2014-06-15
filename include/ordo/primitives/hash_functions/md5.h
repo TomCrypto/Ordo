@@ -1,9 +1,9 @@
 /*===-- primitives/hash_functions/md5.h ----------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The MD5 hash function, which produces a 128-bit digest.
+*** @file
+*** @brief Primitive
+***
+*** The MD5 hash function, which produces a 128-bit digest.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -23,8 +23,8 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 /** @see \c hash_function_init()
-///
-/// @remarks The \c params parameter is ignored.
+***
+*** @remarks The \c params parameter is ignored.
 **/
 ORDO_PUBLIC
 int md5_init(struct MD5_STATE *state,

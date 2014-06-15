@@ -1,9 +1,9 @@
 /*===-- primitives/block_ciphers/block_params.h --------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive Parameters
-///
-/// This header contains parameter structures for all block ciphers.
+*** @file
+*** @brief Primitive Parameters
+***
+*** This header contains parameter structures for all block ciphers.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -34,10 +34,10 @@ struct THREEFISH256_PARAMS
 struct AES_PARAMS
 {
     /** The number of rounds to use.
-    ///
-    /// @remarks The defaults  are 10 for a 128-bit key, 12 for a 192-bit key,
-    ///          14 for a 256-bit key, and are standardized. It is \b strongly
-    ///          discouraged to lower the number of rounds below the defaults.
+    ***
+    *** @remarks The defaults  are 10 for a 128-bit key, 12 for a 192-bit key,
+    ***          14 for a 256-bit key, and are standardized. It is \b strongly
+    ***          discouraged to lower the number of rounds below the defaults.
     **/
     size_t rounds;
 };

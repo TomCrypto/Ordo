@@ -1,19 +1,19 @@
 /*===-- enc/block_modes/ecb.h --------------------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The ECB mode  divides the input message into blocks  of the cipher's block
-/// size,  and encrypts  them  individually and  independently.  If the  input
-/// message's length is  not a multiple of the cipher's  block size, a padding
-/// mechanism is enabled by default which  will pad the message to the correct
-/// length  (and  remove the  extra  data  upon  decryption). Padding  may  be
-/// disabled via \c ECB_PARAMS, putting constraints on the input message.
-///
-/// The ECB mode does not require an initialization vector.
-///
-/// Note that  the ECB mode  is insecure in almost  all situations and  is not
-/// recommended for general purpose use.
+*** @file
+*** @brief Primitive
+***
+*** The ECB mode  divides the input message into blocks  of the cipher's block
+*** size,  and encrypts  them  individually and  independently.  If the  input
+*** message's length is  not a multiple of the cipher's  block size, a padding
+*** mechanism is enabled by default which  will pad the message to the correct
+*** length  (and  remove the  extra  data  upon  decryption). Padding  may  be
+*** disabled via \c ECB_PARAMS, putting constraints on the input message.
+***
+*** The ECB mode does not require an initialization vector.
+***
+*** Note that  the ECB mode  is insecure in almost  all situations and  is not
+*** recommended for general purpose use.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -60,7 +60,7 @@ int ecb_final(struct ECB_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ecb_query(enum BLOCK_CIPHER cipher,
+size_t ecb_query(int cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

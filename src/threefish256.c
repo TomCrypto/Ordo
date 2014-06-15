@@ -341,7 +341,7 @@ void threefish256_inverse_C(uint64_t block[4], const uint64_t *subkeys)
     subkeys[n * 4 + 2] = key_w[s2] + tweak_w[t1]; \
     subkeys[n * 4 + 3] = key_w[s3] + n; \
 
-#define K_S (0x1BD11BDAA9FC1A22ULL)
+#define K_S (UINT64_C(0x1BD11BDAA9FC1A22))
 
 void threefish256_key_schedule(const uint64_t key[4],
                                const uint64_t tweak[2],

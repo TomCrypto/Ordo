@@ -213,7 +213,7 @@ int cbc_final(struct CBC_STATE *state,
             : cbc_decrypt_final(state, cipher_state, out, out_len));
 }
 
-size_t cbc_query(enum BLOCK_CIPHER cipher, int query, size_t value)
+size_t cbc_query(int cipher, int query, size_t value)
 {
     switch(query)
     {

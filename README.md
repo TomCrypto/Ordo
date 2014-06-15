@@ -1,4 +1,4 @@
-Ordo v2.7.1
+Ordo v3.0.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,11 +11,10 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 2.7.1:
+What's new in 3.0.0:
+ - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
+ - renamed a few functions to reduce verbosity (e.g. `hash_function_init` becomes `ordo_hash_init`)
  - the test driver is being reworked (work in progress)
- - internal functions have been namespaced, so they will no longer cause name conflicts when linking statically
- - primitive functions like `rc4()` have been prefixed with `ordo_` to prevent name conflicts (e.g. `ordo_ctr()`)
- - added `os_secure_random()` function, see the documentation for more information
 
 Feature Map
 -----------
@@ -68,7 +67,9 @@ If you wish to link statically to the library, please define the `ORDO_STATIC_LI
 Compatibility
 -------------
 
-The library will run everywhere a C99 compiler (with `stdint.h` and a couple other C99 features) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
+The library will run everywhere a C89 compiler (with `stdint.h`) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
+
+The test driver requires partial C99 support (WIP), the build system requires CMake and Python (WIP)
 
 Conclusion
 ----------

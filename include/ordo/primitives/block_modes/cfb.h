@@ -1,20 +1,20 @@
 /*===-- enc/block_modes/cfb.h --------------------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The  CFB   mode  generates  a   keystream  by  repeatedly   encrypting  an
-/// initialization vector and  mixing in the plaintext,  effectively turning a
-/// block cipher into a stream cipher.  As such, CFB mode requires no padding,
-/// and the ciphertext size will always be equal to the plaintext size.
-///
-/// Note  that  the CFB  keystream  depends  on  the  plaintext fed  into  it,
-/// as  opposed to  OFB  mode.  This also  means  the  block cipher's  inverse
-/// permutation is never used.
-///
-/// \c cfb_final() accepts 0 as an argument for \c outlen, since by design the
-/// CFB mode of operation does not produce any final data. However, if a valid
-/// pointer is passed, its value will be set to zero as expected.
+*** @file
+*** @brief Primitive
+***
+*** The  CFB   mode  generates  a   keystream  by  repeatedly   encrypting  an
+*** initialization vector and  mixing in the plaintext,  effectively turning a
+*** block cipher into a stream cipher.  As such, CFB mode requires no padding,
+*** and the ciphertext size will always be equal to the plaintext size.
+***
+*** Note  that  the CFB  keystream  depends  on  the  plaintext fed  into  it,
+*** as  opposed to  OFB  mode.  This also  means  the  block cipher's  inverse
+*** permutation is never used.
+***
+*** \c cfb_final() accepts 0 as an argument for \c outlen, since by design the
+*** CFB mode of operation does not produce any final data. However, if a valid
+*** pointer is passed, its value will be set to zero as expected.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -61,7 +61,7 @@ int cfb_final(struct CFB_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cfb_query(enum BLOCK_CIPHER cipher,
+size_t cfb_query(int cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/

@@ -7,8 +7,8 @@
  *
  * Usage: ./bin/md5sum [path to files ...]
  *
- * This could easily be extended to any hash function, by changing md5() into a
- * different algorithm, and adjusting the digest buffer's size, here 16 bytes.
+ * This could easily be extended to any hash function, by changing HASH_MD5 to
+ * another algorithm (i.e. simply replace the ALG token by something else).
 */
 
 #include <stdlib.h>
@@ -16,17 +16,17 @@
 
 #include "ordo.h"
 
-#define DIGEST_SZ 16
 #define BUFFER_SZ 4096
+#define ALG HASH_MD5
 
-static int md5_file(FILE *f, struct DIGEST_CTX *ctx, void *digest)
+static int hash_file(FILE *f, struct DIGEST_CTX *ctx, void *digest)
 {
-    int err = digest_init(ctx, HASH_MD5, 0);
+    int err = digest_init(ctx, ALG, 0);
     if (err) return err;
 
     while (!feof(f))
     {
-        unsigned char buffer[BUFFER_SZ]; /* Read in by chunks. */
+        unsigned char buffer[BUFFER_SZ]; /* Read file in chunks. */
         size_t len = fread(buffer, 1, sizeof(buffer), f);
         if (len) digest_update(ctx, buffer, len);
     }
@@ -40,7 +40,7 @@ static void print_output(const char *path, const unsigned char *digest)
 {
     size_t t = 0;
 
-    for (t = 0; t < DIGEST_SZ; ++t)
+    for (t = 0; t < digest_length(ALG); ++t)
         printf("%.2x", digest[t]);
 
     printf("  %s\n", path);
@@ -49,20 +49,26 @@ static void print_output(const char *path, const unsigned char *digest)
 int main(int argc, char *argv[])
 {
     struct DIGEST_CTX ctx;
-
-    while (*++argv)
+    
+    void *digest = malloc(digest_length(ALG));
+    if (!digest) printf("Memory allocation error.\n");
+    else
     {
-        FILE *f = fopen(*argv, "rb");
-        if (!f) perror(*argv);
-        else
+        while (*++argv)
         {
-            unsigned char digest[DIGEST_SZ];
-            int err = md5_file(f, &ctx, digest);
-            if (!err) print_output(*argv, digest);
-            else printf("Error: %s.\n", ordo_error_msg(err));
+            FILE *f = fopen(*argv, "rb");
+            if (!f) perror(*argv);
+            else
+            {
+                int err = hash_file(f, &ctx, digest);
+                if (!err) print_output(*argv, digest);
+                else printf("Error: %s.\n", ordo_error_msg(err));
 
-            fclose(f);
-        } 
+                fclose(f);
+            } 
+        }
+
+        free(digest);
     }
 
     return EXIT_SUCCESS;

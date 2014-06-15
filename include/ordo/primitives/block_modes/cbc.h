@@ -1,26 +1,26 @@
 /*===-- enc/block_modes/cbc.h --------------------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The CBC mode  divides the input message into blocks  of the cipher's block
-/// size, and encrypts them in a  sequential fashion, where each block depends
-/// on the  previous one (and  the first  block depends on  the initialization
-/// vector). If the  input message's length is not a  multiple of the cipher's
-/// block size, a  padding mechanism is enabled by default  which will pad the
-/// message to the correct length (and remove the extra data upon decryption).
-/// If  padding  is  explicitly  disabled  through  the  mode  of  operation's
-/// parameters, the  input's length must be  a multiple of the  cipher's block
-/// size.
-///
-/// If  padding is  enabled, \c  cbc_final() requires  a valid  pointer to  be
-/// passed in the \c outlen parameter  and will always return a full blocksize
-/// of data, containing  the last few ciphertext bytes  containing the padding
-/// information.
-///
-/// If padding  is disabled, \c outlen  is also required, and  will return the
-/// number of unprocessed plaintext bytes in the context. If this is any value
-/// other than zero, the function will also fail with \c ORDO_LEFTOVER.
+*** @file
+*** @brief Primitive
+***
+*** The CBC mode  divides the input message into blocks  of the cipher's block
+*** size, and encrypts them in a  sequential fashion, where each block depends
+*** on the  previous one (and  the first  block depends on  the initialization
+*** vector). If the  input message's length is not a  multiple of the cipher's
+*** block size, a  padding mechanism is enabled by default  which will pad the
+*** message to the correct length (and remove the extra data upon decryption).
+*** If  padding  is  explicitly  disabled  through  the  mode  of  operation's
+*** parameters, the  input's length must be  a multiple of the  cipher's block
+*** size.
+***
+*** If  padding is  enabled, \c  cbc_final() requires  a valid  pointer to  be
+*** passed in the \c outlen parameter  and will always return a full blocksize
+*** of data, containing  the last few ciphertext bytes  containing the padding
+*** information.
+***
+*** If padding  is disabled, \c outlen  is also required, and  will return the
+*** number of unprocessed plaintext bytes in the context. If this is any value
+*** other than zero, the function will also fail with \c ORDO_LEFTOVER.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -67,7 +67,7 @@ int cbc_final(struct CBC_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cbc_query(enum BLOCK_CIPHER cipher,
+size_t cbc_query(int cipher,
                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/
