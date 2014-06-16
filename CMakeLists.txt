@@ -129,18 +129,10 @@ SET(INCLUDE_FILES
 )
 
 SET(IN_FILES
-    aes.asm
-    aes.c
-    threefish256.asm
-    threefish256.c
     alg.c
     block_ciphers.c
     block_modes.c
-    cbc.c
-    cfb.c
-    ctr.c
     digest.c
-    ecb.c
     enc_block.c
     enc_stream.c
     endianness.c
@@ -149,19 +141,29 @@ SET(IN_FILES
     hash_functions.c
     hash_params.c
     hmac.c
-    md5.c
-    nullcipher.c
-    ofb.c
     ordo.c
     os_random.c
     pbkdf2.c
-    rc4.asm
-    rc4.c
-    sha256.c
-    skein256.c
     stream_ciphers.c
     version.c
 )
+
+SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
+
+FOREACH(PRIM ${PRIM_LIST})
+    OPTION(WITH_${PRIM} "Include this primitive" ON)
+ENDFOREACH()
+
+IF(WITH_SKEIN256 AND NOT WITH_THREEFISH256)
+    MESSAGE(FATAL_ERROR "WITH_SKEIN256 requires WITH_THREEFISH256!")
+ENDIF()
+
+FOREACH(PRIM ${PRIM_LIST})
+    IF(WITH_${PRIM})
+        STRING(TOLOWER ${PRIM} PRIM_FILE)
+        LIST(APPEND IN_FILES ${PRIM_FILE}.c ${PRIM_FILE}.asm)
+    ENDIF()
+ENDFOREACH()
 
 FUNCTION(PROCESS FOLDER)
     FOREACH(F ${IN_FILES})

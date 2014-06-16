@@ -14,7 +14,7 @@ int main(void)
     const struct ORDO_VERSION *version = ordo_version();
     const char *const *features = version->features;
 
-    printf("With %s (%d)\n", version->build, version->id);
+    printf("Running %s (%d)\n", version->build, version->id);
     while (*features) printf("  * %s\n", *features++);
 
     return EXIT_SUCCESS;

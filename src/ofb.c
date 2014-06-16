@@ -12,7 +12,7 @@
 struct OFB_STATE
 {
     unsigned char iv[BLOCK_BLOCK_LEN];
-    size_t remaining; /* unused data in the state */
+    size_t remaining;
     size_t block_size;
 };
 #endif /* annotation */

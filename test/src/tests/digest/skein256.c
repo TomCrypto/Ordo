@@ -73,6 +73,13 @@ static int config_block(void)
 
     /* Test the generic output block and see if we get the same output. */
     struct SKEIN256_PARAMS params = skein256_default();
+    
+    if (!prim_available(HASH_SKEIN256))
+    {
+        lprintf(WARN, "Algorithm %s not available - skipping.",
+                      byellow(prim_name(HASH_SKEIN256)));
+        return 1;
+    }
 
     for (t = 0; t < vector_count; ++t)
     {

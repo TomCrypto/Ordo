@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ''' The purpose of this script is to extract struct definitions
     for primitives from source files that are being built (this
@@ -9,7 +10,7 @@
     to the nontrivial nature of the operation it is much easier
     to prototype in Python for the moment.                      '''
 
-from sys import argv
+import sys
 
 class Primitive:
     def __init__(self, name, prefix, ptype, block_len = 0, digest_len = 0):
@@ -55,19 +56,26 @@ def extract_struct(path, prim):
     return buf
 
 def gen_polymorphic_struct(prims, ptype):
-    buf =  "struct {0}_STATE\n".format(ptype)
-    buf += "{\n"
-    
-    buf += "    prim_t primitive;\n"
-    
-    buf += "\n    union\n"
-    buf += "    {\n"
-    
+    count = 0
     for (arg, prim) in prims:
         if prim.ptype == ptype:
-            buf += "        struct {0}_STATE {1};\n".format(prim.prefix, prim.prefix.lower())
-    
-    buf += "    } jmp;\n"
+            count += 1
+
+    buf =  "struct {0}_STATE\n".format(ptype)
+    buf += "{\n"
+
+    buf += "    prim_t primitive;\n"
+
+    if count > 0:
+        buf += "\n    union\n"
+        buf += "    {\n"
+        
+        for (arg, prim) in prims:
+            if prim.ptype == ptype:
+                buf += "        struct {0}_STATE {1};\n".format(prim.prefix, prim.prefix.lower())
+        
+        buf += "    } jmp;\n"
+
     buf += "};\n"
     
     return buf
@@ -79,7 +87,7 @@ def calc_block_len(prims, ptype):
         if prim.ptype == ptype:
             maxval = max(maxval, prim.block_len)
     
-    return maxval
+    return 1 if maxval == 0 else maxval
 
 def calc_digest_len(prims, ptype):
     maxval = 0
@@ -88,12 +96,12 @@ def calc_digest_len(prims, ptype):
         if prim.ptype == ptype:
             maxval = max(maxval, prim.digest_len)
     
-    return maxval
+    return 1 if maxval == 0 else maxval
 
 if __name__ == "__main__":
     in_use = []
     
-    for arg in argv:
+    for arg in sys.argv:
         for prim in primitives:
             if prim.name in arg:
                 in_use.append((arg, prim))
@@ -110,6 +118,7 @@ if __name__ == "__main__":
     platform += "#define BLOCK_BLOCK_LEN {0}\n".format(calc_block_len(in_use, "BLOCK"))
     
     for (path, prim) in in_use:
+        print prim.name
         platform += "\n" + extract_struct(path, prim)
     
     platform += "\n" + gen_polymorphic_struct(in_use, "BLOCK")
