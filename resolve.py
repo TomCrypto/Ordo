@@ -1,134 +1,116 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-''' The purpose of this script is to extract struct definitions
+""" The purpose of this script is to extract struct definitions
     for primitives from source files that are being built (this
     is provided via command-line arguments) and write them into
-    a header file so they can be made public to the user.
-    
-    This will be moved into the CMake script eventually but due
-    to the nontrivial nature of the operation it is much easier
-    to prototype in Python for the moment.                      '''
+    a header file so they can be made public to the user.       """
 
-import sys
+import sys, os
 
 class Primitive:
-    def __init__(self, name, prefix, ptype, block_len = 0, digest_len = 0):
+    """ Holds a library primitive with limit information. """
+    def __init__(self, name, prim_type, block_len = 0, digest_len = 0):
         self.name = name
-        self.prefix = prefix
-        self.ptype = ptype
+        self.prim_type = prim_type
         self.block_len = block_len
         self.digest_len = digest_len
 
-primitives = [Primitive("rc4.c", "RC4", "STREAM"),
-              Primitive("md5.c", "MD5", "HASH", block_len = 64, digest_len = 16),
-              Primitive("sha256.c", "SHA256", "HASH", block_len = 64, digest_len = 32),
-              Primitive("skein256.c", "SKEIN256", "HASH", block_len = 32, digest_len = 32),
-              Primitive("aes.c", "AES", "BLOCK", block_len = 16),
-              Primitive("threefish256.c", "THREEFISH256", "BLOCK", block_len = 32),
-              Primitive("nullcipher.c", "NULLCIPHER", "BLOCK", block_len = 16),
-              Primitive("ecb.c", "ECB", "BLOCK_MODE"),
-              Primitive("cbc.c", "CBC", "BLOCK_MODE"),
-              Primitive("cfb.c", "CFB", "BLOCK_MODE"),
-              Primitive("ofb.c", "OFB", "BLOCK_MODE"),
-              Primitive("ctr.c", "CTR", "BLOCK_MODE"),
-              ]
+""" The list of primitives, must be listed in inverse order of dependency! """
+primitives = [
+    Primitive('rc4',               'STREAM'                                           ),
+    Primitive('md5',               'HASH',             block_len = 64, digest_len = 16),
+    Primitive('sha256',            'HASH',             block_len = 64, digest_len = 32),
+    Primitive('skein256',          'HASH',             block_len = 32, digest_len = 32),
+    Primitive('aes',               'BLOCK',            block_len = 16                 ),
+    Primitive('threefish256',      'BLOCK',            block_len = 32                 ),
+    Primitive('nullcipher',        'BLOCK',            block_len = 16                 ),
+    Primitive('ecb',               'BLOCK_MODE'                                       ),
+    Primitive('cbc',               'BLOCK_MODE'                                       ),
+    Primitive('cfb',               'BLOCK_MODE'                                       ),
+    Primitive('ofb',               'BLOCK_MODE'                                       ),
+    Primitive('ctr',               'BLOCK_MODE'                                       ),
+]
 
-def extract_struct(path, prim):
-    with open(path, "r") as f:
-        content = f.readlines()
-    
-    for i, line in enumerate(content):
-        if line == "#if annotation\n":
-            p1 = i
-            break
-    
-    for i, line in enumerate(content):
-        if (line == "#endif /* annotation */\n") and (i > p1):
-            p2 = i
-            break
+def extract(fd):
+    """ Extracts a primitive structure from a file, fails if none is found. """
+    source = fd.readlines()
 
-    buf = ""
-    
-    for i in range(p1 + 1, p2):
-        buf += content[i]
-    
-    return buf
+    bgn = source.index("#if annotation\n") + 1 if "#if annotation\n" in source else len(source) + 1
+    end = source.index("#endif /* annotation */\n") if "#endif /* annotation */\n" in source else -1
 
-def gen_polymorphic_struct(prims, ptype):
-    count = 0
-    for (arg, prim) in prims:
-        if prim.ptype == ptype:
-            count += 1
+    if bgn <= end:
+        return "".join(source[bgn:end])
+    else:
+        print "-- [resolve.py] Failed to resolve primitive structure for {0}".format(fd.name)
+        sys.exit(-1)
 
-    buf =  "struct {0}_STATE\n".format(ptype)
-    buf += "{\n"
+def gen_polymorphic_struct(built_prims, prim_type):
+    """ Generates the polymorphic structure (union) for a primitive type. """
+    prim_count = sum(1 for p in built_prims if p[1].prim_type == prim_type)
 
-    buf += "    prim_t primitive;\n"
+    src =  "struct {0}_STATE\n".format(prim_type)
+    src += "{\n"
+    src += "    prim_t primitive;\n"
 
-    if count > 0:
-        buf += "\n    union\n"
-        buf += "    {\n"
-        
-        for (arg, prim) in prims:
-            if prim.ptype == ptype:
-                buf += "        struct {0}_STATE {1};\n".format(prim.prefix, prim.prefix.lower())
-        
-        buf += "    } jmp;\n"
+    if prim_count > 0:
+        src += "\n"
+        src += "    union\n"
+        src += "    {\n"
 
-    buf += "};\n"
-    
-    return buf
+        for (_, prim) in built_prims:
+            if prim.prim_type == prim_type:
+                src += "        struct {0}_STATE {1};\n".format(prim.name.upper(), prim.name)
 
-def calc_block_len(prims, ptype):
-    maxval = 0
+        src += "    } jmp;\n"
 
-    for (arg, prim) in prims:
-        if prim.ptype == ptype:
-            maxval = max(maxval, prim.block_len)
-    
-    return 1 if maxval == 0 else maxval
+    src += "};\n"
+    return src
 
-def calc_digest_len(prims, ptype):
-    maxval = 0
+def get_block_len(built_prims, prim_type):
+    """ Calculates the maximum block length for a given primitive type """
+    retval = max(built_prims, key = lambda (_, p):
+        p.block_len if p.prim_type == prim_type else 0)[1]
+    return 1 if retval.block_len == 0 else retval.block_len
 
-    for (arg, prim) in prims:
-        if prim.ptype == ptype:
-            maxval = max(maxval, prim.digest_len)
-    
-    return 1 if maxval == 0 else maxval
+def get_digest_len(built_prims, prim_type):
+    """ Calculates the maximum digest length for a given primitive type """
+    retval = max(built_prims, key = lambda (_, p):
+        p.digest_len if p.prim_type == prim_type else 0)[1]
+    return 1 if retval.digest_len == 0 else retval.digest_len
 
 if __name__ == "__main__":
-    in_use = []
-    
-    for arg in sys.argv:
+    """ Main function - takes a list of file paths scheduled for compilation, parses
+        them to work out which primitives are being built and generates the header.  """
+    built_prims = []
+
+    for path in sys.argv:
         for prim in primitives:
-            if prim.name in arg:
-                in_use.append((arg, prim))
-    
-    platform  = "/* AUTOGENERATED - DO NOT EDIT */\n\n"
-    platform += "#ifndef ORDO_DEFINITIONS_H\n"
-    platform += "#define ORDO_DEFINITIONS_H\n"
-    platform += "\n"
-    platform += "#include \"ordo/common/identification.h\"\n"
-    
-    platform += "\n"
-    platform += "#define HASH_BLOCK_LEN {0}\n".format(calc_block_len(in_use, "HASH"))
-    platform += "#define HASH_DIGEST_LEN {0}\n".format(calc_digest_len(in_use, "HASH"))
-    platform += "#define BLOCK_BLOCK_LEN {0}\n".format(calc_block_len(in_use, "BLOCK"))
-    
-    for (path, prim) in in_use:
-        print prim.name
-        platform += "\n" + extract_struct(path, prim)
-    
-    platform += "\n" + gen_polymorphic_struct(in_use, "BLOCK")
-    platform += "\n" + gen_polymorphic_struct(in_use, "HASH")
-    platform += "\n" + gen_polymorphic_struct(in_use, "STREAM")
-    platform += "\n" + gen_polymorphic_struct(in_use, "BLOCK_MODE")
-    
-    platform += "\n#endif\n"
-    
-    with open('include/ordo/definitions.h', 'w') as f:
-        f.write(platform)
-    
-    # done!
+            if prim.name + '.c' in path:
+                built_prims.append((path, prim))
+
+    definitions  = "/* AUTOGENERATED - DO NOT EDIT */\n\n"
+    definitions += "#ifndef ORDO_DEFINITIONS_H\n"
+    definitions += "#define ORDO_DEFINITIONS_H\n"
+    definitions += "\n"
+    definitions += "#include \"ordo/common/identification.h\"\n"
+
+    definitions += "\n"
+    definitions += "#define HASH_BLOCK_LEN  {0}\n".format(get_block_len(built_prims,  'HASH'))
+    definitions += "#define HASH_DIGEST_LEN {0}\n".format(get_digest_len(built_prims, 'HASH'))
+    definitions += "#define BLOCK_BLOCK_LEN {0}\n".format(get_block_len(built_prims,  'BLOCK'))
+
+    for (path, prim) in built_prims:
+        with open(path, 'r') as fd:
+            definitions += "\n"
+            definitions += extract(fd)
+
+    definitions += "\n" + gen_polymorphic_struct(built_prims, 'BLOCK')
+    definitions += "\n" + gen_polymorphic_struct(built_prims, 'HASH')
+    definitions += "\n" + gen_polymorphic_struct(built_prims, 'STREAM')
+    definitions += "\n" + gen_polymorphic_struct(built_prims, 'BLOCK_MODE')
+    definitions += "\n"
+    definitions += "#endif\n"
+
+    with open('include/ordo/definitions.h', 'w') as fd:
+        fd.write(definitions)
