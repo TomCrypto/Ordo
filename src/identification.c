@@ -61,18 +61,18 @@ int prim_available(prim_t prim)
 {
     switch (prim)
     {
-        case BLOCK_AES:                    return USING_AES;
-        case BLOCK_NULLCIPHER:             return USING_NULLCIPHER;
-        case BLOCK_THREEFISH256:           return USING_THREEFISH256;
-        case HASH_MD5:                     return USING_MD5;
-        case HASH_SHA256:                  return USING_SHA256;
-        case HASH_SKEIN256:                return USING_SKEIN256;
-        case STREAM_RC4:                   return USING_RC4;
-        case BLOCK_MODE_ECB:               return USING_ECB;
-        case BLOCK_MODE_CBC:               return USING_CBC;
-        case BLOCK_MODE_CTR:               return USING_CTR;
-        case BLOCK_MODE_CFB:               return USING_CFB;
-        case BLOCK_MODE_OFB:               return USING_OFB;
+        case BLOCK_AES:                    return WITH_AES;
+        case BLOCK_NULLCIPHER:             return WITH_NULLCIPHER;
+        case BLOCK_THREEFISH256:           return WITH_THREEFISH256;
+        case HASH_MD5:                     return WITH_MD5;
+        case HASH_SHA256:                  return WITH_SHA256;
+        case HASH_SKEIN256:                return WITH_SKEIN256;
+        case STREAM_RC4:                   return WITH_RC4;
+        case BLOCK_MODE_ECB:               return WITH_ECB;
+        case BLOCK_MODE_CBC:               return WITH_CBC;
+        case BLOCK_MODE_CTR:               return WITH_CTR;
+        case BLOCK_MODE_CFB:               return WITH_CFB;
+        case BLOCK_MODE_OFB:               return WITH_OFB;
     }
     
     return 0;
@@ -82,13 +82,13 @@ const prim_t *prim_from_type(int type)
 {
     static const prim_t hash[] =
     {
-        #if USING_MD5
+        #if WITH_MD5
         HASH_MD5,
         #endif
-        #if USING_SHA256
+        #if WITH_SHA256
         HASH_SHA256,
         #endif
-        #if USING_SKEIN256
+        #if WITH_SKEIN256
         HASH_SKEIN256,
         #endif
         0
@@ -96,7 +96,7 @@ const prim_t *prim_from_type(int type)
 
     static const prim_t stream[] =
     {
-        #if USING_RC4
+        #if WITH_RC4
         STREAM_RC4,
         #endif
         0
@@ -104,13 +104,13 @@ const prim_t *prim_from_type(int type)
 
     static const prim_t block[] =
     {
-        #if USING_AES
+        #if WITH_AES
         BLOCK_AES,
         #endif
-        #if USING_THREEFISH256
+        #if WITH_THREEFISH256
         BLOCK_THREEFISH256,
         #endif
-        #if USING_NULLCIPHER
+        #if WITH_NULLCIPHER
         BLOCK_NULLCIPHER,
         #endif
         0
@@ -118,19 +118,19 @@ const prim_t *prim_from_type(int type)
 
     static const prim_t block_modes[] =
     {
-        #if USING_ECB
+        #if WITH_ECB
         BLOCK_MODE_ECB,
         #endif
-        #if USING_CBC
+        #if WITH_CBC
         BLOCK_MODE_CBC,
         #endif
-        #if USING_CTR
+        #if WITH_CTR
         BLOCK_MODE_CTR,
         #endif
-        #if USING_CFB
+        #if WITH_CFB
         BLOCK_MODE_CFB,
         #endif
-        #if USING_OFB
+        #if WITH_OFB
         BLOCK_MODE_OFB,
         #endif
         0

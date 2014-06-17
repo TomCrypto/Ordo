@@ -16,9 +16,9 @@ int ordo_enc_block(prim_t cipher, const void *cipher_params,
                    const void *in,size_t in_len,
                    void* out, size_t *out_len)
 {
+    struct ENC_BLOCK_CTX ctx;
     int err = ORDO_SUCCESS;
     size_t end_pos = 0;
-    struct ENC_BLOCK_CTX ctx;
 
     if ((err = enc_block_init(&ctx,
                               key, key_len,
@@ -42,8 +42,8 @@ int ordo_enc_stream(prim_t cipher, const void *params,
                     const void *key, size_t key_len,
                     void *buffer, size_t len)
 {
-    int err = ORDO_SUCCESS;
     struct ENC_STREAM_CTX ctx;
+    int err = ORDO_SUCCESS;
 
     if (!(err = enc_stream_init(&ctx, key, key_len, cipher, params)))
     {
