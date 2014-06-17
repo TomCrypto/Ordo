@@ -75,7 +75,7 @@ Compatibility
 
 The library will run everywhere a near-C89 compiler (i.e. with `stdint.h` and `long long` support) is available, however system-dependent modules will not be available without an implementation for these platforms. For better performance, specialized algorithm implementations may be available for your system and processor architecture, and are easy to integrate once written.
 
-The test driver requires partial C99 support (WIP), the build system requires CMake and Python (WIP)
+The test driver requires partial C99 support (WIP), the build system requires CMake and Python.
 
 Conclusion
 ----------
