@@ -54,18 +54,15 @@ extern "C" {
 ***
 *** @remarks The \c out buffer should be at least \c out_len bytes long.
 ***
-*** @remarks Do not use hash parameters which modify the output length or this
+*** @warning Do not use hash parameters which modify the output length or this
 ***          function's behavior is undefined.
 **/
 ORDO_PUBLIC
 int pbkdf2(prim_t hash, const void *params,
-           const void *password,
-           size_t password_len,
-           const void *salt,
-           size_t salt_len,
+           const void *password, size_t password_len,
+           const void *salt, size_t salt_len,
            size_t iterations,
-           void *out,
-           size_t out_len);
+           void *out, size_t out_len);
 
 /*===----------------------------------------------------------------------===*/
 
