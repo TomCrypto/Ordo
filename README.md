@@ -1,4 +1,4 @@
-Ordo v3.0.0
+Ordo v0.3.0
 ===========
 
 Symmetric Cryptography Library
@@ -11,7 +11,7 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 3.0.0:
+What's new in 0.3.0:
  - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
  - renamed a few functions to reduce verbosity and namespace pollution (e.g. `hash_function_init` becomes `ordo_hash_init`) [WIP]
  - the test driver is being reworked (work in progress)

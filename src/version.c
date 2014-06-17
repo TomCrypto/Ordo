@@ -8,8 +8,8 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#define MAJ 3
-#define MIN 0
+#define MAJ 0
+#define MIN 3
 #define REV 0
 
 #define STR_HELPER(x) #x
