@@ -41,7 +41,7 @@ struct HMAC_CTX
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
 *** @remarks The hash parameters apply to the outer hash operation only, which
-***          is the one used to hash the message with the processed key.
+***          is the one used to hash the processed message and masked key.
 **/
 ORDO_PUBLIC
 int hmac_init(struct HMAC_CTX *ctx,
