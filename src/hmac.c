@@ -17,6 +17,9 @@ int hmac_init(struct HMAC_CTX *ctx,
     int err = ORDO_SUCCESS;
     size_t t;
 
+    if ((err = digest_init(&ctx->outer, hash, hash_params)))
+        return err;
+
     /* The key may be smaller than the hash's block size, pad with zeroes. */
     memset(ctx->key, 0x00, block_size);
 
@@ -32,8 +35,9 @@ int hmac_init(struct HMAC_CTX *ctx,
     else memcpy(ctx->key, key, key_len);
 
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x36;
-    if ((err = digest_init(&ctx->dgt, hash, hash_params)))
+    if ((err = digest_init(&ctx->dgt, hash, 0)))
         return err;
+
     digest_update(&ctx->dgt, ctx->key, block_size);
 
     return err;
@@ -54,17 +58,16 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
                                             BLOCK_SIZE_Q, 0);
     size_t t;
 
-    digest_final(&ctx->dgt, digest);
+    unsigned char tmp[HASH_DIGEST_LEN];
+
+    digest_final(&ctx->dgt, tmp);
 
     /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
-    if ((err = digest_init(&ctx->dgt, ctx->dgt.primitive, 0)))
-        return err;
-
-    digest_update(&ctx->dgt, ctx->key, block_size);
-    digest_update(&ctx->dgt, digest, digest_len);
-    digest_final(&ctx->dgt, digest);
+    digest_update(&ctx->outer, ctx->key, block_size);
+    digest_update(&ctx->outer, tmp, digest_len);
+    digest_final(&ctx->outer, digest);
 
     return err;
 }

@@ -24,9 +24,7 @@
 
 /***                         DATA STORAGE BUFFER                            ***/
 
-#define MAX_BLOCK_SIZE 65536
-
-static char buffer[MAX_BLOCK_SIZE];
+static char buffer[65536];
 
 /***                    MISCELLANEOUS UTILITY FUNCTIONS                     ***/
 
@@ -160,7 +158,7 @@ static void *stream_params(int cipher)
 {
     if (cipher == STREAM_RC4)
     {
-        /* we don't want to benchmark dropping bytes of RC4
+        /* We don't want to benchmark dropping bytes of RC4
          * as this would heavily penalize the short blocks. */
         struct RC4_PARAMS *rc4 = allocate(sizeof(*rc4));
         rc4->drop = 0;
@@ -172,110 +170,98 @@ static void *stream_params(int cipher)
 
 /***                          LOW-LEVEL BENCHMARKS                          ***/
 
-static double hash_speed(int hash, uint64_t block)
+static double hash_speed(prim_t hash, uint64_t block)
 {
-    os_random(buffer, sizeof(buffer));
+    void *params = hash_params(hash);
+    struct DIGEST_CTX ctx;
 
-    {
-        void *params = hash_params(hash);
-        struct DIGEST_CTX ctx;
+    uint64_t iterations = 0;
+    double elapsed;
+    my_time start;
 
-        uint64_t iterations = 0;
-        double elapsed;
-        my_time start;
+    digest_init(&ctx, hash, params);
 
-        digest_init(&ctx, hash, params);
+    start = now();
 
-        start = now();
+    while (++iterations && (get_elapsed(start) < INTERVAL))
+        digest_update(&ctx, buffer, block);
 
-        while (++iterations && (get_elapsed(start) < INTERVAL))
-            digest_update(&ctx, buffer, block);
+    elapsed = get_elapsed(start);
 
-        elapsed = get_elapsed(start);
+    digest_final(&ctx, buffer);
+    free(params);
 
-        digest_final(&ctx, buffer);
-        free(params);
-
-        return speed_MiB(block * iterations, elapsed);
-    }
+    return speed_MiB(block * iterations, elapsed);
 }
 
-static double stream_speed(int cipher, uint64_t block)
+static double stream_speed(prim_t cipher, uint64_t block)
 {
-    os_random(buffer, sizeof(buffer));
+    void *params = stream_params(cipher);
+    struct ENC_STREAM_CTX ctx;
 
-    {
-        void *params = stream_params(cipher);
-        struct ENC_STREAM_CTX ctx;
+    size_t key_len = stream_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
 
-        size_t key_len = stream_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
+    void *key = allocate(key_len);
 
-        void *key = allocate(key_len);
+    uint64_t iterations = 0;
+    double elapsed;
+    my_time start;
 
-        uint64_t iterations = 0;
-        double elapsed;
-        my_time start;
+    enc_stream_init(&ctx, key, key_len, cipher, params);
 
-        enc_stream_init(&ctx, key, key_len, cipher, params);
+    start = now();
 
-        start = now();
+    while (++iterations && (get_elapsed(start) < INTERVAL))
+        enc_stream_update(&ctx, buffer, block);
 
-        while (++iterations && (get_elapsed(start) < INTERVAL))
-            enc_stream_update(&ctx, buffer, block);
+    elapsed = get_elapsed(start);
 
-        elapsed = get_elapsed(start);
+    enc_stream_final(&ctx);
+    free(params);
+    free(key);
 
-        enc_stream_final(&ctx);
-        free(params);
-        free(key);
-
-        return speed_MiB(block * iterations, elapsed);
-    }
+    return speed_MiB(block * iterations, elapsed);
 }
 
-static double block_speed(int cipher, int mode, uint64_t block)
+static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
 {
-    os_random(buffer, sizeof(buffer));
+    void *cipher_params = block_params(cipher);
+    void *mode_params = block_mode_params(mode);
+    struct ENC_BLOCK_CTX ctx;
 
-    {
-        void *cipher_params = block_params(cipher);
-        void *mode_params = block_mode_params(mode);
-        struct ENC_BLOCK_CTX ctx;
+    size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
+    size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
 
-        size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
-        size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
+    void *key = allocate(key_len);
+    void *iv = allocate(iv_len);
 
-        void *key = allocate(key_len);
-        void *iv = allocate(iv_len);
+    uint64_t iterations = 0;
+    double elapsed;
+    my_time start;
+    size_t out;
 
-        uint64_t iterations = 0;
-        double elapsed;
-        my_time start;
-        size_t out;
+    enc_block_init(&ctx, key, key_len, iv, iv_len,
+                   1, cipher, cipher_params, mode, mode_params);
 
-        enc_block_init(&ctx, key, key_len, iv, iv_len,
-                       1, cipher, cipher_params, mode, mode_params);
+    start = now();
 
-        start = now();
+    while (++iterations && (get_elapsed(start) < INTERVAL))
+        enc_block_update(&ctx, buffer, block, buffer, &out);
 
-        while (++iterations && (get_elapsed(start) < INTERVAL))
-            enc_block_update(&ctx, buffer, block, buffer, &out);
+    elapsed = get_elapsed(start);
 
-        elapsed = get_elapsed(start);
+    enc_block_final(&ctx, buffer, &out);
+    free(cipher_params);
+    free(mode_params);
+    free(key);
+    free(iv);
 
-        enc_block_final(&ctx, buffer, &out);
-        free(cipher_params);
-        free(mode_params);
-        free(key);
-        free(iv);
-
-        return speed_MiB(block * iterations, elapsed);
-    }
+    return speed_MiB(block * iterations, elapsed);
 }
 
 /***                          HIGH-LEVEL BENCHMARK                          ***/
 
-static int benchmark_hash_function(int hash, int argc, char * const argv[])
+static int benchmark_hash_function(prim_t hash, int argc, char * const argv[])
 {
     if (argc > 2)
     {
@@ -294,9 +280,9 @@ static int benchmark_hash_function(int hash, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-static int benchmark_stream_cipher(int cipher, int argc, char * const argv[])
+static int benchmark_stream_cipher(prim_t cipher, int argc, char * const argv[])
 {
-    if (argc != 2)
+    if (argc > 2)
     {
         printf("Unrecognized argument '%s'.\n", argv[2]);
         return EXIT_FAILURE;
@@ -313,9 +299,9 @@ static int benchmark_stream_cipher(int cipher, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
+static int benchmark_block_cipher(prim_t cipher, int argc, char * const argv[])
 {
-    int mode;
+    prim_t mode;
 
     if (argc == 2)
     {
@@ -348,22 +334,6 @@ static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-/***                        ALGORITHM IDENTIFICATION                        ***/
-
-enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
-
-static enum ALG_TYPE identify(const char *name)
-{
-    switch (prim_type(prim_from_name(name)))
-    {
-        case PRIM_TYPE_HASH:             return ALG_HASH;
-        case PRIM_TYPE_STREAM:           return ALG_STREAM;
-        case PRIM_TYPE_BLOCK:            return ALG_BLOCK;
-    }
-
-    return ALG_NONE;
-}
-
 /***                             MAIN DISPATCHER                            ***/
 
 int main(int argc, char *argv[])
@@ -373,19 +343,23 @@ int main(int argc, char *argv[])
         benchmark_usage(argc, argv);
         return EXIT_FAILURE;
     }
-
-    switch (identify(argv[1]))
+    else
     {
-        case ALG_HASH:
-            return benchmark_hash_function(prim_from_name(argv[1]), argc, argv);
-        case ALG_STREAM:
-            return benchmark_stream_cipher(prim_from_name(argv[1]), argc, argv);
-        case ALG_BLOCK:
-            return benchmark_block_cipher(prim_from_name(argv[1]), argc, argv);
-        case ALG_NONE:
+        prim_t primitive = prim_from_name(argv[1]);
+
+        switch (prim_type(primitive))
         {
-            printf("Unrecognized argument '%s'.\n", argv[1]);
-            return EXIT_FAILURE;
+            case PRIM_TYPE_HASH:
+                return benchmark_hash_function(primitive, argc, argv);
+            case PRIM_TYPE_STREAM:
+                return benchmark_stream_cipher(primitive, argc, argv);
+            case PRIM_TYPE_BLOCK:
+                return benchmark_block_cipher(primitive, argc, argv);
+            default:
+            {
+                printf("Unrecognized argument '%s'.\n", argv[1]);
+                return EXIT_FAILURE;
+            }
         }
     }
 

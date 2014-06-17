@@ -26,7 +26,7 @@ extern "C" {
 
 struct HMAC_CTX
 {
-    struct DIGEST_CTX dgt;
+    struct DIGEST_CTX dgt, outer;
     unsigned char key[HASH_BLOCK_LEN];
 };
 
@@ -35,16 +35,13 @@ struct HMAC_CTX
 *** @param [in]     ctx            An allocated HMAC context.
 *** @param [in]     key            The cryptographic key to use.
 *** @param [in]     key_len        The size, in bytes, of the key.
-*** @param [out]    hash           A Hash function primitive to use.
+*** @param [out]    hash           A hash function primitive to use.
 *** @param [out]    params         Hash function specific parameters.
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
-*** @remarks The hash parameters apply to the inner hash operation only, which
-***          is the one used to hash the passed key with the inner mask.
-***
-*** @remarks Do not use hash parameters which modify the output length or this
-***          function's behavior is undefined.
+*** @remarks The hash parameters apply to the outer hash operation only, which
+***          is the one used to hash the message with the processed key.
 **/
 ORDO_PUBLIC
 int hmac_init(struct HMAC_CTX *ctx,
@@ -72,7 +69,9 @@ void hmac_update(struct HMAC_CTX *ctx,
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
 *** @remarks The fingerprint length is equal to the underlying hash function's
-***          digest length, which may be queried via \c hash_digest_length().
+***          digest length, which must be queried via \c hash_digest_length(),
+***          or to the provided length, if a parameter which modified the hash
+***          function's output length was passed to \c hmac_init().
 **/
 ORDO_PUBLIC
 int hmac_final(struct HMAC_CTX *ctx, void *fingerprint);

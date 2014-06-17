@@ -49,26 +49,23 @@ static void print_output(const char *path, const unsigned char *digest)
 int main(int argc, char *argv[])
 {
     struct DIGEST_CTX ctx;
-    
-    void *digest = malloc(digest_length(ALG));
-    if (!digest) printf("Memory allocation error.\n");
-    else
+
+    /* Make use of the maximum possible digest length (without parameters that
+     * modify output length) to avoid allocations. This is of course optional. */
+    unsigned char digest[HASH_DIGEST_LEN];
+
+    while (*++argv)
     {
-        while (*++argv)
+        FILE *f = fopen(*argv, "rb");
+        if (!f) perror(*argv);
+        else
         {
-            FILE *f = fopen(*argv, "rb");
-            if (!f) perror(*argv);
-            else
-            {
-                int err = hash_file(f, &ctx, digest);
-                if (!err) print_output(*argv, digest);
-                else printf("Error: %s.\n", ordo_error_msg(err));
+            int err = hash_file(f, &ctx, digest);
+            if (!err) print_output(*argv, digest);
+            else printf("Error: %s.\n", ordo_error_msg(err));
 
-                fclose(f);
-            } 
+            fclose(f);
         }
-
-        free(digest);
     }
 
     return EXIT_SUCCESS;
