@@ -10,7 +10,6 @@ int test_error_codes(void)
     ASSERT_NE(ORDO_LEFTOVER, 0, "%s is zero.",    byellow("ORDO_LEFTOVER"));
     ASSERT_NE(ORDO_KEY_LEN,  0, "%s is zero.",    byellow("ORDO_KEY_LEN"));
     ASSERT_NE(ORDO_PADDING,  0, "%s is zero.",    byellow("ORDO_PADDING"));
-    ASSERT_NE(ORDO_ALLOC,    0, "%s is zero.",    byellow("ORDO_ALLOC"));
     ASSERT_NE(ORDO_ARG,      0, "%s is zero.",    byellow("ORDO_ARG"));
     
     return 1;

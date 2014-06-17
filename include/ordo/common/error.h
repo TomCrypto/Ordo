@@ -102,19 +102,6 @@ enum ORDO_ERROR
     **/
     ORDO_PADDING,
 
-    /** An attempt to allocate memory failed.
-    ***
-    *** @remarks This  occurs when  the  library's memory  subsystem fails  to
-    ***          allocate memory, and shouldn't occur during normal operation.
-    ***
-    *** @remarks This likely indicates  a memory leak in your  code, though it
-    ***          may  also  be  symptomatic  of  an  error  in  the  library's
-    ***          allocator (the  default allocator uses malloc/free,  but this
-    ***          can be overriden)  or your own, if you  changed the library's
-    ***          allocator at runtime.
-    **/
-    ORDO_ALLOC,
-
     /** An invalid argument was passed to a function.
     ***
     *** @remarks This is  a generic error  which is returned when  the library
