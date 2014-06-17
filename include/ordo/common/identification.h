@@ -99,10 +99,18 @@ int prim_available(prim_t prim);
 *** @remarks Passing zero returns all available primitives.
 **/
 ORDO_PUBLIC
-const prim_t *prim_type(int type);
+const prim_t *prim_from_type(int type);
 
+/** Returns the type of a given primitive.
+***
+*** @param [in]     prim           A primitive identifier.
+***
+*** @returns The type of the primitive, or zero on error.
+***
+*** @warning Will \b not work if the primitive is not available.
+**/
 ORDO_PUBLIC
-int prim_is_type(int prim, int type);
+int prim_type(int prim);
 
 /*===----------------------------------------------------------------------===*/
 

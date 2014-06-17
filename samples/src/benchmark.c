@@ -46,7 +46,6 @@ static void *allocate(size_t size)
 
 static void benchmark_usage(int argc, char * const argv[])
 {
-    size_t t, count;
     const int *p;
 
     printf("Usage:\n\n");
@@ -55,28 +54,28 @@ static void benchmark_usage(int argc, char * const argv[])
     printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
 
     printf("\nAvailable hash functions:\n\n\t");
-    for (p = prim_type(PRIM_TYPE_HASH); *p; ++p)
+    for (p = prim_from_type(PRIM_TYPE_HASH); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable stream ciphers:\n\n\t");
-    for (p = prim_type(PRIM_TYPE_STREAM); *p; ++p)
+    for (p = prim_from_type(PRIM_TYPE_STREAM); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable block ciphers:\n\n\t");
-    for (p = prim_type(PRIM_TYPE_BLOCK); *p; ++p)
+    for (p = prim_from_type(PRIM_TYPE_BLOCK); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable modes of operation:\n\n\t");
-    for (p = prim_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
+    for (p = prim_from_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
@@ -332,7 +331,7 @@ static int benchmark_block_cipher(int cipher, int argc, char * const argv[])
 
     mode = prim_from_name(argv[2]);
 
-    if (!prim_is_type(mode, PRIM_TYPE_BLOCK_MODE))
+    if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
     {
         printf("Unrecognized mode of operation '%s'.\n", argv[2]);
         return EXIT_FAILURE;
@@ -355,11 +354,13 @@ enum ALG_TYPE { ALG_NONE, ALG_HASH, ALG_STREAM, ALG_BLOCK };
 
 static enum ALG_TYPE identify(const char *name)
 {
-    int prim = prim_from_name(name);
+    switch (prim_type(prim_from_name(name)))
+    {
+        case PRIM_TYPE_HASH:             return ALG_HASH;
+        case PRIM_TYPE_STREAM:           return ALG_STREAM;
+        case PRIM_TYPE_BLOCK:            return ALG_BLOCK;
+    }
 
-    if (prim_is_type(prim, PRIM_TYPE_HASH))   return ALG_HASH;
-    if (prim_is_type(prim, PRIM_TYPE_STREAM)) return ALG_STREAM;
-    if (prim_is_type(prim, PRIM_TYPE_BLOCK))  return ALG_BLOCK;
     return ALG_NONE;
 }
 

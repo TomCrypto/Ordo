@@ -80,68 +80,68 @@ int prim_available(prim_t prim)
 
 const prim_t *prim_from_type(int type)
 {
+    static const prim_t hash[] =
+    {
+        #if USING_MD5
+        HASH_MD5,
+        #endif
+        #if USING_SHA256
+        HASH_SHA256,
+        #endif
+        #if USING_SKEIN256
+        HASH_SKEIN256,
+        #endif
+        0
+    };
+
+    static const prim_t stream[] =
+    {
+        #if USING_RC4
+        STREAM_RC4,
+        #endif
+        0
+    };
+
+    static const prim_t block[] =
+    {
+        #if USING_AES
+        BLOCK_AES,
+        #endif
+        #if USING_THREEFISH256
+        BLOCK_THREEFISH256,
+        #endif
+        #if USING_NULLCIPHER
+        BLOCK_NULLCIPHER,
+        #endif
+        0
+    };
+
+    static const prim_t block_modes[] =
+    {
+        #if USING_ECB
+        BLOCK_MODE_ECB,
+        #endif
+        #if USING_CBC
+        BLOCK_MODE_CBC,
+        #endif
+        #if USING_CTR
+        BLOCK_MODE_CTR,
+        #endif
+        #if USING_CFB
+        BLOCK_MODE_CFB,
+        #endif
+        #if USING_OFB
+        BLOCK_MODE_OFB,
+        #endif
+        0
+    };
+
     switch (type)
     {
-        case PRIM_TYPE_HASH:
-        {
-            const prim_t *x = (const prim_t [])
-            {
-                #if USING_MD5
-                HASH_MD5,
-                #endif
-                #if USING_SHA256
-                HASH_SHA256,
-                #endif
-                #if USING_SKEIN256
-                HASH_SKEIN256,
-                #endif
-                0
-            };
-            return x;
-        }
-        case PRIM_TYPE_STREAM:
-            return (const prim_t *)
-                {
-                #if USING_RC4
-                STREAM_RC4,
-                #endif
-                0
-            };
-        case PRIM_TYPE_BLOCK:
-            return (const prim_t *)
-            {
-                #if USING_AES
-                BLOCK_AES,
-                #endif
-                #if USING_THREEFISH256
-                BLOCK_THREEFISH256,
-                #endif
-                #if USING_NULLCIPHER
-                BLOCK_NULLCIPHER,
-                #endif
-                0
-            };
-        
-        case PRIM_TYPE_BLOCK_MODE:
-            return (const prim_t *)
-            {
-                #if USING_ECB
-                BLOCK_MODE_ECB,
-                #endif
-                #if USING_CBC
-                BLOCK_MODE_CBC,
-                #endif
-                #if USING_CTR
-                BLOCK_MODE_CTR,
-                #endif
-                #if USING_CFB
-                BLOCK_MODE_CFB,
-                #endif
-                #if USING_OFB
-                BLOCK_MODE_OFB,
-                #endif
-                0
-            };
+        case PRIM_TYPE_HASH:             return hash;
+        case PRIM_TYPE_STREAM:           return stream;
+        case PRIM_TYPE_BLOCK:            return block;
+        case PRIM_TYPE_BLOCK_MODE:       return block_modes;
     }
     
     return 0;
@@ -149,6 +149,9 @@ const prim_t *prim_from_type(int type)
 
 int prim_type(prim_t prim)
 {
+    if (!prim_available(prim))
+        return 0;
+
     switch (prim)
     {
         case BLOCK_AES:                    return PRIM_TYPE_BLOCK;
