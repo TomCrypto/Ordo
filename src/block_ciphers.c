@@ -8,13 +8,13 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#ifdef USING_AES
+#if USING_AES
 #include "ordo/primitives/block_ciphers/aes.h"
 #endif
-#ifdef USING_NULLCIPHER
+#if USING_NULLCIPHER
 #include "ordo/primitives/block_ciphers/nullcipher.h"
 #endif
-#ifdef USING_THREEFISH256
+#if USING_THREEFISH256
 #include "ordo/primitives/block_ciphers/threefish256.h"
 #endif
 
@@ -24,15 +24,15 @@ int block_cipher_init(struct BLOCK_STATE *state,
 {
     switch (state->primitive = primitive)
     {
-        #ifdef USING_AES
+        #if USING_AES
         case BLOCK_AES:
             return aes_init(&state->jmp.aes, key, key_len, params);
         #endif
-        #ifdef USING_NULLCIPHER
+        #if USING_NULLCIPHER
         case BLOCK_NULLCIPHER:
             return nullcipher_init(&state->jmp.nullcipher, key, key_len, params);
         #endif
-        #ifdef USING_THREEFISH256
+        #if USING_THREEFISH256
         case BLOCK_THREEFISH256:
             return threefish256_init(&state->jmp.threefish256, key, key_len, params);
         #endif
@@ -46,17 +46,17 @@ void block_cipher_forward(const struct BLOCK_STATE *state,
 {
     switch (state->primitive)
     {
-        #ifdef USING_AES
+        #if USING_AES
         case BLOCK_AES:
             aes_forward(&state->jmp.aes, block);
             break;
         #endif
-        #ifdef USING_NULLCIPHER
+        #if USING_NULLCIPHER
         case BLOCK_NULLCIPHER:
             nullcipher_forward(&state->jmp.nullcipher, block);
             break;
         #endif
-        #ifdef USING_THREEFISH256
+        #if USING_THREEFISH256
         case BLOCK_THREEFISH256:
             threefish256_forward(&state->jmp.threefish256, block);
             break;
@@ -69,17 +69,17 @@ void block_cipher_inverse(const struct BLOCK_STATE *state,
 {
     switch (state->primitive)
     {
-        #ifdef USING_AES
+        #if USING_AES
         case BLOCK_AES:
             aes_inverse(&state->jmp.aes, block);
             break;
         #endif
-        #ifdef USING_NULLCIPHER
+        #if USING_NULLCIPHER
         case BLOCK_NULLCIPHER:
             nullcipher_inverse(&state->jmp.nullcipher, block);
             break;
         #endif
-        #ifdef USING_THREEFISH256
+        #if USING_THREEFISH256
         case BLOCK_THREEFISH256:
             threefish256_inverse(&state->jmp.threefish256, block);
             break;
@@ -91,17 +91,17 @@ void block_cipher_final(struct BLOCK_STATE *state)
 {
     switch (state->primitive)
     {
-        #ifdef USING_AES
+        #if USING_AES
         case BLOCK_AES:
             aes_final(&state->jmp.aes);
             break;
         #endif
-        #ifdef USING_NULLCIPHER
+        #if USING_NULLCIPHER
         case BLOCK_NULLCIPHER:
             nullcipher_final(&state->jmp.nullcipher);
             break;
         #endif
-        #ifdef USING_THREEFISH256
+        #if USING_THREEFISH256
         case BLOCK_THREEFISH256:
             threefish256_final(&state->jmp.threefish256);
             break;
@@ -114,15 +114,15 @@ size_t block_cipher_query(prim_t primitive,
 {
     switch (primitive)
     {
-        #ifdef USING_AES
+        #if USING_AES
         case BLOCK_AES:
             return aes_query(query, value);
         #endif
-        #ifdef USING_NULLCIPHER
+        #if USING_NULLCIPHER
         case BLOCK_NULLCIPHER:
             return nullcipher_query(query, value);
         #endif
-        #ifdef USING_THREEFISH256
+        #if USING_THREEFISH256
         case BLOCK_THREEFISH256:
             return threefish256_query(query, value);
         #endif

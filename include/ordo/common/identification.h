@@ -70,6 +70,14 @@ typedef int prim_t;
 ORDO_PUBLIC
 const char *prim_name(prim_t prim);
 
+/** Returns a primitive identifier from a name.
+***
+*** @param [in]     name           A primitive name.
+***
+*** @returns The corresponding primitive identifier, or zero on error.
+***
+*** @remarks Will work even if the primitive is not available.
+**/
 ORDO_PUBLIC
 prim_t prim_from_name(const char *name);
 
@@ -80,10 +88,18 @@ prim_t prim_from_name(const char *name);
 *** @returns 0 if the primitive is not available, 1 otherwise.
 **/
 ORDO_PUBLIC
-prim_t prim_available(prim_t prim);
+int prim_available(prim_t prim);
 
+/** Returns a list of available primitives of a given type.
+***
+*** @param [in]     type           A primitive type.
+***
+*** @returns A zero-terminated list of such primitives.
+***
+*** @remarks Passing zero returns all available primitives.
+**/
 ORDO_PUBLIC
-const int *prim_type(int type);
+const prim_t *prim_type(int type);
 
 ORDO_PUBLIC
 int prim_is_type(int prim, int type);

@@ -6,149 +6,164 @@
 
 /*===----------------------------------------------------------------------===*/
 
-struct NAMED_PRIMITIVE
+static uint32_t fnv32(const char *s)
 {
-    const char *name;
-    int primitive;
-};
+    uint32_t n = 2166136261;
 
-static const struct NAMED_PRIMITIVE list[] =
-{
-    { "MD5", HASH_MD5 },
-    { "SHA-256", HASH_SHA256 },
-    { "Skein-256", HASH_SKEIN256 },
-    { "RC4", STREAM_RC4 },
-    { "AES", BLOCK_AES },
-    { "Threefish-256", BLOCK_THREEFISH256 },
-    { "NullCipher", BLOCK_NULLCIPHER },
-    { "ECB", BLOCK_MODE_ECB },
-    { "CBC", BLOCK_MODE_CBC },
-    { "CTR", BLOCK_MODE_CTR },
-    { "CFB", BLOCK_MODE_CFB },
-    { "OFB", BLOCK_MODE_OFB }
-};
-
-const char *prim_name(int prim)
-{
-    size_t t;
+    while (*s) n = (n ^ *(s++)) * 16777619;
     
-    for (t = 0; t < sizeof(list) / sizeof(struct NAMED_PRIMITIVE); ++t)
-        if (list[t].primitive == prim) return list[t].name;
-    
-    return 0;
+    return n;
 }
 
-int prim_from_name(const char *name)
+const char *prim_name(prim_t prim)
 {
-    size_t t;
-    
-    for (t = 0; t < sizeof(list) / sizeof(struct NAMED_PRIMITIVE); ++t)
-        if (!strcmp(list[t].name, name)) return list[t].primitive;
-    
-    return 0;
-}
-
-prim_t prim_available(prim_t prim)
-{
-    const int *p;
-    
-    for (p = prim_type(PRIM_TYPE_HASH); *p; ++p)
-        if (prim == *p) return 1;
-    
-    for (p = prim_type(PRIM_TYPE_STREAM); *p; ++p)
-        if (prim == *p) return 1;
-
-    for (p = prim_type(PRIM_TYPE_BLOCK); *p; ++p)
-        if (prim == *p) return 1;
-
-    for (p = prim_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
-        if (prim == *p) return 1;
-
-    return 0;
-}
-
-static const int hash_list[] =
-{
-    #ifdef USING_MD5
-    HASH_MD5,
-    #endif
-    #ifdef USING_SHA256
-    HASH_SHA256,
-    #endif
-    #ifdef USING_SKEIN256
-    HASH_SKEIN256,
-    #endif
-    0
-};
-
-static const int stream_list[] =
-{
-    #ifdef USING_RC4
-    STREAM_RC4,
-    #endif
-    0
-};
-
-static const int block_list[] =
-{
-    #ifdef USING_AES
-    BLOCK_AES,
-    #endif
-    #ifdef USING_THREEFISH256
-    BLOCK_THREEFISH256,
-    #endif
-    #ifdef USING_NULLCIPHER
-    BLOCK_NULLCIPHER,
-    #endif
-    0
-};
-
-static const int block_mode_list[] =
-{
-    #ifdef USING_ECB
-    BLOCK_MODE_ECB,
-    #endif
-    #ifdef USING_CBC
-    BLOCK_MODE_CBC,
-    #endif
-    #ifdef USING_CTR
-    BLOCK_MODE_CTR,
-    #endif
-    #ifdef USING_CFB
-    BLOCK_MODE_CFB,
-    #endif
-    #ifdef USING_OFB
-    BLOCK_MODE_OFB,
-    #endif
-    0
-};
-
-const int *prim_type(int type)
-{
-    switch (type)
+    switch (prim)
     {
-        case PRIM_TYPE_HASH:
-            return hash_list;
-    
-        case PRIM_TYPE_STREAM:
-            return stream_list;
-        
-        case PRIM_TYPE_BLOCK:
-            return block_list;
-        
-        case PRIM_TYPE_BLOCK_MODE:
-            return block_mode_list;
+        case BLOCK_AES:                    return "AES";
+        case BLOCK_NULLCIPHER:             return "NullCipher";
+        case BLOCK_THREEFISH256:           return "Threefish-256";
+        case HASH_MD5:                     return "MD5";
+        case HASH_SHA256:                  return "SHA-256";
+        case HASH_SKEIN256:                return "Skein-256";
+        case STREAM_RC4:                   return "RC4";
+        case BLOCK_MODE_ECB:               return "ECB";
+        case BLOCK_MODE_CBC:               return "CBC";
+        case BLOCK_MODE_CTR:               return "CTR";
+        case BLOCK_MODE_CFB:               return "CFB";
+        case BLOCK_MODE_OFB:               return "OFB";
     }
     
     return 0;
 }
 
-int prim_is_type(int prim, int type)
+prim_t prim_from_name(const char *name)
 {
-    const int *p;
+    switch (fnv32(name))
+    {
+        case 0xac77e168: return BLOCK_AES;
+        case 0xe91180ab: return BLOCK_NULLCIPHER;
+        case 0x652cf289: return BLOCK_THREEFISH256;
+        case 0x7360d733: return HASH_MD5;
+        case 0xc64cb93d: return HASH_SHA256;
+        case 0x24488a55: return HASH_SKEIN256;
+        case 0xd7de26c2: return STREAM_RC4;
+        case 0x0b284c61: return BLOCK_MODE_ECB;
+        case 0x4647b2a9: return BLOCK_MODE_CBC;
+        case 0x352e0000: return BLOCK_MODE_CTR;
+        case 0x5d50d13a: return BLOCK_MODE_CFB;
+        case 0x2a14ff9e: return BLOCK_MODE_CTR;
+    }
     
-    for (p = prim_type(type); *p; ++p)
-        if (prim == *p) return 1;
+    return 0;
+}
+
+int prim_available(prim_t prim)
+{
+    switch (prim)
+    {
+        case BLOCK_AES:                    return USING_AES;
+        case BLOCK_NULLCIPHER:             return USING_NULLCIPHER;
+        case BLOCK_THREEFISH256:           return USING_THREEFISH256;
+        case HASH_MD5:                     return USING_MD5;
+        case HASH_SHA256:                  return USING_SHA256;
+        case HASH_SKEIN256:                return USING_SKEIN256;
+        case STREAM_RC4:                   return USING_RC4;
+        case BLOCK_MODE_ECB:               return USING_ECB;
+        case BLOCK_MODE_CBC:               return USING_CBC;
+        case BLOCK_MODE_CTR:               return USING_CTR;
+        case BLOCK_MODE_CFB:               return USING_CFB;
+        case BLOCK_MODE_OFB:               return USING_OFB;
+    }
+    
+    return 0;
+}
+
+const prim_t *prim_from_type(int type)
+{
+    switch (type)
+    {
+        case PRIM_TYPE_HASH:
+        {
+            const prim_t *x = (const prim_t [])
+            {
+                #if USING_MD5
+                HASH_MD5,
+                #endif
+                #if USING_SHA256
+                HASH_SHA256,
+                #endif
+                #if USING_SKEIN256
+                HASH_SKEIN256,
+                #endif
+                0
+            };
+            return x;
+        }
+        case PRIM_TYPE_STREAM:
+            return (const prim_t *)
+                {
+                #if USING_RC4
+                STREAM_RC4,
+                #endif
+                0
+            };
+        case PRIM_TYPE_BLOCK:
+            return (const prim_t *)
+            {
+                #if USING_AES
+                BLOCK_AES,
+                #endif
+                #if USING_THREEFISH256
+                BLOCK_THREEFISH256,
+                #endif
+                #if USING_NULLCIPHER
+                BLOCK_NULLCIPHER,
+                #endif
+                0
+            };
+        
+        case PRIM_TYPE_BLOCK_MODE:
+            return (const prim_t *)
+            {
+                #if USING_ECB
+                BLOCK_MODE_ECB,
+                #endif
+                #if USING_CBC
+                BLOCK_MODE_CBC,
+                #endif
+                #if USING_CTR
+                BLOCK_MODE_CTR,
+                #endif
+                #if USING_CFB
+                BLOCK_MODE_CFB,
+                #endif
+                #if USING_OFB
+                BLOCK_MODE_OFB,
+                #endif
+                0
+            };
+    }
+    
+    return 0;
+}
+
+int prim_type(prim_t prim)
+{
+    switch (prim)
+    {
+        case BLOCK_AES:                    return PRIM_TYPE_BLOCK;
+        case BLOCK_NULLCIPHER:             return PRIM_TYPE_BLOCK;
+        case BLOCK_THREEFISH256:           return PRIM_TYPE_BLOCK;
+        case HASH_MD5:                     return PRIM_TYPE_HASH;
+        case HASH_SHA256:                  return PRIM_TYPE_HASH;
+        case HASH_SKEIN256:                return PRIM_TYPE_HASH;
+        case STREAM_RC4:                   return PRIM_TYPE_STREAM;
+        case BLOCK_MODE_ECB:               return PRIM_TYPE_BLOCK_MODE;
+        case BLOCK_MODE_CBC:               return PRIM_TYPE_BLOCK_MODE;
+        case BLOCK_MODE_CTR:               return PRIM_TYPE_BLOCK_MODE;
+        case BLOCK_MODE_CFB:               return PRIM_TYPE_BLOCK_MODE;
+        case BLOCK_MODE_OFB:               return PRIM_TYPE_BLOCK_MODE;
+    }
     
     return 0;
 }

@@ -48,7 +48,7 @@ def extract_struct(path, prim):
             p2 = i
             break
 
-    buf = "#define USING_" + prim.prefix + "\n"
+    buf = ""
     
     for i in range(p1 + 1, p2):
         buf += content[i]
