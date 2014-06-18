@@ -226,9 +226,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>1</code> if the buffer is valid, <code>0</code> otherwise.</dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>PKCS padding is defined as appending <code>N</code> bytes of padding data at the end of the message, each with binary value <code>N</code>, with <code>N</code> between <code>1</code> and the block size of the block cipher used such that the length of the message plus <code>N</code> is a multiple of the block cipher's block size.</dd>
-<dd>
-This implies the buffer must be at least <code>padding</code> bytes long. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>PKCS padding is defined as appending <code>N</code> bytes of padding data at the end of the message, each with binary value <code>N</code>, with <code>N</code> between <code>1</code> and the block size of the block cipher used such that the length of the message plus <code>N</code> is a multiple of the block cipher's block size.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This implies the buffer must be at least <code>padding</code> bytes long. </dd></dl>
 
 </div>
 </div>
@@ -270,9 +269,8 @@ This implies the buffer must be at least <code>padding</code> bytes long. </dd><
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>This is conceptually equivalent to <code>dst</code> <code>^=</code> <code>src</code>.</dd>
-<dd>
-The source and destination buffers may be the same (in which case the buffer will contain <code>len</code> zeroes), but otherwise they cannot overlap. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This is conceptually equivalent to <code>dst</code> <code>^=</code> <code>src</code>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The source and destination buffers may be the same (in which case the buffer will contain <code>len</code> zeroes), but otherwise they cannot overlap. </dd></dl>
 
 </div>
 </div>
@@ -314,7 +312,7 @@ The source and destination buffers may be the same (in which case the buffer wil
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:32:06 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

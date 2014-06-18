@@ -309,9 +309,8 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a></code> on success, else an error code.</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>Stream ciphers do not strictly speaking require an initialization vector - if such a feature is needed, it is recommended to use a key derivation function to derive an encryption key from a master key using a pseudorandomly generated nonce.</dd>
 <dd>
-Encryption is always done in place. If you require out-of-place encryption, make a copy of the plaintext prior to encryption.</dd>
-<dd>
-By design, encryption and decryption are equivalent for stream ciphers - an implication is that encrypting a message twice using the same key yields the original message. </dd></dl>
+Encryption is always done in place. If you require out-of-place encryption, make a copy of the plaintext prior to encryption.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>By design, encryption and decryption are equivalent for stream ciphers - an implication is that encrypting a message twice using the same key yields the original message. </dd></dl>
 
 </div>
 </div>
@@ -444,7 +443,7 @@ By design, encryption and decryption are equivalent for stream ciphers - an impl
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:32:06 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

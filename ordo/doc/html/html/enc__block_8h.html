@@ -278,7 +278,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This function might not immediately encrypt all data fed into it, and will write the amount of input bytes effectively encrypted in <code>out_len</code>. However, it does <b>not</b> mean that the plaintext left over has been "rejected" or "ignored". It <b>has</b> been taken into account but the corresponding ciphertext simply can't be produced until more data is fed into it (or until <code><a class="el" href="enc__block_8h.html#aca63b6c5d686e8d103bfb384f89647bb">enc_block_final()</a></code> is called).</dd>
 <dd>
-Some modes of operation always process all input data, in which case they may allow <code>out_len</code> to be nil; check the documentation of the relevant mode of operation. </dd></dl>
+Some modes of operation always process all input data, in which case they may allow <code>out_len</code> to be 0 - check the documentation of the relevant mode of operation. </dd></dl>
 
 </div>
 </div>
@@ -323,7 +323,7 @@ Some modes of operation always process all input data, in which case they may al
 <dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a></code> on success, else an error code.</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>The function will return up to one block size's worth of data and may not return any data at all. For example, for the CBC mode of operation (with padding on), this function will, for encryption, append padding bytes to the final plaintext block, and return the padding block, whereas for decryption, it will take that padding block and strip the padding off, returning the last few bytes of plaintext.</dd>
 <dd>
-Some modes of operation always process all input data, in which case they may allow <code>out_len</code> to be nil; check the documentation of the relevant mode of operation. </dd></dl>
+Some modes of operation always process all input data, in which case they may allow <code>out_len</code> to be 0 - check the documentation of the relevant mode of operation. </dd></dl>
 
 </div>
 </div>
@@ -358,7 +358,7 @@ Some modes of operation always process all input data, in which case they may al
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An ideal key length to use for this cipher. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A suitable key length to use for this cipher. </dd></dl>
 
 </div>
 </div>
@@ -400,14 +400,14 @@ Some modes of operation always process all input data, in which case they may al
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An ideal IV length to use for this mode and cipher. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A suitable IV length to use for this mode and cipher. </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:32:06 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

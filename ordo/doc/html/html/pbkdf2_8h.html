@@ -204,9 +204,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a></code> on success, else an error code.</dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>There is a maximum output length of 2^32 - 1 multiplied by the digest length of the chosen hash function, but it is unlikely to be reached as derived keys are generally no longer than a few hundred bits. Reaching the limit will result in an <code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437">ORDO_ARG</a></code> error code. This limit is mandated by the PBKDF2 specification.</dd>
-<dd>
-The <code>out</code> buffer should be at least <code>out_len</code> bytes long.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>There is a maximum output length of 2^32 - 1 multiplied by the digest length of the chosen hash function, but it is unlikely to be reached as derived keys are generally no longer than a few hundred bits. Reaching the limit will result in an <code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437">ORDO_ARG</a></code> error code. This limit is mandated by the PBKDF2 specification.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The <code>out</code> buffer should be at least <code>out_len</code> bytes long.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Do not use hash parameters which modify the output length or this function's behavior is undefined (use <code>out_len</code> instead). </dd></dl>
 
 </div>
@@ -214,7 +213,7 @@ The <code>out</code> buffer should be at least <code>out_len</code> bytes long.<
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:32:06 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
