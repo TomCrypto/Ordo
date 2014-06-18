@@ -105,16 +105,16 @@ static double get_elapsed(my_time start)
     return (double)(t.QuadPart - start) / f.QuadPart;
 }
 #else
-typedef double my_time;
+typedef uintmax_t my_time;
 
 static my_time now()
 {
-    return (double)clock() / CLOCKS_PER_SEC;
+    return (my_time)clock();
 }
 
 static double get_elapsed(my_time start)
 {
-    return now() - start;
+    return (now() - start) / (double)CLOCKS_PER_SEC;
 }
 #endif
 

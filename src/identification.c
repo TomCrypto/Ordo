@@ -8,9 +8,9 @@
 
 static uint32_t fnv32(const char *s)
 {
-    uint32_t n = 2166136261;
+    uint32_t n = UINT32_C(2166136261);
 
-    while (*s) n = (n ^ *(s++)) * 16777619;
+    while (*s) n = (n ^ (uint8_t)*(s++)) * UINT32_C(16777619);
     
     return n;
 }
@@ -81,7 +81,7 @@ enum PRIM_TYPE prim_type(prim_t prim)
         case BLOCK_MODE_OFB:               return PRIM_TYPE_BLOCK_MODE;
     }
     
-    return 0;
+    return PRIM_TYPE_UNKNOWN;
 }
 
 prim_t prim_from_name(const char *name)
@@ -189,11 +189,12 @@ const prim_t *prims_by_type(enum PRIM_TYPE type)
 
     switch (type)
     {
+        case PRIM_TYPE_UNKNOWN:          return 0;
         case PRIM_TYPE_HASH:             return hash;
         case PRIM_TYPE_STREAM:           return stream;
         case PRIM_TYPE_BLOCK:            return block;
         case PRIM_TYPE_BLOCK_MODE:       return block_modes;
     }
-    
+
     return 0;
 }

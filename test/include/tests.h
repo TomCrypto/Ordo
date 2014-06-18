@@ -117,7 +117,7 @@ static struct TEST tests_stream[] =
     { (TEST_FUNCTION)test_enc_stream_interface, "Stream encryption module" },
 };
 
-static struct TEST_GROUP tests[] =
+static struct TEST_GROUP TESTS[] =
 {
     #if defined(ORDO_STATIC_LIB)
     { tests_internal, TEST_COUNT(tests_internal), "Internal utilities" },
@@ -140,6 +140,6 @@ static struct TEST_GROUP tests[] =
     { tests_stream, TEST_COUNT(tests_stream), "Stream cipher primitives" },
 };
 
-#define GROUP_COUNT (sizeof(tests) / sizeof(struct TEST_GROUP))
+#define GROUP_COUNT (sizeof(TESTS) / sizeof(struct TEST_GROUP))
 
 #endif

@@ -10,9 +10,6 @@
 
 #define AES_BLOCK (bits(128))
 
-/* Key length in bytes from number of rounds. */
-#define key_bytes(rounds) (16 * ((rounds) + 1))
-
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
                       size_t key_len, size_t rounds) HOT_CODE;
 

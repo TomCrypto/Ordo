@@ -1,7 +1,5 @@
 /*===-- alg.c -----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/internal/alg.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
@@ -16,12 +14,35 @@ void pswap64(uint64_t *a, uint64_t *b) { uint64_t c = *a; *a = *b; *b = c; }
 size_t smin(size_t a, size_t b) { return (a < b) ? a : b; }
 size_t smax(size_t a, size_t b) { return (a > b) ? a : b; }
 
-uint16_t rol16(uint16_t x, int n) { return (x << n) | (x >> (16 - n)); }
-uint16_t ror16(uint16_t x, int n) { return (x >> n) | (x << (16 - n)); }
-uint32_t rol32(uint32_t x, int n) { return (x << n) | (x >> (32 - n)); }
-uint32_t ror32(uint32_t x, int n) { return (x >> n) | (x << (32 - n)); }
-uint64_t rol64(uint64_t x, int n) { return (x << n) | (x >> (64 - n)); }
-uint64_t ror64(uint64_t x, int n) { return (x >> n) | (x << (64 - n)); }
+uint16_t rol16(uint16_t x, int n)
+{
+    return (uint16_t)((x << n) | (x >> (16 - n)));
+}
+
+uint16_t ror16(uint16_t x, int n)
+{
+    return (uint16_t)((x >> n) | (x << (16 - n)));
+}
+
+uint32_t rol32(uint32_t x, int n)
+{
+    return (uint32_t)((x << n) | (x >> (32 - n)));
+}
+
+uint32_t ror32(uint32_t x, int n)
+{
+    return (uint32_t)((x >> n) | (x << (32 - n)));
+}
+
+uint64_t rol64(uint64_t x, int n)
+{
+    return (uint64_t)((x << n) | (x >> (64 - n)));
+}
+
+uint64_t ror64(uint64_t x, int n)
+{
+    return (uint64_t)((x >> n) | (x << (64 - n)));
+}
 
 /*===----------------------------------------------------------------------===*/
 

@@ -54,17 +54,19 @@ static void init_log(struct DRIVER_OPTIONS opt)
 {
     if ((enable_colors = opt.color))
     {
-        pass_str = "\x1b[1m[\x1b[0m\x1b[1;32mpass\x1b[0m\x1b[1m]\x1b[0m";
-        fail_str = "\x1b[1m[\x1b[0m\x1b[1;31mfail\x1b[0m\x1b[1m]\x1b[0m";
-        warn_str = "\x1b[1m[\x1b[0m\x1b[1;33mwarn\x1b[0m\x1b[1m]\x1b[0m";
-        info_str = "\x1b[1m[\x1b[0m\x1b[1;36minfo\x1b[0m\x1b[1m]\x1b[0m";
+        #define RESET(STR) ("\x1b[1m[\x1b[0m" STR "\x1b[0m\x1b[1m]\x1b[0m")
+
+        pass_str = (char *)RESET("\x1b[1;32mpass");
+        fail_str = (char *)RESET("\x1b[1;31mfail");
+        warn_str = (char *)RESET("\x1b[1;33mwarn");
+        info_str = (char *)RESET("\x1b[1;36minfo");
     }
     else
     {
-        pass_str = "[pass]";
-        fail_str = "[fail]";
-        warn_str = "[warn]";
-        info_str = "[info]";
+        pass_str = (char *)"[pass]";
+        fail_str = (char *)"[fail]";
+        warn_str = (char *)"[warn]";
+        info_str = (char *)"[info]";
     }
 
     atexit(cleanup);
@@ -95,7 +97,7 @@ static int run_test_group(struct TEST_GROUP group)
 
     for (t = 0; t < group.test_count; ++t)
     {
-        int retval = group.list[t].run() ? 1 : 0; passed += retval;
+        size_t retval = group.list[t].run() ? 1 : 0; passed += retval;
         lprintf(retval ? PASS : FAIL, "%s.", test(group.list[t].name));
     }
 
@@ -121,8 +123,8 @@ int run_test_driver(struct DRIVER_OPTIONS opt)
 
         for (t = 0; t < GROUP_COUNT; ++t)
         {
-            int retval = run_test_group(tests[t]) ? 1 : 0; passed += retval;
-            lprintf(retval ? PASS : FAIL, "%s.", groupname(tests[t].group));
+            size_t ret = run_test_group(TESTS[t]) ? 1 : 0; passed += ret;
+            lprintf(ret ? PASS : FAIL, "%s.", groupname(TESTS[t].group));
         }
 
         printf("\n================\n"); /* Any failure gets reported. */

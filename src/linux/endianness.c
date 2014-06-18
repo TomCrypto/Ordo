@@ -11,8 +11,6 @@
 #include <sys/types.h>
 #include <endian.h>
 
-#define __STRICT_ANSI__
-
 /*===----------------------------------------------------------------------===*/
 
 /* On Linux we can just use the endian.h header which has it all built-in. */

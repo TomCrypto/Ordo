@@ -68,7 +68,7 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                       const uint8_t *key, size_t key_len)
 {
     uint8_t tmp;
-    int t;
+    unsigned t;
 
     state->i = 0;
     state->j = 0;

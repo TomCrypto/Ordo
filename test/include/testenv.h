@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "tests.h"
+
 enum LOG_COLOR
 {
     BLACK,

@@ -59,7 +59,8 @@ extern "C" {
 **/
 enum PRIM_TYPE
 {
-    PRIM_TYPE_HASH = 1,
+    PRIM_TYPE_UNKNOWN = 0,
+    PRIM_TYPE_HASH,
     PRIM_TYPE_BLOCK,
     PRIM_TYPE_STREAM,
     PRIM_TYPE_BLOCK_MODE
