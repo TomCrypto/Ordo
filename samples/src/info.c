@@ -16,9 +16,9 @@
 
 int main(void)
 {
-    const int *cipher;
+    const prim_t *cipher;
 
-    for (cipher = prim_from_type(PRIM_TYPE_BLOCK); *cipher; ++cipher)
+    for (cipher = prims_by_type(PRIM_TYPE_BLOCK); *cipher; ++cipher)
     {
         size_t key_len, last_len = (size_t)(-1);
 

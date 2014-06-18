@@ -52,28 +52,28 @@ static void benchmark_usage(int argc, char * const argv[])
     printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
 
     printf("\nAvailable hash functions:\n\n\t");
-    for (p = prim_from_type(PRIM_TYPE_HASH); *p; ++p)
+    for (p = prims_by_type(PRIM_TYPE_HASH); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable stream ciphers:\n\n\t");
-    for (p = prim_from_type(PRIM_TYPE_STREAM); *p; ++p)
+    for (p = prims_by_type(PRIM_TYPE_STREAM); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable block ciphers:\n\n\t");
-    for (p = prim_from_type(PRIM_TYPE_BLOCK); *p; ++p)
+    for (p = prims_by_type(PRIM_TYPE_BLOCK); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");
     }
 
     printf("\nAvailable modes of operation:\n\n\t");
-    for (p = prim_from_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
+    for (p = prims_by_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", "); else printf("\n");

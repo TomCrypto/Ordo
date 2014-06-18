@@ -43,7 +43,7 @@ int os_random(void *out, size_t len);
 /** Generates cryptographically secure pseudorandom numbers, the function will
 *** make a best effort attempt to access the operating system entropy pool and
 *** so, ideally, should return exactly \c len bytes of entropy, whereas the \c
-*** os_random function need only return *enough* entropy for the output stream
+*** os_random() function need only return enough entropy for the output stream
 *** to be computationally indistinguishable from a non-random stream. However,
 *** keep in mind that this function is **not required** to behave as such.
 ***

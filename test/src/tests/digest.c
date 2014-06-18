@@ -182,7 +182,7 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    if (!prim_available(test.primitive))
+    if (!prim_avail(test.primitive))
     {
         lprintf(WARN, "Algorithm %s not available - skipping.",
                       byellow(prim_name(test.primitive)));

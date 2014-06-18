@@ -59,48 +59,53 @@ extern "C" {
 /** @enum ORDO_QUERY
 ***
 *** Query codes used by the library. These end in \c _Q.
+***
+*** @var ORDO_QUERY::KEY_LEN_Q
+***
+*** Query code to retrieve a key length.
+***
+*** Applicable to:
+*** - block ciphers
+*** - stream ciphers
+***
+*** @var ORDO_QUERY::BLOCK_SIZE_Q
+***
+*** Query code to retrieve a block size.
+***
+*** Applicable to:
+*** - block ciphers
+*** - hash functions
+***
+*** @remarks For hash functions, this is taken to be the input size of the
+***          message block to  the compression function or, more formally,
+***          the amount of data required to trigger a compression function
+***          iteration. This may not be meaningful for all hash functions.
+***
+*** @var ORDO_QUERY::DIGEST_LEN_Q
+***
+*** Query code to retrieve the default digest length of a hash function.
+***
+*** @remarks The suggested value is ignored for this query code.
+***
+*** Applicable to:
+*** - hash functions
+***
+*** @var ORDO_QUERY::IV_LEN_Q
+***
+*** Query code to retrieve an initialization vector length.
+***
+*** Applicable to:
+*** - block modes
+***
+*** @remarks As the block  mode of operation  primitives use block ciphers
+***          internally, the  returned  initialization vector length might
+***          depend on the block cipher (likely its block size).
 **/
 enum ORDO_QUERY
 {
-    /** Query code to retrieve a key length.
-    ***
-    *** Applicable to:
-    *** - block ciphers
-    *** - stream ciphers
-    **/
     KEY_LEN_Q,
-
-    /** Query code to retrieve a block size.
-    ***
-    *** Applicable to:
-    *** - block ciphers
-    *** - hash functions
-    ***
-    *** @remarks For hash functions, this is taken to be the input size of the
-    ***          message block to  the compression function or, more formally,
-    ***          the amount of data required to trigger a compression function
-    ***          iteration. This may not be meaningful for all hash functions.
-    **/
     BLOCK_SIZE_Q,
-
-    /** Query code to retrieve the default digest length of a hash function.
-    ***
-    *** @remarks The suggested value is ignored for this query code.
-    ***
-    *** Applicable to:
-    *** - hash functions
-    **/
     DIGEST_LEN_Q,
-
-    /** Query code to retrieve an initialization vector length.
-    ***
-    *** Applicable to:
-    *** - block modes
-    ***
-    *** @remarks As the block  mode of operation  primitives use block ciphers
-    ***          internally, the  returned  initialization vector length might
-    ***          depend on the block cipher (likely its block size).
-    **/
     IV_LEN_Q
 };
 

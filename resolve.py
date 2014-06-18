@@ -95,7 +95,7 @@ if __name__ == "__main__":
     definitions += '\n'
     definitions += '#include "ordo/common/identification.h"\n'
 
-    definitions += '\n"
+    definitions += '\n'
     definitions += '#define HASH_BLOCK_LEN  {0}\n'.format(get_block_len(built_prims,  'HASH'))
     definitions += '#define HASH_DIGEST_LEN {0}\n'.format(get_digest_len(built_prims, 'HASH'))
     definitions += '#define BLOCK_BLOCK_LEN {0}\n'.format(get_block_len(built_prims,  'BLOCK'))

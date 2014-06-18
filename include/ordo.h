@@ -8,9 +8,6 @@
 *** cost of  reduced flexibility - in other  words, if you  can afford  to use
 *** them, you probably want to do so.
 ***
-*** This header also contains the \c  ordo_allocator() function, which is used
-*** for (optionally) changing the memory allocator used by the library.
-***
 *** Usage snippet (compare to snippet in \c digest.h):
 ***
 *** @code
@@ -82,7 +79,7 @@ int ordo_enc_block(prim_t cipher, const void *cipher_params,
                    const void *key, size_t key_len,
                    const void *iv, size_t iv_len,
                    const void *in, size_t in_len,
-                   void* out, size_t *out_len);
+                   void *out, size_t *out_len);
 
 /** Encrypts or decrypts data using a stream cipher.
 ***

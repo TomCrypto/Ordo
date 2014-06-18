@@ -45,16 +45,32 @@ extern "C" {
 #define BLOCK_MODE_CFB                                                  0x8340
 #define BLOCK_MODE_OFB                                                  0x8440
 
-#define PRIM_TYPE_HASH                                                       1
-#define PRIM_TYPE_BLOCK                                                      2
-#define PRIM_TYPE_STREAM                                                     3
-#define PRIM_TYPE_BLOCK_MODE                                                 4
+/** @enum PRIM_TYPE
+***
+*** Enumerates the different types of primitives (values start at 1).
+**/
+enum PRIM_TYPE
+{
+    PRIM_TYPE_HASH = 1,
+    PRIM_TYPE_BLOCK,
+    PRIM_TYPE_STREAM,
+    PRIM_TYPE_BLOCK_MODE
+};
 
 /** @typedef prim_t
 ***
 *** @brief Data type which holds a primitive identifier.
 **/
 typedef int prim_t;
+
+/** Checks whether a primitive is available.
+***
+*** @param [in]     prim           A primitive identifier.
+***
+*** @returns 0 if the primitive is not available, 1 otherwise.
+**/
+ORDO_PUBLIC
+int prim_avail(prim_t prim);
 
 /** Returns the name of a primitive.
 ***
@@ -65,41 +81,10 @@ typedef int prim_t;
 ***
 *** @remarks Do not rely on this being constant, use it for display only.
 ***
-*** @remarks Will work even if the primitive is not available.
+*** @warning Will \b not work if the primitive is not available.
 **/
 ORDO_PUBLIC
 const char *prim_name(prim_t prim);
-
-/** Returns a primitive identifier from a name.
-***
-*** @param [in]     name           A primitive name.
-***
-*** @returns The corresponding primitive identifier, or zero on error.
-***
-*** @remarks Will work even if the primitive is not available.
-**/
-ORDO_PUBLIC
-prim_t prim_from_name(const char *name);
-
-/** Checks whether a primitive is available.
-***
-*** @param [in]     prim           A primitive identifier.
-***
-*** @returns 0 if the primitive is not available, 1 otherwise.
-**/
-ORDO_PUBLIC
-int prim_available(prim_t prim);
-
-/** Returns a list of available primitives of a given type.
-***
-*** @param [in]     type           A primitive type.
-***
-*** @returns A zero-terminated list of such primitives.
-***
-*** @remarks Passing zero returns all available primitives.
-**/
-ORDO_PUBLIC
-const prim_t *prim_from_type(int type);
 
 /** Returns the type of a given primitive.
 ***
@@ -110,7 +95,27 @@ const prim_t *prim_from_type(int type);
 *** @warning Will \b not work if the primitive is not available.
 **/
 ORDO_PUBLIC
-int prim_type(int prim);
+enum PRIM_TYPE prim_type(prim_t prim);
+
+/** Returns a primitive identifier from a name.
+***
+*** @param [in]     name           A primitive name.
+***
+*** @returns The corresponding primitive identifier, or zero on error.
+***
+*** @warning Will \b not work if the primitive is not available.
+**/
+ORDO_PUBLIC
+prim_t prim_from_name(const char *name);
+
+/** Returns a list of available primitives of a given type.
+***
+*** @param [in]     type           A primitive type.
+***
+*** @returns A zero-terminated list of such primitives.
+**/
+ORDO_PUBLIC
+const prim_t *prims_by_type(enum PRIM_TYPE type);
 
 /*===----------------------------------------------------------------------===*/
 
