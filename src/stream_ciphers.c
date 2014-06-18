@@ -12,9 +12,9 @@
 #include "ordo/primitives/stream_ciphers/rc4.h"
 #endif
 
-int stream_cipher_init(struct STREAM_STATE *state,
-                       const void *key, size_t key_len,
-                       prim_t primitive, const void *params)
+int stream_init(struct STREAM_STATE *state,
+                const void *key, size_t key_len,
+                prim_t primitive, const void *params)
 {
     switch (state->primitive = primitive)
     {
@@ -27,9 +27,8 @@ int stream_cipher_init(struct STREAM_STATE *state,
     return ORDO_FAIL;
 }
 
-void stream_cipher_update(struct STREAM_STATE *state,
-                          void *buffer,
-                          size_t len)
+void stream_update(struct STREAM_STATE *state,
+                   void *buffer, size_t len)
 {
     switch (state->primitive)
     {
@@ -41,7 +40,7 @@ void stream_cipher_update(struct STREAM_STATE *state,
     }
 }
 
-void stream_cipher_final(struct STREAM_STATE *state)
+void stream_final(struct STREAM_STATE *state)
 {
     switch (state->primitive)
     {
@@ -53,8 +52,8 @@ void stream_cipher_final(struct STREAM_STATE *state)
     }
 }
 
-size_t stream_cipher_query(prim_t primitive,
-                           int query, size_t value)
+size_t stream_query(prim_t primitive,
+                    int query, size_t value)
 {
     switch (primitive)
     {

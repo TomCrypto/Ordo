@@ -199,7 +199,7 @@ static double stream_speed(prim_t cipher, uint64_t block)
     void *params = stream_params(cipher);
     struct ENC_STREAM_CTX ctx;
 
-    size_t key_len = stream_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
+    size_t key_len = enc_stream_key_len(cipher, (size_t)-1);
 
     void *key = allocate(key_len);
 
@@ -229,7 +229,7 @@ static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
     void *mode_params = block_mode_params(mode);
     struct ENC_BLOCK_CTX ctx;
 
-    size_t key_len = block_cipher_query(cipher, KEY_LEN_Q, (size_t)-1);
+    size_t key_len = block_query(cipher, KEY_LEN_Q, (size_t)-1);
     size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
 
     void *key = allocate(key_len);

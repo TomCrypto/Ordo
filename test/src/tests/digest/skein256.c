@@ -76,8 +76,7 @@ static int config_block(void)
     
     if (!prim_avail(HASH_SKEIN256))
     {
-        lprintf(WARN, "Algorithm %s not available - skipping.",
-                      byellow(prim_name(HASH_SKEIN256)));
+        lprintf(WARN, "Algorithm not available - skipping.");
         return 1;
     }
 

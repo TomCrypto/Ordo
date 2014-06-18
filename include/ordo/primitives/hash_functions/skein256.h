@@ -32,7 +32,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-/** @see \c hash_function_init()
+#define skein256_init                    ordo_skein256_init
+#define skein256_update                  ordo_skein256_update
+#define skein256_final                   ordo_skein256_final
+#define skein256_query                   ordo_skein256_query
+
+/*===----------------------------------------------------------------------===*/
+
+/** @see \c hash_init()
 ***
 *** @retval #ORDO_ARG if parameters were  provided, but  requested  an  output
 ***                      length of zero bytes.
@@ -41,14 +48,14 @@ ORDO_PUBLIC
 int skein256_init(struct SKEIN256_STATE *state,
                   const struct SKEIN256_PARAMS *params);
 
-/** @see \c hash_function_update()
+/** @see \c hash_update()
 **/
 ORDO_PUBLIC
 void skein256_update(struct SKEIN256_STATE *state,
                      const void *buffer,
                      size_t len);
 
-/** @see \c hash_function_final()
+/** @see \c hash_final()
 ***
 *** @remarks If no parameters are provided, the digest buffer must be at least
 ***          32 bytes (256 bits) large. If parameters are provided, the buffer
@@ -60,7 +67,7 @@ ORDO_PUBLIC
 void skein256_final(struct SKEIN256_STATE *state,
                     void *digest);
 
-/** @see \c hash_function_query()
+/** @see \c hash_query()
 **/
 ORDO_PUBLIC
 size_t skein256_query(int query, size_t value);

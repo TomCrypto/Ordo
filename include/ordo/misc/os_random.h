@@ -24,6 +24,11 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define os_random                        ordo_os_random
+#define os_secure_random                 ordo_os_secure_random
+
+/*===----------------------------------------------------------------------===*/
+
 /** Generates cryptographically secure pseudorandom numbers.
 ***
 *** @param [out]    out            The destination buffer.

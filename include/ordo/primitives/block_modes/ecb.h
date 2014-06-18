@@ -33,6 +33,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define ecb_init                         ordo_ecb_init
+#define ecb_update                       ordo_ecb_update
+#define ecb_final                        ordo_ecb_final
+#define ecb_query                        ordo_ecb_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC

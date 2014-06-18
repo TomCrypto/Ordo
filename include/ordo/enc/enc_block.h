@@ -35,6 +35,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define enc_block_init                   ordo_enc_block_init
+#define enc_block_update                 ordo_enc_block_update
+#define enc_block_final                  ordo_enc_block_final
+#define enc_block_key_len                ordo_enc_block_key_len
+#define enc_block_iv_len                 ordo_enc_block_iv_len
+
+/*===----------------------------------------------------------------------===*/
+
 struct ENC_BLOCK_CTX
 {
     struct BLOCK_STATE cipher;

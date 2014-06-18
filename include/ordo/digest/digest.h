@@ -48,6 +48,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define digest_init                      ordo_digest_init
+#define digest_update                    ordo_digest_update
+#define digest_final                     ordo_digest_final
+#define digest_length                    ordo_digest_length
+
+/*===----------------------------------------------------------------------===*/
+
 #define DIGEST_CTX HASH_STATE
 
 /** Initializes a digest context.
@@ -64,7 +71,7 @@ extern "C" {
 ***          before calling \c digest_final(), this is because some algorithms
 ***          may allocate additional memory depending on the parameters given.
 **/
-#define digest_init hash_function_init
+#define ordo_digest_init hash_init
 
 /** Feeds data into a digest context.
 ***
@@ -72,13 +79,13 @@ extern "C" {
 *** @param [in]     in             The data to feed into the context.
 *** @param [in]     in_len         The length, in bytes, of the data.
 ***
-*** @remarks This function has the same property as \c hash_function_update(),
-***          with respect to calling it in succession with different buffers.
+*** @remarks This function has the same property as \c hash_update(), in that
+***          it will concatenate the input buffers of successive calls.
 ***
 *** @remarks It is valid to pass a  zero-length  buffer (`in_len == 0`), which
 ***          will do nothing (if this is the case, `in` may be \c 0).
 **/
-#define digest_update hash_function_update
+#define ordo_digest_update hash_update
 
 /** Finalizes a  digest context, returning the digest of all the data fed into
 *** it through successive \c digest_update() calls.
@@ -100,7 +107,7 @@ extern "C" {
 *** @remarks After this  function returns, you may not call \c digest_update()
 ***          again until you reinitialize the context using \c digest_init().
 **/
-#define digest_final hash_function_final
+#define ordo_digest_final hash_final
 
 /** Returns the default digest length of a hash function.
 ***

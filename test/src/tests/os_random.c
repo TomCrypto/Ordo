@@ -22,4 +22,6 @@ int test_os_random(void)
 
     /* Chances of a false positive are 256^(-1024) (read: non-existent). */
     FAIL("'os_random' reports success but non-random output.");
+
+    return 1;
 }

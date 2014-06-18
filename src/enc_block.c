@@ -15,9 +15,9 @@ int enc_block_init(struct ENC_BLOCK_CTX *ctx,
                    prim_t cipher, const void *cipher_params,
                    prim_t mode, const void *mode_params)
 {
-    int err = block_cipher_init(&ctx->cipher,
-                                key, key_len,
-                                cipher, cipher_params);
+    int err = block_init(&ctx->cipher,
+                         key, key_len,
+                         cipher, cipher_params);
 
     if (err != ORDO_SUCCESS) return err;
 
@@ -37,7 +37,7 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
 int enc_block_final(struct ENC_BLOCK_CTX *ctx,
                     void *out, size_t *out_len)
 {
-    block_cipher_final(&ctx->cipher);
+    block_final(&ctx->cipher);
     return block_mode_final(&ctx->mode, &ctx->cipher,
                             out, out_len);
 }
@@ -45,7 +45,7 @@ int enc_block_final(struct ENC_BLOCK_CTX *ctx,
 size_t enc_block_key_len(prim_t cipher,
                          size_t key_len)
 {
-    return block_cipher_query(cipher, KEY_LEN_Q, key_len);
+    return block_query(cipher, KEY_LEN_Q, key_len);
 }
 
 size_t enc_block_iv_len(prim_t cipher,

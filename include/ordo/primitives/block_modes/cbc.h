@@ -40,6 +40,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define cbc_init                         ordo_cbc_init
+#define cbc_update                       ordo_cbc_update
+#define cbc_final                        ordo_cbc_final
+#define cbc_query                        ordo_cbc_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC

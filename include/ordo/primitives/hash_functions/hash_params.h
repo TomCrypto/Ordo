@@ -20,6 +20,10 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define skein256_default                 ordo_skein256_default
+
+/*===----------------------------------------------------------------------===*/
+
 /** @brief Skein-256 hash function parameters.
 ***
 *** @remarks Refer to the Skein specification to  know more about what each of

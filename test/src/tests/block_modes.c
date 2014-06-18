@@ -88,8 +88,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not available - skipping.",
-                      byellow(prim_name(test.primitive)));
+        lprintf(WARN, "Algorithm not available - skipping.");
         return 1;
     }
     else

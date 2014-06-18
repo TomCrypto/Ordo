@@ -10,14 +10,14 @@
 
 /*===----------------------------------------------------------------------===*/
 
-int pbkdf2(prim_t hash, const void *params,
-           const void *password,
-           size_t password_len,
-           const void *salt,
-           size_t salt_len,
-           size_t iterations,
-           void *out,
-           size_t out_len)
+int kdf_pbkdf2(prim_t hash, const void *params,
+               const void *password,
+               size_t password_len,
+               const void *salt,
+               size_t salt_len,
+               size_t iterations,
+               void *out,
+               size_t out_len)
 {
     int err = ORDO_SUCCESS;
 

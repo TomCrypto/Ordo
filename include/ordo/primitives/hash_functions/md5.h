@@ -22,7 +22,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-/** @see \c hash_function_init()
+#define md5_init                         ordo_md5_init
+#define md5_update                       ordo_md5_update
+#define md5_final                        ordo_md5_final
+#define md5_query                        ordo_md5_query
+
+/*===----------------------------------------------------------------------===*/
+
+/** @see \c hash_init()
 ***
 *** @remarks The \c params parameter is ignored.
 **/
@@ -30,20 +37,20 @@ ORDO_PUBLIC
 int md5_init(struct MD5_STATE *state,
              const void *params);
 
-/** @see \c hash_function_update()
+/** @see \c hash_update()
 **/
 ORDO_PUBLIC
 void md5_update(struct MD5_STATE *state,
                const void *buffer,
                size_t len);
 
-/** @see \c hash_function_final()
+/** @see \c hash_final()
 **/
 ORDO_PUBLIC
 void md5_final(struct MD5_STATE *state,
                void *digest);
 
-/** @see \c hash_function_query()
+/** @see \c hash_query()
 **/
 ORDO_PUBLIC
 size_t md5_query(int query, size_t value);

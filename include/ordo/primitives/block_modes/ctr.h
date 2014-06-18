@@ -36,6 +36,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define ctr_init                         ordo_ctr_init
+#define ctr_update                       ordo_ctr_update
+#define ctr_final                        ordo_ctr_final
+#define ctr_query                        ordo_ctr_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC

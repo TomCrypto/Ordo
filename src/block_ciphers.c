@@ -18,9 +18,9 @@
 #include "ordo/primitives/block_ciphers/threefish256.h"
 #endif
 
-int block_cipher_init(struct BLOCK_STATE *state,
-                      const void *key, size_t key_len,
-                      prim_t primitive, const void *params)
+int block_init(struct BLOCK_STATE *state,
+               const void *key, size_t key_len,
+               prim_t primitive, const void *params)
 {
     switch (state->primitive = primitive)
     {
@@ -41,8 +41,8 @@ int block_cipher_init(struct BLOCK_STATE *state,
     return ORDO_FAIL;
 }
 
-void block_cipher_forward(const struct BLOCK_STATE *state,
-                          void *block)
+void block_forward(const struct BLOCK_STATE *state,
+                   void *block)
 {
     switch (state->primitive)
     {
@@ -64,8 +64,8 @@ void block_cipher_forward(const struct BLOCK_STATE *state,
     }
 }
 
-void block_cipher_inverse(const struct BLOCK_STATE *state,
-                          void *block)
+void block_inverse(const struct BLOCK_STATE *state,
+                   void *block)
 {
     switch (state->primitive)
     {
@@ -87,7 +87,7 @@ void block_cipher_inverse(const struct BLOCK_STATE *state,
     }
 }
 
-void block_cipher_final(struct BLOCK_STATE *state)
+void block_final(struct BLOCK_STATE *state)
 {
     switch (state->primitive)
     {
@@ -109,8 +109,8 @@ void block_cipher_final(struct BLOCK_STATE *state)
     }
 }
 
-size_t block_cipher_query(prim_t primitive,
-                          int query, size_t value)
+size_t block_query(prim_t primitive,
+                   int query, size_t value)
 {
     switch (primitive)
     {

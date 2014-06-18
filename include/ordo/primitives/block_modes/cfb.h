@@ -34,6 +34,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define cfb_init                         ordo_cfb_init
+#define cfb_update                       ordo_cfb_update
+#define cfb_final                        ordo_cfb_final
+#define cfb_query                        ordo_cfb_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC

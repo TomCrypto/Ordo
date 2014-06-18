@@ -34,6 +34,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define ofb_init                         ordo_ofb_init
+#define ofb_update                       ordo_ofb_update
+#define ofb_final                        ordo_ofb_final
+#define ofb_query                        ordo_ofb_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** @see \c block_mode_init()
 **/
 ORDO_PUBLIC

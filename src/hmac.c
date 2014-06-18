@@ -12,7 +12,7 @@ int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
               prim_t hash, const void *hash_params)
 {
-    size_t block_size = hash_function_query(hash, BLOCK_SIZE_Q, 0);
+    size_t block_size = hash_query(hash, BLOCK_SIZE_Q, 0);
 
     int err = ORDO_SUCCESS;
     size_t t;
@@ -54,8 +54,8 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     int err = ORDO_SUCCESS;
 
     size_t digest_len = digest_length(ctx->dgt.primitive);
-    size_t block_size = hash_function_query(ctx->dgt.primitive,
-                                            BLOCK_SIZE_Q, 0);
+    size_t block_size = hash_query(ctx->dgt.primitive,
+                                   BLOCK_SIZE_Q, 0);
     size_t t;
 
     unsigned char tmp[HASH_DIGEST_LEN];

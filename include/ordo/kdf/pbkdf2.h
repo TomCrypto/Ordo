@@ -30,6 +30,10 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define kdf_pbkdf2                       ordo_kdf_pbkdf2
+
+/*===----------------------------------------------------------------------===*/
+
 /** Derives a key using PBKDF2.
 ***
 *** @param [in]     hash           The hash function to use (the PRF used will
@@ -58,11 +62,11 @@ extern "C" {
 ***          function's behavior is undefined (use \c out_len instead).
 **/
 ORDO_PUBLIC
-int pbkdf2(prim_t hash, const void *params,
-           const void *password, size_t password_len,
-           const void *salt, size_t salt_len,
-           size_t iterations,
-           void *out, size_t out_len);
+int kdf_pbkdf2(prim_t hash, const void *params,
+               const void *password, size_t password_len,
+               const void *salt, size_t salt_len,
+               size_t iterations,
+               void *out, size_t out_len);
 
 /*===----------------------------------------------------------------------===*/
 

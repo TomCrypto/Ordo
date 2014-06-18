@@ -23,6 +23,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define hash_init                        ordo_hash_init
+#define hash_update                      ordo_hash_update
+#define hash_final                       ordo_hash_final
+#define hash_query                       ordo_hash_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** Initializes a hash function state.
 ***
 *** @param [in,out] state          An allocated hash function state.
@@ -32,8 +39,8 @@ extern "C" {
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int hash_function_init(struct HASH_STATE *state,
-                       prim_t primitive, const void *params);
+int hash_init(struct HASH_STATE *state,
+              prim_t primitive, const void *params);
 
 /** Updates a hash  function state by  appending a buffer to the  message this
 *** state is to calculate the cryptographic digest of.
@@ -47,8 +54,8 @@ int hash_function_init(struct HASH_STATE *state,
 ***          concatenation.
 **/
 ORDO_PUBLIC
-void hash_function_update(struct HASH_STATE *state,
-                          const void *buffer, size_t len);
+void hash_update(struct HASH_STATE *state,
+                 const void *buffer, size_t len);
 
 /** Finalizes a hash function state, outputting the final digest.
 ***
@@ -59,8 +66,8 @@ void hash_function_update(struct HASH_STATE *state,
 ***          digest length (unless you changed it via custom parameters).
 **/
 ORDO_PUBLIC
-void hash_function_final(struct HASH_STATE *state,
-                         void *digest);
+void hash_final(struct HASH_STATE *state,
+                void *digest);
 
 /** Queries a hash function for suitable parameters.
 ***
@@ -73,8 +80,8 @@ void hash_function_final(struct HASH_STATE *state,
 *** @see query.h
 **/
 ORDO_PUBLIC
-size_t hash_function_query(prim_t primitive,
-                           int query, size_t value);
+size_t hash_query(prim_t primitive,
+                  int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/
 

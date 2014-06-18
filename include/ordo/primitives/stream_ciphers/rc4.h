@@ -26,7 +26,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-/** @see \c stream_cipher_init()
+#define rc4_init                         ordo_rc4_init
+#define rc4_update                       ordo_rc4_update
+#define rc4_final                        ordo_rc4_final
+#define rc4_query                        ordo_rc4_query
+
+/*===----------------------------------------------------------------------===*/
+
+/** @see \c stream_init()
 ***
 *** @retval #ORDO_KEY_LEN if the key length was less than 40 bits (5 bytes) or
 ***                       more than 2048 bits (256 bytes).
@@ -39,18 +46,18 @@ int rc4_init(struct RC4_STATE *state,
              const uint8_t *key, size_t key_len,
              const struct RC4_PARAMS *params);
 
-/** @see \c stream_cipher_update()
+/** @see \c stream_update()
 **/
 ORDO_PUBLIC
 void rc4_update(struct RC4_STATE *state,
                 uint8_t *buffer, size_t len);
 
-/** @see \c stream_cipher_final()
+/** @see \c stream_final()
 **/
 ORDO_PUBLIC
 void rc4_final(struct RC4_STATE *state);
 
-/** @see \c stream_cipher_query()
+/** @see \c stream_query()
 **/
 ORDO_PUBLIC
 size_t rc4_query(int query, size_t value);

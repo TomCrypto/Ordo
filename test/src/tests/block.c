@@ -157,31 +157,30 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not available - skipping.",
-                      byellow(prim_name(test.primitive)));
+        lprintf(WARN, "Algorithm not available - skipping.");
         return 1;
     }
     else
     {
-        size_t check_len = block_cipher_query(test.primitive, BLOCK_SIZE_Q, 0);
+        size_t check_len = block_query(test.primitive, BLOCK_SIZE_Q, 0);
         struct BLOCK_STATE state;
         int err;
 
         /* We can't use ordo_enc_block, since we are testing the block
          * cipher's permutation functions - fall back to a lower level. */
-        err = block_cipher_init(&state,
-                                test.key, test.key_len,
-                                test.primitive, 0);
+        err = block_init(&state,
+                         test.key, test.key_len,
+                         test.primitive, 0);
 
         if (err) return 0;
 
         memcpy(scratch, test.input, check_len);
-        block_cipher_forward(&state, scratch);
+        block_forward(&state, scratch);
 
         if (memcmp(test.expected, scratch, check_len)) return 0;
 
         /* Now try to decrypt and see if we get back the input. */
-        block_cipher_inverse(&state, scratch);
+        block_inverse(&state, scratch);
 
         return !memcmp(test.input, scratch, check_len);
     }

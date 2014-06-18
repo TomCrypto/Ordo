@@ -24,6 +24,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define block_init                       ordo_block_init
+#define block_forward                    ordo_block_forward
+#define block_inverse                    ordo_block_inverse
+#define block_final                      ordo_block_final
+#define block_query                      ordo_block_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** Initializes a block cipher state.
 ***
 *** @param [in,out] state          An allocated block cipher state.
@@ -35,9 +43,9 @@ extern "C" {
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int block_cipher_init(struct BLOCK_STATE *state,
-                      const void *key, size_t key_len,
-                      prim_t primitive, const void *params);
+int block_init(struct BLOCK_STATE *state,
+               const void *key, size_t key_len,
+               prim_t primitive, const void *params);
 
 /** Applies a block cipher's forward permutation.
 ***
@@ -47,8 +55,8 @@ int block_cipher_init(struct BLOCK_STATE *state,
 *** @remarks The block should be the size of the block cipher's block size.
 **/
 ORDO_PUBLIC
-void block_cipher_forward(const struct BLOCK_STATE *state,
-                          void *block);
+void block_forward(const struct BLOCK_STATE *state,
+                   void *block);
 
 /** Applies a block cipher's inverse permutation.
 ***
@@ -58,15 +66,15 @@ void block_cipher_forward(const struct BLOCK_STATE *state,
 *** @remarks The block should be the size of the block cipher's block size.
 **/
 ORDO_PUBLIC
-void block_cipher_inverse(const struct BLOCK_STATE *state,
-                          void *block);
+void block_inverse(const struct BLOCK_STATE *state,
+                   void *block);
 
 /** Finalizes a block cipher state.
 ***
 *** @param [in,out] state          A block cipher state.
 **/
 ORDO_PUBLIC
-void block_cipher_final(struct BLOCK_STATE *state);
+void block_final(struct BLOCK_STATE *state);
 
 /** Queries a block cipher for suitable parameters.
 ***
@@ -79,8 +87,8 @@ void block_cipher_final(struct BLOCK_STATE *state);
 *** @see query.h
 **/
 ORDO_PUBLIC
-size_t block_cipher_query(prim_t primitive,
-                          int query, size_t value);
+size_t block_query(prim_t primitive,
+                   int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/
 

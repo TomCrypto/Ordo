@@ -24,6 +24,12 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define hmac_init                        ordo_hmac_init
+#define hmac_update                      ordo_hmac_update
+#define hmac_final                       ordo_hmac_final
+
+/*===----------------------------------------------------------------------===*/
+
 struct HMAC_CTX
 {
     struct DIGEST_CTX dgt, outer;

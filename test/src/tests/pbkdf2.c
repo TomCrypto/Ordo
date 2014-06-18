@@ -81,8 +81,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
 {
     if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not available - skipping.",
-                      byellow(prim_name(test.primitive)));
+        lprintf(WARN, "Algorithm not available - skipping.");
         return 1;
     }
     else
@@ -90,11 +89,11 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
         size_t check_len = test.out_len;
         int err;
 
-        err = pbkdf2(test.primitive, 0,
-                     test.pwd, test.pwd_len,
-                     test.salt, test.salt_len,
-                     test.iterations,
-                     scratch, check_len);
+        err = kdf_pbkdf2(test.primitive, 0,
+                         test.pwd, test.pwd_len,
+                         test.salt, test.salt_len,
+                         test.iterations,
+                         scratch, check_len);
 
         return err ? 0 : !memcmp(test.expected, scratch, check_len);
     }

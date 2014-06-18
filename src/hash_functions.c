@@ -18,8 +18,8 @@
 #include "ordo/primitives/hash_functions/skein256.h"
 #endif
 
-int hash_function_init(struct HASH_STATE *state,
-                       prim_t primitive, const void *params)
+int hash_init(struct HASH_STATE *state,
+              prim_t primitive, const void *params)
 {
     switch (state->primitive = primitive)
     {
@@ -40,9 +40,8 @@ int hash_function_init(struct HASH_STATE *state,
     return ORDO_FAIL;
 }
 
-void hash_function_update(struct HASH_STATE *state,
-                          const void *buffer,
-                          size_t len)
+void hash_update(struct HASH_STATE *state,
+                 const void *buffer, size_t len)
 {
     switch (state->primitive)
     {
@@ -64,8 +63,8 @@ void hash_function_update(struct HASH_STATE *state,
     }
 }
 
-void hash_function_final(struct HASH_STATE *state,
-                         void *digest)
+void hash_final(struct HASH_STATE *state,
+                void *digest)
 {
     switch (state->primitive)
     {
@@ -87,8 +86,8 @@ void hash_function_final(struct HASH_STATE *state,
     }
 }
 
-size_t hash_function_query(prim_t primitive,
-                           int query, size_t value)
+size_t hash_query(prim_t primitive,
+                  int query, size_t value)
 {
     switch (primitive)
     {

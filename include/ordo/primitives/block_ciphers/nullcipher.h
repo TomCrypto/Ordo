@@ -25,7 +25,15 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-/** @see \c block_cipher_init()
+#define nullcipher_init                  ordo_nullcipher_init
+#define nullcipher_forward               ordo_nullcipher_forward
+#define nullcipher_inverse               ordo_nullcipher_inverse
+#define nullcipher_final                 ordo_nullcipher_final
+#define nullcipher_query                 ordo_nullcipher_query
+
+/*===----------------------------------------------------------------------===*/
+
+/** @see \c block_init()
 ***
 *** @retval #ORDO_KEY_LEN if the key length is not zero.
 **/
@@ -34,24 +42,24 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void *key, size_t key_len,
                     const void *params);
 
-/** @see \c block_cipher_forward()
+/** @see \c block_forward()
 **/
 ORDO_PUBLIC
 void nullcipher_forward(const struct NULLCIPHER_STATE *state,
                         void *block);
 
-/** @see \c block_cipher_inverse()
+/** @see \c block_inverse()
 **/
 ORDO_PUBLIC
 void nullcipher_inverse(const struct NULLCIPHER_STATE *state,
                         void *block);
 
-/** @see \c block_cipher_final()
+/** @see \c block_final()
 **/
 ORDO_PUBLIC
 void nullcipher_final(struct NULLCIPHER_STATE *state);
 
-/** @see \c block_cipher_query()
+/** @see \c block_query()
 **/
 ORDO_PUBLIC
 size_t nullcipher_query(int query, size_t value);

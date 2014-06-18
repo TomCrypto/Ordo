@@ -24,6 +24,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define stream_init                      ordo_stream_init
+#define stream_update                    ordo_stream_update
+#define stream_final                     ordo_stream_final
+#define stream_query                     ordo_stream_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** Initializes a stream cipher state.
 ***
 *** @param [in,out] state          A stream cipher state.
@@ -35,10 +42,10 @@ extern "C" {
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-int stream_cipher_init(struct STREAM_STATE *state,
-                       const void *key,
-                       size_t key_len,
-                       prim_t primitive, const void *params);
+int stream_init(struct STREAM_STATE *state,
+                const void *key,
+                size_t key_len,
+                prim_t primitive, const void *params);
 
 /** Encrypts or decrypts a buffer using a stream cipher state.
 ***
@@ -53,15 +60,15 @@ int stream_cipher_init(struct STREAM_STATE *state,
 ***          deterministic permutations.
 **/
 ORDO_PUBLIC
-void stream_cipher_update(struct STREAM_STATE *state,
-                          void *buffer, size_t len);
+void stream_update(struct STREAM_STATE *state,
+                   void *buffer, size_t len);
 
 /** Finalizes a stream cipher state.
 ***
 *** @param [in,out] state          A stream cipher state.
 **/
 ORDO_PUBLIC
-void stream_cipher_final(struct STREAM_STATE *state);
+void stream_final(struct STREAM_STATE *state);
 
 /** Queries a stream cipher for suitable parameters.
 ***
@@ -74,8 +81,8 @@ void stream_cipher_final(struct STREAM_STATE *state);
 *** @see query.h
 **/
 ORDO_PUBLIC
-size_t stream_cipher_query(prim_t primitive,
-                           int query, size_t value);
+size_t stream_query(prim_t primitive,
+                    int query, size_t value);
 
 /*===----------------------------------------------------------------------===*/
 

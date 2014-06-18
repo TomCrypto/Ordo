@@ -24,9 +24,9 @@ int main(void)
 
         printf("%s:\n", prim_name(*cipher));
         
-        for (key_len = block_cipher_query(*cipher, KEY_LEN_Q, 0);
-             key_len != last_len; /* This is a way to iterate them. */
-             key_len = block_cipher_query(*cipher, KEY_LEN_Q, key_len + 1))
+        for (key_len = block_query(*cipher, KEY_LEN_Q, 0);
+             key_len != last_len; /* One way to iterate them. */
+             key_len = block_query(*cipher, KEY_LEN_Q, key_len + 1))
         {
             printf("  * %d bits (%d bytes)\n", (int)key_len * 8,
                                                (int)key_len);

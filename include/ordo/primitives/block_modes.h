@@ -28,6 +28,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define block_mode_init                  ordo_block_mode_init
+#define block_mode_update                ordo_block_mode_update
+#define block_mode_final                 ordo_block_mode_final
+#define block_mode_query                 ordo_block_mode_query
+
+/*===----------------------------------------------------------------------===*/
+
 /** Initializes a block mode state.
 ***
 *** @param [in,out] state          A block mode state.

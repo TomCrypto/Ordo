@@ -23,6 +23,13 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define enc_stream_init                  ordo_enc_stream_init
+#define enc_stream_update                ordo_enc_stream_update
+#define enc_stream_final                 ordo_enc_stream_final
+#define enc_stream_key_len               ordo_enc_stream_key_len
+
+/*===----------------------------------------------------------------------===*/
+
 #define ENC_STREAM_CTX STREAM_STATE
 
 /** Initializes a stream encryption context.
@@ -34,7 +41,7 @@ extern "C" {
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
-#define enc_stream_init stream_cipher_init
+#define ordo_enc_stream_init stream_init
 
 /** Encrypts or decrypts a data buffer.
 ***
@@ -48,13 +55,13 @@ extern "C" {
 ***
 *** @remarks Stream encryption is always done in place by design.
 **/
-#define enc_stream_update stream_cipher_update
+#define ordo_enc_stream_update stream_update
 
 /** Finalizes a stream encryption context.
 ***
 *** @param [in,out] ctx            A stream encryption context.
 **/
-#define enc_stream_final stream_cipher_final
+#define ordo_enc_stream_final stream_final
 
 /** Queries a stream cipher for its key length.
 ***

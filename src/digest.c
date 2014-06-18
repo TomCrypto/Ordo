@@ -10,5 +10,5 @@
 
 size_t digest_length(prim_t hash)
 {
-    return hash_function_query(hash, DIGEST_LEN_Q, 0);
+    return hash_query(hash, DIGEST_LEN_Q, 0);
 }

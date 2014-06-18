@@ -29,6 +29,14 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define prim_avail                       ordo_prim_avail
+#define prim_name                        ordo_prim_name
+#define prim_type                        ordo_prim_type
+#define prim_from_name                   ordo_prim_from_name
+#define prims_by_type                    ordo_prims_by_type
+
+/*===----------------------------------------------------------------------===*/
+
 #define HASH_MD5                                                        0x8110
 #define HASH_SHA256                                                     0x8010
 #define HASH_SKEIN256                                                   0x8210

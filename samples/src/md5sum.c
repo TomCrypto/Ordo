@@ -54,6 +54,12 @@ int main(int argc, char *argv[])
      * modify output length) to avoid allocations. This is of course optional. */
     unsigned char digest[HASH_DIGEST_LEN];
 
+    if (!prim_avail(ALG))
+    {
+        printf("Hash algorithm not available!\n");
+        return EXIT_FAILURE;
+    }
+
     while (*++argv)
     {
         FILE *f = fopen(*argv, "rb");
