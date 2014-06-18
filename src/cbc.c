@@ -8,10 +8,11 @@
 
 /*===----------------------------------------------------------------------===*/
 
+#if annotation
 struct CBC_STATE
 {
-    void *iv;
-    unsigned char *block;
+    unsigned char iv[BLOCK_BLOCK_LEN];
+    unsigned char block[BLOCK_BLOCK_LEN];
     size_t available;
 
     size_t block_size;
@@ -19,39 +20,20 @@ struct CBC_STATE
     size_t padding;
     int direction;
 };
+#endif /* annotation */
 
-struct CBC_STATE *cbc_alloc(const struct BLOCK_CIPHER *cipher,
-                            const void *cipher_state)
-{
-
-
-    struct CBC_STATE *state = mem_alloc(sizeof(struct CBC_STATE));
-    if (!state) goto fail;
-
-    state->block_size = block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
-
-    state->iv = mem_alloc(state->block_size);
-    if (!state->iv) goto fail;
-
-    state->block = mem_alloc(state->block_size);
-    if (!state->block) goto fail;
-
-    return state;
-
-fail:
-    cbc_free(state, cipher, cipher_state);
-    return 0;
-}
+/*===----------------------------------------------------------------------===*/
 
 int cbc_init(struct CBC_STATE *state,
-             const struct BLOCK_CIPHER *cipher,
-             const void *cipher_state,
-             const void *iv,
-             size_t iv_len,
+             struct BLOCK_STATE *cipher_state,
+             const void *iv, size_t iv_len,
              int dir,
              const struct CBC_PARAMS *params)
 {
-    if (cbc_query(cipher, IV_LEN_Q, iv_len) != iv_len) return ORDO_ARG;
+    state->block_size = block_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
+
+    if (cbc_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len)
+        return ORDO_ARG;
 
     state->available = 0;
     state->direction = dir;
@@ -65,12 +47,9 @@ int cbc_init(struct CBC_STATE *state,
 }
 
 static void cbc_encrypt_update(struct CBC_STATE *state,
-                               const struct BLOCK_CIPHER *cipher,
-                               const void *cipher_state,
-                               const unsigned char *in,
-                               size_t in_len,
-                               unsigned char *out,
-                               size_t *out_len)
+                               struct BLOCK_STATE *cipher_state,
+                               const unsigned char *in, size_t in_len,
+                               unsigned char *out, size_t *out_len)
 {
     size_t block_size = state->block_size;
     *out_len = 0;
@@ -83,7 +62,7 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
         memcpy(state->block + state->available, in, process);
 
         xor_buffer(state->block, state->iv, block_size);
-        block_cipher_forward(cipher, cipher_state, state->block);
+        block_forward(cipher_state, state->block);
         memcpy(state->iv, state->block, block_size);
 
         memcpy(out, state->block, block_size);
@@ -101,12 +80,9 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
 }
 
 static void cbc_decrypt_update(struct CBC_STATE *state,
-                               const struct BLOCK_CIPHER *cipher,
-                               const void *cipher_state,
-                               const unsigned char *in,
-                               size_t in_len,
-                               unsigned char *out,
-                               size_t *out_len)
+                               struct BLOCK_STATE *cipher_state,
+                               const unsigned char *in, size_t in_len,
+                               unsigned char *out, size_t *out_len)
 {
     size_t block_size = state->block_size;
     *out_len = 0;
@@ -123,7 +99,7 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
          * are lossy wrt state. */
         memcpy(out, state->block, block_size);
 
-        block_cipher_inverse(cipher, cipher_state, state->block);
+        block_inverse(cipher_state, state->block);
         xor_buffer(state->block, state->iv, block_size);
         memcpy(state->iv, out, block_size);
 
@@ -141,10 +117,8 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
 }
 
 static int cbc_encrypt_final(struct CBC_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+                             struct BLOCK_STATE *cipher_state,
+                             unsigned char *out, size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -160,7 +134,7 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
 
         memset(state->block + state->available, padding, padding);
         xor_buffer(state->block, state->iv, block_size);
-        block_cipher_forward(cipher, cipher_state, state->block);
+        block_forward(cipher_state, state->block);
 
         memcpy(out, state->block, block_size);
         *out_len = block_size;
@@ -170,10 +144,8 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
 }
 
 static int cbc_decrypt_final(struct CBC_STATE *state,
-                             const struct BLOCK_CIPHER *cipher,
-                             const void *cipher_state,
-                             unsigned char *out,
-                             size_t *out_len)
+                             struct BLOCK_STATE *cipher_state,
+                             unsigned char *out, size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -185,7 +157,7 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
         size_t block_size = state->block_size;
         uint8_t padding;
 
-        block_cipher_inverse(cipher, cipher_state, state->block);
+        block_inverse(cipher_state, state->block);
         xor_buffer(state->block, state->iv, block_size);
 
         padding = (uint8_t)(*(state->block + block_size - 1));
@@ -212,60 +184,32 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
 }
 
 void cbc_update(struct CBC_STATE *state,
-                const struct BLOCK_CIPHER *cipher,
-                const void *cipher_state,
-                const unsigned char *in,
-                size_t in_len,
-                unsigned char *out,
-                size_t *out_len)
+                struct BLOCK_STATE *cipher_state,
+                const unsigned char *in, size_t in_len,
+                unsigned char *out, size_t *out_len)
 {
     (state->direction
-     ? cbc_encrypt_update(state, cipher, cipher_state,
+     ? cbc_encrypt_update(state, cipher_state,
                           in, in_len, out, out_len)
-     : cbc_decrypt_update(state, cipher, cipher_state,
+     : cbc_decrypt_update(state, cipher_state,
                           in, in_len, out, out_len));
 }
 
 int cbc_final(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state,
-              unsigned char *out,
-              size_t *out_len)
+              struct BLOCK_STATE *cipher_state,
+              unsigned char *out, size_t *out_len)
 {
     return (state->direction
-            ? cbc_encrypt_final(state, cipher, cipher_state, out, out_len)
-            : cbc_decrypt_final(state, cipher, cipher_state, out, out_len));
+            ? cbc_encrypt_final(state, cipher_state, out, out_len)
+            : cbc_decrypt_final(state, cipher_state, out, out_len));
 }
 
-void cbc_free(struct CBC_STATE *state,
-              const struct BLOCK_CIPHER *cipher,
-              const void *cipher_state)
-{
-    if (state)
-    {
-        mem_free(state->block);
-        mem_free(state->iv);
-    }
-
-    mem_free(state);
-}
-
-void cbc_copy(struct CBC_STATE *dst,
-              const struct CBC_STATE *src,
-              const struct BLOCK_CIPHER *cipher)
-{
-    memcpy(dst->block, src->block, dst->block_size);
-    memcpy(dst->iv, src->iv, dst->block_size);
-    dst->direction = src->direction;
-    dst->available = src->available;
-    dst->padding = src->padding;
-}
-
-size_t cbc_query(const struct BLOCK_CIPHER *cipher, int query, size_t value)
+size_t cbc_query(prim_t cipher,
+                 int query, size_t value)
 {
     switch(query)
     {
-        case IV_LEN_Q: return block_cipher_query(cipher, BLOCK_SIZE_Q, 0);
+        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
         default      : return 0;
     }
 }

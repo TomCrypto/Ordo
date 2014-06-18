@@ -16,25 +16,25 @@
 
 int main(void)
 {
-    size_t t;
+    const prim_t *cipher;
 
-    for (t = 0; t < block_cipher_count(); ++t)
+    for (cipher = prims_by_type(PRIM_TYPE_BLOCK); *cipher; ++cipher)
     {
-        const struct BLOCK_CIPHER *cipher = block_cipher_by_index(t);
         size_t key_len, last_len = (size_t)(-1);
 
-        printf("%s:\n", block_cipher_name(cipher));
+        printf("%s:\n", prim_name(*cipher));
         
-        for (key_len = block_cipher_query(cipher, KEY_LEN_Q, 0);
-             key_len != last_len; /* This is a way to iterate them. */
-             key_len = block_cipher_query(cipher, KEY_LEN_Q, key_len + 1))
+        for (key_len = block_query(*cipher, KEY_LEN_Q, 0);
+             key_len != last_len; /* One way to iterate them. */
+             key_len = block_query(*cipher, KEY_LEN_Q, key_len + 1))
         {
             printf("  * %d bits (%d bytes)\n", (int)key_len * 8,
                                                (int)key_len);
             last_len = key_len;
         }
 
-        printf("\n");
+        if (*(cipher + 1))
+            printf("\n");
     }
 
     return EXIT_SUCCESS;

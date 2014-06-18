@@ -6,6 +6,23 @@ ENABLE_LANGUAGE(ASM_NASM)
 SET(LIB_NAME "ordo")
 SET(SRC_PATH "src" )
 
+INCLUDE(CheckIncludeFile)
+INCLUDE(CheckTypeSize)
+
+CHECK_INCLUDE_FILE("stdint.h" HAVE_STDINT_H)
+SET(CMAKE_EXTRA_INCLUDE_FILES stdint.h)
+CHECK_TYPE_SIZE("uint8_t" HAVE_UINT8_T)
+CHECK_TYPE_SIZE("uint16_t" HAVE_UINT16_T)
+CHECK_TYPE_SIZE("uint32_t" HAVE_UINT32_T)
+CHECK_TYPE_SIZE("uint64_t" HAVE_UINT64_T)
+CHECK_TYPE_SIZE("long long" HAVE_LONG_LONG)
+CHECK_TYPE_SIZE("unsigned long long" HAVE_UNSIGNED_LONG_LONG)
+SET(CMAKE_EXTRA_INCLUDE_FILES)
+
+IF(NOT HAVE_STDINT_H)
+    MESSAGE(FATAL_ERROR "Standard fixed-width types required!")
+ENDIF()
+
 IF("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
     SET(COMPILER_GNU ON)
 ELSEIF("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
@@ -50,17 +67,28 @@ ENDIF()
 
 OPTION(LTO "Link-Time Optimization" ON)
 OPTION(NATIVE "Native Optimization" ON)
+OPTION(COMPAT "For Older Compilers" OFF)
 
 IF(NOT COMPILER_MSVC)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-long-long") # shut up!
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
 
-    IF(LTO)
+    IF(COMPILER_GNU AND NOT COMPAT)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-maybe-uninitialized")
+    ENDIF()
+
+    IF(LTO AND NOT COMPAT)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
+
+        IF(COMPILER_GNU)
+            SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffat-lto-objects")
+        ENDIF()
     ENDIF()
 
     IF(NATIVE)
@@ -80,6 +108,7 @@ ENDIF()
 
 SET(INCLUDE_FILES
     include/ordo.h
+    include/ordo/definitions.h
     include/ordo/misc/endianness.h
     include/ordo/misc/os_random.h
     include/ordo/enc/enc_block.h
@@ -92,7 +121,6 @@ SET(INCLUDE_FILES
     include/ordo/auth/hmac.h
     include/ordo/internal/alg.h
     include/ordo/internal/implementation.h
-    include/ordo/internal/mem.h
     include/ordo/internal/sys.h
     include/ordo/digest/digest.h
     include/ordo/primitives/stream_ciphers/rc4.h
@@ -118,39 +146,41 @@ SET(INCLUDE_FILES
 )
 
 SET(IN_FILES
-    aes.asm
-    aes.c
     alg.c
     block_ciphers.c
     block_modes.c
-    cbc.c
-    cfb.c
-    ctr.c
     digest.c
-    ecb.c
     enc_block.c
     enc_stream.c
     endianness.c
     error.c
+    identification.c
     hash_functions.c
     hash_params.c
     hmac.c
-    md5.c
-    mem.c
-    nullcipher.c
-    ofb.c
     ordo.c
     os_random.c
     pbkdf2.c
-    rc4.asm
-    rc4.c
-    sha256.c
-    skein256.c
     stream_ciphers.c
-    threefish256.asm
-    threefish256.c
     version.c
 )
+
+SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
+
+FOREACH(PRIM ${PRIM_LIST})
+    OPTION(WITH_${PRIM} "Include this primitive" ON)
+ENDFOREACH()
+
+IF(WITH_SKEIN256 AND NOT WITH_THREEFISH256)
+    MESSAGE(FATAL_ERROR "WITH_SKEIN256 requires WITH_THREEFISH256!")
+ENDIF()
+
+FOREACH(PRIM ${PRIM_LIST})
+    IF(WITH_${PRIM})
+        STRING(TOLOWER ${PRIM} PRIM_FILE)
+        LIST(APPEND IN_FILES ${PRIM_FILE}.c ${PRIM_FILE}.asm)
+    ENDIF()
+ENDFOREACH()
 
 FUNCTION(PROCESS FOLDER)
     FOREACH(F ${IN_FILES})
@@ -165,7 +195,7 @@ FUNCTION(PROCESS FOLDER)
                     ELSE()
                         SET(OBJ_TYPE win32)
                     ENDIF()
-                    
+
                     SET(OBJ_FILE ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${F}.obj)
                     SET(CMD ${CMAKE_ASM_NASM_COMPILER} -f ${OBJ_TYPE} ${CMAKE_SOURCE_DIR}/${FOLDER}/${F} -o ${OBJ_FILE})
                     ADD_CUSTOM_COMMAND(OUTPUT ${OBJ_FILE} COMMAND ${CMD} DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${FOLDER}/${F})
@@ -197,6 +227,14 @@ ENDIF()
 
 PROCESS(${SRC_PATH})
 
+EXECUTE_PROCESS(COMMAND python resolve.py ${SOURCE_FILES}
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                RESULT_VARIABLE RESOLVE_EXITCODE)
+
+IF(RESOLVE_EXITCODE)
+    MESSAGE(FATAL_ERROR "Resolution script failed!")
+ENDIF()
+
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
 SOURCE_GROUP("Source" FILES ${SOURCE_FILES})
 
@@ -207,7 +245,6 @@ INSTALL(FILES include/ordo.h DESTINATION include)
 INSTALL(DIRECTORY include/ordo DESTINATION include)
 INSTALL(TARGETS ${LIB_NAME} ${LIB_NAME}_s LIBRARY DESTINATION lib
                                           ARCHIVE DESTINATION lib)
-
 TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC
                            ${CMAKE_CURRENT_LIST_DIR}/include)
 TARGET_INCLUDE_DIRECTORIES(${LIB_NAME}_s PUBLIC
@@ -219,6 +256,14 @@ FUNCTION(ADD_TOKEN TOKEN)
 ENDFUNCTION()
 
 ADD_TOKEN(BUILDING_${LIB_NAME})
+
+FOREACH(PRIM ${PRIM_LIST})
+    IF(WITH_${PRIM})
+        ADD_TOKEN(WITH_${PRIM}=1)
+    ELSE()
+        ADD_TOKEN(WITH_${PRIM}=0)
+    ENDIF()
+ENDFOREACH()
 
 IF(NOT SYSTEM_GENERIC)
     ADD_TOKEN(ORDO_ARCH="${ARCH}")
@@ -262,7 +307,7 @@ ADD_SUBDIRECTORY(samples)
 FIND_PACKAGE(Doxygen)
 
 IF(DOXYGEN_FOUND)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
                    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     ADD_CUSTOM_TARGET(doc
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile

@@ -1,14 +1,14 @@
 /*===-- primitives/block_ciphers/threefish256.h --------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// Threefish-256 is  a block cipher with  a 256-bit block size  and a 256-bit
-/// key size. It also has an optional  128-bit tweak, which can be set through
-/// the cipher parameters.
-///
-/// The Threefish  ciphers were originally designed  to be used as  a building
-/// block for the Skein hash function family.
+*** @file
+*** @brief Primitive
+***
+*** Threefish-256 is  a block cipher with  a 256-bit block size  and a 256-bit
+*** key size. It also has an optional  128-bit tweak, which can be set through
+*** the cipher parameters.
+***
+*** The Threefish  ciphers were originally designed  to be used as  a building
+*** block for the Skein hash function family.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -27,51 +27,41 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct THREEFISH256_STATE;
+#define threefish256_init                ordo_threefish256_init
+#define threefish256_forward             ordo_threefish256_forward
+#define threefish256_inverse             ordo_threefish256_inverse
+#define threefish256_final               ordo_threefish256_final
+#define threefish256_query               ordo_threefish256_query
 
-/** @see \c block_cipher_alloc()
-**/
-ORDO_PUBLIC
-struct THREEFISH256_STATE *threefish256_alloc(void);
+/*===----------------------------------------------------------------------===*/
 
-/** @see \c block_cipher_init()
-///
-/// @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).
+/** @see \c block_init()
+***
+*** @retval #ORDO_KEY_LEN if the key length is not 32 (bytes).
 **/
 ORDO_PUBLIC
 int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params);
 
-/** @see \c block_cipher_forward()
+/** @see \c block_forward()
 **/
 ORDO_PUBLIC
 void threefish256_forward(const struct THREEFISH256_STATE *state,
                           uint64_t *block);
 
-/** @see \c block_cipher_inverse()
+/** @see \c block_inverse()
 **/
 ORDO_PUBLIC
 void threefish256_inverse(const struct THREEFISH256_STATE *state,
                           uint64_t *block);
 
-/** @see \c block_cipher_final()
+/** @see \c block_final()
 **/
 ORDO_PUBLIC
 void threefish256_final(struct THREEFISH256_STATE *state);
 
-/** @see \c block_cipher_free()
-**/
-ORDO_PUBLIC
-void threefish256_free(struct THREEFISH256_STATE *state);
-
-/** @see \c block_cipher_copy()
-**/
-ORDO_PUBLIC
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src);
-
-/** @see \c block_cipher_query()
+/** @see \c block_query()
 **/
 ORDO_PUBLIC
 size_t threefish256_query(int query, size_t value);

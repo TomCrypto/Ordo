@@ -8,137 +8,60 @@
 
 /*===----------------------------------------------------------------------===*/
 
-typedef void  *(*STREAM_ALLOC)
-    (void);
-typedef  int   (*STREAM_INIT)
-    (void *, const void *, size_t, const void *);
-typedef void   (*STREAM_UPDATE)
-    (void *, void *, size_t);
-typedef void   (*STREAM_FINAL)
-    (void *);
-typedef void   (*STREAM_FREE)
-    (void *);
-typedef void   (*STREAM_COPY)
-    (void *, const void *);
-typedef size_t (*STREAM_QUERY)
-    (int, size_t);
-
-struct STREAM_CIPHER
-{
-    STREAM_ALLOC  alloc;
-    STREAM_INIT   init;
-    STREAM_UPDATE update;
-    STREAM_FINAL  final;
-    STREAM_FREE   free;
-    STREAM_COPY   copy;
-    STREAM_QUERY  query;
-    const char   *name;
-};
-
-/*===----------------------------------------------------------------------===*/
-
-const char *stream_cipher_name(const struct STREAM_CIPHER *primitive)
-{
-    return primitive->name;
-}
-
+#if WITH_RC4
 #include "ordo/primitives/stream_ciphers/rc4.h"
+#endif
 
-const struct STREAM_CIPHER *ordo_rc4(void)
+int stream_init(struct STREAM_STATE *state,
+                const void *key, size_t key_len,
+                prim_t primitive, const void *params)
 {
-    static const struct STREAM_CIPHER primitive =
+    switch (state->primitive = primitive)
     {
-        (STREAM_ALLOC )rc4_alloc,
-        (STREAM_INIT  )rc4_init,
-        (STREAM_UPDATE)rc4_update,
-        (STREAM_FINAL )rc4_final,
-        (STREAM_FREE  )rc4_free,
-        (STREAM_COPY  )rc4_copy,
-        (STREAM_QUERY )rc4_query,
-        "RC4"
-    };
-
-    return &primitive;
-}
-
-/*===----------------------------------------------------------------------===*/
-
-const struct STREAM_CIPHER *stream_cipher_by_name(const char *name)
-{
-    size_t t;
-
-    for (t = 0; t < stream_cipher_count(); t++)
-    {
-        const struct STREAM_CIPHER *primitive;
-        primitive = stream_cipher_by_index(t);
-
-        if (!strcmp(name, primitive->name))
-            return primitive;
+        #if WITH_RC4
+        case STREAM_RC4:
+            return rc4_init(&state->jmp.rc4, key, key_len, params);
+        #endif
     }
-
-    return 0;
+    
+    return ORDO_FAIL;
 }
 
-const struct STREAM_CIPHER *stream_cipher_by_index(size_t index)
+void stream_update(struct STREAM_STATE *state,
+                   void *buffer, size_t len)
 {
-    switch (index)
+    switch (state->primitive)
     {
-        case __COUNTER__: return ordo_rc4();
-
-        default: return 0;
+        #if WITH_RC4
+        case STREAM_RC4:
+            rc4_update(&state->jmp.rc4, buffer, len);
+            break;
+        #endif
     }
 }
 
-size_t stream_cipher_count(void)
+void stream_final(struct STREAM_STATE *state)
 {
-    return __COUNTER__;
+    switch (state->primitive)
+    {
+        #if WITH_RC4
+        case STREAM_RC4:
+            rc4_final(&state->jmp.rc4);
+            break;
+        #endif
+    }
 }
 
-/*===----------------------------------------------------------------------===*/
-
-void *stream_cipher_alloc(const struct STREAM_CIPHER *primitive)
+size_t stream_query(prim_t primitive,
+                    int query, size_t value)
 {
-    return primitive->alloc();
-}
-
-int stream_cipher_init(const struct STREAM_CIPHER *primitive,
-                       void *state,
-                       const void *key,
-                       size_t key_len,
-                       const void *params)
-{
-    return primitive->init(state, key, key_len, params);
-}
-
-void stream_cipher_update(const struct STREAM_CIPHER *primitive,
-                          void *state,
-                          void *buffer,
-                          size_t len)
-{
-    primitive->update(state, buffer, len);
-}
-
-void stream_cipher_final(const struct STREAM_CIPHER *primitive,
-                         void *state)
-{
-    primitive->final(state);
-}
-
-void stream_cipher_free(const struct STREAM_CIPHER *primitive,
-                        void *state)
-{
-    primitive->free(state);
-}
-
-void stream_cipher_copy(const struct STREAM_CIPHER *primitive,
-                        void *dst,
-                        const void *src)
-{
-    primitive->copy(dst, src);
-}
-
-size_t stream_cipher_query(const struct STREAM_CIPHER *primitive,
-                           int query, size_t value)
-{
-    return primitive->query(query, value);
+    switch (primitive)
+    {
+        #if WITH_RC4
+        case STREAM_RC4:
+            return rc4_query(query, value);
+        #endif
+    }
+    
+    return (size_t)-1;
 }

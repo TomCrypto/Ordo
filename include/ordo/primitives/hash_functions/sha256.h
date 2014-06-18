@@ -1,9 +1,9 @@
 /*===-- primitives/hash_functions/sha256.h -------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The SHA-256 hash function, which produces a 256-bit digest.
+*** @file
+*** @brief Primitive
+***
+*** The SHA-256 hash function, which produces a 256-bit digest.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -22,46 +22,35 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct SHA256_STATE;
+#define sha256_init                      ordo_sha256_init
+#define sha256_update                    ordo_sha256_update
+#define sha256_final                     ordo_sha256_final
+#define sha256_query                     ordo_sha256_query
 
-/** @see \c hash_function_alloc()
-**/
-ORDO_PUBLIC
-struct SHA256_STATE *sha256_alloc(void);
+/*===----------------------------------------------------------------------===*/
 
-/** @see \c hash_function_init()
-///
-/// @remarks The \c params parameter is ignored.
+/** @see \c hash_init()
+***
+*** @remarks The \c params parameter is ignored.
 **/
 ORDO_PUBLIC
 int sha256_init(struct SHA256_STATE *state,
                 const void *params);
 
-/** @see \c hash_function_update()
+/** @see \c hash_update()
 **/
 ORDO_PUBLIC
 void sha256_update(struct SHA256_STATE *state,
                    const void *buffer,
                    size_t len);
 
-/** @see \c hash_function_final()
+/** @see \c hash_final()
 **/
 ORDO_PUBLIC
 void sha256_final(struct SHA256_STATE *state,
                   void *digest);
 
-/** @see \c hash_function_free()
-**/
-ORDO_PUBLIC
-void sha256_free(struct SHA256_STATE *state);
-
-/** @see \c hash_function_copy()
-**/
-ORDO_PUBLIC
-void sha256_copy(struct SHA256_STATE *dst,
-                 const struct SHA256_STATE *src);
-
-/** @see \c hash_function_query()
+/** @see \c hash_query()
 **/
 ORDO_PUBLIC
 size_t sha256_query(int query, size_t value);

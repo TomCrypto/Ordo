@@ -11,14 +11,6 @@
 #define SHA256_DIGEST (bits(256))
 #define SHA256_BLOCK  (bits(512))
 
-struct SHA256_STATE
-{
-    uint32_t digest[8];
-    uint32_t block[16];
-    uint64_t block_len;
-    uint64_t msg_len;
-};
-
 static void sha256_compress(const uint32_t block[16],
                             uint32_t digest[8]) HOT_CODE;
 
@@ -28,12 +20,17 @@ static const uint32_t sha256_iv[8] =
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
-/*===----------------------------------------------------------------------===*/
-
-struct SHA256_STATE *sha256_alloc(void)
+#if annotation
+struct SHA256_STATE
 {
-    return mem_alloc(sizeof(struct SHA256_STATE));
-}
+    uint32_t digest[8];
+    uint32_t block[16];
+    uint64_t block_len;
+    uint64_t msg_len;
+};
+#endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int sha256_init(struct SHA256_STATE *state,
                 const void *params)
@@ -98,17 +95,6 @@ void sha256_final(struct SHA256_STATE *state,
         state->digest[t] = fmbe32(state->digest[t]);
 
     memcpy(digest, state->digest, SHA256_DIGEST);
-}
-
-void sha256_free(struct SHA256_STATE *state)
-{
-    mem_free(state);
-}
-
-void sha256_copy(struct SHA256_STATE *dst,
-                 const struct SHA256_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t sha256_query(int query, size_t value)

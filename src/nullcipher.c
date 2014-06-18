@@ -10,17 +10,14 @@
 
 #define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
 
+#if annotation
 struct NULLCIPHER_STATE
 {
     uint8_t dummy;
 };
+#endif /* annotation */
 
-struct NULLCIPHER_STATE *nullcipher_alloc(void)
-{
-    /* A block cipher always needs to allocate a state (returning nil means
-     * an allocation failed, so we can't use that even for this cipher). */
-    return mem_alloc(sizeof(struct NULLCIPHER_STATE));
-}
+/*===----------------------------------------------------------------------===*/
 
 int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void *key, size_t key_len,
@@ -45,17 +42,6 @@ void nullcipher_inverse(const struct NULLCIPHER_STATE *state, void *block)
 void nullcipher_final(struct NULLCIPHER_STATE *state)
 {
     return;
-}
-
-void nullcipher_free(struct NULLCIPHER_STATE *state)
-{
-    mem_free(state);
-}
-
-void nullcipher_copy(struct NULLCIPHER_STATE *dst,
-                     const struct NULLCIPHER_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t nullcipher_query(int query, size_t value)

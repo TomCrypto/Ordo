@@ -1,9 +1,9 @@
 /*===-- primitives/hash_functions/hash_params.h --------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive Parameters
-///
-/// This header contains parameter structures for all hash functions.
+*** @file
+*** @brief Primitive Parameters
+***
+*** This header contains parameter structures for all hash functions.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -20,10 +20,17 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
+#define skein256_default                 ordo_skein256_default
+
+/*===----------------------------------------------------------------------===*/
+
 /** @brief Skein-256 hash function parameters.
-///
-/// @remarks Refer to the Skein specification to  know more about what each of
-///          these parameter fields stand for.
+***
+*** @remarks Refer to the Skein specification to  know more about what each of
+***          these parameter fields stand for.
+***
+*** @warning This structure is \b packed, to improve performance while hashing
+***          the configuration block, be careful when taking pointers to it.
 **/
 #pragma pack(push,1)
 struct SKEIN256_PARAMS
@@ -38,12 +45,12 @@ struct SKEIN256_PARAMS
     **/
     uint8_t reserved[2];
     /** Desired output length, in \b bits.
-    ///
-    /// @remarks This parameter affects the hash function's digest length.
-    ///
-    /// @remarks The actual output length will be in bytes, and this parameter
-    ///          \b will be  truncated to a byte boundary, so this should be a
-    ///          multiple of 8 to avoid any surprises.
+    ***
+    *** @warning This parameter affects the hash function's digest length.
+    ***
+    *** @remarks The actual output length will be in bytes, and this parameter
+    ***          \b will be  truncated to a byte boundary, so this should be a
+    ***          multiple of 8 to avoid any surprises.
     **/
     uint64_t out_len;
     /** Unused, should be left zero according to the Skein specification.

@@ -10,11 +10,6 @@
 
 #define THREEFISH256_BLOCK (bits(256))
 
-struct THREEFISH256_STATE
-{
-    uint64_t subkey[19 * 4];
-};
-
 static void threefish256_key_schedule(const uint64_t key[4],
                                       const uint64_t tweak[2],
                                       uint64_t *subkeys) HOT_CODE;
@@ -22,12 +17,14 @@ static void threefish256_key_schedule(const uint64_t key[4],
 extern void threefish256_forward_ASM(void *block, const void *subkeys);
 extern void threefish256_inverse_ASM(void *block, const void *subkeys);
 
-/*===----------------------------------------------------------------------===*/
-
-struct THREEFISH256_STATE *threefish256_alloc(void)
+#if annotation
+struct THREEFISH256_STATE
 {
-    return mem_alloc(sizeof(struct THREEFISH256_STATE));
-}
+    uint64_t subkey[19 * 4];
+};
+#endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int threefish256_init(struct THREEFISH256_STATE *state,
                       const uint64_t *key, size_t key_len,
@@ -44,12 +41,14 @@ int threefish256_init(struct THREEFISH256_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void threefish256_forward(const struct THREEFISH256_STATE *state, uint64_t *block)
+void threefish256_forward(const struct THREEFISH256_STATE *state,
+                          uint64_t *block)
 {
     threefish256_forward_ASM(block, state->subkey);
 }
 
-void threefish256_inverse(const struct THREEFISH256_STATE *state, uint64_t *block)
+void threefish256_inverse(const struct THREEFISH256_STATE *state,
+                          uint64_t *block)
 {
     threefish256_inverse_ASM(block, state->subkey);
 }
@@ -57,17 +56,6 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state, uint64_t *bloc
 void threefish256_final(struct THREEFISH256_STATE *state)
 {
     return;
-}
-
-void threefish256_free(struct THREEFISH256_STATE *state)
-{
-    mem_free(state);
-}
-
-void threefish256_copy(struct THREEFISH256_STATE *dst,
-                       const struct THREEFISH256_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t threefish256_query(int query, size_t value)
@@ -88,7 +76,7 @@ size_t threefish256_query(int query, size_t value)
     subkeys[n * 4 + 2] = key_w[s2] + tweak_w[t1]; \
     subkeys[n * 4 + 3] = key_w[s3] + n; \
 
-#define K_S (0x1BD11BDAA9FC1A22ULL)
+#define K_S (UINT64_C(0x1BD11BDAA9FC1A22))
 
 void threefish256_key_schedule(const uint64_t key[4],
                                const uint64_t tweak[2],

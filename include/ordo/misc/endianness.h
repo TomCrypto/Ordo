@@ -1,12 +1,10 @@
 /*===-- misc/endianness.h -------------------------------*- PUBLIC-*- H -*-===*/
 /**
-/// @file
-/// @brief Utility
-///
-/// This header provides endianness functionality. You may use it freely as it
-/// has a stable API and is public. Only supports little/big endian for now.
-///
-/// The functions in this header are not prefixed, be wary of name clashes.
+*** @file
+*** @brief Utility
+***
+*** This header provides endianness functionality. You may use it freely as it
+*** has a stable API and is public. Only supports little/big endian for now.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -20,6 +18,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*===----------------------------------------------------------------------===*/
+
+#define tole16                           ordo_tole16
+#define tobe16                           ordo_tobe16
+#define fmle16                           ordo_fmle16
+#define fmbe16                           ordo_fmbe16
+#define tole32                           ordo_tole32
+#define tobe32                           ordo_tobe32
+#define fmle32                           ordo_fmle32
+#define fmbe32                           ordo_fmbe32
+#define tole64                           ordo_tole64
+#define tobe64                           ordo_tobe64
+#define fmle64                           ordo_fmle64
+#define fmbe64                           ordo_fmbe64
 
 /*===----------------------------------------------------------------------===*/
 

@@ -1,9 +1,9 @@
 /*===-- enc/block_modes/mode_params.h -----------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive Parameters
-///
-/// This header contains parameter structures for all block modes.
+*** @file
+*** @brief Primitive Parameters
+***
+*** This header contains parameter structures for all block modes.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -25,11 +25,11 @@ extern "C" {
 struct ECB_PARAMS
 {
     /** Whether padding should be used.
-    ///
-    /// @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
-    ///          least significant bit is used, all other bits are ignored.
-    ///
-    /// @remarks Padding is enabled by default if parameters are not used.
+    ***
+    *** @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
+    ***          least significant bit is used, all other bits are ignored.
+    ***
+    *** @remarks Padding is enabled by default if parameters are not used.
     **/
     size_t padding;
 };
@@ -39,11 +39,11 @@ struct ECB_PARAMS
 struct CBC_PARAMS
 {
     /** Whether padding should be used.
-    ///
-    /// @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
-    ///          least significant bit is used, all other bits are ignored.
-    ///
-    /// @remarks Padding is enabled by default if parameters are not used.
+    ***
+    *** @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
+    ***          least significant bit is used, all other bits are ignored.
+    ***
+    *** @remarks Padding is enabled by default if parameters are not used.
     **/
     size_t padding;
 };

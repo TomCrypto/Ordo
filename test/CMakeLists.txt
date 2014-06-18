@@ -4,6 +4,8 @@ PROJECT(Test C)
 
 SET(BIN_NAME "test")
 
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+
 SET(INCLUDE_FILES
     include/kat/parser.h
     include/kat/kats.h

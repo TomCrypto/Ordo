@@ -1,13 +1,13 @@
 /*===-- internal/sys.h --------------------------------*- INTERNAL-*- H -*-===*/
 /**
-/// @file
-/// @internal
-/// @brief \b Internal, Utility
-///
-/// This header provides system-dependent functionality and is internal to the
-/// library. It probably shouldn't ever be used from outside the library.
-///
-/// See \c alg.h about internal headers.
+*** @file
+*** @internal
+*** @brief \b Internal, Utility
+***
+*** This header provides system-dependent functionality and is internal to the
+*** library. It probably shouldn't ever be used from outside the library.
+***
+*** See \c alg.h about internal headers.
 **/
 /*===----------------------------------------------------------------------===*/
 

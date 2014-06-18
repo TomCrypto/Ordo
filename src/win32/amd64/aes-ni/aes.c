@@ -12,31 +12,21 @@
 
 #define key_bytes(rounds) (16 * ((rounds) + 1))
 
-struct AES_STATE
-{
-    unsigned char key[336];
-    size_t rounds;
-};
-
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
                       size_t key_len, size_t rounds) HOT_CODE;
 
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
 
-/*===----------------------------------------------------------------------===*/
-
-struct AES_STATE *aes_alloc(void)
+#if annotation
+struct AES_STATE
 {
-    struct AES_STATE *state = mem_alloc(sizeof(struct AES_STATE));
-    if (!state) goto fail;
+    unsigned char key[336];
+    size_t rounds;
+};
+#endif /* annotation */
 
-    return state;
-
-fail:
-    aes_free(state);
-    return 0;
-}
+/*===----------------------------------------------------------------------===*/
 
 int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,
@@ -79,17 +69,6 @@ void aes_inverse(const struct AES_STATE *state, uint8_t *block)
 void aes_final(struct AES_STATE *state)
 {
     return;
-}
-
-void aes_free(struct AES_STATE *state)
-{
-    mem_free(state);
-}
-
-void aes_copy(struct AES_STATE *dst,
-              const struct AES_STATE *src)
-{
-    *dst = *src;
 }
 
 size_t aes_query(int query, size_t value)

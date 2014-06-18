@@ -4,7 +4,7 @@
 
 struct TEST_VECTOR
 {
-    const char *name;
+    int primitive;
     size_t pwd_len;
     const char *pwd;
     size_t salt_len;
@@ -16,7 +16,7 @@ struct TEST_VECTOR
 
 static struct TEST_VECTOR tests[] = {
 {
-    "SHA-256",
+    HASH_SHA256,
     8,
     "password",
     4,
@@ -27,7 +27,7 @@ static struct TEST_VECTOR tests[] = {
     "\xa8\x65\x48\xc9\x2c\xcc\x35\x48\x08\x05\x98\x7c\xb7\x0b\xe1\x7b"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     8,
     "password",
     4,
@@ -39,7 +39,7 @@ static struct TEST_VECTOR tests[] = {
 },
 /* Takes painfully long for little benefit - ignored. */
 /*{
-    "SHA-256",
+    HASH_SHA256,
     8,
     "password",
     4,
@@ -50,7 +50,7 @@ static struct TEST_VECTOR tests[] = {
     "\xf7\xf1\x79\xe8\x9b\x3b\x0b\xcb\x17\xad\x10\xe3\xac\x6e\xba\x46"
 },*/
 {
-    "SHA-256",
+    HASH_SHA256,
     9,
     "\x70\x61\x73\x73\x00\x77\x6f\x72\x64",
     5,
@@ -60,7 +60,7 @@ static struct TEST_VECTOR tests[] = {
     "\x89\xb6\x9d\x05\x16\xf8\x29\x89\x3c\x69\x62\x26\x65\x0a\x86\x87"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     24,
     "passwordPASSWORDpassword",
     36,
@@ -79,36 +79,23 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct HASH_FUNCTION *hash = hash_function_by_name(test.name);
-    if (!hash)
+    if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
-        return 1; /* If skipping, the test passed by convention. */
+        lprintf(WARN, "Algorithm not available - skipping.");
+        return 1;
     }
     else
     {
         size_t check_len = test.out_len;
         int err;
 
-        err = pbkdf2(hash, 0,
-                     test.pwd, test.pwd_len,
-                     test.salt, test.salt_len,
-                     test.iterations,
-                     scratch, check_len);
+        err = kdf_pbkdf2(test.primitive, 0,
+                         test.pwd, test.pwd_len,
+                         test.salt, test.salt_len,
+                         test.iterations,
+                         scratch, check_len);
 
-        if (err)
-        {
-            return 0;
-        }
-
-        if (memcmp(test.expected, scratch, check_len))
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        return err ? 0 : !memcmp(test.expected, scratch, check_len);
     }
 }
 

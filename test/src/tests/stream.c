@@ -4,7 +4,7 @@
 
 struct TEST_VECTOR
 {
-    const char *name;
+    int primitive;
     size_t key_len;
     const char *key;
     size_t input_len;
@@ -14,7 +14,7 @@ struct TEST_VECTOR
 
 static struct TEST_VECTOR tests[] = {
 {
-    "RC4",
+    STREAM_RC4,
     5,
     "\x01\x02\x03\x04\x05",
     8,
@@ -22,7 +22,7 @@ static struct TEST_VECTOR tests[] = {
     "\xcd\x7b\x6a\xec\x20\x59\xa8\x0d"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
     16,
@@ -30,7 +30,7 @@ static struct TEST_VECTOR tests[] = {
     "\xc3\x4b\x11\x6d\xa0\x18\xda\x7e\x4e\x07\x96\x53\x42\xbe\xcd\x64"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
     16,
@@ -38,7 +38,7 @@ static struct TEST_VECTOR tests[] = {
     "\x12\x84\xaa\x5c\xc4\xc6\x41\x9d\xf0\x3d\xae\xb9\xdd\xc6\xb4\x38"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x81\x94\xfe\x03\xff\x94\xe3\x81\xd0\xcc\x91\xb0\xaa\x9d\xe8\xf0",
     16,
@@ -46,7 +46,7 @@ static struct TEST_VECTOR tests[] = {
     "\xf4\xf6\x95\x08\x15\x32\xea\xd3\x40\x1f\xc5\x5a\x80\x99\xe0\x1d"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55",
     16,
@@ -54,7 +54,7 @@ static struct TEST_VECTOR tests[] = {
     "\xd1\x30\x52\xac\x16\x78\x92\x32\x9a\x32\x14\xf7\xc3\xaa\x7f\x09"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
     16,
@@ -62,7 +62,7 @@ static struct TEST_VECTOR tests[] = {
     "\xab\x2e\x7d\x01\xcf\x38\xbe\x1b\x2f\x75\xb6\x24\x2d\xcc\xa1\x00"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
     16,
@@ -70,7 +70,7 @@ static struct TEST_VECTOR tests[] = {
     "\x7a\xe1\xc6\x30\xab\xe6\x25\xf8\x91\x4f\x8e\xce\xb2\xb4\xd8\x5c"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\x81\x94\xfe\x03\xff\x94\xe3\x81\xd0\xcc\x91\xb0\xaa\x9d\xe8\xf0",
     16,
@@ -78,7 +78,7 @@ static struct TEST_VECTOR tests[] = {
     "\x9c\x93\xf9\x64\x7a\x12\x8e\xb6\x21\x6d\xe5\x2d\xef\xeb\x8c\x79"
 },
 {
-    "RC4",
+    STREAM_RC4,
     16,
     "\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55\xff\x55",
     16,
@@ -93,11 +93,10 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct STREAM_CIPHER *cipher = stream_cipher_by_name(test.name);
-    if (!cipher)
+    if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
-        return 1; /* If skipping, the test passed by convention. */
+        lprintf(WARN, "Algorithm not available - skipping.");
+        return 1;
     }
     else
     {
@@ -109,7 +108,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
 
         /* Note there is no need to try to decrypt - stream encryption is
          * done via xor_buffer, so checking the latter function suffices. */
-        err = ordo_enc_stream(cipher, 0,
+        err = ordo_enc_stream(test.primitive, 0,
                               test.key, test.key_len,
                               scratch, check_len);
 
@@ -142,13 +141,5 @@ int test_stream(void)
 
 int test_stream_utilities(void)
 {
-    size_t t, count = stream_cipher_count();
-
-    for (t = 0; t < count; ++t)
-    {
-        const struct STREAM_CIPHER *cipher = stream_cipher_by_index(t);
-        if (!cipher) return 0;
-    }
-
     return 1;
 }

@@ -1,9 +1,9 @@
 /*===-- primitives/hash_functions/md5.h ----------------*- PUBLIC -*- H -*-===*/
 /**
-/// @file
-/// @brief Primitive
-///
-/// The MD5 hash function, which produces a 128-bit digest.
+*** @file
+*** @brief Primitive
+***
+*** The MD5 hash function, which produces a 128-bit digest.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -22,46 +22,35 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct MD5_STATE;
+#define md5_init                         ordo_md5_init
+#define md5_update                       ordo_md5_update
+#define md5_final                        ordo_md5_final
+#define md5_query                        ordo_md5_query
 
-/** @see \c hash_function_alloc()
-**/
-ORDO_PUBLIC
-struct MD5_STATE *md5_alloc(void);
+/*===----------------------------------------------------------------------===*/
 
-/** @see \c hash_function_init()
-///
-/// @remarks The \c params parameter is ignored.
+/** @see \c hash_init()
+***
+*** @remarks The \c params parameter is ignored.
 **/
 ORDO_PUBLIC
 int md5_init(struct MD5_STATE *state,
              const void *params);
 
-/** @see \c hash_function_update()
+/** @see \c hash_update()
 **/
 ORDO_PUBLIC
 void md5_update(struct MD5_STATE *state,
                const void *buffer,
                size_t len);
 
-/** @see \c hash_function_final()
+/** @see \c hash_final()
 **/
 ORDO_PUBLIC
 void md5_final(struct MD5_STATE *state,
                void *digest);
 
-/** @see \c hash_function_free()
-**/
-ORDO_PUBLIC
-void md5_free(struct MD5_STATE *state);
-
-/** @see \c hash_function_copy()
-**/
-ORDO_PUBLIC
-void md5_copy(struct MD5_STATE *dst,
-             const struct MD5_STATE *src);
-
-/** @see \c hash_function_query()
+/** @see \c hash_query()
 **/
 ORDO_PUBLIC
 size_t md5_query(int query, size_t value);

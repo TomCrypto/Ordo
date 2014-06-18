@@ -36,7 +36,6 @@ extern int test_inc_buffer(void);
 
 static struct TEST tests_internal[] =
 {
-    { (TEST_FUNCTION)test_mem, "Memory subsystem" },
     { (TEST_FUNCTION)test_alg, "Internal functions" },
     { (TEST_FUNCTION)test_sys, "System utilities" },
     { (TEST_FUNCTION)test_pad_check, "pad_check function" },

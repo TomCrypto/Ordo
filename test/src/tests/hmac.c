@@ -4,7 +4,7 @@
 
 struct TEST_VECTOR
 {
-    const char *name;
+    int primitive;
     size_t key_len;
     const char *key;
     size_t input_len;
@@ -14,7 +14,7 @@ struct TEST_VECTOR
 
 static struct TEST_VECTOR tests[] = {
 {
-    "SHA-256",
+    HASH_SHA256,
     20,
     "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b"
     "\x0b\x0b\x0b\x0b",
@@ -24,7 +24,7 @@ static struct TEST_VECTOR tests[] = {
     "\x88\x1d\xc2\x00\xc9\x83\x3d\xa7\x26\xe9\x37\x6c\x2e\x32\xcf\xf7"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     4,
     "Jefe",
     28,
@@ -34,7 +34,7 @@ static struct TEST_VECTOR tests[] = {
     "\x5a\x00\x3f\x08\x9d\x27\x39\x83\x9d\xec\x58\xb9\x64\xec\x38\x43"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     20,
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
     "\xaa\xaa\xaa\xaa",
@@ -47,7 +47,7 @@ static struct TEST_VECTOR tests[] = {
     "\x29\x59\x09\x8b\x3e\xf8\xc1\x22\xd9\x63\x55\x14\xce\xd5\x65\xfe"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     25,
     "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10"
     "\x11\x12\x13\x14\x15\x16\x17\x18\x19",
@@ -60,7 +60,7 @@ static struct TEST_VECTOR tests[] = {
     "\x85\xf0\xfa\xa3\xe5\x78\xf8\x07\x7a\x2e\x3f\xf4\x67\x29\x66\x5b"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     131,
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
@@ -80,7 +80,7 @@ static struct TEST_VECTOR tests[] = {
     "\x8e\x0b\xc6\x21\x37\x28\xc5\x14\x05\x46\x04\x0f\x0e\xe3\x7f\x54"
 },
 {
-    "SHA-256",
+    HASH_SHA256,
     131,
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa"
@@ -106,7 +106,7 @@ static struct TEST_VECTOR tests[] = {
     "\xbf\xdc\x63\x64\x4f\x07\x13\x93\x8a\x7f\x51\x53\x5c\x3a\x35\xe2"
 },
 {
-    "MD5",
+    HASH_MD5,
     16,
     "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b",
     8,
@@ -114,7 +114,7 @@ static struct TEST_VECTOR tests[] = {
     "\x92\x94\x72\x7a\x36\x38\xbb\x1c\x13\xf4\x8e\xf8\x15\x8b\xfc\x9d"
 },
 {
-    "MD5",
+    HASH_MD5,
     16,
     "\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa\xaa",
     50,
@@ -132,35 +132,22 @@ static unsigned char scratch[1024];
 
 static int check_test_vector(int index, struct TEST_VECTOR test)
 {
-    const struct HASH_FUNCTION *hash = hash_function_by_name(test.name);
-    if (!hash)
+    if (!prim_avail(test.primitive))
     {
-        lprintf(WARN, "Algorithm %s not found - skipping.", byellow(test.name));
-        return 1; /* If skipping, the test passed by convention. */
+        lprintf(WARN, "Algorithm not available - skipping.");
+        return 1;
     }
     else
     {
-        size_t check_len = digest_length(hash);
+        size_t check_len = digest_length(test.primitive);
         int err;
 
-        err = ordo_hmac(hash, 0,
+        err = ordo_hmac(test.primitive, 0,
                         test.key, test.key_len,
                         test.input, test.input_len,
                         scratch);
 
-        if (err)
-        {
-            return 0;
-        }
-
-        if (memcmp(test.expected, scratch, check_len))
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        return err ? 0 : !memcmp(test.expected, scratch, check_len);
     }
 }
 

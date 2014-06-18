@@ -10,23 +10,20 @@
 
 #define RC4_DROP_DEFAULT 2048
 
-struct RC4_STATE
-{
-    uint64_t i, j;
-    uint64_t s[256];
-};
-
 static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 
 extern void rc4_update_ASM(void *state, uint64_t len, void *in, void *out);
 
-/*===----------------------------------------------------------------------===*/
-
-struct RC4_STATE *rc4_alloc(void)
+#if annotation
+struct RC4_STATE
 {
-    return mem_alloc(sizeof(struct RC4_STATE));
-}
+    uint64_t i, j;
+    uint64_t s[256];
+};
+#endif /* annotation */
+
+/*===----------------------------------------------------------------------===*/
 
 int rc4_init(struct RC4_STATE *state,
              const uint8_t *key, size_t key_len,
@@ -50,11 +47,6 @@ void rc4_final(struct RC4_STATE *state)
     return;
 }
 
-void rc4_free(struct RC4_STATE *state)
-{
-    mem_free(state);
-}
-
 size_t rc4_query(int query, size_t key_len)
 {
     switch (query)
@@ -68,12 +60,6 @@ size_t rc4_query(int query, size_t key_len)
 
         default: return 0;
     }
-}
-
-void rc4_copy(struct RC4_STATE *dst,
-              const struct RC4_STATE *src)
-{
-    *dst = *src;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -96,8 +82,5 @@ void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
 
     state->j = 0;
 
-    {
-        while (drop--) rc4_update(state, &tmp, sizeof(uint8_t));
-        mem_erase(&tmp, sizeof(uint8_t));
-    }
+    while (drop--) rc4_update(state, &tmp, sizeof(uint8_t));
 }

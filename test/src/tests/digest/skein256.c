@@ -73,13 +73,19 @@ static int config_block(void)
 
     /* Test the generic output block and see if we get the same output. */
     struct SKEIN256_PARAMS params = skein256_default();
+    
+    if (!prim_avail(HASH_SKEIN256))
+    {
+        lprintf(WARN, "Algorithm not available - skipping.");
+        return 1;
+    }
 
     for (t = 0; t < vector_count; ++t)
     {
         struct TEST_VECTOR test = tests[t];
         int err;
 
-        err = ordo_digest(ordo_skein256(), &params,
+        err = ordo_digest(HASH_SKEIN256, &params,
                           test.input, test.input_len,
                           scratch);
 

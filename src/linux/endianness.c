@@ -1,5 +1,7 @@
 /*===-- endianness.c ------------------------------------*- linux -*- C -*-===*/
 
+#undef __STRICT_ANSI__
+
 #include "ordo/misc/endianness.h"
 
 /** @cond **/
@@ -8,6 +10,8 @@
 
 #include <sys/types.h>
 #include <endian.h>
+
+#define __STRICT_ANSI__
 
 /*===----------------------------------------------------------------------===*/
 
@@ -27,4 +31,3 @@ uint64_t tole64(uint64_t x) { return htole64(x); }
 uint64_t tobe64(uint64_t x) { return htobe64(x); }
 uint64_t fmle64(uint64_t x) { return le64toh(x); }
 uint64_t fmbe64(uint64_t x) { return be64toh(x); }
-
