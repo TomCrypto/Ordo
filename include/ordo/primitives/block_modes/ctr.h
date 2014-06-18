@@ -40,6 +40,7 @@ extern "C" {
 #define ctr_update                       ordo_ctr_update
 #define ctr_final                        ordo_ctr_final
 #define ctr_query                        ordo_ctr_query
+#define ctr_bsize                        ordo_ctr_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -70,8 +71,17 @@ int ctr_final(struct CTR_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ctr_query(int cipher,
+size_t ctr_query(prim_t cipher,
                  int query, size_t value);
+
+/** Gets the size in bytes of a \c CTR_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t ctr_size(void);
 
 /*===----------------------------------------------------------------------===*/
 

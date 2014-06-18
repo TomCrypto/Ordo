@@ -30,6 +30,7 @@ extern "C" {
 #define aes_inverse                      ordo_aes_inverse
 #define aes_final                        ordo_aes_final
 #define aes_query                        ordo_aes_query
+#define aes_bsize                        ordo_aes_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -65,6 +66,15 @@ void aes_final(struct AES_STATE *state);
 **/
 ORDO_PUBLIC
 size_t aes_query(int query, size_t value);
+
+/** Gets the size in bytes of an \c AES_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t aes_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

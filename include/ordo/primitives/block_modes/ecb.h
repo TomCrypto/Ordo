@@ -37,6 +37,7 @@ extern "C" {
 #define ecb_update                       ordo_ecb_update
 #define ecb_final                        ordo_ecb_final
 #define ecb_query                        ordo_ecb_query
+#define ecb_bsize                        ordo_ecb_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -67,8 +68,17 @@ int ecb_final(struct ECB_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ecb_query(int cipher,
+size_t ecb_query(prim_t cipher,
                  int query, size_t value);
+
+/** Gets the size in bytes of a \c ECB_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t ecb_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

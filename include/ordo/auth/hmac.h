@@ -27,6 +27,7 @@ extern "C" {
 #define hmac_init                        ordo_hmac_init
 #define hmac_update                      ordo_hmac_update
 #define hmac_final                       ordo_hmac_final
+#define hmac_bsize                       ordo_hmac_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -81,6 +82,15 @@ void hmac_update(struct HMAC_CTX *ctx,
 **/
 ORDO_PUBLIC
 int hmac_final(struct HMAC_CTX *ctx, void *fingerprint);
+
+/** Gets the size in bytes of an \c HMAC_CTX.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t hmac_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

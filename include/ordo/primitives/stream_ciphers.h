@@ -28,6 +28,7 @@ extern "C" {
 #define stream_update                    ordo_stream_update
 #define stream_final                     ordo_stream_final
 #define stream_query                     ordo_stream_query
+#define stream_bsize                     ordo_stream_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -83,6 +84,15 @@ void stream_final(struct STREAM_STATE *state);
 ORDO_PUBLIC
 size_t stream_query(prim_t primitive,
                     int query, size_t value);
+
+/** Gets the size in bytes of a \c STREAM_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t stream_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

@@ -71,3 +71,8 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
 
     return err;
 }
+
+size_t hmac_bsize(void)
+{
+    return sizeof(struct HMAC_CTX);
+}

@@ -213,3 +213,8 @@ size_t cbc_query(prim_t cipher,
         default      : return 0;
     }
 }
+
+size_t cbc_bsize(void)
+{
+    return sizeof(struct CBC_STATE);
+}

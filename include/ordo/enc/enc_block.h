@@ -40,6 +40,7 @@ extern "C" {
 #define enc_block_final                  ordo_enc_block_final
 #define enc_block_key_len                ordo_enc_block_key_len
 #define enc_block_iv_len                 ordo_enc_block_iv_len
+#define enc_block_bsize                  ordo_enc_block_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -148,6 +149,15 @@ ORDO_PUBLIC
 size_t enc_block_iv_len(prim_t cipher,
                         prim_t mode,
                         size_t iv_len);
+
+/** Gets the size in bytes of an \c ENC_BLOCK_CTX.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t enc_block_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

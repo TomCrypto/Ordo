@@ -26,6 +26,7 @@ extern "C" {
 #define sha256_update                    ordo_sha256_update
 #define sha256_final                     ordo_sha256_final
 #define sha256_query                     ordo_sha256_query
+#define sha256_bsize                     ordo_sha256_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -54,6 +55,15 @@ void sha256_final(struct SHA256_STATE *state,
 **/
 ORDO_PUBLIC
 size_t sha256_query(int query, size_t value);
+
+/** Gets the size in bytes of a \c SHA256_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t sha256_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

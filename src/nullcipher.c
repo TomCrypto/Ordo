@@ -53,3 +53,8 @@ size_t nullcipher_query(int query, size_t value)
         default          : return 0;
     }
 }
+
+size_t nullcipher_bsize(void)
+{
+    return sizeof(struct NULLCIPHER_STATE);
+}

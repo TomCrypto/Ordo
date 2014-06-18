@@ -92,3 +92,8 @@ size_t ctr_query(prim_t cipher,
         default      : return 0;
     }
 }
+
+size_t ctr_bsize(void)
+{
+    return sizeof(struct CTR_STATE);
+}

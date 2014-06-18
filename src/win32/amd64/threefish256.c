@@ -68,6 +68,11 @@ size_t threefish256_query(int query, size_t value)
     }
 }
 
+size_t threefish256_bsize(void)
+{
+    return sizeof(struct THREEFISH256_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 #define subkey(n, s0, s1, s2, s3, t0, t1)\

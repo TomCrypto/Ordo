@@ -119,6 +119,11 @@ size_t md5_query(int query, size_t value)
     }
 }
 
+size_t md5_bsize(void)
+{
+    return sizeof(struct MD5_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 void md5_compress(uint32_t block[16], uint32_t digest[4])

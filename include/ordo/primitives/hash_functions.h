@@ -27,6 +27,7 @@ extern "C" {
 #define hash_update                      ordo_hash_update
 #define hash_final                       ordo_hash_final
 #define hash_query                       ordo_hash_query
+#define hash_bsize                       ordo_hash_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -82,6 +83,15 @@ void hash_final(struct HASH_STATE *state,
 ORDO_PUBLIC
 size_t hash_query(prim_t primitive,
                   int query, size_t value);
+
+/** Gets the size in bytes of a \c HASH_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t hash_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

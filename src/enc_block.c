@@ -54,3 +54,8 @@ size_t enc_block_iv_len(prim_t cipher,
 {
     return block_mode_query(mode, cipher, IV_LEN_Q, iv_len);
 }
+
+size_t enc_block_bsize(void)
+{
+    return sizeof(struct ENC_BLOCK_CTX);
+}

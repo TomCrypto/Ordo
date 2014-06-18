@@ -30,6 +30,7 @@ extern "C" {
 #define rc4_update                       ordo_rc4_update
 #define rc4_final                        ordo_rc4_final
 #define rc4_query                        ordo_rc4_query
+#define rc4_bsize                        ordo_rc4_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -61,6 +62,15 @@ void rc4_final(struct RC4_STATE *state);
 **/
 ORDO_PUBLIC
 size_t rc4_query(int query, size_t value);
+
+/** Gets the size in bytes of an \c RC4_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t rc4_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

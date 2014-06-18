@@ -36,6 +36,7 @@ extern "C" {
 #define skein256_update                  ordo_skein256_update
 #define skein256_final                   ordo_skein256_final
 #define skein256_query                   ordo_skein256_query
+#define skein256_bsize                    ordo_skein256_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -71,6 +72,15 @@ void skein256_final(struct SKEIN256_STATE *state,
 **/
 ORDO_PUBLIC
 size_t skein256_query(int query, size_t value);
+
+/** Gets the size in bytes of a \c SKEIN256_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t skein256_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

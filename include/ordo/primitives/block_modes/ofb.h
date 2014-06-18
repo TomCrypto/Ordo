@@ -38,6 +38,7 @@ extern "C" {
 #define ofb_update                       ordo_ofb_update
 #define ofb_final                        ordo_ofb_final
 #define ofb_query                        ordo_ofb_query
+#define ofb_bsize                        ordo_ofb_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -68,8 +69,17 @@ int ofb_final(struct OFB_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t ofb_query(int cipher,
+size_t ofb_query(prim_t cipher,
                  int query, size_t value);
+
+/** Gets the size in bytes of an \c OFB_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t ofb_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

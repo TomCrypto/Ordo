@@ -38,6 +38,7 @@ extern "C" {
 #define cfb_update                       ordo_cfb_update
 #define cfb_final                        ordo_cfb_final
 #define cfb_query                        ordo_cfb_query
+#define cfb_bsize                        ordo_cfb_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -68,8 +69,17 @@ int cfb_final(struct CFB_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cfb_query(int cipher,
+size_t cfb_query(prim_t cipher,
                  int query, size_t value);
+
+/** Gets the size in bytes of a \c CFB_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t cfb_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

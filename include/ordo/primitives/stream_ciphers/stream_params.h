@@ -31,7 +31,7 @@ struct RC4_PARAMS
     *** @remarks If this \c RC4_PARAMS  structure is \b not  passed to the RC4
     ***          stream cipher primitive, the default drop amount is 2048.
     **/
-    size_t drop;
+    unsigned int drop;
 };
 
 /*===----------------------------------------------------------------------===*/

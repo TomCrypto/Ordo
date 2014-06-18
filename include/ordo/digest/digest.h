@@ -48,6 +48,7 @@ extern "C" {
 #define digest_update                    ordo_digest_update
 #define digest_final                     ordo_digest_final
 #define digest_length                    ordo_digest_length
+#define digest_bsize                     ordo_digest_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -116,6 +117,14 @@ extern "C" {
 **/
 ORDO_PUBLIC
 size_t digest_length(prim_t hash);
+
+/** Gets the size in bytes of a \c DIGEST_CTX.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+#define ordo_digest_bsize hash_bsize
 
 /*===----------------------------------------------------------------------===*/
 

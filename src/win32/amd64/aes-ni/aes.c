@@ -88,6 +88,11 @@ size_t aes_query(int query, size_t value)
     }
 }
 
+size_t aes_bsize(void)
+{
+    return sizeof(struct AES_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 /* This AES implementation was obtained along with the following license: */

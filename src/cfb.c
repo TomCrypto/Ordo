@@ -135,3 +135,8 @@ size_t cfb_query(prim_t cipher,
         default      : return 0;
     }
 }
+
+size_t cfb_bsize(void)
+{
+    return sizeof(struct CFB_STATE);
+}

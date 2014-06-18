@@ -169,3 +169,8 @@ size_t ecb_query(prim_t cipher,
         default: return 0;
     }
 }
+
+size_t ecb_bsize(void)
+{
+    return sizeof(struct ECB_STATE);
+}

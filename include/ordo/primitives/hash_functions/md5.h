@@ -26,6 +26,7 @@ extern "C" {
 #define md5_update                       ordo_md5_update
 #define md5_final                        ordo_md5_final
 #define md5_query                        ordo_md5_query
+#define md5_bsize                        ordo_md5_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -54,6 +55,15 @@ void md5_final(struct MD5_STATE *state,
 **/
 ORDO_PUBLIC
 size_t md5_query(int query, size_t value);
+
+/** Gets the size in bytes of an \c MD5_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t md5_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

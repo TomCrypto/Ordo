@@ -152,3 +152,8 @@ size_t block_mode_query(prim_t mode, prim_t cipher,
     
     return (size_t)-1;
 }
+
+size_t block_mode_bsize(void)
+{
+    return sizeof(struct BLOCK_MODE_STATE);
+}

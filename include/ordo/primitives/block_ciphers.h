@@ -29,6 +29,7 @@ extern "C" {
 #define block_inverse                    ordo_block_inverse
 #define block_final                      ordo_block_final
 #define block_query                      ordo_block_query
+#define block_bsize                      ordo_block_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -89,6 +90,15 @@ void block_final(struct BLOCK_STATE *state);
 ORDO_PUBLIC
 size_t block_query(prim_t primitive,
                    int query, size_t value);
+
+/** Gets the size in bytes of a \c BLOCK_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t block_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

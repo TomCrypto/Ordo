@@ -27,6 +27,7 @@ extern "C" {
 #define enc_stream_update                ordo_enc_stream_update
 #define enc_stream_final                 ordo_enc_stream_final
 #define enc_stream_key_len               ordo_enc_stream_key_len
+#define enc_stream_bsize                 ordo_enc_stream_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -77,6 +78,14 @@ extern "C" {
 ORDO_PUBLIC
 size_t enc_stream_key_len(prim_t cipher,
                           size_t key_len);
+
+/** Gets the size in bytes of an \c ENC_STREAM_CTX.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+#define ordo_enc_stream_bsize stream_bsize
 
 /*===----------------------------------------------------------------------===*/
 

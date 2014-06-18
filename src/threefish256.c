@@ -71,6 +71,11 @@ size_t threefish256_query(int query, size_t value)
     }
 }
 
+size_t threefish256_bsize(void)
+{
+    return sizeof(struct THREEFISH256_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 void threefish256_forward_C(uint64_t block[4], const uint64_t *subkeys)

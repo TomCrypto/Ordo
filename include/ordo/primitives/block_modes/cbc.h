@@ -44,6 +44,7 @@ extern "C" {
 #define cbc_update                       ordo_cbc_update
 #define cbc_final                        ordo_cbc_final
 #define cbc_query                        ordo_cbc_query
+#define cbc_bsize                        ordo_cbc_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -74,8 +75,17 @@ int cbc_final(struct CBC_STATE *state,
 /** @see \c block_mode_query()
 **/
 ORDO_PUBLIC
-size_t cbc_query(int cipher,
+size_t cbc_query(prim_t cipher,
                  int query, size_t value);
+
+/** Gets the size in bytes of a \c CBC_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t cbc_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

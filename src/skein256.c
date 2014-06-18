@@ -191,6 +191,11 @@ size_t skein256_query(int query, size_t value)
     }
 }
 
+size_t skein256_bsize(void)
+{
+    return sizeof(struct SKEIN256_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 void make_tweak(uint64_t tweak[2],

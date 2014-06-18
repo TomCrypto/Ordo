@@ -62,6 +62,11 @@ size_t rc4_query(int query, size_t key_len)
     }
 }
 
+size_t rc4_bsize(void)
+{
+    return sizeof(struct RC4_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 void rc4_key_schedule(struct RC4_STATE *state, size_t drop,

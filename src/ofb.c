@@ -88,3 +88,8 @@ size_t ofb_query(prim_t cipher,
         default      : return 0;
     }
 }
+
+size_t ofb_bsize(void)
+{
+    return sizeof(struct OFB_STATE);
+}

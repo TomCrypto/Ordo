@@ -32,6 +32,7 @@ extern "C" {
 #define block_mode_update                ordo_block_mode_update
 #define block_mode_final                 ordo_block_mode_final
 #define block_mode_query                 ordo_block_mode_query
+#define block_mode_bsize                 ordo_block_mode_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -108,6 +109,15 @@ int block_mode_final(struct BLOCK_MODE_STATE *state,
 ORDO_PUBLIC
 size_t block_mode_query(prim_t mode, prim_t cipher,
                         int query, size_t value);
+
+/** Gets the size in bytes of a \c BLOCK_MODE_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t block_mode_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

@@ -108,6 +108,11 @@ size_t sha256_query(int query, size_t value)
     }
 }
 
+size_t sha256_bsize(void)
+{
+    return sizeof(struct SHA256_STATE);
+}
+
 /*===----------------------------------------------------------------------===*/
 
 static const uint32_t sha256_table[64] =

@@ -30,6 +30,7 @@ extern "C" {
 #define nullcipher_inverse               ordo_nullcipher_inverse
 #define nullcipher_final                 ordo_nullcipher_final
 #define nullcipher_query                 ordo_nullcipher_query
+#define nullcipher_bsize                 ordo_nullcipher_bsize
 
 /*===----------------------------------------------------------------------===*/
 
@@ -63,6 +64,15 @@ void nullcipher_final(struct NULLCIPHER_STATE *state);
 **/
 ORDO_PUBLIC
 size_t nullcipher_query(int query, size_t value);
+
+/** Gets the size in bytes of a \c NULLCIPHER_STATE.
+***
+*** @returns The size in bytes of the structure.
+***
+*** @remarks Binary compatibility layer.
+**/
+ORDO_PUBLIC
+size_t nullcipher_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 
