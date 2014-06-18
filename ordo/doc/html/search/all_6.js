@@ -1,23 +1,13 @@
 var searchData=
 [
-  ['hash_5ffunction_5falloc',['hash_function_alloc',['../hash__functions_8h.html#a19dd175e7ce27e75281bc1345b5fff02',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fby_5findex',['hash_function_by_index',['../hash__functions_8h.html#a52a59051b322645e00dae8299671a87c',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fby_5fname',['hash_function_by_name',['../hash__functions_8h.html#a762145b036d92a55cf7e5e9abe8e4ca7',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fcopy',['hash_function_copy',['../hash__functions_8h.html#a04d3139084e555d61b3683e84d5bdadb',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fcount',['hash_function_count',['../hash__functions_8h.html#acd4bd632815c84de381be66c10c1aa1c',1,'hash_functions.c']]],
-  ['hash_5ffunction_5ffinal',['hash_function_final',['../hash__functions_8h.html#ad38082f2e0056778ff5c6b6254c50b32',1,'hash_functions.c']]],
-  ['hash_5ffunction_5ffree',['hash_function_free',['../hash__functions_8h.html#ab2f7703ab7b6c6bda140fe67a4ba3438',1,'hash_functions.c']]],
-  ['hash_5ffunction_5finit',['hash_function_init',['../hash__functions_8h.html#a440909860662fb40aa4e860fa975b499',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fname',['hash_function_name',['../hash__functions_8h.html#a10528b6fe9c461f4e5c40eeee4204c9d',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fquery',['hash_function_query',['../hash__functions_8h.html#ae0dbf373f85b7c19c138a0c573cabcf7',1,'hash_functions.c']]],
-  ['hash_5ffunction_5fupdate',['hash_function_update',['../hash__functions_8h.html#a4f848af22b0782c0a0c4d688cd77b33a',1,'hash_functions.c']]],
+  ['hash_5ffinal',['hash_final',['../hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4',1,'hash_functions.c']]],
   ['hash_5ffunctions_2eh',['hash_functions.h',['../hash__functions_8h.html',1,'']]],
+  ['hash_5finit',['hash_init',['../hash__functions_8h.html#a0d048f223aa81366e37e403389e98598',1,'hash_functions.c']]],
   ['hash_5fparams_2eh',['hash_params.h',['../hash__params_8h.html',1,'']]],
+  ['hash_5fquery',['hash_query',['../hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc',1,'hash_functions.c']]],
+  ['hash_5fupdate',['hash_update',['../hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f',1,'hash_functions.c']]],
   ['hmac_2eh',['hmac.h',['../hmac_8h.html',1,'']]],
-  ['hmac_5falloc',['hmac_alloc',['../hmac_8h.html#ab46db5c02ecf5ee5229099ab305d7300',1,'hmac.c']]],
-  ['hmac_5fcopy',['hmac_copy',['../hmac_8h.html#a763a39ef98d76e3c66d875f5df4ca0bb',1,'hmac.c']]],
   ['hmac_5ffinal',['hmac_final',['../hmac_8h.html#a278e06c71b6d5d16b5e070d74454adbf',1,'hmac.c']]],
-  ['hmac_5ffree',['hmac_free',['../hmac_8h.html#a0983c473a49e07b6a4ba62b9bc3e871c',1,'hmac.c']]],
-  ['hmac_5finit',['hmac_init',['../hmac_8h.html#af7bcd6e3598551430db3c8c668de2295',1,'hmac.c']]],
+  ['hmac_5finit',['hmac_init',['../hmac_8h.html#a57c1bb102980d7bdb0794f0aeaba8c1d',1,'hmac.c']]],
   ['hmac_5fupdate',['hmac_update',['../hmac_8h.html#a3a29e3bb7bc7b0f58e28bf100925a613',1,'hmac.c']]]
 ];

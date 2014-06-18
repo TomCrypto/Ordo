@@ -2,10 +2,7 @@ var searchData=
 [
   ['readme',['README',['../md__ssd__ordo_src_shared__r_e_a_d_m_e.html',1,'']]],
   ['rc4_2eh',['rc4.h',['../rc4_8h.html',1,'']]],
-  ['rc4_5falloc',['rc4_alloc',['../rc4_8h.html#acba828ec04caacec9f4918301a3daf0d',1,'rc4.c']]],
-  ['rc4_5fcopy',['rc4_copy',['../rc4_8h.html#a1c870606ab06e8cea33346356f90c8f4',1,'rc4.c']]],
   ['rc4_5ffinal',['rc4_final',['../rc4_8h.html#a4ce31f65c9eec889907cdf7930738141',1,'rc4.c']]],
-  ['rc4_5ffree',['rc4_free',['../rc4_8h.html#a7a5010532a26def0953bb7873b456e00',1,'rc4.c']]],
   ['rc4_5finit',['rc4_init',['../rc4_8h.html#a8b5e7fcf2aca34fda5659c5dddc095a8',1,'rc4.c']]],
   ['rc4_5fparams',['RC4_PARAMS',['../struct_r_c4___p_a_r_a_m_s.html',1,'']]],
   ['rc4_5fquery',['rc4_query',['../rc4_8h.html#a8f816cd3b35c3043b31f14dd068654e2',1,'rc4.c']]],

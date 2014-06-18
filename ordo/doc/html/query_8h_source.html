@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_3fe948eabb9fcb35afed81796c2d9321.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_d103d6802619b1ccb3f7bb5e4656153d.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,48 +90,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">query.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="query_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//===-- common/query.h ---------------------------------*- PUBLIC -*- H -*-===//</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment"></span><span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<a href="query_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- common/query.h ---------------------------------*- PUBLIC -*- H -*-===*/</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#ifndef ORDO_QUERY_H</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_QUERY_H</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">   62</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">ORDO_QUERY</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a105e9b8418439f602c843ef00f1b0853">   69</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a105e9b8418439f602c843ef00f1b0853">KEY_LEN_Q</a>,</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a4a27d131f5cc1119892c41daf2bc30c9">   81</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a4a27d131f5cc1119892c41daf2bc30c9">BLOCK_SIZE_Q</a>,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3aef9fed6b813e32e003c4b65b244979">   89</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3aef9fed6b813e32e003c4b65b244979">DIGEST_LEN_Q</a>,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92acf5108695c7f8d556d24dc117e0a24f3">   99</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92acf5108695c7f8d556d24dc117e0a24f3">IV_LEN_Q</a></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a4a27d131f5cc1119892c41daf2bc30c9"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a4a27d131f5cc1119892c41daf2bc30c9">BLOCK_SIZE_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:81</div></div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">  104</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">ORDO_QUERY</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
+<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a50fa3215f2b72bd849bb7a5873d7ff2f">  106</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a50fa3215f2b72bd849bb7a5873d7ff2f">KEY_LEN_Q</a>,</div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92ae2ee99e6b808b7e6c5fa6950e7d83b31">  107</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92ae2ee99e6b808b7e6c5fa6950e7d83b31">BLOCK_SIZE_Q</a>,</div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3b7a967d89a77406f134472f5263bb45">  108</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3b7a967d89a77406f134472f5263bb45">DIGEST_LEN_Q</a>,</div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a437a30001a55f6dc0a2c9287027a409f">  109</a></span>&#160;    <a class="code" href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a437a30001a55f6dc0a2c9287027a409f">IV_LEN_Q</a></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;};</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92ae2ee99e6b808b7e6c5fa6950e7d83b31"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92ae2ee99e6b808b7e6c5fa6950e7d83b31">BLOCK_SIZE_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:107</div></div>
+<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a3b7a967d89a77406f134472f5263bb45"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3b7a967d89a77406f134472f5263bb45">DIGEST_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:108</div></div>
+<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a50fa3215f2b72bd849bb7a5873d7ff2f"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a50fa3215f2b72bd849bb7a5873d7ff2f">KEY_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:106</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92acf5108695c7f8d556d24dc117e0a24f3"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92acf5108695c7f8d556d24dc117e0a24f3">IV_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:99</div></div>
-<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a3aef9fed6b813e32e003c4b65b244979"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a3aef9fed6b813e32e003c4b65b244979">DIGEST_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:89</div></div>
-<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">ORDO_QUERY</a></div><div class="ttdeci">ORDO_QUERY</div><div class="ttdef"><b>Definition:</b> query.h:62</div></div>
-<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a105e9b8418439f602c843ef00f1b0853"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a105e9b8418439f602c843ef00f1b0853">KEY_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:69</div></div>
+<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92">ORDO_QUERY</a></div><div class="ttdeci">ORDO_QUERY</div><div class="ttdef"><b>Definition:</b> query.h:104</div></div>
+<div class="ttc" id="query_8h_html_a8104fee8c8e05679a17a05b93831fa92a437a30001a55f6dc0a2c9287027a409f"><div class="ttname"><a href="query_8h.html#a8104fee8c8e05679a17a05b93831fa92a437a30001a55f6dc0a2c9287027a409f">IV_LEN_Q</a></div><div class="ttdef"><b>Definition:</b> query.h:109</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

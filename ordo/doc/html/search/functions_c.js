@@ -1,29 +1,7 @@
 var searchData=
 [
-  ['sha256_5falloc',['sha256_alloc',['../sha256_8h.html#a0fab778aa0352a01a21ee42b5d1324d8',1,'sha256.c']]],
-  ['sha256_5fcopy',['sha256_copy',['../sha256_8h.html#a4fac7c7e812df5f50d3f1803e81e50be',1,'sha256.c']]],
-  ['sha256_5ffinal',['sha256_final',['../sha256_8h.html#a2525f27711a3ec54be774816d29b27b2',1,'sha256.c']]],
-  ['sha256_5ffree',['sha256_free',['../sha256_8h.html#ae794159275750d628a78616146e37c56',1,'sha256.c']]],
-  ['sha256_5finit',['sha256_init',['../sha256_8h.html#a2e4fbe0ac655cb0016a9b96131af5d77',1,'sha256.c']]],
-  ['sha256_5fquery',['sha256_query',['../sha256_8h.html#af0fa5e6e28aa33d80d49cbaf324d6f1f',1,'sha256.c']]],
-  ['sha256_5fupdate',['sha256_update',['../sha256_8h.html#a40f7f23d41a50ff99d8c538947af243d',1,'sha256.c']]],
-  ['skein256_5falloc',['skein256_alloc',['../skein256_8h.html#a1ea6ffaa8cda164b4a00915dbe517a77',1,'skein256.c']]],
-  ['skein256_5fcopy',['skein256_copy',['../skein256_8h.html#a9e9943a56952ccd7da1180b54139b69f',1,'skein256.c']]],
-  ['skein256_5fdefault',['skein256_default',['../hash__params_8h.html#af39e987fe81d0da7b9209c7b02c36c63',1,'hash_params.c']]],
-  ['skein256_5ffinal',['skein256_final',['../skein256_8h.html#a14cb4c5ed5ac6131c29f80a2c094f52f',1,'skein256.c']]],
-  ['skein256_5ffree',['skein256_free',['../skein256_8h.html#a48f04cccae72ceb1a57b50adfc7d4916',1,'skein256.c']]],
-  ['skein256_5finit',['skein256_init',['../skein256_8h.html#a4bdd1723530846a6e049625f76550a9b',1,'skein256.c']]],
-  ['skein256_5fquery',['skein256_query',['../skein256_8h.html#a2ec757e402e50c370f348213ef6ab3d9',1,'skein256.c']]],
-  ['skein256_5fupdate',['skein256_update',['../skein256_8h.html#a41fbdae5a68bed6d3806c234828cc3a3',1,'skein256.c']]],
-  ['stream_5fcipher_5falloc',['stream_cipher_alloc',['../stream__ciphers_8h.html#a72b93a8f2f63d28f6d6ebd0b5a9c3fa6',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fby_5findex',['stream_cipher_by_index',['../stream__ciphers_8h.html#aee01ef2fe2aeb9e613b7721272b69f64',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fby_5fname',['stream_cipher_by_name',['../stream__ciphers_8h.html#a4ab80a34e401fae1bce57a29b1f1e686',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fcopy',['stream_cipher_copy',['../stream__ciphers_8h.html#a79c94d013f063935dbeeeef9921e2f7c',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fcount',['stream_cipher_count',['../stream__ciphers_8h.html#ad3133dbe12148d44fe33979ebf58f441',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5ffinal',['stream_cipher_final',['../stream__ciphers_8h.html#a994816d888697c365da769d46870c676',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5ffree',['stream_cipher_free',['../stream__ciphers_8h.html#ab634c6c0cf01d77f301272e0e5005869',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5finit',['stream_cipher_init',['../stream__ciphers_8h.html#ac2b1576ac268c90367a7f2cd8991b72c',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fname',['stream_cipher_name',['../stream__ciphers_8h.html#ade952abccd5264182cf41d686ace826a',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fquery',['stream_cipher_query',['../stream__ciphers_8h.html#ae5debc682c415378899b6c91fe6a291e',1,'stream_ciphers.c']]],
-  ['stream_5fcipher_5fupdate',['stream_cipher_update',['../stream__ciphers_8h.html#af74930ab5297446d0fae0c8a033d966d',1,'stream_ciphers.c']]]
+  ['rc4_5ffinal',['rc4_final',['../rc4_8h.html#a4ce31f65c9eec889907cdf7930738141',1,'rc4.c']]],
+  ['rc4_5finit',['rc4_init',['../rc4_8h.html#a8b5e7fcf2aca34fda5659c5dddc095a8',1,'rc4.c']]],
+  ['rc4_5fquery',['rc4_query',['../rc4_8h.html#a8f816cd3b35c3043b31f14dd068654e2',1,'rc4.c']]],
+  ['rc4_5fupdate',['rc4_update',['../rc4_8h.html#ae8c1325725976241911b13fc01fef1c3',1,'rc4.c']]]
 ];

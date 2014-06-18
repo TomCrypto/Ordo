@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_c18379eaeb444da03f5e18a4eb82b9c7.html">enc</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_d0e2ba83fd2678cc205586c5de9d9043.html">enc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,72 +90,55 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">enc_stream.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="enc__stream_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//===-- enc/enc_stream.h -------------------------------*- PUBLIC -*- H -*-===//</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"></span><span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<a href="enc__stream_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- enc/enc_stream.h -------------------------------*- PUBLIC -*- H -*-===*/</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#ifndef ORDO_ENC_STREAM_H</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_ENC_STREAM_H</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="stream__ciphers_8h.html">ordo/primitives/stream_ciphers.h</a>&quot;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">struct </span>ENC_STREAM_CTX;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">struct </span>ENC_STREAM_CTX *<a class="code" href="enc__stream_8h.html#a89029db9d8363ff85334ea9ef7152246">enc_stream_alloc</a>(<span class="keyword">const</span> <span class="keyword">struct</span> STREAM_CIPHER *cipher);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">int</span> <a class="code" href="enc__stream_8h.html#ae9941f41598f81c480a92ae0234034a9">enc_stream_init</a>(<span class="keyword">struct</span> ENC_STREAM_CTX *ctx,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *key,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                    <span class="keywordtype">size_t</span> key_size,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> <a class="code" href="enc__stream_8h.html#ad6dbbda3711fcfa3dd40ca5208044109">enc_stream_update</a>(<span class="keyword">struct</span> ENC_STREAM_CTX *ctx,</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                       <span class="keywordtype">void</span> *buffer,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                       <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">void</span> <a class="code" href="enc__stream_8h.html#a7e8b98004c699fcd6581507259dd21ef">enc_stream_final</a>(<span class="keyword">struct</span> ENC_STREAM_CTX *ctx);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">void</span> <a class="code" href="enc__stream_8h.html#abb8e07a569a73058a33e94b0d190436e">enc_stream_free</a>(<span class="keyword">struct</span> ENC_STREAM_CTX *ctx);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keywordtype">void</span> <a class="code" href="enc__stream_8h.html#a0729f67413eaa8f755922bf207c5b13e">enc_stream_copy</a>(<span class="keyword">struct</span> ENC_STREAM_CTX *dst,</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                     <span class="keyword">const</span> <span class="keyword">struct</span> ENC_STREAM_CTX *src);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="enc__stream_8h.html#adafb1565af8fd03ed71623d7bb320923">enc_stream_key_len</a>(<span class="keyword">const</span> <span class="keyword">struct</span> STREAM_CIPHER *cipher,</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                          <span class="keywordtype">size_t</span> key_len);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="enc__stream_8h_html_a0729f67413eaa8f755922bf207c5b13e"><div class="ttname"><a href="enc__stream_8h.html#a0729f67413eaa8f755922bf207c5b13e">enc_stream_copy</a></div><div class="ttdeci">ORDO_PUBLIC void enc_stream_copy(struct ENC_STREAM_CTX *dst, const struct ENC_STREAM_CTX *src)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:57</div></div>
-<div class="ttc" id="enc__stream_8h_html_a7e8b98004c699fcd6581507259dd21ef"><div class="ttname"><a href="enc__stream_8h.html#a7e8b98004c699fcd6581507259dd21ef">enc_stream_final</a></div><div class="ttdeci">ORDO_PUBLIC void enc_stream_final(struct ENC_STREAM_CTX *ctx)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:46</div></div>
-<div class="ttc" id="enc__stream_8h_html_abb8e07a569a73058a33e94b0d190436e"><div class="ttname"><a href="enc__stream_8h.html#abb8e07a569a73058a33e94b0d190436e">enc_stream_free</a></div><div class="ttdeci">ORDO_PUBLIC void enc_stream_free(struct ENC_STREAM_CTX *ctx)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:51</div></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define enc_stream_init                  ordo_enc_stream_init</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_update                ordo_enc_stream_update</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_final                 ordo_enc_stream_final</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_key_len               ordo_enc_stream_key_len</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define ENC_STREAM_CTX STREAM_STATE</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#a6675550871294a1cf33fd655bec07b2c">   44</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_init stream_init</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#acbb9c7042b1cd8141e9809e5b049a92b">   58</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_update stream_update</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#af437c971b934407138373ea3dcfd9b2d">   64</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_final stream_final</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="enc__stream_8h.html#a0e0205389b2af58a5d03310363cb84b6">enc_stream_key_len</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher,</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                          <span class="keywordtype">size_t</span> key_len);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
 <div class="ttc" id="stream__ciphers_8h_html"><div class="ttname"><a href="stream__ciphers_8h.html">stream_ciphers.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="enc__stream_8h_html_ae9941f41598f81c480a92ae0234034a9"><div class="ttname"><a href="enc__stream_8h.html#ae9941f41598f81c480a92ae0234034a9">enc_stream_init</a></div><div class="ttdeci">ORDO_PUBLIC int enc_stream_init(struct ENC_STREAM_CTX *ctx, const void *key, size_t key_size, const void *params)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:31</div></div>
-<div class="ttc" id="enc__stream_8h_html_ad6dbbda3711fcfa3dd40ca5208044109"><div class="ttname"><a href="enc__stream_8h.html#ad6dbbda3711fcfa3dd40ca5208044109">enc_stream_update</a></div><div class="ttdeci">ORDO_PUBLIC void enc_stream_update(struct ENC_STREAM_CTX *ctx, void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:39</div></div>
-<div class="ttc" id="enc__stream_8h_html_adafb1565af8fd03ed71623d7bb320923"><div class="ttname"><a href="enc__stream_8h.html#adafb1565af8fd03ed71623d7bb320923">enc_stream_key_len</a></div><div class="ttdeci">ORDO_PUBLIC size_t enc_stream_key_len(const struct STREAM_CIPHER *cipher, size_t key_len)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:63</div></div>
-<div class="ttc" id="enc__stream_8h_html_a89029db9d8363ff85334ea9ef7152246"><div class="ttname"><a href="enc__stream_8h.html#a89029db9d8363ff85334ea9ef7152246">enc_stream_alloc</a></div><div class="ttdeci">ORDO_PUBLIC struct ENC_STREAM_CTX * enc_stream_alloc(const struct STREAM_CIPHER *cipher)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:17</div></div>
+<div class="ttc" id="enc__stream_8h_html_a0e0205389b2af58a5d03310363cb84b6"><div class="ttname"><a href="enc__stream_8h.html#a0e0205389b2af58a5d03310363cb84b6">enc_stream_key_len</a></div><div class="ttdeci">ORDO_PUBLIC size_t enc_stream_key_len(prim_t cipher, size_t key_len)</div><div class="ttdef"><b>Definition:</b> enc_stream.c:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

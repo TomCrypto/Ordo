@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_462de7c1e1b35dcbd41187fa92c0aa0f.html">primitives</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_7ab082df77894271436dc1ec132901b9.html">primitives</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,105 +90,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">hash_functions.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="hash__functions_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//===-- primitives/hash_functions.h --------------------*- PUBLIC -*- H -*-===//</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"></span><span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<a href="hash__functions_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- primitives/hash_functions.h --------------------*- PUBLIC -*- H -*-===*/</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#ifndef ORDO_HASH_FUNCTIONS_H</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_HASH_FUNCTIONS_H</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hash__params_8h.html">ordo/primitives/hash_functions/hash_params.h</a>&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">struct </span>HASH_FUNCTION;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="hash__functions_8h.html#a10528b6fe9c461f4e5c40eeee4204c9d">hash_function_name</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *<a class="code" href="hash__functions_8h.html#a0fca1da54aaf7a82d2b49d8bb8bfda83">ordo_sha256</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *<a class="code" href="hash__functions_8h.html#a45274ebe55f3ec6d02a1dfcf871be8b9">ordo_md5</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *<a class="code" href="hash__functions_8h.html#a014a766b21ba6180668cb933cc257781">ordo_skein256</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *<a class="code" href="hash__functions_8h.html#a762145b036d92a55cf7e5e9abe8e4ca7">hash_function_by_name</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define hash_init                        ordo_hash_init</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define hash_update                      ordo_hash_update</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define hash_final                       ordo_hash_final</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define hash_query                       ordo_hash_query</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">int</span> <a class="code" href="hash__functions_8h.html#a0d048f223aa81366e37e403389e98598">hash_init</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;              <a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> primitive, <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                 <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">const</span> <span class="keyword">struct </span>HASH_FUNCTION *<a class="code" href="hash__functions_8h.html#a52a59051b322645e00dae8299671a87c">hash_function_by_index</a>(<span class="keywordtype">size_t</span> index);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                <span class="keywordtype">void</span> *digest);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#acd4bd632815c84de381be66c10c1aa1c">hash_function_count</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordtype">void</span> *<a class="code" href="hash__functions_8h.html#a19dd175e7ce27e75281bc1345b5fff02">hash_function_alloc</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">int</span> <a class="code" href="hash__functions_8h.html#a440909860662fb40aa4e860fa975b499">hash_function_init</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                       <span class="keywordtype">void</span> *state,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                       <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a4f848af22b0782c0a0c4d688cd77b33a">hash_function_update</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                          <span class="keywordtype">void</span> *state,</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                          <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer,</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                          <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ad38082f2e0056778ff5c6b6254c50b32">hash_function_final</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                         <span class="keywordtype">void</span> *state,</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                         <span class="keywordtype">void</span> *digest);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ab2f7703ab7b6c6bda140fe67a4ba3438">hash_function_free</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                        <span class="keywordtype">void</span> *state);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a04d3139084e555d61b3683e84d5bdadb">hash_function_copy</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        <span class="keywordtype">void</span> *dst,</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                        <span class="keyword">const</span> <span class="keywordtype">void</span> *src);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#ae0dbf373f85b7c19c138a0c573cabcf7">hash_function_query</a>(<span class="keyword">const</span> <span class="keyword">struct</span> HASH_FUNCTION *primitive,</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                           <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="hash__functions_8h_html_a4f848af22b0782c0a0c4d688cd77b33a"><div class="ttname"><a href="hash__functions_8h.html#a4f848af22b0782c0a0c4d688cd77b33a">hash_function_update</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_update(const struct HASH_FUNCTION *primitive, void *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:151</div></div>
-<div class="ttc" id="hash__functions_8h_html_a45274ebe55f3ec6d02a1dfcf871be8b9"><div class="ttname"><a href="hash__functions_8h.html#a45274ebe55f3ec6d02a1dfcf871be8b9">ordo_md5</a></div><div class="ttdeci">ORDO_PUBLIC const struct HASH_FUNCTION * ordo_md5(void)</div><div class="ttdoc">The MD5 hash function. </div><div class="ttdef"><b>Definition:</b> hash_functions.c:47</div></div>
-<div class="ttc" id="hash__functions_8h_html_a10528b6fe9c461f4e5c40eeee4204c9d"><div class="ttname"><a href="hash__functions_8h.html#a10528b6fe9c461f4e5c40eeee4204c9d">hash_function_name</a></div><div class="ttdeci">ORDO_PUBLIC const char * hash_function_name(const struct HASH_FUNCTION *primitive)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:40</div></div>
-<div class="ttc" id="hash__functions_8h_html_ad38082f2e0056778ff5c6b6254c50b32"><div class="ttname"><a href="hash__functions_8h.html#ad38082f2e0056778ff5c6b6254c50b32">hash_function_final</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_final(const struct HASH_FUNCTION *primitive, void *state, void *digest)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:159</div></div>
-<div class="ttc" id="hash__functions_8h_html_a52a59051b322645e00dae8299671a87c"><div class="ttname"><a href="hash__functions_8h.html#a52a59051b322645e00dae8299671a87c">hash_function_by_index</a></div><div class="ttdeci">ORDO_PUBLIC const struct HASH_FUNCTION * hash_function_by_index(size_t index)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:120</div></div>
-<div class="ttc" id="hash__functions_8h_html_a19dd175e7ce27e75281bc1345b5fff02"><div class="ttname"><a href="hash__functions_8h.html#a19dd175e7ce27e75281bc1345b5fff02">hash_function_alloc</a></div><div class="ttdeci">ORDO_PUBLIC void * hash_function_alloc(const struct HASH_FUNCTION *primitive)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:139</div></div>
-<div class="ttc" id="hash__functions_8h_html_a014a766b21ba6180668cb933cc257781"><div class="ttname"><a href="hash__functions_8h.html#a014a766b21ba6180668cb933cc257781">ordo_skein256</a></div><div class="ttdeci">ORDO_PUBLIC const struct HASH_FUNCTION * ordo_skein256(void)</div><div class="ttdoc">The Skein-256 hash function. </div><div class="ttdef"><b>Definition:</b> hash_functions.c:85</div></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> primitive,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                  <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
+<div class="ttc" id="hash__functions_8h_html_a77031706039df9adcaf773da0f5445fc"><div class="ttname"><a href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_query(prim_t primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:89</div></div>
+<div class="ttc" id="hash__functions_8h_html_ab84990c894aaaa1a29f546836ad179a4"><div class="ttname"><a href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a></div><div class="ttdeci">ORDO_PUBLIC void hash_final(struct HASH_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:66</div></div>
+<div class="ttc" id="hash__functions_8h_html_a0d048f223aa81366e37e403389e98598"><div class="ttname"><a href="hash__functions_8h.html#a0d048f223aa81366e37e403389e98598">hash_init</a></div><div class="ttdeci">ORDO_PUBLIC int hash_init(struct HASH_STATE *state, prim_t primitive, const void *params)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:21</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="hash__functions_8h_html_ae0dbf373f85b7c19c138a0c573cabcf7"><div class="ttname"><a href="hash__functions_8h.html#ae0dbf373f85b7c19c138a0c573cabcf7">hash_function_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_function_query(const struct HASH_FUNCTION *primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:179</div></div>
-<div class="ttc" id="hash__functions_8h_html_a762145b036d92a55cf7e5e9abe8e4ca7"><div class="ttname"><a href="hash__functions_8h.html#a762145b036d92a55cf7e5e9abe8e4ca7">hash_function_by_name</a></div><div class="ttdeci">ORDO_PUBLIC const struct HASH_FUNCTION * hash_function_by_name(const char *name)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:104</div></div>
-<div class="ttc" id="hash__functions_8h_html_a440909860662fb40aa4e860fa975b499"><div class="ttname"><a href="hash__functions_8h.html#a440909860662fb40aa4e860fa975b499">hash_function_init</a></div><div class="ttdeci">ORDO_PUBLIC int hash_function_init(const struct HASH_FUNCTION *primitive, void *state, const void *params)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:144</div></div>
-<div class="ttc" id="hash__functions_8h_html_acd4bd632815c84de381be66c10c1aa1c"><div class="ttname"><a href="hash__functions_8h.html#acd4bd632815c84de381be66c10c1aa1c">hash_function_count</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_function_count(void)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:132</div></div>
-<div class="ttc" id="hash__functions_8h_html_a0fca1da54aaf7a82d2b49d8bb8bfda83"><div class="ttname"><a href="hash__functions_8h.html#a0fca1da54aaf7a82d2b49d8bb8bfda83">ordo_sha256</a></div><div class="ttdeci">ORDO_PUBLIC const struct HASH_FUNCTION * ordo_sha256(void)</div><div class="ttdoc">The SHA-256 hash function. </div><div class="ttdef"><b>Definition:</b> hash_functions.c:66</div></div>
-<div class="ttc" id="hash__functions_8h_html_a04d3139084e555d61b3683e84d5bdadb"><div class="ttname"><a href="hash__functions_8h.html#a04d3139084e555d61b3683e84d5bdadb">hash_function_copy</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_copy(const struct HASH_FUNCTION *primitive, void *dst, const void *src)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:172</div></div>
-<div class="ttc" id="hash__functions_8h_html_ab2f7703ab7b6c6bda140fe67a4ba3438"><div class="ttname"><a href="hash__functions_8h.html#ab2f7703ab7b6c6bda140fe67a4ba3438">hash_function_free</a></div><div class="ttdeci">ORDO_PUBLIC void hash_function_free(const struct HASH_FUNCTION *primitive, void *state)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:166</div></div>
+<div class="ttc" id="hash__functions_8h_html_a7c5e7766fb032e9936ea4ef9eb1e4f1f"><div class="ttname"><a href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a></div><div class="ttdeci">ORDO_PUBLIC void hash_update(struct HASH_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:43</div></div>
 <div class="ttc" id="hash__params_8h_html"><div class="ttname"><a href="hash__params_8h.html">hash_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

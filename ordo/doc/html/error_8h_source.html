@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">2.7.1</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d123810ffc52040794f0e98a285358dc.html">Ordo</a></li><li class="navelem"><a class="el" href="dir_0d02763f569ebb2bad671cc2bd02e294.html">include</a></li><li class="navelem"><a class="el" href="dir_c00beb2f47f1a372281af19e94b4f2ce.html">ordo</a></li><li class="navelem"><a class="el" href="dir_3fe948eabb9fcb35afed81796c2d9321.html">common</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_dd693003ba73995af773430f8dbf2713.html">ordo</a></li><li class="navelem"><a class="el" href="dir_d103d6802619b1ccb3f7bb5e4656153d.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -90,61 +90,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">error.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="error_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//===-- common/errors.h --------------------------------*- PUBLIC -*- H -*-===//</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"></span><span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<a href="error_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- common/errors.h --------------------------------*- PUBLIC -*- H -*-===*/</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#ifndef ORDO_ERROR_H</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_ERROR_H</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="error_8h.html#a720eb73dee3d9bea09cc0cba1d7db13a">ordo_error_msg</a>(<span class="keywordtype">int</span> code);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">   39</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">ORDO_ERROR</a></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129">   45</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129">ORDO_SUCCESS</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a085e33c510c0246e0cb48968f3a3c580">   52</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a085e33c510c0246e0cb48968f3a3c580">ORDO_FAIL</a>,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a68146dcf5237899792ec7a9490f18d12">   62</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a68146dcf5237899792ec7a9490f18d12">ORDO_LEFTOVER</a>,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3111d7993a8dd20ca8474681751c3a9">   79</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3111d7993a8dd20ca8474681751c3a9">ORDO_KEY_LEN</a>,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5">   96</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5">ORDO_PADDING</a>,</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3af89d5264e888dffb7f57194370ba45cb">  108</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3af89d5264e888dffb7f57194370ba45cb">ORDO_ALLOC</a>,</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a2fdf7332be97bd5376dda7c5810125ea">  120</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a2fdf7332be97bd5376dda7c5810125ea">ORDO_ARG</a></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">//===----------------------------------------------------------------------===//</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="error_8h.html#a720eb73dee3d9bea09cc0cba1d7db13a">ordo_error_msg</a>(<span class="keywordtype">int</span> code);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">  115</a></span>&#160;<span class="keyword">enum</span> <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">ORDO_ERROR</a></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;{</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">  117</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a>,</div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a97599c9aca611faae007068794557b0e">  118</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a97599c9aca611faae007068794557b0e">ORDO_FAIL</a>,</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a5ca3670d84f9a2d7b664eb7178603f8c">  119</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a5ca3670d84f9a2d7b664eb7178603f8c">ORDO_LEFTOVER</a>,</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3ecdd3d0abd94fbf5a6467369ee918b">  120</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3ecdd3d0abd94fbf5a6467369ee918b">ORDO_KEY_LEN</a>,</div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a8f93efb3991e2621b77224186902ded9">  121</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a8f93efb3991e2621b77224186902ded9">ORDO_PADDING</a>,</div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437">  122</a></span>&#160;    <a class="code" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437">ORDO_ARG</a></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a085e33c510c0246e0cb48968f3a3c580"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a085e33c510c0246e0cb48968f3a3c580">ORDO_FAIL</a></div><div class="ttdef"><b>Definition:</b> error.h:52</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a68146dcf5237899792ec7a9490f18d12"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a68146dcf5237899792ec7a9490f18d12">ORDO_LEFTOVER</a></div><div class="ttdef"><b>Definition:</b> error.h:62</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">ORDO_ERROR</a></div><div class="ttdeci">ORDO_ERROR</div><div class="ttdef"><b>Definition:</b> error.h:39</div></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437">ORDO_ARG</a></div><div class="ttdef"><b>Definition:</b> error.h:122</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a97599c9aca611faae007068794557b0e"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a97599c9aca611faae007068794557b0e">ORDO_FAIL</a></div><div class="ttdef"><b>Definition:</b> error.h:118</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3">ORDO_ERROR</a></div><div class="ttdeci">ORDO_ERROR</div><div class="ttdef"><b>Definition:</b> error.h:115</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3aeac88754638f0b42c8becf05730f4129">ORDO_SUCCESS</a></div><div class="ttdef"><b>Definition:</b> error.h:45</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a9ffc9c8ac65d72145bb648da350bd5c5">ORDO_PADDING</a></div><div class="ttdef"><b>Definition:</b> error.h:96</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3ae3ecdd3d0abd94fbf5a6467369ee918b"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3ecdd3d0abd94fbf5a6467369ee918b">ORDO_KEY_LEN</a></div><div class="ttdef"><b>Definition:</b> error.h:120</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a></div><div class="ttdef"><b>Definition:</b> error.h:117</div></div>
 <div class="ttc" id="error_8h_html_a720eb73dee3d9bea09cc0cba1d7db13a"><div class="ttname"><a href="error_8h.html#a720eb73dee3d9bea09cc0cba1d7db13a">ordo_error_msg</a></div><div class="ttdeci">ORDO_PUBLIC const char * ordo_error_msg(int code)</div><div class="ttdef"><b>Definition:</b> error.c:11</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3af89d5264e888dffb7f57194370ba45cb"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3af89d5264e888dffb7f57194370ba45cb">ORDO_ALLOC</a></div><div class="ttdef"><b>Definition:</b> error.h:108</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3ae3111d7993a8dd20ca8474681751c3a9"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ae3111d7993a8dd20ca8474681751c3a9">ORDO_KEY_LEN</a></div><div class="ttdef"><b>Definition:</b> error.h:79</div></div>
-<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a2fdf7332be97bd5376dda7c5810125ea"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a2fdf7332be97bd5376dda7c5810125ea">ORDO_ARG</a></div><div class="ttdef"><b>Definition:</b> error.h:120</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a5ca3670d84f9a2d7b664eb7178603f8c"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a5ca3670d84f9a2d7b664eb7178603f8c">ORDO_LEFTOVER</a></div><div class="ttdef"><b>Definition:</b> error.h:119</div></div>
+<div class="ttc" id="error_8h_html_a7e07095466ca14dd043a75140b9874a3a8f93efb3991e2621b77224186902ded9"><div class="ttname"><a href="error_8h.html#a7e07095466ca14dd043a75140b9874a3a8f93efb3991e2621b77224186902ded9">ORDO_PADDING</a></div><div class="ttdef"><b>Definition:</b> error.h:121</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 2 2014 15:33:15 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
