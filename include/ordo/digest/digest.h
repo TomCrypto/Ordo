@@ -64,7 +64,7 @@ extern "C" {
 *** @remarks It is always valid to pass  \c 0 into \c params if you don't want
 ***          to use special features offered by a specific hash function.
 ***
-*** @remarks It  is \b not valid to initialize digest  contexts more than once
+*** @warning It  is \b not valid to initialize digest  contexts more than once
 ***          before calling \c digest_final(), this is because some algorithms
 ***          may allocate additional memory depending on the parameters given.
 **/
@@ -101,7 +101,7 @@ extern "C" {
 ***          and will  return the so-called "zero-length" digest, which is the
 ***          digest of the input of length zero.
 ***
-*** @remarks After this  function returns, you may not call \c digest_update()
+*** @warning After this  function returns, you may not call \c digest_update()
 ***          again until you reinitialize the context using \c digest_init().
 **/
 #define ordo_digest_final hash_final

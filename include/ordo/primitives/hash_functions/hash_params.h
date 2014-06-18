@@ -48,7 +48,7 @@ struct SKEIN256_PARAMS
     ***
     *** @warning This parameter affects the hash function's digest length.
     ***
-    *** @remarks The actual output length will be in bytes, and this parameter
+    *** @warning The actual output length will be in bytes, and this parameter
     ***          \b will be  truncated to a byte boundary, so this should be a
     ***          multiple of 8 to avoid any surprises.
     **/

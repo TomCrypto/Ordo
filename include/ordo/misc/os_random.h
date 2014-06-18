@@ -57,11 +57,11 @@ int os_random(void *out, size_t len);
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
-*** @remarks If your platform doesn't provide this feature, this function will
+*** @warning If your platform doesn't provide this feature, this function will
 ***          fall back to \c os_random() (there is no way to know whether this
 ***          feature is available, this is by design).
 ***
-*** @remarks You should not need to know whether this feature is available, as
+*** @warning You should not need to know whether this feature is available, as
 ***          this function will make a "best effort" attempt to obtain entropy
 ***          from the operating system - you should use this function for high
 ***          security uses such as generating private keys (it has a high cost

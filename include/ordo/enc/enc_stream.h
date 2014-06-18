@@ -49,7 +49,7 @@ extern "C" {
 *** @param [in,out] buffer         The plaintext or ciphertext buffer.
 *** @param [in]     len            Number of bytes to read from the buffer.
 ***
-*** @remarks By nature, stream  ciphers encrypt and decrypt data the same way,
+*** @warning By nature, stream  ciphers encrypt and decrypt data the same way,
 ***          in other  words, if you encrypt data twice, you will get back the
 ***          original data.
 ***
@@ -65,7 +65,7 @@ extern "C" {
 
 /** Queries a stream cipher for its key length.
 ***
-*** @param [in]     cipher         The stream cipher to probe.
+*** @param [in]     cipher         The stream cipher to query.
 *** @param [in]     key_len        A suggested key length.
 ***
 *** @returns \c  key_len if and only if \c  key_len is a valid  key length for

@@ -93,7 +93,7 @@ int enc_block_init(struct ENC_BLOCK_CTX *ctx,
 ***          called).
 ***
 *** @remarks Some modes of  operation always  process all input data, in which
-***          case they may allow \c out_len to be nil; check the documentation
+***          case they  may allow \c out_len to be 0 - check the documentation
 //           of the relevant mode of operation.
 **/
 ORDO_PUBLIC
@@ -118,7 +118,7 @@ void enc_block_update(struct ENC_BLOCK_CTX *ctx,
 ***          plaintext.
 ***
 *** @remarks Some modes of  operation always  process all input data, in which
-***          case they may allow \c out_len to be nil; check the documentation
+***          case they  may allow \c out_len to be 0 - check the documentation
 ***          of the relevant mode of operation.
 **/
 ORDO_PUBLIC
@@ -130,7 +130,7 @@ int enc_block_final(struct ENC_BLOCK_CTX *ctx,
 *** @param [in]     cipher         A block cipher primitive.
 *** @param [in]     key_len        A suggested key length.
 ***
-*** @returns An ideal key length to use for this cipher.
+*** @returns A suitable key length to use for this cipher.
 **/
 ORDO_PUBLIC
 size_t enc_block_key_len(prim_t cipher,
@@ -142,7 +142,7 @@ size_t enc_block_key_len(prim_t cipher,
 *** @param [in]     mode           A block mode primitive.
 *** @param [in]     iv_len         A suggested IV length.
 ***
-*** @returns An ideal IV length to use for this mode and cipher.
+*** @returns A suitable IV length to use for this mode and cipher.
 **/
 ORDO_PUBLIC
 size_t enc_block_iv_len(prim_t cipher,

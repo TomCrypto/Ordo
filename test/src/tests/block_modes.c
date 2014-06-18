@@ -96,6 +96,8 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
         size_t check_len = test.in_len;
         int err;
 
+        memcpy(scratch, test.input, check_len);
+
         /* We will encrypt in place, for simplicity (this also implicitly
          * tests buffered encryption, by definition). Also note that the
          * NullCipher uses no key, so no need to pass that in. */
@@ -103,7 +105,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
                              1, /* encryption */
                              0, 0, /* no key */
                              test.iv, test.iv_len,
-                             test.input, check_len,
+                             scratch, check_len,
                              scratch, &check_len);
 
         if (err || (check_len != (size_t)test.out_len))

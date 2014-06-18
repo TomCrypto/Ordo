@@ -11,13 +11,11 @@
 *** Usage snippet (compare to snippet in \c digest.h):
 ***
 *** @code
-***
 *** const char x[] = "Hello, world!";
 *** unsigned char out[32]; // 256 bits
 *** int err = ordo_digest(HASH_SHA256, 0, x, strlen(x), out);
 *** if (err) printf("Error encountered!\n");
 *** // out = 315f5bdb76d0...
-***
 *** @endcode
 ***
 *** Some specialized headers are *not* included by this header - these are the
@@ -100,7 +98,7 @@ int ordo_enc_block(prim_t cipher, const void *cipher_params,
 *** @remarks Encryption  is always done in  place. If you require out-of-place
 ***          encryption, make a copy of the plaintext prior to encryption.
 ***
-*** @remarks By design, encryption  and decryption are  equivalent for  stream
+*** @warning By design, encryption  and decryption are  equivalent for  stream
 ***          ciphers - an implication is that encrypting a message twice using
 ***          the same key yields the original message.
 **/

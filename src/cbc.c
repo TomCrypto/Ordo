@@ -41,7 +41,7 @@ int cbc_init(struct CBC_STATE *state,
     memset(state->iv, 0x00, state->block_size);
     memcpy(state->iv, iv, iv_len);
 
-    state->padding = (params == 0) ? 1 : params->padding & 1;
+    state->padding = (params == 0) ? 1 : (params->padding == 1);
 
     return ORDO_SUCCESS;
 }

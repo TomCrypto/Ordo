@@ -38,7 +38,7 @@ int ecb_init(struct ECB_STATE *state,
 
     state->available = 0;
     state->direction = direction;
-    state->padding = (params == 0) ? 1 : params->padding & 1;
+    state->padding = (params == 0) ? 1 : (params->padding == 1);
 
     return ORDO_SUCCESS;
 }

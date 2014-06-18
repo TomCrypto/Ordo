@@ -26,12 +26,11 @@ struct ECB_PARAMS
 {
     /** Whether padding should be used.
     ***
-    *** @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
-    ***          least significant bit is used, all other bits are ignored.
+    *** @remarks Set to 0 to disable padding, and 1 to enable it.
     ***
     *** @remarks Padding is enabled by default if parameters are not used.
     **/
-    size_t padding;
+    int padding;
 };
 
 /** @brief CBC parameters.
@@ -40,12 +39,11 @@ struct CBC_PARAMS
 {
     /** Whether padding should be used.
     ***
-    *** @remarks Set to 0 to  disable  padding, and 1 to  enable it - only the
-    ***          least significant bit is used, all other bits are ignored.
+    *** @remarks Set to 0 to disable padding, and 1 to enable it.
     ***
     *** @remarks Padding is enabled by default if parameters are not used.
     **/
-    size_t padding;
+    int padding;
 };
 
 /*===----------------------------------------------------------------------===*/

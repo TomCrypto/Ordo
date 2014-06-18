@@ -67,8 +67,8 @@ int block_mode_init(struct BLOCK_MODE_STATE *state,
 ***                                has \b not been ignored  and should  not be
 ***                                passed again.
 ***
-*** @remarks In-place  encryption (by  letting \c in be the  same buffer as \c
-***          out) may not be supported by \c mode, check the documentation.
+*** @warning In-place  encryption (by  letting \c in be the  same buffer as \c
+***          out) is always supported, however the buffers may \b not overlap.
 **/
 ORDO_PUBLIC
 void block_mode_update(struct BLOCK_MODE_STATE *state,

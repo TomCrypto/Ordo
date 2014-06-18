@@ -86,7 +86,7 @@ ORDO_HIDDEN uint64_t ror64(uint64_t x, int n);
 ***          the  length of the message  plus \c N is a  multiple of the  block
 ***          cipher's block size.
 ***
-*** @remarks This implies the buffer must be at least \c padding bytes long.
+*** @warning This implies the buffer must be at least \c padding bytes long.
 **/
 ORDO_HIDDEN
 int pad_check(const unsigned char *buffer, uint8_t padding);
@@ -99,7 +99,7 @@ int pad_check(const unsigned char *buffer, uint8_t padding);
 ***
 *** @remarks This is conceptually equivalent to \c dst \c ^= \c src.
 ***
-*** @remarks The source and destination buffers may be the same (in which case
+*** @warning The source and destination buffers may be the same (in which case
 ***          the buffer will contain \c len zeroes), but otherwise they cannot
 ***          overlap.
 **/
