@@ -15,10 +15,7 @@ What's new in 0.3.0:
  - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
  - the test driver is being reworked (work in progress)
  - the HMAC module has been slightly changed to apply the hash parameters on the outer hash instance, which allows for variable output length parameters
-
-Todo before merge:
- - complete naming conventions
- - review and fix documentation
+ - all functions have been namespaced, to prevent declaration and linking conflicts
 
 Feature Map
 -----------
