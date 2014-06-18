@@ -13,9 +13,9 @@
 *** @code
 ***
 *** const char x[] = "Hello, world!";
-*** unsigned char out[32];
-*** int err = ordo_digest(sha256(), 0, x, strlen(x), out);
-*** if (err) printf("Error encountered!");
+*** unsigned char out[32]; // 256 bits
+*** int err = ordo_digest(HASH_SHA256, 0, x, strlen(x), out);
+*** if (err) printf("Error encountered!\n");
 *** // out = 315f5bdb76d0...
 ***
 *** @endcode
@@ -135,8 +135,6 @@ int ordo_digest(prim_t hash, const void *params,
 *** @param [out]    fingerprint    The output buffer for the fingerprint.
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
-***
-*** @remarks Do not use hash parameters which modify output length.
 **/
 ORDO_PUBLIC
 int ordo_hmac(prim_t hash, const void *params,

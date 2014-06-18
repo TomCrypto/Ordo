@@ -34,7 +34,7 @@ extern "C" {
 
 /** Initializes a block cipher state.
 ***
-*** @param [in,out] state          An allocated block cipher state.
+*** @param [in,out] state          A block cipher state.
 *** @param [in]     key            The cryptographic key to use.
 *** @param [in]     key_len        The length, in bytes, of the key.
 *** @param [in]     primitive      A block cipher primitive.

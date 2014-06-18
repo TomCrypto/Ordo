@@ -49,7 +49,7 @@ int stream_init(struct STREAM_STATE *state,
 
 /** Encrypts or decrypts a buffer using a stream cipher state.
 ***
-*** @param [in,out] state          A stream cipher state.
+*** @param [in,out] state          An initialized stream cipher state.
 *** @param [in,out] buffer         The buffer to encrypt or decrypt.
 *** @param [in]     len            The length, in bytes, of the buffer.
 ***
@@ -65,7 +65,7 @@ void stream_update(struct STREAM_STATE *state,
 
 /** Finalizes a stream cipher state.
 ***
-*** @param [in,out] state          A stream cipher state.
+*** @param [in,out] state          An initialized stream cipher state.
 **/
 ORDO_PUBLIC
 void stream_final(struct STREAM_STATE *state);

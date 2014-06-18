@@ -32,7 +32,7 @@ extern "C" {
 
 /** Initializes a hash function state.
 ***
-*** @param [in,out] state          An allocated hash function state.
+*** @param [in,out] state          A hash function state.
 *** @param [in]     primitive      A hash function primitive.
 *** @param [in]     params         Hash function specific parameters.
 ***
@@ -45,7 +45,7 @@ int hash_init(struct HASH_STATE *state,
 /** Updates a hash  function state by  appending a buffer to the  message this
 *** state is to calculate the cryptographic digest of.
 ***
-*** @param [in,out] state          A hash function state.
+*** @param [in,out] state          An initialized hash function state.
 *** @param [in]     buffer         A buffer to append to the message.
 *** @param [in]     len            The length, in bytes, of the buffer.
 ***
@@ -59,7 +59,7 @@ void hash_update(struct HASH_STATE *state,
 
 /** Finalizes a hash function state, outputting the final digest.
 ***
-*** @param [in,out] state          A hash function state.
+*** @param [in,out] state          An initialized hash function state.
 *** @param [out]    digest         A buffer in which to write the digest.
 ***
 *** @remarks The \c digest buffer should  be as  large as the  hash function's

@@ -14,12 +14,10 @@
 *** Usage snippet:
 ***
 *** @code
-*** const struct HASH_FUNCTION *hash = sha256();
-*** struct DIGEST_CTX *ctx = digest_alloc(hash);
-*** if (!ctx) printf("Failed to allocate ctx!");
+*** struct DIGEST_CTX ctx;
 ***
-*** int err = digest_init(ctx, 0);
-*** if (err) printf("Got error!");
+*** int err = digest_init(ctx, HASH_SHA256, 0);
+*** if (err) printf("Got error!\n");
 ***
 *** const char x[] = "Hello, world!";
 *** digest_update(ctx, x, strlen(x));
@@ -27,8 +25,6 @@
 *** unsigned char out[32];
 *** digest_final(ctx, out);
 *** // out = 315f5bdb76d0...
-***
-*** digest_free(ctx);
 *** @endcode
 **/
 /*===----------------------------------------------------------------------===*/
@@ -59,7 +55,8 @@ extern "C" {
 
 /** Initializes a digest context.
 ***
-*** @param [in,out] ctx            An allocated digest context.
+*** @param [in,out] ctx            A digest context.
+*** @param [in]     primitive      A hash function primitive.
 *** @param [in]     params         Hash function parameters.
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
