@@ -37,13 +37,14 @@ HOT_CODE;
 
 /*===----------------------------------------------------------------------===*/
 
-void curve25519_gen(void *priv)
+int curve25519_gen(void *priv)
 {
     int err = os_secure_random(priv, bits(256));
     if (!err) return err;
     *((uint8_t *)priv +  0) &= 248;
     *((uint8_t *)priv + 31) &= 127;
     *((uint8_t *)priv + 31) |=  64;
+    return ORDO_SUCCESS;
 }
 
 void curve25519_pub(void *pub, const void *priv)
