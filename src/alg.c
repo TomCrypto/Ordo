@@ -56,16 +56,9 @@ int pad_check(const unsigned char *buffer, uint8_t padding)
     return 1;
 }
 
-void xor_buffer(void *dst, const void *src, size_t len)
+void xor_buffer(unsigned char *dst, const unsigned char *src, size_t len)
 {
-    while (len--)
-    {
-        *(unsigned char *)dst = *(unsigned char *)dst
-                              ^ *(unsigned char *)src;
-
-        dst = offset(dst, 1);
-        src = offset(src, 1);
-    }
+    while (len--) *(dst++) ^= *(src++);
 }
 
 void inc_buffer(unsigned char *buffer, size_t len)

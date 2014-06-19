@@ -223,5 +223,7 @@ void skein256_compress(const uint64_t *block,
     threefish256_forward(cipher, state);
     threefish256_final(cipher);
 
-    xor_buffer(state, block, SKEIN256_INTERNAL);
+    xor_buffer((unsigned char *)state,
+               (const unsigned char *)block,
+               SKEIN256_INTERNAL);
 }

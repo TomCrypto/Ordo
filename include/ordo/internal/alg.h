@@ -104,7 +104,7 @@ int pad_check(const unsigned char *buffer, uint8_t padding);
 ***          overlap.
 **/
 ORDO_HIDDEN
-void xor_buffer(void *dst, const void *src, size_t len);
+void xor_buffer(unsigned char *dst, const unsigned char *src, size_t len);
 
 /** Increments a  buffer of arbitrary  length, as though it were a \c len byte
 *** integer stored as a byte array.

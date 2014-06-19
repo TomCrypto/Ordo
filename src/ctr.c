@@ -11,7 +11,7 @@
 #if annotation
 struct CTR_STATE
 {
-    unsigned char iv[BLOCK_BLOCK_LEN];
+    unsigned char buf[BLOCK_BLOCK_LEN];
     unsigned char counter[BLOCK_BLOCK_LEN];
     size_t remaining;
     size_t block_size;
@@ -33,11 +33,11 @@ int ctr_init(struct CTR_STATE *state,
     if (ctr_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len)
         return ORDO_ARG;
 
-    memset(state->iv, 0x00, block_size);
-    memcpy(state->iv, iv, iv_len);
-    memcpy(state->counter, state->iv, block_size);
+    memset(state->buf, 0x00, block_size);
+    memcpy(state->buf, iv, iv_len);
+    memcpy(state->counter, state->buf, block_size);
 
-    block_forward(cipher_state, state->iv);
+    block_forward(cipher_state, state->buf);
     state->remaining = block_size;
 
     return ORDO_SUCCESS;
@@ -58,15 +58,15 @@ void ctr_update(struct CTR_STATE *state,
         if (state->remaining == 0)
         {
             inc_buffer(state->counter, block_size);
-            memcpy(state->iv, state->counter, block_size);
-            block_forward(cipher_state, state->iv);
+            memcpy(state->buf, state->counter, block_size);
+            block_forward(cipher_state, state->buf);
             state->remaining = block_size;
         }
 
         process = (inlen < state->remaining) ? inlen : state->remaining;
 
         if (out != in) memcpy(out, in, process);
-        xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
+        xor_buffer(out, offset(state->buf, block_size - state->remaining), process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
         inlen -= process;
