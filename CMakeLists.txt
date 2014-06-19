@@ -73,7 +73,7 @@ OPTION(COMPAT "For Older Compilers" OFF)
 
 IF(COMPILER_GNU OR COMPILER_CLANG)
     #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O1 -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
