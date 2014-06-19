@@ -130,12 +130,14 @@ SET(INCLUDE_FILES
     include/ordo/definitions.h
     include/ordo/misc/endianness.h
     include/ordo/misc/os_random.h
+    include/ordo/misc/curve25519.h
     include/ordo/enc/enc_block.h
     include/ordo/enc/enc_stream.h
     include/ordo/kdf/pbkdf2.h
     include/ordo/common/error.h
     include/ordo/common/query.h
     include/ordo/common/interface.h
+    include/ordo/common/identification.h
     include/ordo/common/version.h
     include/ordo/auth/hmac.h
     include/ordo/internal/alg.h
@@ -182,6 +184,8 @@ SET(IN_FILES
     pbkdf2.c
     stream_ciphers.c
     version.c
+    curve25519.c
+    curve25519.asm
 )
 
 SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)

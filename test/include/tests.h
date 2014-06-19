@@ -117,6 +117,13 @@ static struct TEST tests_stream[] =
     { (TEST_FUNCTION)test_enc_stream_interface, "Stream encryption module" },
 };
 
+extern int test_curve25519(void);
+
+static struct TEST tests_misc_modules[] =
+{
+    { (TEST_FUNCTION)test_curve25519, "Curve25519 test vectors" }
+};
+
 static struct TEST_GROUP TESTS[] =
 {
     #if defined(ORDO_STATIC_LIB)
@@ -138,6 +145,8 @@ static struct TEST_GROUP TESTS[] =
     { tests_kdf, TEST_COUNT(tests_kdf), "KDF module" },
     
     { tests_stream, TEST_COUNT(tests_stream), "Stream cipher primitives" },
+
+    { tests_misc_modules, TEST_COUNT(tests_misc_modules), "Miscellaneous modules" }
 };
 
 #define GROUP_COUNT (sizeof(TESTS) / sizeof(struct TEST_GROUP))

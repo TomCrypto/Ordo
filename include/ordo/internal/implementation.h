@@ -59,13 +59,16 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if defined(__clang__) || defined(__GNUC__) || defined(__MINGW32__)
+#if defined(__clang__)\
+ || defined(__GNUC__)\
+ || defined(__MINGW32__)\
+ || defined(__INTEL_COMPILER)
     #define ALIGN(x) __attribute__((aligned(x)))
 #elif defined(_MSC_VER)
     #define ALIGN(x) __declspec(align(x))
 #endif
 
-#if defined(__clang__)
+#if defined(__clang__) || defined(__INTEL_COMPILER)
     #define HOT_CODE __attribute__((hot))
     #define COLD_CODE __attribute__((cold))
 #elif defined(__GNUC__) || defined(__MINGW32__)

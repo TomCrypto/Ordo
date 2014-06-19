@@ -26,7 +26,7 @@ This table doesn't include every single feature but gives a high level overview 
  Block Ciphers | Stream Ciphers | Hash Functions | Modes | Authentication | Key Derivation | Misc
  ------------- | -------------- | -------------- | ----- | -------------- | -------------- | ----
  AES           | RC4            | MD5            | ECB   | HMAC           | PBKDF2         | CSPRNG
- Threefish-256 | -              | SHA-256        | CBC   | -              | -              | -
+ Threefish-256 | -              | SHA-256        | CBC   | -              | -              | Curve25519
  -             | -              | Skein-256      | OFB   | -              | -              | -
  -             | -              | -              | CFB   | -              | -              | -
  -             | -              | -              | CTR   | -              | -              | -

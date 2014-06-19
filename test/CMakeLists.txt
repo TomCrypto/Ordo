@@ -28,6 +28,7 @@ SET(SOURCE_FILES
     src/tests/hmac.c
     src/tests/pbkdf2.c
     src/tests/enc_stream.c
+    src/tests/curve25519.c
 )
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
