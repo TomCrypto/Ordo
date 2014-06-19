@@ -6,8 +6,8 @@
 
 BITS 64
 
-global aes_forward_ASM:function hidden
-global aes_inverse_ASM:function hidden
+global aes_forward_ASM
+global aes_inverse_ASM
 
 section .text
 
