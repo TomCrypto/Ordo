@@ -46,7 +46,7 @@ We support recent versions of MSVC, GCC, ICC (Linux only), MinGW, and Clang. Oth
 - `LTO`: use link-time optimization, this should be enabled for optimal performance.
 - `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
 - `NATIVE`: tune the build for the current hardware (e.g. `-march` for GCC).
-- `COMPAT`: remove some advanced compiler settings for older compiler versions (for GCC only, if this is enabled `LTO` has no effect)
+- `COMPAT`: remove some advanced compiler settings for older compiler versions (for GCC only, if this is enabled `LTO` and `NATIVE` have no effect)
 
 Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know). For the Intel compiler (ICC) with native optimization, architecture autodetection is not available - pass the appropriate architecture in ICC_TARGET (e.g. `-DICC_TARGET=SSE4.2`).
 
