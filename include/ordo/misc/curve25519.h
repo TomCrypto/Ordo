@@ -31,6 +31,8 @@ extern "C" {
 ***
 *** @param [out]    priv           Output buffer for the private key.
 ***
+*** @returns \c #ORDO_SUCCESS on success, else an error code.
+***
 *** @remarks The private key is exactly 32 bytes (256 bits) long.
 ***
 *** @remarks This function uses \c os_secure_random().
