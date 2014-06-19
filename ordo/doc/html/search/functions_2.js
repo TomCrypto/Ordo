@@ -14,5 +14,8 @@ var searchData=
   ['ctr_5finit',['ctr_init',['../ctr_8h.html#ac3aa671dba7a1e0fe6be7d4ddd825589',1,'ctr.c']]],
   ['ctr_5fquery',['ctr_query',['../ctr_8h.html#a935eb05aab3bc2c101a53b897745b64b',1,'ctr.c']]],
   ['ctr_5fsize',['ctr_size',['../ctr_8h.html#aad3a11809c2501baf0e8e19c10e4247a',1,'ctr.h']]],
-  ['ctr_5fupdate',['ctr_update',['../ctr_8h.html#a78ab2ed710bf12b4151ba71a279c0a08',1,'ctr.c']]]
+  ['ctr_5fupdate',['ctr_update',['../ctr_8h.html#a78ab2ed710bf12b4151ba71a279c0a08',1,'ctr.c']]],
+  ['curve25519_5fecdh',['curve25519_ecdh',['../curve25519_8h.html#ace3f6d6ff6e9a3a2b8c625cd5e610a46',1,'curve25519.c']]],
+  ['curve25519_5fgen',['curve25519_gen',['../curve25519_8h.html#aecf706bdfde84d0caff6250ed7ae161a',1,'curve25519.c']]],
+  ['curve25519_5fpub',['curve25519_pub',['../curve25519_8h.html#a36c478b272dce0463b45aaa55a000975',1,'curve25519.c']]]
 ];

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /ssd/Ordo/include/ordo/misc/endianness.h Source File</title>
+<title>Ordo: /ssd/Ordo/include/ordo/misc/curve25519.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,14 +87,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">endianness.h</div>  </div>
+<div class="title">curve25519.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="endianness_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- misc/endianness.h -------------------------------*- PUBLIC-*- H -*-===*/</span></div>
+<a href="curve25519_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*===-- misc/curve25519.h -------------------------------*- PUBLIC-*- H -*-===*/</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#ifndef ORDO_ENDIANNESS_H</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_ENDIANNESS_H</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#ifndef ORDO_CURVE25519_H</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_CURVE25519_H</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
@@ -103,47 +103,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define tole16                           ordo_tole16</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tobe16                           ordo_tobe16</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmle16                           ordo_fmle16</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmbe16                           ordo_fmbe16</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tole32                           ordo_tole32</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tobe32                           ordo_tobe32</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmle32                           ordo_fmle32</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmbe32                           ordo_fmbe32</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tole64                           ordo_tole64</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define tobe64                           ordo_tobe64</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmle64                           ordo_fmle64</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define fmbe64                           ordo_fmbe64</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">/* tole16  ==  host --&gt; little-endian (16 bits) */</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/* fmbe32  ==  host &lt;-- big-endian    (32 bits) */</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/* etc.                                         */</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define curve25519_gen                   ordo_curve25519_gen</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define curve25519_pub                   ordo_curve25519_pub</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define curve25519_ecdh                  ordo_curve25519_ecdh</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">int</span> <a class="code" href="curve25519_8h.html#aecf706bdfde84d0caff6250ed7ae161a">curve25519_gen</a>(<span class="keywordtype">void</span> *priv);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;ORDO_PUBLIC uint16_t tole16(uint16_t x);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;ORDO_PUBLIC uint16_t tobe16(uint16_t x);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;ORDO_PUBLIC uint16_t fmle16(uint16_t x);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;ORDO_PUBLIC uint16_t fmbe16(uint16_t x);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC uint32_t tole32(uint32_t x);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;ORDO_PUBLIC uint32_t tobe32(uint32_t x);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;ORDO_PUBLIC uint32_t fmle32(uint32_t x);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;ORDO_PUBLIC uint32_t fmbe32(uint32_t x);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;ORDO_PUBLIC uint64_t tole64(uint64_t x);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;ORDO_PUBLIC uint64_t tobe64(uint64_t x);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;ORDO_PUBLIC uint64_t fmle64(uint64_t x);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;ORDO_PUBLIC uint64_t fmbe64(uint64_t x);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> <a class="code" href="curve25519_8h.html#a36c478b272dce0463b45aaa55a000975">curve25519_pub</a>(<span class="keywordtype">void</span> *pub, <span class="keyword">const</span> <span class="keywordtype">void</span> *priv);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> <a class="code" href="curve25519_8h.html#ace3f6d6ff6e9a3a2b8c625cd5e610a46">curve25519_ecdh</a>(<span class="keywordtype">void</span> *shared, <span class="keyword">const</span> <span class="keywordtype">void</span> *priv, <span class="keyword">const</span> <span class="keywordtype">void</span> *other);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="curve25519_8h_html_a36c478b272dce0463b45aaa55a000975"><div class="ttname"><a href="curve25519_8h.html#a36c478b272dce0463b45aaa55a000975">curve25519_pub</a></div><div class="ttdeci">ORDO_PUBLIC void curve25519_pub(void *pub, const void *priv)</div><div class="ttdef"><b>Definition:</b> curve25519.c:67</div></div>
+<div class="ttc" id="curve25519_8h_html_aecf706bdfde84d0caff6250ed7ae161a"><div class="ttname"><a href="curve25519_8h.html#aecf706bdfde84d0caff6250ed7ae161a">curve25519_gen</a></div><div class="ttdeci">ORDO_PUBLIC int curve25519_gen(void *priv)</div><div class="ttdef"><b>Definition:</b> curve25519.c:58</div></div>
+<div class="ttc" id="curve25519_8h_html_ace3f6d6ff6e9a3a2b8c625cd5e610a46"><div class="ttname"><a href="curve25519_8h.html#ace3f6d6ff6e9a3a2b8c625cd5e610a46">curve25519_ecdh</a></div><div class="ttdeci">ORDO_PUBLIC void curve25519_ecdh(void *shared, const void *priv, const void *other)</div><div class="ttdef"><b>Definition:</b> curve25519.c:73</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
