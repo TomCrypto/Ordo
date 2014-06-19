@@ -632,9 +632,28 @@ void crecip(felem *out, const felem *z) {
 
 void curve25519_donna(u8 *mypublic, const u8 *secret, const u8 *basepoint) {
   felem bp[10], x[10], z[10], zmone[10];
+  size_t t;
   fexpand(bp, basepoint);
+  printf("-- bp --\n");
+  for (t = 0; t < 10; ++t) printf("%.8x%.8x\n", (uint32_t)(bp[t] >> 32), (uint32_t)(bp[t]));
+  printf("\n");
   cmult(x, z, secret, bp);
+  printf("-- x --\n");
+  for (t = 0; t < 10; ++t) printf("%.8x%.8x\n", (uint32_t)(x[t] >> 32), (uint32_t)(x[t]));
+  printf("\n");
+  printf("-- z --\n");
+  for (t = 0; t < 10; ++t) printf("%.8x%.8x\n", (uint32_t)(z[t] >> 32), (uint32_t)(z[t]));
+  printf("\n");
   crecip(zmone, z);
+  printf("-- zmone --\n");
+  for (t = 0; t < 10; ++t) printf("%.8x%.8x\n", (uint32_t)(zmone[t] >> 32), (uint32_t)(zmone[t]));
+  printf("\n");
   fmul(z, x, zmone);
+  printf("-- x --\n");
+  for (t = 0; t < 10; ++t) printf("%.8x%.8x\n", (uint32_t)(x[t] >> 32), (uint32_t)(x[t]));
+  printf("\n");
   fcontract(mypublic, z);
+  printf("-- mypublic --\n");
+  for (t = 0; t < 32; ++t) printf("%.2x", mypublic[t]);
+  printf("\n");
 }
