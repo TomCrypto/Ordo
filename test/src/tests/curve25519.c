@@ -48,10 +48,10 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
     curve25519_pub(calc_pub2, test.priv2);
 
     printf("Generated pub1: ");
-    for (t = 0; t < 32; ++t) printf("%2x\n", calc_pub1[t]);
+    for (t = 0; t < 32; ++t) printf("%2x", calc_pub1[t]);
     printf("\n");
     printf("Generated pub2: ");
-    for (t = 0; t < 32; ++t) printf("%2x\n", calc_pub2[t]);
+    for (t = 0; t < 32; ++t) printf("%2x", calc_pub2[t]);
     printf("\n");
 
     if (memcmp(calc_pub1, test.pub1, 32))
@@ -62,7 +62,7 @@ static int check_test_vector(int index, struct TEST_VECTOR test)
     curve25519_ecdh(calc_shared, test.priv1, calc_pub2);
 
     printf("Generated shared: ");
-    for (t = 0; t < 32; ++t) printf("%2x\n", calc_shared[t]);
+    for (t = 0; t < 32; ++t) printf("%2x", calc_shared[t]);
     printf("\n");
 
     if (memcmp(calc_shared, test.shared, 32))
