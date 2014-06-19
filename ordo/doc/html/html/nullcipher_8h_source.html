@@ -110,37 +110,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define nullcipher_inverse               ordo_nullcipher_inverse</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define nullcipher_final                 ordo_nullcipher_final</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define nullcipher_query                 ordo_nullcipher_query</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">int</span> <a class="code" href="nullcipher_8h.html#a106ab38fbb788d73a119e36f31c3be49">nullcipher_init</a>(<span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a8dca4ef6c42c5b0ca47fbb7415ce1389">nullcipher_forward</a>(<span class="keyword">const</span> <span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                        <span class="keywordtype">void</span> *block);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a21f0550bea63c3e7a7dcaf3cfc9ad1e6">nullcipher_inverse</a>(<span class="keyword">const</span> <span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                        <span class="keywordtype">void</span> *block);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a9ff3bf55795480242ec626e92c9f6a12">nullcipher_final</a>(<span class="keyword">struct</span> NULLCIPHER_STATE *state);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="nullcipher_8h.html#ab45dbdc6d544c87877f52f544fe07d8b">nullcipher_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define nullcipher_bsize                 ordo_nullcipher_bsize</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keywordtype">int</span> <a class="code" href="nullcipher_8h.html#a106ab38fbb788d73a119e36f31c3be49">nullcipher_init</a>(<span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a8dca4ef6c42c5b0ca47fbb7415ce1389">nullcipher_forward</a>(<span class="keyword">const</span> <span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                        <span class="keywordtype">void</span> *block);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a21f0550bea63c3e7a7dcaf3cfc9ad1e6">nullcipher_inverse</a>(<span class="keyword">const</span> <span class="keyword">struct</span> NULLCIPHER_STATE *state,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                        <span class="keywordtype">void</span> *block);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> <a class="code" href="nullcipher_8h.html#a9ff3bf55795480242ec626e92c9f6a12">nullcipher_final</a>(<span class="keyword">struct</span> NULLCIPHER_STATE *state);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="nullcipher_8h.html#ab45dbdc6d544c87877f52f544fe07d8b">nullcipher_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="nullcipher_8h.html#ad645e98127a67026d1b63588963e09ff">nullcipher_bsize</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="nullcipher_8h_html_a106ab38fbb788d73a119e36f31c3be49"><div class="ttname"><a href="nullcipher_8h.html#a106ab38fbb788d73a119e36f31c3be49">nullcipher_init</a></div><div class="ttdeci">ORDO_PUBLIC int nullcipher_init(struct NULLCIPHER_STATE *state, const void *key, size_t key_len, const void *params)</div><div class="ttdef"><b>Definition:</b> nullcipher.c:22</div></div>
 <div class="ttc" id="nullcipher_8h_html_a9ff3bf55795480242ec626e92c9f6a12"><div class="ttname"><a href="nullcipher_8h.html#a9ff3bf55795480242ec626e92c9f6a12">nullcipher_final</a></div><div class="ttdeci">ORDO_PUBLIC void nullcipher_final(struct NULLCIPHER_STATE *state)</div><div class="ttdef"><b>Definition:</b> nullcipher.c:42</div></div>
+<div class="ttc" id="nullcipher_8h_html_ad645e98127a67026d1b63588963e09ff"><div class="ttname"><a href="nullcipher_8h.html#ad645e98127a67026d1b63588963e09ff">nullcipher_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t nullcipher_bsize(void)</div><div class="ttdef"><b>Definition:</b> nullcipher.c:57</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="block__params_8h_html"><div class="ttname"><a href="block__params_8h.html">block_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
 <div class="ttc" id="nullcipher_8h_html_ab45dbdc6d544c87877f52f544fe07d8b"><div class="ttname"><a href="nullcipher_8h.html#ab45dbdc6d544c87877f52f544fe07d8b">nullcipher_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t nullcipher_query(int query, size_t value)</div><div class="ttdef"><b>Definition:</b> nullcipher.c:47</div></div>
@@ -149,7 +154,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:01:34 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

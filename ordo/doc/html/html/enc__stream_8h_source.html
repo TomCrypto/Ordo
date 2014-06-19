@@ -109,28 +109,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_update                ordo_enc_stream_update</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_final                 ordo_enc_stream_final</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_key_len               ordo_enc_stream_key_len</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define ENC_STREAM_CTX STREAM_STATE</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#a6675550871294a1cf33fd655bec07b2c">   44</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_init stream_init</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#acbb9c7042b1cd8141e9809e5b049a92b">   58</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_update stream_update</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#af437c971b934407138373ea3dcfd9b2d">   64</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_final stream_final</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="enc__stream_8h.html#a0e0205389b2af58a5d03310363cb84b6">enc_stream_key_len</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                          <span class="keywordtype">size_t</span> key_len);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define enc_stream_bsize                 ordo_enc_stream_bsize</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define ENC_STREAM_CTX STREAM_STATE</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#a6675550871294a1cf33fd655bec07b2c">   45</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_init stream_init</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#acbb9c7042b1cd8141e9809e5b049a92b">   59</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_update stream_update</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#af437c971b934407138373ea3dcfd9b2d">   65</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_final stream_final</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="enc__stream_8h.html#a0e0205389b2af58a5d03310363cb84b6">enc_stream_key_len</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                          <span class="keywordtype">size_t</span> key_len);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="enc__stream_8h.html#a16cdc2a5bdf2d93aa2adfc4c4eb16ac4">   88</a></span>&#160;<span class="preprocessor">#define ordo_enc_stream_bsize stream_bsize</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
 <div class="ttc" id="stream__ciphers_8h_html"><div class="ttname"><a href="stream__ciphers_8h.html">stream_ciphers.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
@@ -138,7 +141,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:01:34 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

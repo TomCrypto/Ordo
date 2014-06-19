@@ -109,43 +109,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define skein256_update                  ordo_skein256_update</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define skein256_final                   ordo_skein256_final</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define skein256_query                   ordo_skein256_query</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">int</span> <a class="code" href="skein256_8h.html#a4bdd1723530846a6e049625f76550a9b">skein256_init</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                  <span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a> *params);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> <a class="code" href="skein256_8h.html#a41fbdae5a68bed6d3806c234828cc3a3">skein256_update</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                     <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer,</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                     <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> <a class="code" href="skein256_8h.html#a14cb4c5ed5ac6131c29f80a2c094f52f">skein256_final</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                    <span class="keywordtype">void</span> *digest);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="skein256_8h.html#a2ec757e402e50c370f348213ef6ab3d9">skein256_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define skein256_bsize                    ordo_skein256_bsize</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">int</span> <a class="code" href="skein256_8h.html#a4bdd1723530846a6e049625f76550a9b">skein256_init</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                  <span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a> *params);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> <a class="code" href="skein256_8h.html#a41fbdae5a68bed6d3806c234828cc3a3">skein256_update</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                     <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                     <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> <a class="code" href="skein256_8h.html#a14cb4c5ed5ac6131c29f80a2c094f52f">skein256_final</a>(<span class="keyword">struct</span> SKEIN256_STATE *state,</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                    <span class="keywordtype">void</span> *digest);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="skein256_8h.html#a2ec757e402e50c370f348213ef6ab3d9">skein256_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="skein256_8h.html#a110f4d7ddd456a8ae1f2775e7c366342">skein256_bsize</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="skein256_8h_html_a41fbdae5a68bed6d3806c234828cc3a3"><div class="ttname"><a href="skein256_8h.html#a41fbdae5a68bed6d3806c234828cc3a3">skein256_update</a></div><div class="ttdeci">ORDO_PUBLIC void skein256_update(struct SKEIN256_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> skein256.c:92</div></div>
 <div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></div><div class="ttdoc">Skein-256 hash function parameters. </div><div class="ttdef"><b>Definition:</b> hash_params.h:36</div></div>
 <div class="ttc" id="skein256_8h_html_a4bdd1723530846a6e049625f76550a9b"><div class="ttname"><a href="skein256_8h.html#a4bdd1723530846a6e049625f76550a9b">skein256_init</a></div><div class="ttdeci">ORDO_PUBLIC int skein256_init(struct SKEIN256_STATE *state, const struct SKEIN256_PARAMS *params)</div><div class="ttdef"><b>Definition:</b> skein256.c:55</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
+<div class="ttc" id="skein256_8h_html_a110f4d7ddd456a8ae1f2775e7c366342"><div class="ttname"><a href="skein256_8h.html#a110f4d7ddd456a8ae1f2775e7c366342">skein256_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t skein256_bsize(void)</div><div class="ttdef"><b>Definition:</b> skein256.c:194</div></div>
 <div class="ttc" id="skein256_8h_html_a14cb4c5ed5ac6131c29f80a2c094f52f"><div class="ttname"><a href="skein256_8h.html#a14cb4c5ed5ac6131c29f80a2c094f52f">skein256_final</a></div><div class="ttdeci">ORDO_PUBLIC void skein256_final(struct SKEIN256_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> skein256.c:139</div></div>
 <div class="ttc" id="skein256_8h_html_a2ec757e402e50c370f348213ef6ab3d9"><div class="ttname"><a href="skein256_8h.html#a2ec757e402e50c370f348213ef6ab3d9">skein256_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t skein256_query(int query, size_t value)</div><div class="ttdef"><b>Definition:</b> skein256.c:184</div></div>
 <div class="ttc" id="hash__params_8h_html"><div class="ttname"><a href="hash__params_8h.html">hash_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:01:34 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

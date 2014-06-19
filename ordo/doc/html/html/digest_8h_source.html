@@ -109,27 +109,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define digest_update                    ordo_digest_update</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define digest_final                     ordo_digest_final</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define digest_length                    ordo_digest_length</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define DIGEST_CTX HASH_STATE</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="digest_8h.html#ad14db1cbe311c4141410f4ebfd6ccd4f">   71</a></span>&#160;<span class="preprocessor">#define ordo_digest_init hash_init</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="digest_8h.html#a95dbccafc6f233082c6827990cb91262">   85</a></span>&#160;<span class="preprocessor">#define ordo_digest_update hash_update</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="digest_8h.html#a01d008a30a8dffa7820bc7b640c2b953">  107</a></span>&#160;<span class="preprocessor">#define ordo_digest_final hash_final</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="digest_8h.html#a91f89be5bedceb2be13e37c223a6d4ac">digest_length</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define digest_bsize                     ordo_digest_bsize</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define DIGEST_CTX HASH_STATE</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="digest_8h.html#ad14db1cbe311c4141410f4ebfd6ccd4f">   72</a></span>&#160;<span class="preprocessor">#define ordo_digest_init hash_init</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="digest_8h.html#a95dbccafc6f233082c6827990cb91262">   86</a></span>&#160;<span class="preprocessor">#define ordo_digest_update hash_update</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="digest_8h.html#a01d008a30a8dffa7820bc7b640c2b953">  108</a></span>&#160;<span class="preprocessor">#define ordo_digest_final hash_final</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="digest_8h.html#a91f89be5bedceb2be13e37c223a6d4ac">digest_length</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="digest_8h.html#a6aa7ec2d420f74c7e5e3f4859a31d6db">  127</a></span>&#160;<span class="preprocessor">#define ordo_digest_bsize hash_bsize</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="hash__functions_8h_html"><div class="ttname"><a href="hash__functions_8h.html">hash_functions.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
@@ -137,7 +140,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:01:34 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

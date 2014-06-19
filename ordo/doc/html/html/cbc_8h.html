@@ -115,8 +115,10 @@ Functions</h2></td></tr>
 <tr class="separator:ac3bbf0dd5410b017efd2a4ce2e4cfe74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2e9dde385bc010c77a9a96bff4e8817"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cbc_8h.html#ac2e9dde385bc010c77a9a96bff4e8817">cbc_final</a> (struct CBC_STATE *state, struct BLOCK_STATE *cipher_state, unsigned char *out, size_t *out_len)</td></tr>
 <tr class="separator:ac2e9dde385bc010c77a9a96bff4e8817"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bb19125f98aab4c53c92eb24fe9fca7"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cbc_8h.html#a4bb19125f98aab4c53c92eb24fe9fca7">cbc_query</a> (int cipher, int query, size_t value)</td></tr>
-<tr class="separator:a4bb19125f98aab4c53c92eb24fe9fca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afac1b15fab5be0942774c769fb4faecb"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cbc_8h.html#afac1b15fab5be0942774c769fb4faecb">cbc_query</a> (<a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, int query, size_t value)</td></tr>
+<tr class="separator:afac1b15fab5be0942774c769fb4faecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba8e656e0ff82c893595c8915839241d"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cbc_8h.html#aba8e656e0ff82c893595c8915839241d">cbc_bsize</a> (void)</td></tr>
+<tr class="separator:aba8e656e0ff82c893595c8915839241d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Primitive. </p>
@@ -265,14 +267,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4bb19125f98aab4c53c92eb24fe9fca7"></a>
+<a class="anchor" id="afac1b15fab5be0942774c769fb4faecb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">ORDO_PUBLIC size_t cbc_query </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a>&#160;</td>
           <td class="paramname"><em>cipher</em>, </td>
         </tr>
         <tr>
@@ -298,10 +300,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aba8e656e0ff82c893595c8915839241d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ORDO_PUBLIC size_t cbc_bsize </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the size in bytes of a <code>CBC_STATE</code>.</p>
+<dl class="section return"><dt>Returns</dt><dd>The size in bytes of the structure.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Binary compatibility layer. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:49:09 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:01:34 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
