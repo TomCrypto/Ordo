@@ -16,6 +16,7 @@ What's new in 0.3.0:
  - the test driver is being reworked (work in progress)
  - the HMAC module has been slightly changed to apply the hash parameters on the outer hash instance, which allows for variable output length parameters
  - all functions have been namespaced, to prevent declaration and linking conflicts
+ - added support for Intel compilers on Linux
 
 Feature Map
 -----------
@@ -40,14 +41,14 @@ You can also access a recent version of the documentation online through the [pr
 How To Build
 ------------
 
-We support recent versions of MSVC, GCC, MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to. Python 2.x (probably 2.7+) is also required.
+We support recent versions of MSVC, GCC, ICC (Linux only), MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to. Python 2.x (probably 2.7+) is also required.
 
 - `LTO`: use link-time optimization, this should be enabled for optimal performance.
 - `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
 - `NATIVE`: tune the build for the current hardware (e.g. `-march` for GCC).
 - `COMPAT`: remove some advanced compiler settings for older compiler versions (for GCC only, if this is enabled `LTO` has no effect)
 
-Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know).
+Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know). For the Intel compiler (ICC) with native optimization, architecture autodetection is not available - pass the appropriate architecture in ICC_TARGET (e.g. `-DICC_TARGET=SSE4.2`).
 
 If you are not using the `cmake-gui` utility, the command-line options to configure the library are:
 

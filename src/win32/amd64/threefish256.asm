@@ -1,7 +1,13 @@
+;/===-- threefish256.asm ------------------------*- win32/amd64 -*- ASM -*-===//
+
+; Threefish-256 implementation for AMD64 (Windows ABI)
+
+;/===----------------------------------------------------------------------===//
+
 BITS 64
 
-global threefish256_forward_ASM
-global threefish256_inverse_ASM
+global threefish256_forward_ASM:function hidden
+global threefish256_inverse_ASM:function hidden
 
 section .text
 

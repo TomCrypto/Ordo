@@ -1,7 +1,13 @@
+;/===-- aes.asm --------------------------*- win32/amd64/aes-ni -*- ASM -*-===//
+
+; AES-NI implementation (Windows ABI)
+
+;/===----------------------------------------------------------------------===//
+
 BITS 64
 
-global aes_forward_ASM
-global aes_inverse_ASM
+global aes_forward_ASM:function hidden
+global aes_inverse_ASM:function hidden
 
 section .text
 

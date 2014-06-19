@@ -21,7 +21,7 @@
 
 BITS 64
 
-global rc4_update_ASM
+global rc4_update_ASM:function hidden
 
 section .text
 

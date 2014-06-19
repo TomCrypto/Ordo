@@ -6,8 +6,8 @@
 
 BITS 64
 
-global threefish256_forward_ASM
-global threefish256_inverse_ASM
+global threefish256_forward_ASM:function hidden
+global threefish256_inverse_ASM:function hidden
 
 section .text
 
