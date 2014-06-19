@@ -38,7 +38,7 @@ extern "C" {
 *** @remarks This function uses \c os_secure_random().
 **/
 ORDO_PUBLIC
-void curve25519_gen(void *priv);
+int curve25519_gen(void *priv);
 
 /** Retrieves the public key corresponding to a private key.
 ***
