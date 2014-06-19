@@ -109,42 +109,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define sha256_update                    ordo_sha256_update</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define sha256_final                     ordo_sha256_final</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define sha256_query                     ordo_sha256_query</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keywordtype">int</span> <a class="code" href="sha256_8h.html#a2e4fbe0ac655cb0016a9b96131af5d77">sha256_init</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sha256_8h.html#a40f7f23d41a50ff99d8c538947af243d">sha256_update</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                   <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sha256_8h.html#a2525f27711a3ec54be774816d29b27b2">sha256_final</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                  <span class="keywordtype">void</span> *digest);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="sha256_8h.html#af0fa5e6e28aa33d80d49cbaf324d6f1f">sha256_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define sha256_bsize                     ordo_sha256_bsize</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">int</span> <a class="code" href="sha256_8h.html#a2e4fbe0ac655cb0016a9b96131af5d77">sha256_init</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sha256_8h.html#a40f7f23d41a50ff99d8c538947af243d">sha256_update</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                   <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> <a class="code" href="sha256_8h.html#a2525f27711a3ec54be774816d29b27b2">sha256_final</a>(<span class="keyword">struct</span> SHA256_STATE *state,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                  <span class="keywordtype">void</span> *digest);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="sha256_8h.html#af0fa5e6e28aa33d80d49cbaf324d6f1f">sha256_query</a>(<span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="sha256_8h.html#a12cb020179d9a061395aaaf0d2d33293">sha256_bsize</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="sha256_8h_html_a2e4fbe0ac655cb0016a9b96131af5d77"><div class="ttname"><a href="sha256_8h.html#a2e4fbe0ac655cb0016a9b96131af5d77">sha256_init</a></div><div class="ttdeci">ORDO_PUBLIC int sha256_init(struct SHA256_STATE *state, const void *params)</div><div class="ttdef"><b>Definition:</b> sha256.c:35</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="sha256_8h_html_af0fa5e6e28aa33d80d49cbaf324d6f1f"><div class="ttname"><a href="sha256_8h.html#af0fa5e6e28aa33d80d49cbaf324d6f1f">sha256_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t sha256_query(int query, size_t value)</div><div class="ttdef"><b>Definition:</b> sha256.c:100</div></div>
+<div class="ttc" id="sha256_8h_html_a12cb020179d9a061395aaaf0d2d33293"><div class="ttname"><a href="sha256_8h.html#a12cb020179d9a061395aaaf0d2d33293">sha256_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t sha256_bsize(void)</div><div class="ttdef"><b>Definition:</b> sha256.c:111</div></div>
 <div class="ttc" id="sha256_8h_html_a40f7f23d41a50ff99d8c538947af243d"><div class="ttname"><a href="sha256_8h.html#a40f7f23d41a50ff99d8c538947af243d">sha256_update</a></div><div class="ttdeci">ORDO_PUBLIC void sha256_update(struct SHA256_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> sha256.c:45</div></div>
 <div class="ttc" id="hash__params_8h_html"><div class="ttname"><a href="hash__params_8h.html">hash_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
 <div class="ttc" id="sha256_8h_html_a2525f27711a3ec54be774816d29b27b2"><div class="ttname"><a href="sha256_8h.html#a2525f27711a3ec54be774816d29b27b2">sha256_final</a></div><div class="ttdeci">ORDO_PUBLIC void sha256_final(struct SHA256_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> sha256.c:76</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:10:02 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

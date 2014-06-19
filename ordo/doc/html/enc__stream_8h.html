@@ -122,6 +122,8 @@ Macros</h2></td></tr>
 <tr class="separator:acbb9c7042b1cd8141e9809e5b049a92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af437c971b934407138373ea3dcfd9b2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enc__stream_8h.html#af437c971b934407138373ea3dcfd9b2d">ordo_enc_stream_final</a></td></tr>
 <tr class="separator:af437c971b934407138373ea3dcfd9b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16cdc2a5bdf2d93aa2adfc4c4eb16ac4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enc__stream_8h.html#a16cdc2a5bdf2d93aa2adfc4c4eb16ac4">ordo_enc_stream_bsize</a></td></tr>
+<tr class="separator:a16cdc2a5bdf2d93aa2adfc4c4eb16ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -173,9 +175,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>By nature, stream ciphers encrypt and decrypt data the same way, in other words, if you encrypt data twice, you will get back the original data.</dd>
-<dd>
-Stream encryption is always done in place by design. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>By nature, stream ciphers encrypt and decrypt data the same way, in other words, if you encrypt data twice, you will get back the original data.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Stream encryption is always done in place by design. </dd></dl>
 
 </div>
 </div>
@@ -195,6 +196,21 @@ Stream encryption is always done in place by design. </dd></dl>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a16cdc2a5bdf2d93aa2adfc4c4eb16ac4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ordo_enc_stream_bsize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the size in bytes of an <code>ENC_STREAM_CTX</code>.</p>
+<dl class="section return"><dt>Returns</dt><dd>The size in bytes of the structure.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Binary compatibility layer. </dd></dl>
 
 </div>
 </div>
@@ -225,7 +241,7 @@ Stream encryption is always done in place by design. </dd></dl>
 <p>Queries a stream cipher for its key length.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">cipher</td><td>The stream cipher to probe. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">cipher</td><td>The stream cipher to query. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">key_len</td><td>A suggested key length.</td></tr>
   </table>
   </dd>
@@ -237,7 +253,7 @@ Stream encryption is always done in place by design. </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:10:02 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

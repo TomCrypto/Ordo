@@ -122,6 +122,8 @@ Macros</h2></td></tr>
 <tr class="separator:a95dbccafc6f233082c6827990cb91262"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01d008a30a8dffa7820bc7b640c2b953"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digest_8h.html#a01d008a30a8dffa7820bc7b640c2b953">ordo_digest_final</a></td></tr>
 <tr class="separator:a01d008a30a8dffa7820bc7b640c2b953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aa7ec2d420f74c7e5e3f4859a31d6db"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digest_8h.html#a6aa7ec2d420f74c7e5e3f4859a31d6db">ordo_digest_bsize</a></td></tr>
+<tr class="separator:a6aa7ec2d420f74c7e5e3f4859a31d6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -164,9 +166,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="error_8h.html#a7e07095466ca14dd043a75140b9874a3ab1fa4de5abf56ebadd836a30d3c770ce">ORDO_SUCCESS</a></code> on success, else an error code.</dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>It is always valid to pass <code>0</code> into <code>params</code> if you don't want to use special features offered by a specific hash function.</dd>
-<dd>
-It is <b>not</b> valid to initialize digest contexts more than once before calling <code>digest_final()</code>, this is because some algorithms may allocate additional memory depending on the parameters given. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>It is always valid to pass <code>0</code> into <code>params</code> if you don't want to use special features offered by a specific hash function.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is <b>not</b> valid to initialize digest contexts more than once before calling <code>digest_final()</code>, this is because some algorithms may allocate additional memory depending on the parameters given. </dd></dl>
 
 </div>
 </div>
@@ -213,9 +214,23 @@ It is valid to pass a zero-length buffer (<code>in_len == 0</code>), which will 
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>The <code>digest</code> buffer should be large enough to accomodate the digest - you can query the hash function's default digest length in bytes by the <code><a class="el" href="digest_8h.html#a91f89be5bedceb2be13e37c223a6d4ac">digest_length()</a></code> function, note if you provided parameters which modify the hash function's digest length, then you should already know how long the digest will be (refer to the parameter's documentation).</dd>
 <dd>
-Calling this function immediately after <code>digest_init()</code> is valid and will return the so-called "zero-length" digest, which is the digest of the input of length zero.</dd>
-<dd>
-After this function returns, you may not call <code>digest_update()</code> again until you reinitialize the context using <code>digest_init()</code>. </dd></dl>
+Calling this function immediately after <code>digest_init()</code> is valid and will return the so-called "zero-length" digest, which is the digest of the input of length zero.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>After this function returns, you may not call <code>digest_update()</code> again until you reinitialize the context using <code>digest_init()</code>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6aa7ec2d420f74c7e5e3f4859a31d6db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ordo_digest_bsize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the size in bytes of a <code>DIGEST_CTX</code>.</p>
+<dl class="section return"><dt>Returns</dt><dd>The size in bytes of the structure.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Binary compatibility layer. </dd></dl>
 
 </div>
 </div>
@@ -247,7 +262,7 @@ After this function returns, you may not call <code>digest_update()</code> again
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 00:26:30 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 19 2014 13:10:02 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
