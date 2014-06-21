@@ -1,4 +1,4 @@
-/*===-- samples/md5sum.c -------------------------------*- PUBLIC -*- H -*-===*/
+/*===-- samples/hashsum.c ------------------------------*- PUBLIC -*- H -*-===*/
 /**
 *** @file
 *** @brief Sample
