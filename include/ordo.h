@@ -40,6 +40,7 @@
 
 #include "ordo/kdf/pbkdf2.h"
 
+#include "ordo/misc/utils.h"
 #include "ordo/misc/os_random.h"
 #include "ordo/misc/curve25519.h"
 

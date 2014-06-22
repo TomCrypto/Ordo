@@ -128,6 +128,7 @@ ENDIF()
 SET(INCLUDE_FILES
     include/ordo.h
     include/ordo/definitions.h
+    include/ordo/misc/utils.h
     include/ordo/misc/endianness.h
     include/ordo/misc/os_random.h
     include/ordo/misc/curve25519.h
@@ -168,6 +169,7 @@ SET(INCLUDE_FILES
 
 SET(IN_FILES
     alg.c
+    utils.c
     block_ciphers.c
     block_modes.c
     digest.c
