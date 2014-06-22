@@ -33,19 +33,19 @@ int test_pad_check(void);
 int test_pad_check(void)
 {
     unsigned char buffer[256];
-    size_t val, r;
+    uint16_t r, val;
 
     for (r = 0; r < 256; ++r)
         for (val = 1; val < 256; ++val)
         {
-            memset(buffer, (uint8_t)val, val);
+            memset(buffer, (uint8_t)val, (size_t)val);
 
             /* This should pass because all bytes have the same value. */
             ASSERT(pad_check(buffer, (uint8_t)val));
 
             if (r < val)
             {
-                buffer[r] = r;
+                buffer[r] = (uint8_t)r;
 
                 /* This should fail as not all bytes have the same value. */
                 ASSERT(!pad_check(buffer, (uint8_t)val));
@@ -61,8 +61,7 @@ int test_xor_buffer(void)
     /* We will test the function on small integers only. If it works there,
      * it probably always works, given it is a very generic function. */
 
-    uint32_t a, b, out;
-    size_t t;
+    uint32_t a, b, out, t;
 
     for (t = 0; t < 1024; ++t)
     {
@@ -126,7 +125,7 @@ int test_inc_buffer(void)
         /* Finally, try it on a single-byte buffer. The function should be
          * equivalent to 8-bit addition by definition. */
         uint8_t x = 0, y = 0;
-        size_t t;
+        uint16_t t;
 
         for (t = 0; t < 1024; ++t)
         {

@@ -194,7 +194,7 @@ static double hash_speed(prim_t hash, uint64_t block)
     start = now();
 
     while (++iterations && (get_elapsed(start) < INTERVAL))
-        digest_update(&ctx, buffer, block);
+        digest_update(&ctx, buffer, (size_t)block);
 
     elapsed = get_elapsed(start);
 
@@ -222,7 +222,7 @@ static double stream_speed(prim_t cipher, uint64_t block)
     start = now();
 
     while (++iterations && (get_elapsed(start) < INTERVAL))
-        enc_stream_update(&ctx, buffer, block);
+        enc_stream_update(&ctx, buffer, (size_t)block);
 
     elapsed = get_elapsed(start);
 
@@ -256,7 +256,7 @@ static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
     start = now();
 
     while (++iterations && (get_elapsed(start) < INTERVAL))
-        enc_block_update(&ctx, buffer, block, buffer, &out);
+        enc_block_update(&ctx, buffer, (size_t)block, buffer, &out);
 
     elapsed = get_elapsed(start);
 

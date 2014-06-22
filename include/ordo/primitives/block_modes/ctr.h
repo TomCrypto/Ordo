@@ -81,7 +81,7 @@ size_t ctr_query(prim_t cipher,
 *** @remarks Binary compatibility layer.
 **/
 ORDO_PUBLIC
-size_t ctr_size(void);
+size_t ctr_bsize(void);
 
 /*===----------------------------------------------------------------------===*/
 

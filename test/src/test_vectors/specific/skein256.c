@@ -90,7 +90,7 @@ static int check(struct TEST_VECTOR test)
 
     hash_final(&state, digest);
 
-    ASSERT_BUF_EQ(digest, test.expected, params.out_len / 8);
+    ASSERT_BUF_EQ(digest, test.expected, (size_t)params.out_len / 8);
 
     return 1;
 }
