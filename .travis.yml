@@ -17,6 +17,6 @@ install:
   - sudo apt-get install nasm
 
 script:
-  - cd build && cmake .. -DLTO=off && make -j 4 && ./test/test --color && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
-  - cd build && cmake .. -DLTO=off -DARCH=amd64 && make -j 4 && ./test/test --color && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
+  - cd build && cmake .. -DLTO=off && make -j 4 && ./test/test && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
+  - cd build && cmake .. -DLTO=off -DARCH=amd64 && make -j 4 && ./test/test && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
 
