@@ -50,6 +50,9 @@ int pad_check(const unsigned char *buffer, uint8_t padding)
 {
     size_t t;
 
+    if (padding == 0)
+        return 0;
+
     for (t = 0; t < padding; t++)
         if (buffer[t] != padding) return 0;
 

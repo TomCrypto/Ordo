@@ -33,22 +33,24 @@ int test_pad_check(void);
 int test_pad_check(void)
 {
     unsigned char buffer[256];
-    uint8_t val, r;
+    size_t val, r;
 
-    for (val = 1; val < 255; ++val)
-    {
-        memset(buffer, val, val);
+    for (r = 0; r < 256; ++r)
+        for (val = 1; val < 256; ++val)
+        {
+            memset(buffer, (uint8_t)val, val);
 
-        /* This should pass because all bytes have the same value. */
-        ASSERT(pad_check(buffer, val));
+            /* This should pass because all bytes have the same value. */
+            ASSERT(pad_check(buffer, (uint8_t)val));
 
-        r = random(val);
-        if (r == val) --r;
-        buffer[random(val)] = r;
+            if (r < val)
+            {
+                buffer[r] = r;
 
-        /* This should fail as not all bytes have the same value. */
-        ASSERT(!pad_check(buffer, val));
-    }
+                /* This should fail as not all bytes have the same value. */
+                ASSERT(!pad_check(buffer, (uint8_t)val));
+            }
+        }
 
     return 1;
 }
@@ -64,8 +66,8 @@ int test_xor_buffer(void)
 
     for (t = 0; t < 1024; ++t)
     {
-        a = random(32768);
-        b = random(32768);
+        a = (uint32_t)t * 7919;
+        b = (uint32_t)t * 3637;
 
         out = a ^ b; /* Expected output. */
 
