@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.0</span>
+   &#160;<span id="projectnumber">0.3.1</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -84,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This is the github repository for Ordo, a minimalist cryptography library with an emphasis on symmetric cryptography, which strives to meet high performance, portability, and security standards, while remaining modular in design to facilitate adding new features and maintaining existing ones. The library is written in standard C with system-specific features, but some sections are assembly-optimized for efficiency. Note that while the library is technically usable at this point, it is still very much a work in progress and mustn't be deployed in security-sensitive applications.</p>
 <h2>Status </h2>
 <p><a href="https://travis-ci.org/TomCrypto/Ordo">![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)</a></p>
-<p>What's new in 0.3.0:</p>
+<p>What's new in 0.3.1:</p>
 <ul>
 <li>completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance</li>
 <li>the test driver is being reworked (work in progress)</li>
@@ -126,7 +126,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <pre class="fragment">cd build &amp;&amp; cmake .. -DARCH=amd64 -DAES_NI=on
 </pre><p>The test driver is in the <code>test</code> folder, the sample programs are in the <code>samples</code> folder.</p>
 <h3>Assembly Support</h3>
-<p>We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.</p>
+<p>We use the <a href="http://www.nasm.us/">NASM</a> assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.</p>
 <h3>Static Linking</h3>
 <p>If you wish to link statically to the library, please define the <code>ORDO_STATIC_LIB</code> preprocessor token in your project so that the Ordo headers can configure themselves accordingly (otherwise, they will assume you are linking to a shared library, which may raise some unwelcome compiler warnings as well as forbidding access to the internal headers).</p>
 <h2>Compatibility </h2>
@@ -137,7 +137,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 19 2014 17:28:00 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 23 2014 11:31:55 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
