@@ -39,7 +39,7 @@ struct AES_PARAMS
     ***          14 for a 256-bit key, and are standardized. It is \b strongly
     ***          discouraged to lower the number of rounds below the defaults.
     **/
-    size_t rounds;
+    unsigned int rounds;
 };
 
 /*===----------------------------------------------------------------------===*/
