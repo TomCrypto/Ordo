@@ -1,84 +1,93 @@
-/* Sample: benchmark - benchmarks all algorithms provided by the library.
- * ------
- * Demonstrates:
- *  - enumerating algorithms
- *  - querying information about algorithms (key/IV length, etc..)
- * ------
- * Usage: see benchmark_usage() below, or run with no arguments.
- * ------
- * Comments: note that some of the benchmarked algorithms do have specific
- *           parameters set, see the *_params() functions, and can be done
- *           on a per-algorithm basis rather elegantly - for instance here
- *           it is used to disable RC4 drop (so as not to skew small block
- *           size timings) and ECB/CBC padding. Furthermore, for the block
- *           cipher algorithms, only encryption is currently benchmarked.
-*/
+/*===-- samples/benchmark.c ----------------------------*- PUBLIC -*- C -*-===*/
+/**
+*** @file
+*** @brief Sample
+***
+*** This sample will benchmark a given primitive provided on the command-line,
+*** printing the time taken to process a specific amount of data under various
+*** conditions (for instance, varying the input buffer size, to study how much
+*** overhead is present in the library API).
+***
+*** Shows how to enumerate algorithms, and how to use most of the library.
+***
+*** Usage:
+***         ./benchmark [hash function]
+***         ./benchmark [stream cipher]
+***         ./benchmark [block cipher]
+***         ./benchmark [block cipher] [mode of operation]
+**/
+/*===----------------------------------------------------------------------===*/
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <time.h>
 
 #include "ordo.h"
 
-/***                         DATA STORAGE BUFFER                            ***/
+/*===--------------------------- SCRATCH BUFFER ---------------------------===*/
 
 static char buffer[65536];
 
-/***                    MISCELLANEOUS UTILITY FUNCTIONS                     ***/
+/*===------------------- MISCELLANEOUS UTILITY FUNCTIONS ------------------===*/
 
-static void *allocate(size_t size)
+/* Yes, the infamous xmalloc. Just to allocate a few bytes to hold key/IV and
+ * primitive parameter data (which is fairly dynamic). */
+static void *xmalloc(size_t size)
 {
     void *ptr = malloc(size);
-    if (ptr)
+
+    if (!ptr)
     {
-        os_random(ptr, size);
-        return ptr;
+        printf("\t* Memory allocation failed!\n");
+        printf("\nAn error occurred.\n");
+        exit(EXIT_FAILURE);
     }
 
-    printf("\t* Memory allocation failed!\n");
-    printf("\nAn error occurred.\n");
-    exit(EXIT_FAILURE);
+    return ptr;
 }
 
-static void benchmark_usage(int argc, char * const argv[])
+static void print_usage(int argc, char * const argv[])
 {
-    const int *p;
+    const prim_t *p;
 
     printf("Usage:\n\n");
     printf("\t%s [hash function]\n", argv[0]);
     printf("\t%s [stream cipher]\n", argv[0]);
+    printf("\t%s [block cipher]\n", argv[0]);
     printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
 
     printf("\nAvailable hash functions:\n\n\t");
     for (p = prims_by_type(PRIM_TYPE_HASH); *p; ++p)
     {
         printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", "); else printf("\n");
+        if (*(p + 1)) printf(", ");
+        else printf("\n");
     }
 
     printf("\nAvailable stream ciphers:\n\n\t");
     for (p = prims_by_type(PRIM_TYPE_STREAM); *p; ++p)
     {
         printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", "); else printf("\n");
+        if (*(p + 1)) printf(", ");
+        else printf("\n");
     }
 
     printf("\nAvailable block ciphers:\n\n\t");
     for (p = prims_by_type(PRIM_TYPE_BLOCK); *p; ++p)
     {
         printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", "); else printf("\n");
+        if (*(p + 1)) printf(", ");
+        else printf("\n");
     }
 
     printf("\nAvailable modes of operation:\n\n\t");
     for (p = prims_by_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
     {
         printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", "); else printf("\n");
+        if (*(p + 1)) printf(", ");
+        else printf("\n");
     }
-
 }
 
 /***                         TIME UTILITY FUNCTIONS                         ***/
@@ -123,30 +132,30 @@ static double speed_MiB(uint64_t throughput, double elapsed)
     return ((double)throughput / (1024 * 1024)) / elapsed;
 }
 
-/***                        PARAMETERIZED UTILITIES                         ***/
+/*===---------------------- PRIMITIVE PARAMETER SETUP ---------------------===*/
 
-static void *hash_params(int hash)
+static void *hash_params(prim_t hash)
 {
     return 0;
 }
 
-static void *block_params(int cipher)
+static void *block_params(prim_t cipher)
 {
     return 0;
 }
 
-static void *block_mode_params(int mode)
+static void *block_mode_params(prim_t mode)
 {
     if (mode == BLOCK_MODE_ECB)
     {
-        struct ECB_PARAMS *ecb = allocate(sizeof(*ecb));
+        struct ECB_PARAMS *ecb = xmalloc(sizeof(*ecb));
         ecb->padding = 0;
         return ecb;
     }
 
     if (mode == BLOCK_MODE_CBC)
     {
-        struct CBC_PARAMS *cbc = allocate(sizeof(*cbc));
+        struct CBC_PARAMS *cbc = xmalloc(sizeof(*cbc));
         cbc->padding = 0;
         return cbc;
     }
@@ -154,13 +163,14 @@ static void *block_mode_params(int mode)
     return 0;
 }
 
-static void *stream_params(int cipher)
+static void *stream_params(prim_t cipher)
 {
     if (cipher == STREAM_RC4)
     {
         /* We don't want to benchmark dropping bytes of RC4
-         * as this would heavily penalize the short blocks. */
-        struct RC4_PARAMS *rc4 = allocate(sizeof(*rc4));
+         * as this would heavily penalize the short blocks.
+        */
+        struct RC4_PARAMS *rc4 = xmalloc(sizeof(*rc4));
         rc4->drop = 0;
         return rc4;
     }
@@ -201,7 +211,7 @@ static double stream_speed(prim_t cipher, uint64_t block)
 
     size_t key_len = enc_stream_key_len(cipher, (size_t)-1);
 
-    void *key = allocate(key_len);
+    void *key = xmalloc(key_len);
 
     uint64_t iterations = 0;
     double elapsed;
@@ -232,8 +242,8 @@ static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
     size_t key_len = block_query(cipher, KEY_LEN_Q, (size_t)-1);
     size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
 
-    void *key = allocate(key_len);
-    void *iv = allocate(iv_len);
+    void *key = xmalloc(key_len);
+    void *iv = xmalloc(iv_len);
 
     uint64_t iterations = 0;
     double elapsed;
@@ -259,15 +269,12 @@ static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
     return speed_MiB(block * iterations, elapsed);
 }
 
-/***                          HIGH-LEVEL BENCHMARK                          ***/
+/*===-------------------- HIGH LEVEL BENCHMARK ROUTINES -------------------===*/
 
-static int benchmark_hash_function(prim_t hash, int argc, char * const argv[])
+static int bench_hash(prim_t hash, int argc, char * const argv[])
 {
     if (argc > 2)
-    {
-        printf("Unrecognized argument '%s'.\n", argv[2]);
-        return EXIT_FAILURE;
-    }
+        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
 
     printf("Benchmarking hash function %s:\n\n", argv[1]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(hash,    16));
@@ -280,13 +287,10 @@ static int benchmark_hash_function(prim_t hash, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-static int benchmark_stream_cipher(prim_t cipher, int argc, char * const argv[])
+static int bench_stream(prim_t cipher, int argc, char * const argv[])
 {
     if (argc > 2)
-    {
-        printf("Unrecognized argument '%s'.\n", argv[2]);
-        return EXIT_FAILURE;
-    }
+        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
 
     printf("Benchmarking stream cipher %s:\n\n", argv[1]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(cipher,    16));
@@ -299,29 +303,20 @@ static int benchmark_stream_cipher(prim_t cipher, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-static int benchmark_block_cipher(prim_t cipher, int argc, char * const argv[])
+static int bench_block(prim_t cipher, int argc, char * const argv[])
 {
     prim_t mode;
 
     if (argc == 2)
-    {
-        printf("Please specify one mode of operation.\n");
-        return EXIT_FAILURE;
-    }
+        return printf("Please specify one mode.\n"), EXIT_FAILURE;
 
     if (argc > 3)
-    {
-        printf("Please specify only one mode of operation.\n");
-        return EXIT_FAILURE;
-    }
+        return printf("Please specify only one mode.\n"), EXIT_FAILURE;
 
     mode = prim_from_name(argv[2]);
 
-    if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
-    {
-        printf("Unrecognized mode of operation '%s'.\n", argv[2]);
-        return EXIT_FAILURE;
-    }
+    if (!mode || (prim_type(mode) != PRIM_TYPE_BLOCK_MODE))
+        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
 
     printf("Benchmarking block cipher %s in %s mode:\n\n", argv[1], argv[2]);
     printf("\t*    16 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,    16));
@@ -334,34 +329,25 @@ static int benchmark_block_cipher(prim_t cipher, int argc, char * const argv[])
     return EXIT_SUCCESS;
 }
 
-/***                             MAIN DISPATCHER                            ***/
+/*===-------------------- MAIN FUNCTION AND DISPATCHER --------------------===*/
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        benchmark_usage(argc, argv);
-        return EXIT_FAILURE;
-    }
-    else
-    {
-        prim_t primitive = prim_from_name(argv[1]);
+    prim_t primitive;
 
-        switch (prim_type(primitive))
-        {
-            case PRIM_TYPE_HASH:
-                return benchmark_hash_function(primitive, argc, argv);
-            case PRIM_TYPE_STREAM:
-                return benchmark_stream_cipher(primitive, argc, argv);
-            case PRIM_TYPE_BLOCK:
-                return benchmark_block_cipher(primitive, argc, argv);
-            default:
-            {
-                printf("Unrecognized argument '%s'.\n", argv[1]);
-                return EXIT_FAILURE;
-            }
-        }
-    }
+    if (argc < 2) return print_usage(argc, argv), EXIT_FAILURE;
+    primitive = prim_from_name(argv[1]); /* Parse primitive. */
 
-    return EXIT_SUCCESS;
+    switch (prim_type(primitive))
+    {
+        case PRIM_TYPE_HASH:
+            return bench_hash(primitive, argc, argv);
+        case PRIM_TYPE_STREAM:
+            return bench_stream(primitive, argc, argv);
+        case PRIM_TYPE_BLOCK:
+            return bench_block(primitive, argc, argv);
+        default:
+            printf("Unrecognized argument `%s`.\n", argv[1]);
+            return EXIT_FAILURE;
+    }
 }

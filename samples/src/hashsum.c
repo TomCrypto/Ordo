@@ -1,4 +1,4 @@
-/*===-- samples/hashsum.c ------------------------------*- PUBLIC -*- H -*-===*/
+/*===-- samples/hashsum.c ------------------------------*- PUBLIC -*- C -*-===*/
 /**
 *** @file
 *** @brief Sample
@@ -27,7 +27,7 @@ static int process_file(const char *path, prim_t prim)
      * maximum digest length of all available hash functions which are in this
      * version of the library. This is used mainly for stack allocation of the
      * internal data structures, but you are free to use it yourself, to avoid
-     * stack allocation. It is, of course, completely optional to use it - you
+     * heap allocation. It is, of course, completely optional to use it - thus
      * you could malloc if you wanted to (or needed to be binary-compatible).
     */
     unsigned char digest[HASH_DIGEST_LEN];

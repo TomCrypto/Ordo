@@ -1,4 +1,4 @@
-/*===-- samples/version.c ------------------------------*- PUBLIC -*- H -*-===*/
+/*===-- samples/version.c ------------------------------*- PUBLIC -*- C -*-===*/
 /**
 *** @file
 *** @brief Sample

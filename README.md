@@ -1,4 +1,4 @@
-Ordo v0.3.0
+Ordo v0.3.1
 ===========
 
 Symmetric Cryptography Library
@@ -11,7 +11,7 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 0.3.0:
+What's new in 0.3.1:
  - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
  - the test driver is being reworked (work in progress)
  - the HMAC module has been slightly changed to apply the hash parameters on the outer hash instance, which allows for variable output length parameters
@@ -62,7 +62,7 @@ The test driver is in the `test` folder, the sample programs are in the `samples
 
 ### Assembly Support
 
-We use the NASM assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.
+We use the [NASM](http://www.nasm.us/) assembler for our assembly files. For Linux and other Unix-based operating systems this should work out of the box after installing the assembler. For MSVC on Windows using the Visual Studio generators, custom build rules have been set up to autodetect NASM and get it to automatically compile assembly files, but they have not been tested (and may not necessarily work) for all versions of Visual Studio.
 
 ### Static Linking
 

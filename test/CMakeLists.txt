@@ -4,31 +4,23 @@ PROJECT(Test C)
 
 SET(BIN_NAME "test")
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-
 SET(INCLUDE_FILES
-    include/kat/parser.h
-    include/kat/kats.h
     include/testenv.h
-    include/tests.h
 )
 
 SET(SOURCE_FILES
     src/main.c
-    src/testenv.c
-    src/kat/parser.c
-    src/tests/misc.c
-    src/tests/internal.c
-    src/tests/stream.c
-    src/tests/os_random.c
-    src/tests/block.c
-    src/tests/block_modes.c
-    src/tests/digest/skein256.c
-    src/tests/digest.c
-    src/tests/hmac.c
-    src/tests/pbkdf2.c
-    src/tests/enc_stream.c
-    src/tests/curve25519.c
+    src/test_vectors/hash.c
+    src/test_vectors/hmac.c
+    src/test_vectors/pbkdf2.c
+    src/test_vectors/stream.c
+    src/test_vectors/block.c
+    src/test_vectors/block_mode.c
+    src/test_vectors/curve25519.c
+    src/test_vectors/specific/skein256.c
+    src/unit_tests/misc.c
+    src/unit_tests/internal.c
+    src/unit_tests/os_random.c
 )
 
 SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})

@@ -1,4 +1,4 @@
-/*===-- internal/implementation.h----------------------*- INTERNAL-*- H -*-===*/
+/*===-- internal/implementation.h---------------------*- INTERNAL -*- H -*-===*/
 /**
 *** @file
 *** @internal
@@ -25,24 +25,21 @@
 
 /* Internal function namespacing to prevent static name conflicts. */
 
-#define rol16 rol16                                         ## _internal_ordo
-#define ror16 ror16                                         ## _internal_ordo
-#define rol32 rol32                                         ## _internal_ordo
-#define ror32 ror32                                         ## _internal_ordo
-#define rol64 rol64                                         ## _internal_ordo
-#define ror64 ror64                                         ## _internal_ordo
-#define smin smin                                           ## _internal_ordo
-#define smax smax                                           ## _internal_ordo
-#define pswap8 pswap8                                       ## _internal_ordo
-#define pswap16 pswap16                                     ## _internal_ordo
-#define pswap32 pswap32                                     ## _internal_ordo
-#define pswap64 pswap64                                     ## _internal_ordo
-#define pad_check pad_check                                 ## _internal_ordo
-#define xor_buffer xor_buffer                               ## _internal_ordo
-#define inc_buffer inc_buffer                               ## _internal_ordo
-#define mem_alloc mem_alloc                                 ## _internal_ordo
-#define mem_free mem_free                                   ## _internal_ordo
-#define mem_erase mem_erase                                 ## _internal_ordo
+#define rol16                            ordo_rol16_internal
+#define ror16                            ordo_ror16_internal
+#define rol32                            ordo_rol32_internal
+#define ror32                            ordo_ror32_internal
+#define rol64                            ordo_rol64_internal
+#define ror64                            ordo_ror64_internal
+#define smin                             ordo_smin_internal
+#define smax                             ordo_smax_internal
+#define pswap8                           ordo_pswap8_internal
+#define pswap16                          ordo_pswap16_internal
+#define pswap32                          ordo_pswap32_internal
+#define pswap64                          ordo_pswap64_internal
+#define pad_check                        ordo_pad_check_internal
+#define xor_buffer                       ordo_xor_buffer_internal
+#define inc_buffer                       ordo_inc_buffer_internal
 
 /*===----------------------------------------------------------------------===*/
 
