@@ -28,6 +28,4 @@
 
 #define ARRAY_SIZE(X) (sizeof((X)) / sizeof(*(X)))
 
-#define random(N) (rand() % N)
-
 #endif
