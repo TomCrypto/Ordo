@@ -562,8 +562,8 @@ void cmult(felem *resultx, felem *resultz, const u8 *n, const felem *q) {
 }
 
 /* -----------------------------------------------------------------------------
-// Shamelessly copied from djb's code
-// ---------------------------------------------------------------------------*/
+** Shamelessly copied from djb's code
+** ---------------------------------------------------------------------------*/
 void crecip(felem *out, const felem *z) {
   felem z2[10];
   felem z9[10];
