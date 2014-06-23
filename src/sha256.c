@@ -43,8 +43,7 @@ int sha256_init(struct SHA256_STATE *state,
 }
 
 void sha256_update(struct SHA256_STATE *state,
-                   const void *buffer,
-                   size_t size)
+                   const void *buffer, size_t size)
 {
     state->msg_len += size;
 

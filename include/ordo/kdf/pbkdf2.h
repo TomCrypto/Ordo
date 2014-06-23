@@ -37,10 +37,10 @@ extern "C" {
 /** Derives a key using PBKDF2.
 ***
 *** @param [in]     hash           The hash function to use (the PRF used will
-***                                be an instantiation of HMAC with it)
+***                                be an instantiation of HMAC with it).
 *** @param [in]     params         Hash-specific parameters.
-*** @param [in]     password       The password to derive a key from.
-*** @param [in]     password_len   The length in bytes of the password.
+*** @param [in]     pwd            The password to derive a key from.
+*** @param [in]     pwd_len        The length in bytes of the password.
 *** @param [in]     salt           The cryptographic salt to use.
 *** @param [in]     salt_len       The length in bytes of the salt.
 *** @param [in]     iterations     The number of PBKDF2 iterations to use.
@@ -63,7 +63,7 @@ extern "C" {
 **/
 ORDO_PUBLIC
 int kdf_pbkdf2(prim_t hash, const void *params,
-               const void *password, size_t password_len,
+               const void *pwd, size_t pwd_len,
                const void *salt, size_t salt_len,
                size_t iterations,
                void *out, size_t out_len);

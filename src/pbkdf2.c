@@ -11,13 +11,10 @@
 /*===----------------------------------------------------------------------===*/
 
 int kdf_pbkdf2(prim_t hash, const void *params,
-               const void *password,
-               size_t password_len,
-               const void *salt,
-               size_t salt_len,
+               const void *pwd, size_t pwd_len,
+               const void *salt, size_t salt_len,
                size_t iterations,
-               void *out,
-               size_t out_len)
+               void *out, size_t out_len)
 {
     int err = ORDO_SUCCESS;
 
@@ -37,13 +34,16 @@ int kdf_pbkdf2(prim_t hash, const void *params,
         return err;
     }
 
+    /* This HMAC initialization need be done only once, because for each
+     * iteration the key is always the same (the password). Thanks to
+     * the design of HMAC, most of the work can then be precomputed. */
+    if ((err = hmac_init(&cst, pwd, pwd_len, hash, params))) return err;
+
     for (t = 0; t < t_max + 1; ++t)
     {
         uint32_t counter = tobe32((uint32_t)(t + 1)); /* Big-endian. */
 
-        if ((err = hmac_init(&ctx,
-                             password, password_len,
-                             hash, params))) return err;
+        ctx = cst;
 
         hmac_update(&ctx, salt, salt_len);
         hmac_update(&ctx, &counter, sizeof(uint32_t));
@@ -52,13 +52,6 @@ int kdf_pbkdf2(prim_t hash, const void *params,
          * is used to store the previous iteration result for the next one. */
         if ((err = hmac_final(&ctx, feedback))) return err;
         memcpy(buf, feedback, digest_len);
-
-        /* This HMAC initialization need be done only once, because for each
-         * iteration the key is always the same (the password). Thanks to
-         * the design of HMAC, most of the work can then be precomputed. */
-        if ((err = hmac_init(&cst,
-                             password, password_len,
-                             hash, params))) return err;
 
         for (i = 1; i < iterations; ++i)
         {
