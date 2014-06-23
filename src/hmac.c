@@ -51,25 +51,21 @@ void hmac_update(struct HMAC_CTX *ctx,
 
 int hmac_final(struct HMAC_CTX *ctx, void *digest)
 {
-    int err = ORDO_SUCCESS;
-
     size_t digest_len = digest_length(ctx->dgt.primitive);
     size_t block_size = hash_query(ctx->dgt.primitive,
                                    BLOCK_SIZE_Q, 0);
     size_t t;
 
-    unsigned char tmp[HASH_DIGEST_LEN];
-
-    digest_final(&ctx->dgt, tmp);
+    digest_final(&ctx->dgt, digest);
 
     /* This will implicitly go from inner mask to outer mask. */
     for (t = 0; t < block_size; ++t) ctx->key[t] ^= 0x5c ^ 0x36;
 
     digest_update(&ctx->outer, ctx->key, block_size);
-    digest_update(&ctx->outer, tmp, digest_len);
+    digest_update(&ctx->outer, digest, digest_len);
     digest_final(&ctx->outer, digest);
 
-    return err;
+    return 0;
 }
 
 size_t hmac_bsize(void)
