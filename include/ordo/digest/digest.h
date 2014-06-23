@@ -4,7 +4,7 @@
 *** @brief Module
 ***
 *** Module to compute cryptographic digests, using cryptographic hash function
-*** primitives (as a pointer to a \c HASH_FUNCTION structure).
+*** primitives.
 ***
 *** The advantage  of using this  digest module  instead of the  hash function
 *** abstraction layer is  this keeps track of the hash  function primitive for
@@ -16,14 +16,14 @@
 *** @code
 *** struct DIGEST_CTX ctx;
 ***
-*** int err = digest_init(ctx, HASH_SHA256, 0);
+*** int err = digest_init(&ctx, HASH_SHA256, 0);
 *** if (err) printf("Got error!\n");
 ***
 *** const char x[] = "Hello, world!";
-*** digest_update(ctx, x, strlen(x));
+*** digest_update(&ctx, x, strlen(x));
 ***
 *** unsigned char out[32];
-*** digest_final(ctx, out);
+*** digest_final(&ctx, out);
 *** // out = 315f5bdb76d0...
 *** @endcode
 **/

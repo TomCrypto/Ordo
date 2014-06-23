@@ -4,8 +4,8 @@
 *** @brief Module
 ***
 *** Module  for computing  HMAC's (Hash-based  Message Authentication  Codes),
-*** which securely combine  a hash function with a  cryptographic key securely
-*** in order to provide both authentication and integrity, as per RFC 2104.
+*** which combine  a hash function with a  cryptographic key securely in order
+*** to provide both authentication and integrity, as per RFC 2104.
 **/
 /*===----------------------------------------------------------------------===*/
 
