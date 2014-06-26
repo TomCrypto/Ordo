@@ -18,6 +18,9 @@ What's new in 0.3.1:
  - all functions have been namespaced, to prevent declaration and linking conflicts
  - added support for Intel compilers on Linux
 
+TODO:
+ - work on tests (!)
+
 Feature Map
 -----------
 
