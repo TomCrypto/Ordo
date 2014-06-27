@@ -1,11 +1,25 @@
+/*===-- test/testenv.h ---------------------------------*- PUBLIC -*- H -*-===*/
+/**
+*** @file
+*** @brief Test Utilities
+***
+*** This header contains some utilities used by the tests, for instance common
+*** includes, some assertion macros, compile-time helper macros, and so on.
+**/
+/*===----------------------------------------------------------------------===*/
+
 #ifndef TESTENV_H
 #define TESTENV_H
 
+/** @cond **/
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+/** @endcond **/
 
 #include "ordo.h"
+
+/*===----------------------------------------------------------------------===*/
 
 /* These are some assertion macros, which tests can use if required. */
 

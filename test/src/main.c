@@ -37,7 +37,6 @@ static int test_fini(void) { return 1; }
 extern int test_vectors_md5(void);
 extern int test_vectors_sha256(void);
 extern int test_vectors_skein256(void);
-extern int test_vectors_skein256_1(void);
 extern int test_vectors_hmac(void);
 extern int test_vectors_pbkdf2(void);
 extern int test_vectors_rc4(void);
@@ -76,7 +75,6 @@ static const struct TEST tests[] =
     { test_vectors_md5,                  "MD5 test vectors"                 },
     { test_vectors_sha256,               "SHA-256 test vectors"             },
     { test_vectors_skein256,             "Skein-256 test vectors"           },
-    { test_vectors_skein256_1,           "Skein-256* test vectors"          },
     { test_vectors_hmac,                 "HMAC test vectors"                },
     { test_vectors_pbkdf2,               "PBKDF2 test vectors"              },
     { test_vectors_rc4,                  "RC4 test vectors"                 },
