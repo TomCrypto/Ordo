@@ -10,14 +10,19 @@ SET(INCLUDE_FILES
 
 SET(SOURCE_FILES
     src/main.c
-    src/test_vectors/hash/md5.c
-    src/test_vectors/hash/sha256.c
-    src/test_vectors/hash/skein256.c
+    src/test_vectors/md5.c
+    src/test_vectors/sha256.c
+    src/test_vectors/skein256.c
     src/test_vectors/hmac.c
     src/test_vectors/pbkdf2.c
-    src/test_vectors/stream.c
-    src/test_vectors/block.c
-    src/test_vectors/block_mode.c
+    src/test_vectors/rc4.c
+    src/test_vectors/aes.c
+    src/test_vectors/threefish256.c
+    src/test_vectors/ecb.c
+    src/test_vectors/cbc.c
+    src/test_vectors/ctr.c
+    src/test_vectors/cfb.c
+    src/test_vectors/ofb.c
     src/test_vectors/curve25519.c
     src/unit_tests/misc.c
     src/unit_tests/internal.c

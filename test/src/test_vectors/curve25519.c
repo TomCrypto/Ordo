@@ -3,7 +3,7 @@
 *** @file
 *** @brief Test Vectors
 ***
-*** This unit provides test vectors for the Curve25519 module.
+*** Test vectors for the Curve25519 module.
 **/
 /*===----------------------------------------------------------------------===*/
 

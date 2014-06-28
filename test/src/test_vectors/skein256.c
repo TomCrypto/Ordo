@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/hash/skein256.c --------------*- PUBLIC -*- C -*-===*/
+/*===-- test/test_vectors/skein256.c -------------------*- PUBLIC -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors
@@ -93,7 +93,7 @@ static const struct TEST_VECTOR tests[] =
 
 static int check(struct TEST_VECTOR test)
 {
-    unsigned char digest[MAX_OUT_LEN];
+    unsigned char out[MAX_OUT_LEN];
     struct HASH_STATE state;
 
     ASSERT_SUCCESS(hash_init(&state, HASH_SKEIN256, test.use_params
@@ -102,9 +102,9 @@ static int check(struct TEST_VECTOR test)
 
     hash_update(&state, test.in, test.in_len);
 
-    hash_final(&state, digest);
+    hash_final(&state, out);
 
-    ASSERT_BUF_EQ(digest, test.out, test.out_len);
+    ASSERT_BUF_EQ(out, test.out, test.out_len);
 
     return 1;
 }

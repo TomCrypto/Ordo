@@ -41,7 +41,6 @@ extern int test_vectors_hmac(void);
 extern int test_vectors_pbkdf2(void);
 extern int test_vectors_rc4(void);
 extern int test_vectors_aes(void);
-extern int test_vectors_nullcipher(void);
 extern int test_vectors_threefish256(void);
 extern int test_vectors_ecb(void);
 extern int test_vectors_cbc(void);
@@ -79,7 +78,6 @@ static const struct TEST tests[] =
     { test_vectors_pbkdf2,               "PBKDF2 test vectors"              },
     { test_vectors_rc4,                  "RC4 test vectors"                 },
     { test_vectors_aes,                  "AES test vectors"                 },
-    { test_vectors_nullcipher,           "NullCipher test vectors"          },
     { test_vectors_threefish256,         "Threefish-256 test vectors"       },
     { test_vectors_ecb,                  "ECB test vectors"                 },
     { test_vectors_cbc,                  "CBC test vectors"                 },
