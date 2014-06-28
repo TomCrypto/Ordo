@@ -114,12 +114,12 @@ const char *ordo_error_msg(int code);
 **/
 enum ORDO_ERROR
 {
-    ORDO_SUCCESS,
-    ORDO_FAIL,
-    ORDO_LEFTOVER,
-    ORDO_KEY_LEN,
-    ORDO_PADDING,
-    ORDO_ARG
+    ORDO_SUCCESS        =  0,
+    ORDO_FAIL           = -1,
+    ORDO_LEFTOVER       = -2,
+    ORDO_KEY_LEN        = -3,
+    ORDO_PADDING        = -4,
+    ORDO_ARG            = -5
 };
 
 /*===----------------------------------------------------------------------===*/
