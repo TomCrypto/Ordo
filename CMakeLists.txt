@@ -331,8 +331,8 @@ IF(SYSTEM_GENERIC)
     ENDIF()
 ENDIF()
 
-ADD_SUBDIRECTORY(test)
-ADD_SUBDIRECTORY(samples)
+ADD_SUBDIRECTORY(extra/test test)
+ADD_SUBDIRECTORY(extra/samples samples)
 
 FIND_PACKAGE(Doxygen)
 

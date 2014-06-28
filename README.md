@@ -61,7 +61,7 @@ For instance, a typical configuration for x86_64 machines with the AES-NI instru
 
     cd build && cmake .. -DARCH=amd64 -DAES_NI=on
 
-The test driver is in the `test` folder, the sample programs are in the `samples` folder.
+The test driver and sample programs are located in the `extra` folder.
 
 ### Assembly Support
 
