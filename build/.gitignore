@@ -1,2 +1,4 @@
+# Have cmake build in here (out-of-source build)
+
 *
 !.gitignore
