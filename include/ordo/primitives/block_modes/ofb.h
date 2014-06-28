@@ -12,7 +12,7 @@
 *** pair must  never be used  for more than one  message. This also  means the
 *** block cipher's inverse permutation is never used.
 ***
-*** \c ofb_final() accepts 0 as an argument for \c outlen, since by design the
+*** \c ofb_final() accepts 0 as an argument for \c out_len since by design the
 *** OFB mode of operation does not produce any final data. However, if a valid
 *** pointer is passed, its value will be set to zero as expected.
 **/

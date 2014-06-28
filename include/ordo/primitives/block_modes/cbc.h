@@ -14,11 +14,11 @@
 *** size.
 ***
 *** If  padding is  enabled, \c  cbc_final() requires  a valid  pointer to  be
-*** passed in the \c outlen parameter  and will always return a full blocksize
+*** passed in the \c out_len parameter and will always return a full blocksize
 *** of data, containing  the last few ciphertext bytes  containing the padding
 *** information.
 ***
-*** If padding  is disabled, \c outlen  is also required, and  will return the
+*** If padding  is disabled, \c out_len is also required, and  will return the
 *** number of unprocessed plaintext bytes in the context. If this is any value
 *** other than zero, the function will also fail with \c ORDO_LEFTOVER.
 **/
