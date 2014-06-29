@@ -49,7 +49,7 @@ static const struct TEST_VECTOR tests[] =
 
 /*===----------------------------------------------------------------------===*/
 
-static int check(struct TEST_VECTOR test)
+static int check(const struct TEST_VECTOR *test)
 {
     unsigned char calc_pub1[32], calc_pub2[32], calc_shared[32];
 
@@ -58,19 +58,19 @@ static int check(struct TEST_VECTOR test)
         return 1;
     #endif
 
-    curve25519_pub(calc_pub1, test.priv1);
-    curve25519_pub(calc_pub2, test.priv2);
+    curve25519_pub(calc_pub1, test->priv1);
+    curve25519_pub(calc_pub2, test->priv2);
 
-    ASSERT_BUF_EQ(calc_pub1, test.pub1, 32);
-    ASSERT_BUF_EQ(calc_pub2, test.pub2, 32);
+    ASSERT_BUF_EQ(calc_pub1, test->pub1, 32);
+    ASSERT_BUF_EQ(calc_pub2, test->pub2, 32);
 
-    curve25519_ecdh(calc_shared, test.priv1, calc_pub2);
+    curve25519_ecdh(calc_shared, test->priv1, calc_pub2);
 
-    ASSERT_BUF_EQ(calc_shared, test.shared, 32);
+    ASSERT_BUF_EQ(calc_shared, test->shared, 32);
 
-    curve25519_ecdh(calc_shared, test.priv2, calc_pub1);
+    curve25519_ecdh(calc_shared, test->priv2, calc_pub1);
 
-    ASSERT_BUF_EQ(calc_shared, test.shared, 32);
+    ASSERT_BUF_EQ(calc_shared, test->shared, 32);
 
     return 1;
 }
@@ -81,7 +81,7 @@ int test_vectors_curve25519(void)
     size_t t;
 
     for (t = 0; t < ARRAY_SIZE(tests); ++t)
-        if (!check(tests[t])) return 0;
+        if (!check(tests + t)) return 0;
 
     return 1;
 }

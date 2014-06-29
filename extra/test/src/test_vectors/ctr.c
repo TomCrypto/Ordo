@@ -43,22 +43,23 @@ static const struct TEST_VECTOR tests[] =
 
 /*===----------------------------------------------------------------------===*/
 
-static int check(struct TEST_VECTOR test)
+static int check(const struct TEST_VECTOR *test)
 {
     unsigned char out[MAX_OUT_LEN];
     struct BLOCK_MODE_STATE ctx;
     size_t total = 0, out_len;
     struct BLOCK_STATE blk;
 
-    if (!prim_avail(test.cipher))
+    if (!prim_avail(test->cipher))
         return 1;
 
-    ASSERT_SUCCESS(block_init(&blk, test.key, test.key_len, test.cipher, 0));
+    ASSERT_SUCCESS(block_init(&blk, test->key, test->key_len,
+                              test->cipher, 0));
 
-    ASSERT_SUCCESS(block_mode_init(&ctx, &blk, test.iv, test.iv_len, 1,
+    ASSERT_SUCCESS(block_mode_init(&ctx, &blk, test->iv, test->iv_len, 1,
                                    BLOCK_MODE_CTR, 0));
 
-    block_mode_update(&ctx, &blk, test.in, test.in_len,
+    block_mode_update(&ctx, &blk, test->in, test->in_len,
                       out, &out_len);
     total += out_len;
 
@@ -66,16 +67,16 @@ static int check(struct TEST_VECTOR test)
 
     total += out_len;
 
-    ASSERT_EQ(total, test.out_len);
+    ASSERT_EQ(total, test->out_len);
 
-    ASSERT_BUF_EQ(out, test.out, test.out_len);
+    ASSERT_BUF_EQ(out, test->out, test->out_len);
 
     total = 0;
 
-    ASSERT_SUCCESS(block_mode_init(&ctx, &blk, test.iv, test.iv_len, 0,
+    ASSERT_SUCCESS(block_mode_init(&ctx, &blk, test->iv, test->iv_len, 0,
                                    BLOCK_MODE_CTR, 0));
 
-    block_mode_update(&ctx, &blk, test.out, test.out_len,
+    block_mode_update(&ctx, &blk, test->out, test->out_len,
                       out, &out_len);
     total += out_len;
 
@@ -83,9 +84,9 @@ static int check(struct TEST_VECTOR test)
 
     total += out_len;
 
-    ASSERT_EQ(total, test.in_len);
+    ASSERT_EQ(total, test->in_len);
 
-    ASSERT_BUF_EQ(out, test.in, test.in_len);
+    ASSERT_BUF_EQ(out, test->in, test->in_len);
 
     block_final(&blk);
 
@@ -101,7 +102,7 @@ int test_vectors_ctr(void)
         return 1;
 
     for (t = 0; t < ARRAY_SIZE(tests); ++t)
-        if (!check(tests[t])) return 0;
+        if (!check(tests + t)) return 0;
 
     return 1;
 }

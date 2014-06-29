@@ -68,18 +68,18 @@ static const struct TEST_VECTOR tests[] =
 
 /*===----------------------------------------------------------------------===*/
 
-static int check(struct TEST_VECTOR test)
+static int check(const struct TEST_VECTOR *test)
 {
     unsigned char out[MAX_OUT_LEN];
     struct HASH_STATE state;
 
     ASSERT_SUCCESS(hash_init(&state, HASH_SHA256, 0));
 
-    hash_update(&state, test.in, test.in_len);
+    hash_update(&state, test->in, test->in_len);
 
     hash_final(&state, out);
 
-    ASSERT_BUF_EQ(out, test.out, test.out_len);
+    ASSERT_BUF_EQ(out, test->out, test->out_len);
 
     return 1;
 }
@@ -93,7 +93,7 @@ int test_vectors_sha256(void)
         return 1;
 
     for (t = 0; t < ARRAY_SIZE(tests); ++t)
-        if (!check(tests[t])) return 0;
+        if (!check(tests + t)) return 0;
 
     return 1;
 }

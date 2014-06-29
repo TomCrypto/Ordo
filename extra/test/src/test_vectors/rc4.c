@@ -76,23 +76,23 @@ static const struct TEST_VECTOR tests[] =
 
 /*===----------------------------------------------------------------------===*/
 
-static int check(struct TEST_VECTOR test)
+static int check(const struct TEST_VECTOR *test)
 {
     unsigned char out[MAX_OUT_LEN];
     struct STREAM_STATE state;
 
-    ASSERT_SUCCESS(stream_init(&state, test.key, test.key_len,
-                               STREAM_RC4, test.use_params
-                                         ? &test.params
+    ASSERT_SUCCESS(stream_init(&state, test->key, test->key_len,
+                               STREAM_RC4, test->use_params
+                                         ? &test->params
                                          : 0));
 
-    memcpy(out, test.in, test.in_len);
+    memcpy(out, test->in, test->in_len);
 
-    stream_update(&state, out, test.in_len);
+    stream_update(&state, out, test->in_len);
 
     stream_final(&state);
 
-    ASSERT_BUF_EQ(out, test.out, test.out_len);
+    ASSERT_BUF_EQ(out, test->out, test->out_len);
 
     return 1;
 }
@@ -106,7 +106,7 @@ int test_vectors_rc4(void)
         return 1;
 
     for (t = 0; t < ARRAY_SIZE(tests); ++t)
-        if (!check(tests[t])) return 0;
+        if (!check(tests + t)) return 0;
 
     return 1;
 }

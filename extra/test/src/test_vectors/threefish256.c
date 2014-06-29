@@ -102,25 +102,25 @@ static const struct TEST_VECTOR tests[] =
 
 /*===----------------------------------------------------------------------===*/
 
-static int check(struct TEST_VECTOR test)
+static int check(const struct TEST_VECTOR *test)
 {
     unsigned char out[MAX_OUT_LEN];
     struct BLOCK_STATE state;
 
-    ASSERT_SUCCESS(block_init(&state, test.key, test.key_len,
-                              BLOCK_THREEFISH256, test.use_params
-                                                ? &test.params
+    ASSERT_SUCCESS(block_init(&state, test->key, test->key_len,
+                              BLOCK_THREEFISH256, test->use_params
+                                                ? &test->params
                                                 : 0));
 
-    memcpy(out, test.in, test.in_len);
+    memcpy(out, test->in, test->in_len);
 
     block_forward(&state, out);
 
-    ASSERT_BUF_EQ(out, test.out, test.out_len);
+    ASSERT_BUF_EQ(out, test->out, test->out_len);
 
     block_inverse(&state, out);
 
-    ASSERT_BUF_EQ(out, test.in, test.in_len);
+    ASSERT_BUF_EQ(out, test->in, test->in_len);
 
     block_final(&state);
 
@@ -136,7 +136,7 @@ int test_vectors_threefish256(void)
         return 1;
 
     for (t = 0; t < ARRAY_SIZE(tests); ++t)
-        if (!check(tests[t])) return 0;
+        if (!check(tests + t)) return 0;
 
     return 1;
 }
