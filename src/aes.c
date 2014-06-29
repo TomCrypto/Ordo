@@ -11,18 +11,18 @@
 #define AES_BLOCK (bits(128))
 
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds) HOT_CODE;
+                      size_t key_len, unsigned rounds) HOT_CODE;
 
-static void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
+static void aes_forward_C(uint8_t *block, const uint8_t *key, unsigned rounds)
 HOT_CODE;
-static void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
+static void aes_inverse_C(uint8_t *block, const uint8_t *key, unsigned rounds)
 HOT_CODE;
 
 #if annotation
 struct AES_STATE
 {
     unsigned char key[336];
-    size_t rounds;
+    unsigned rounds;
 };
 #endif /* annotation */
 
@@ -608,13 +608,13 @@ static const uint8_t ks[11] =
 };
 
 void ExpandKey(const uint8_t *key, uint8_t *ext,
-               size_t key_len, size_t rounds)
+               size_t key_len, unsigned rounds)
 {
     size_t t;
 
     memcpy(ext, key, key_len * 4);
 
-    for (t = key_len; t < 4 * (rounds + 1); ++t)
+    for (t = key_len; t < (size_t)(4 * (rounds + 1)); ++t)
     {
         uint8_t tmp[5];
 
@@ -631,7 +631,7 @@ void ExpandKey(const uint8_t *key, uint8_t *ext,
             tmp[1] = sbox[tmp[2]];
             tmp[2] = sbox[tmp[4]];
         }
-        else if (key_len > 6 && t % key_len == 4 )
+        else if (key_len > 6 && t % key_len == 4)
         {
             tmp[0] = sbox[tmp[0]];
             tmp[1] = sbox[tmp[1]];
@@ -646,9 +646,9 @@ void ExpandKey(const uint8_t *key, uint8_t *ext,
     }
 }
 
-void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
+void aes_forward_C(uint8_t *block, const uint8_t *key, unsigned rounds)
 {
-    size_t t;
+    unsigned t;
 
     AddRoundKey(block, key);
 
@@ -663,21 +663,21 @@ void aes_forward_C(uint8_t *block, const uint8_t *key, size_t rounds)
             ShiftRows(block);
         }
 
-        AddRoundKey(block, key + 16 * t);
+        AddRoundKey(block, key + 16 * (size_t)t);
     }
 }
 
-void aes_inverse_C(uint8_t *block, const uint8_t *key, size_t rounds)
+void aes_inverse_C(uint8_t *block, const uint8_t *key, unsigned rounds)
 {
-    size_t t;
+    unsigned t;
 
-    AddRoundKey(block, key + 16 * rounds);
+    AddRoundKey(block, key + 16 * (size_t)rounds);
 
     InvShiftRows(block);
 
     for (t = rounds; t--;)
     {
-        AddRoundKey(block, key + 16 * t);
+        AddRoundKey(block, key + 16 * (size_t)t);
         if (t) InvMixSubColumns(block);
     }
 }

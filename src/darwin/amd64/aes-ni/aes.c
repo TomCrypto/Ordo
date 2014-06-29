@@ -11,7 +11,7 @@
 #define AES_BLOCK (bits(128))
 
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds) HOT_CODE;
+                      size_t key_len, unsigned rounds) HOT_CODE;
 
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
@@ -155,13 +155,13 @@ static const uint8_t ks[11] =
 };
 
 void ExpandKey(const uint8_t *key, uint8_t *ext,
-               size_t key_len, size_t rounds)
+               size_t key_len, unsigned rounds)
 {
     size_t t;
 
     memcpy(ext, key, key_len * 4);
 
-    for (t = key_len; t < 4 * (rounds + 1); ++t)
+    for (t = key_len; t < (size_t)(4 * (rounds + 1)); ++t)
     {
         uint8_t tmp[5];
 
