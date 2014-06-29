@@ -42,7 +42,7 @@ def extract_state_struct(fd):
     if bgn <= end:
         return ''.join(source[bgn:end])
     else:
-        print "-- [resolve.py] Failed to resolve primitive state structure for {0}".format(fd.name)
+        print("-- [resolve.py] Failed to resolve primitive state structure for {0}".format(fd.name))
         sys.exit(-1)
 
 def gen_polymorphic_struct(built_prims, prim_type):
@@ -69,15 +69,23 @@ def gen_polymorphic_struct(built_prims, prim_type):
 
 def get_block_len(built_prims, prim_type):
     """ Calculates the maximum block length for a given primitive type """
-    retval = max(built_prims, key = lambda (_, p):
-        p.block_len if p.prim_type == prim_type else 0)[1]
-    return 1 if retval.block_len == 0 else retval.block_len
+    retval = 0
+
+    for _, p in built_prims:
+        if p.prim_type == prim_type:
+            retval = max(retval, p.block_len)
+
+    return retval
 
 def get_digest_len(built_prims, prim_type):
     """ Calculates the maximum digest length for a given primitive type """
-    retval = max(built_prims, key = lambda (_, p):
-        p.digest_len if p.prim_type == prim_type else 0)[1]
-    return 1 if retval.digest_len == 0 else retval.digest_len
+    retval = 0
+
+    for _, p in built_prims:
+        if p.prim_type == prim_type:
+            retval = max(retval, p.digest_len)
+
+    return retval
 
 if __name__ == "__main__":
     """ Main function - takes a list of file paths scheduled for compilation, parses
