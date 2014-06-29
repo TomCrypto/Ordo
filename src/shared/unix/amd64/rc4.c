@@ -10,7 +10,7 @@
 
 #define RC4_DROP_DEFAULT 2048
 
-static void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
+static void rc4_key_schedule(struct RC4_STATE *state, unsigned drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 
 extern void rc4_update_ASM(void *state, uint64_t len, void *in, void *out);
@@ -69,7 +69,7 @@ size_t rc4_bsize(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void rc4_key_schedule(struct RC4_STATE *state, size_t drop,
+void rc4_key_schedule(struct RC4_STATE *state, unsigned drop,
                       const uint8_t *key, size_t key_len)
 {
     uint8_t tmp;
