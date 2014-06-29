@@ -36,7 +36,7 @@
     do { if (retval) return 0; } while (0)
 
 #define ASSERT_BUF_EQ(x, e, len) \
-    do { if (memcmp(x, e, len)) return 0; } while (0)
+    do { if (memcmp(x, e, len) != 0) return 0; } while (0)
 
 /* These are convenience macros which tests may wish to make use of. */
 
