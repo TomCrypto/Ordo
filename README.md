@@ -44,7 +44,7 @@ You can also access a recent version of the documentation online through the [pr
 How To Build
 ------------
 
-We support recent versions of MSVC, GCC, ICC (Linux only), MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to. Python 2.x (probably 2.7+) is also required.
+We support recent versions of MSVC, GCC, ICC (Linux only), MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to. Python (2.7 or 3.3 or similar) is also required.
 
 - `LTO`: use link-time optimization, this should be enabled for optimal performance.
 - `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
