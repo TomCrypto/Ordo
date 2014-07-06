@@ -108,7 +108,7 @@ IF(COMPILER_GNU OR COMPILER_CLANG)
     ENDIF()
 ELSEIF(COMPILER_INTEL)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi-alias")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")    
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")    
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
 
