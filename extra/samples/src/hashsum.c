@@ -43,17 +43,21 @@ static int process_file(const char *path, prim_t prim)
 
     digest_init(&ctx, prim, 0);
 
-    while (!feof(file))
+    while (1)
     {
         unsigned char buf[4096]; /* Read in chunks. */
         size_t len = fread(buf, 1, sizeof(buf), file);
 
-        /* Failure */
-        if (len == 0)
+        if (!len)
         {
-            perror(path);
-            fclose(file);
-            return 0;
+            if (!feof(file))
+            {
+                perror(path);
+                fclose(file);
+                return 0;
+            }
+
+            break;
         }
 
         digest_update(&ctx, buf, len);
