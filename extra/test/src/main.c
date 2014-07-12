@@ -10,6 +10,9 @@
 *** The \c term_rewind() function is meant to back to the start of the current
 *** line, then up one character (to redraw on top of the previous iteration).
 ***
+*** The \c term_tty() function should check whether standard output is a valid
+*** tty or something else (like a file) to decide which output format to use.
+***
 *** The \c TERMW macro must contain the width of the terminal in characters.
 **/
 /*===----------------------------------------------------------------------===*/
@@ -120,6 +123,21 @@ static void term_rewind(void)
 	#endif
 }
 
+#if defined(_WIN32)
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
+static int term_tty(void)
+{
+    #if defined(_WIN32)
+    return _isatty(STDOUT_FILENO);
+    #else
+    return isatty(STDOUT_FILENO);
+    #endif
+}
+
 /*===------------------------- TEST DRIVER CODE -------------------------===*/
 
 static void show_progress(size_t pos, size_t total)
@@ -162,7 +180,7 @@ static void show_progress(size_t pos, size_t total)
     }
 }
 
-int main(void)
+static int test_tty(void)
 {
     const char *version = ordo_version()->build;
     unsigned verlen = (unsigned)strlen(version);
@@ -185,4 +203,35 @@ int main(void)
     }
 
     return EXIT_SUCCESS;
+}
+
+static int test_notty(void)
+{
+    const char *version = ordo_version()->build;
+    size_t t;
+
+    printf("Testing %s...\n\n", version);
+
+    for (t = 0; t < ARRAY_SIZE(tests); ++t)
+    {
+        printf("  %s :: ", tests[t].name);
+
+        if (!tests[t].fn())
+        {
+            printf("FAILED\n");
+            return EXIT_FAILURE;
+        }
+
+        printf("PASSED\n");
+    }
+
+    return EXIT_SUCCESS;
+}
+
+int main(void)
+{
+    if (term_tty())
+        return test_tty();
+    else
+        return test_notty();
 }
