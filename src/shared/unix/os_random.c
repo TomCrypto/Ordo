@@ -10,27 +10,18 @@
 
 /*===----------------------------------------------------------------------===*/
 
-static int read_file(const char *file, void *out, size_t len)
+static int read_file(const char *path, void *out, size_t len)
 {
-    FILE *f = fopen(file, "r");
-    if (!f) return ORDO_FAIL;
+    FILE *f = fopen(path, "rb");
 
-    while (len != 0)
+    if (f)
     {
-        size_t read = fread(out, 1, len, f);
-        if (read == 0)
-        {
-            fclose(f);
-            return ORDO_FAIL;
-        }
-
-        out = offset(out, read);
-        len -= read;
+        size_t cnt = fread(out, len, 1, f);
+        fclose(f); /* Do not error-check. */
+        return cnt ? ORDO_SUCCESS : ORDO_FAIL;
     }
 
-    fclose(f);
-
-    return ORDO_SUCCESS;
+    return ORDO_FAIL;
 }
 
 int os_random(void *out, size_t len)
