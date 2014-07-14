@@ -29,10 +29,7 @@ int kdf_pbkdf2(prim_t hash, const void *params,
     /* The output counter is a 32-bit counter which for some reason starts
      * at 1, putting an upper bound on the maximum output length allowed. */
     if ((!out_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
-    {
-        err = ORDO_ARG;
-        return err;
-    }
+        return ORDO_ARG;
 
     /* This HMAC initialization need be done only once, because for each
      * iteration the key is always the same (the password). Thanks to
