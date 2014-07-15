@@ -1,4 +1,4 @@
-Ordo v0.3.1
+Ordo v0.3.2
 ===========
 
 Symmetric Cryptography Library
@@ -29,7 +29,7 @@ This table doesn't include every single feature but gives a high level overview 
  Block Ciphers | Stream Ciphers | Hash Functions | Modes | Authentication | Key Derivation | Misc
  ------------- | -------------- | -------------- | ----- | -------------- | -------------- | ----
  AES           | RC4            | MD5            | ECB   | HMAC           | PBKDF2         | CSPRNG
- Threefish-256 | -              | SHA-256        | CBC   | -              | -              | Curve25519
+ Threefish-256 | -              | SHA-256        | CBC   | -              | HKDF           | Curve25519
  -             | -              | Skein-256      | OFB   | -              | -              | -
  -             | -              | -              | CFB   | -              | -              | -
  -             | -              | -              | CTR   | -              | -              | -
