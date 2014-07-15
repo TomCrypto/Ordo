@@ -49,8 +49,9 @@ extern "C" {
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
-*** @remarks The password and salt may be zero-length in which case the buffer
-***          pointers may be zero (otherwise, \c ORDO_ARG will be returned).
+*** @remarks The salt may be zero-length in which case the buffer may be zero.
+***
+*** @remarks The password or out buffers cannot be zero-length.
 ***
 *** @warning There is a maximum output length of 2^32 - 1 multiplied by the
 ***          digest length of the chosen hash function, but it is unlikely
