@@ -91,9 +91,11 @@ int skein256_init(struct SKEIN256_STATE *state,
 }
 
 void skein256_update(struct SKEIN256_STATE *state,
-                     const void *buffer, size_t size)
+                     const void *buffer, size_t len)
 {
-    if (state->block_len + size > SKEIN256_BLOCK)
+    if (!len) return;
+
+    if (state->block_len + len > SKEIN256_BLOCK)
     {
         size_t pad = (size_t)(SKEIN256_BLOCK - state->block_len);
         uint64_t tweak[2];
@@ -111,10 +113,10 @@ void skein256_update(struct SKEIN256_STATE *state,
         state->block_len = 0;
 
         buffer = offset(buffer, pad);
-        size -= pad;
+        len -= pad;
 
         /* Do NOT process the final block. */
-        while (size > SKEIN256_BLOCK)
+        while (len > SKEIN256_BLOCK)
         {
             memcpy(state->block, buffer, SKEIN256_BLOCK);
             state->msg_len += SKEIN256_BLOCK;
@@ -128,12 +130,12 @@ void skein256_update(struct SKEIN256_STATE *state,
             skein256_compress(state->block, state->state, tweak, &state->cipher);
 
             buffer = offset(buffer, SKEIN256_BLOCK);
-            size -= SKEIN256_BLOCK;
+            len -= SKEIN256_BLOCK;
         }
     }
 
-    memcpy(offset(state->block, state->block_len), buffer, size);
-    state->block_len += size;
+    memcpy(offset(state->block, state->block_len), buffer, len);
+    state->block_len += len;
 }
 
 void skein256_final(struct SKEIN256_STATE *state,

@@ -43,11 +43,13 @@ int sha256_init(struct SHA256_STATE *state,
 }
 
 void sha256_update(struct SHA256_STATE *state,
-                   const void *buffer, size_t size)
+                   const void *buffer, size_t len)
 {
-    state->msg_len += size;
+    if (!len) return;
 
-    if (state->block_len + size >= SHA256_BLOCK)
+    state->msg_len += len;
+
+    if (state->block_len + len >= SHA256_BLOCK)
     {
         size_t pad = (size_t)(SHA256_BLOCK - state->block_len);
 
@@ -56,20 +58,20 @@ void sha256_update(struct SHA256_STATE *state,
         state->block_len = 0;
 
         buffer = offset(buffer, pad);
-        size -= pad;
+        len -= pad;
 
-        while (size >= SHA256_BLOCK)
+        while (len >= SHA256_BLOCK)
         {
             memcpy(state->block, buffer, SHA256_BLOCK);
             sha256_compress(state->block, state->digest);
 
             buffer = offset(buffer, SHA256_BLOCK);
-            size -= SHA256_BLOCK;
+            len -= SHA256_BLOCK;
         }
     }
 
-    memcpy(offset(state->block, state->block_len), buffer, size);
-    state->block_len += size;
+    memcpy(offset(state->block, state->block_len), buffer, len);
+    state->block_len += len;
 }
 
 void sha256_final(struct SHA256_STATE *state,

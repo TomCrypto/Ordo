@@ -43,13 +43,14 @@ int md5_init(struct MD5_STATE *state,
 }
 
 void md5_update(struct MD5_STATE *state,
-                const void *buffer,
-                size_t size)
+                const void *buffer, size_t len)
 {
-    state->msg_len += size;
+    if (!len) return;
+
+    state->msg_len += len;
 
     /* Do we have enough to complete a message block? */
-    if (state->block_len + size >= MD5_BLOCK)
+    if (state->block_len + len >= MD5_BLOCK)
     {
         /* This is certain to be in [0 .. MD5_BLOCK - 1]. */
         size_t pad = (size_t)(MD5_BLOCK - state->block_len);
@@ -59,22 +60,22 @@ void md5_update(struct MD5_STATE *state,
         state->block_len = 0;
 
         buffer = offset(buffer, pad);
-        size -= pad;
+        len -= pad;
 
         /* Process all blocks. */
-        while (size >= MD5_BLOCK)
+        while (len >= MD5_BLOCK)
         {
             memcpy(state->block, buffer, MD5_BLOCK);
             md5_compress(state->block, state->digest);
 
             buffer = offset(buffer, MD5_BLOCK);
-            size -= MD5_BLOCK;
+            len -= MD5_BLOCK;
         }
     }
 
     /* Leftover input data goes into the state for later processing. */
-    memcpy(offset(state->block, state->block_len), buffer, size);
-    state->block_len += size;
+    memcpy(offset(state->block, state->block_len), buffer, len);
+    state->block_len += len;
 }
 
 void md5_final(struct MD5_STATE *state,

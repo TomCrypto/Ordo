@@ -53,6 +53,8 @@ int hash_init(struct HASH_STATE *state,
 *** @remarks This function has the property that doing `update(x)` followed by
 ***          `update(y)` is equivalent to `update(x || y)`, where `||` denotes
 ***          concatenation.
+***
+*** @remarks Passing a buffer of length zero is a no-op.
 **/
 ORDO_PUBLIC
 void hash_update(struct HASH_STATE *state,
