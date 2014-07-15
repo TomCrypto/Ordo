@@ -7,14 +7,14 @@ before_install:
   - sudo apt-get update
 
 install:
-#  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
-#  - tar -xvf cmake-2.8.12.1.tar.gz
-#  - cd cmake-2.8.12.1
-#  - ./configure
-#  - make -j 4
-#  - sudo make install
-#  - cd ..
-  - sudo apt-get install nasm
+  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
+  - tar -xvf cmake-2.8.12.1.tar.gz
+  - cd cmake-2.8.12.1
+  - ./configure
+  - make -j 4
+  - sudo make install
+  - cd ..
+#  - sudo apt-get install nasm
 
 script:
   - cd build && cmake .. -DLTO=off && make -j 4 && ./test/test && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
