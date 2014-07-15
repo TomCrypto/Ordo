@@ -14,7 +14,7 @@ install:
   - make -j 4
   - sudo make install
   - cd ..
-#  - sudo apt-get install nasm
+  - sudo apt-get install nasm
 
 script:
   - cd build && cmake .. -DLTO=off && make -j 4 && ./test/test && rm -rf `find .|grep -v '\.gitignore'|grep -v '\.$'` && cd ..
