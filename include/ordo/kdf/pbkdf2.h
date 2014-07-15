@@ -65,7 +65,7 @@ ORDO_PUBLIC
 int kdf_pbkdf2(prim_t hash, const void *params,
                const void *pwd, size_t pwd_len,
                const void *salt, size_t salt_len,
-               size_t iterations,
+               uintmax_t iterations,
                void *out, size_t out_len);
 
 /*===----------------------------------------------------------------------===*/

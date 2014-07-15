@@ -13,22 +13,20 @@
 int kdf_pbkdf2(prim_t hash, const void *params,
                const void *pwd, size_t pwd_len,
                const void *salt, size_t salt_len,
-               size_t iterations,
+               uintmax_t iterations,
                void *out, size_t out_len)
 {
     int err = ORDO_SUCCESS;
 
+    unsigned char buf[HASH_DIGEST_LEN], feedback[HASH_DIGEST_LEN];
     const size_t digest_len = digest_length(hash);
-    size_t i, t, t_max = out_len / digest_len;
-
     struct HMAC_CTX ctx, cst;
-    
-    unsigned char buf[HASH_DIGEST_LEN];
-    unsigned char feedback[HASH_DIGEST_LEN];
 
     /* The output counter is a 32-bit counter which for some reason starts
      * at 1, putting an upper bound on the maximum output length allowed. */
-    if ((!out_len) || (!iterations) || (t_max > (size_t)UINT32_MAX - 2))
+    uint32_t counter = 1;
+
+    if (!out || !out_len || !iterations)
         return ORDO_ARG;
 
     /* This HMAC initialization need be done only once, because for each
@@ -36,14 +34,16 @@ int kdf_pbkdf2(prim_t hash, const void *params,
      * the design of HMAC, most of the work can then be precomputed. */
     if ((err = hmac_init(&cst, pwd, pwd_len, hash, params))) return err;
 
-    for (t = 0; t < t_max + 1; ++t)
+    while (out_len)
     {
-        uint32_t counter = tobe32((uint32_t)(t + 1)); /* Big-endian. */
+        uint32_t ctr_endian = tobe32(counter); /* Big endian counter */
+        size_t i;
 
+        ++counter;
         ctx = cst;
 
         hmac_update(&ctx, salt, salt_len);
-        hmac_update(&ctx, &counter, sizeof(uint32_t));
+        hmac_update(&ctx, &ctr_endian, sizeof(uint32_t));
 
         /* We copy the first iteration result into the "feedback" buffer which
          * is used to store the previous iteration result for the next one. */
@@ -52,8 +52,9 @@ int kdf_pbkdf2(prim_t hash, const void *params,
 
         for (i = 1; i < iterations; ++i)
         {
-            /* Next iteration: Ui+1 = PRF(Ui). */
             ctx = cst;
+
+            /* Next iteration: Ui+1 = PRF(Ui). */
             hmac_update(&ctx, feedback, digest_len);
             if ((err = hmac_final(&ctx, feedback))) return err;
 
@@ -65,10 +66,14 @@ int kdf_pbkdf2(prim_t hash, const void *params,
          * this ensures that even if something goes wrong at any point, the
          * user-provided buffer will only ever contain either indeterminate
          * data or valid data, and no intermediate, sensitive information. */
-        memcpy(offset(out, t * digest_len),
-               buf,
-               (t == t_max) ? out_len % digest_len : digest_len);
+        memcpy(out, buf, out_len >= digest_len ? digest_len : out_len);
+        out_len -= out_len >= digest_len ? digest_len : out_len;
+        out = offset(out, digest_len);
+
+        /* Maximum output length reached! */
+        if ((counter == 0) && out_len)
+            return ORDO_ARG;
     }
-    
+
     return err;
 }
