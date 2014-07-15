@@ -22,8 +22,6 @@
 #include "ordo/common/interface.h"
 /** @endcond **/
 
-#include "ordo/auth/hmac.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

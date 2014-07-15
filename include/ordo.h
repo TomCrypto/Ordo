@@ -38,6 +38,11 @@
 #include "ordo/enc/enc_stream.h"
 #include "ordo/enc/enc_block.h"
 
+#include "ordo/digest/digest.h"
+
+#include "ordo/auth/hmac.h"
+
+#include "ordo/kdf/hkdf.h"
 #include "ordo/kdf/pbkdf2.h"
 
 #include "ordo/misc/utils.h"

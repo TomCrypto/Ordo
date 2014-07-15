@@ -14,6 +14,7 @@ SET(SOURCE_FILES
     src/test_vectors/sha256.c
     src/test_vectors/skein256.c
     src/test_vectors/hmac.c
+    src/test_vectors/hkdf.c
     src/test_vectors/pbkdf2.c
     src/test_vectors/rc4.c
     src/test_vectors/aes.c

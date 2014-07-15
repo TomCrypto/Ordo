@@ -16,7 +16,7 @@ int kdf_pbkdf2(prim_t hash, const void *params,
                uintmax_t iterations,
                void *out, size_t out_len)
 {
-    int err = ORDO_SUCCESS;
+    int err;
 
     unsigned char buf[HASH_DIGEST_LEN], feedback[HASH_DIGEST_LEN];
     const size_t digest_len = digest_length(hash);
@@ -74,5 +74,5 @@ int kdf_pbkdf2(prim_t hash, const void *params,
             return ORDO_ARG;
     }
 
-    return err;
+    return ORDO_SUCCESS;
 }

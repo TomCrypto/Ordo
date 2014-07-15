@@ -146,6 +146,7 @@ SET(INCLUDE_FILES
     include/ordo/misc/curve25519.h
     include/ordo/enc/enc_block.h
     include/ordo/enc/enc_stream.h
+    include/ordo/kdf/hkdf.h
     include/ordo/kdf/pbkdf2.h
     include/ordo/common/error.h
     include/ordo/common/query.h
@@ -196,6 +197,7 @@ SET(IN_FILES
     ordo.c
     os_random.c
     pbkdf2.c
+    hkdf.c
     stream_ciphers.c
     version.c
     curve25519.c

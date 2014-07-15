@@ -41,6 +41,7 @@ extern int test_vectors_md5(void);
 extern int test_vectors_sha256(void);
 extern int test_vectors_skein256(void);
 extern int test_vectors_hmac(void);
+extern int test_vectors_hkdf(void);
 extern int test_vectors_pbkdf2(void);
 extern int test_vectors_rc4(void);
 extern int test_vectors_aes(void);
@@ -78,6 +79,7 @@ static const struct TEST tests[] =
     { test_vectors_sha256,               "SHA-256 test vectors"             },
     { test_vectors_skein256,             "Skein-256 test vectors"           },
     { test_vectors_hmac,                 "HMAC test vectors"                },
+    { test_vectors_hkdf,                 "HKDF test vectors"                },
     { test_vectors_pbkdf2,               "PBKDF2 test vectors"              },
     { test_vectors_rc4,                  "RC4 test vectors"                 },
     { test_vectors_aes,                  "AES test vectors"                 },
