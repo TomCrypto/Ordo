@@ -8,6 +8,11 @@
 *** of  initial  keystream  bytes  to drop  immediately  after  key  schedule,
 *** effectively implementing RC4-drop[n]. If no  drop parameter is passed, the
 *** implementation drops 2048 bytes by default.
+***
+*** Be aware that even with a drop, it isn't secure to encrypt more than a few
+*** hundred megabytes of data with the same key (due to a distinguisher attack
+*** that can distinguish between an RC4 keystream and a random stream). If you
+*** are concerned, use a different algorithm or rekey at generous intervals.
 **/
 /*===----------------------------------------------------------------------===*/
 
