@@ -1,6 +1,12 @@
 var searchData=
 [
   ['schema',['schema',['../struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28',1,'SKEIN256_PARAMS']]],
+  ['sha1_2eh',['sha1.h',['../sha1_8h.html',1,'']]],
+  ['sha1_5fbsize',['sha1_bsize',['../sha1_8h.html#a9b3ef701b4becc52902ccacca9143481',1,'sha1.c']]],
+  ['sha1_5ffinal',['sha1_final',['../sha1_8h.html#ad936ca38b64e1afa8ae05f12b47f6c7b',1,'sha1.c']]],
+  ['sha1_5finit',['sha1_init',['../sha1_8h.html#a450cd592d8bee4b962c0fa194cf64b86',1,'sha1.c']]],
+  ['sha1_5fquery',['sha1_query',['../sha1_8h.html#a77f0aa0ffde057e1ee43b9dfaf2e6002',1,'sha1.c']]],
+  ['sha1_5fupdate',['sha1_update',['../sha1_8h.html#a4bcaf12c5fb9276e6598416894a4028d',1,'sha1.c']]],
   ['sha256_2eh',['sha256.h',['../sha256_8h.html',1,'']]],
   ['sha256_5fbsize',['sha256_bsize',['../sha256_8h.html#a12cb020179d9a061395aaaf0d2d33293',1,'sha256.c']]],
   ['sha256_5ffinal',['sha256_final',['../sha256_8h.html#a2525f27711a3ec54be774816d29b27b2',1,'sha256.c']]],

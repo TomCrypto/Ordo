@@ -7,6 +7,7 @@ var searchData=
   ['hash_5fparams_2eh',['hash_params.h',['../hash__params_8h.html',1,'']]],
   ['hash_5fquery',['hash_query',['../hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc',1,'hash_functions.c']]],
   ['hash_5fupdate',['hash_update',['../hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f',1,'hash_functions.c']]],
+  ['hkdf_2eh',['hkdf.h',['../hkdf_8h.html',1,'']]],
   ['hmac_2eh',['hmac.h',['../hmac_8h.html',1,'']]],
   ['hmac_5fbsize',['hmac_bsize',['../hmac_8h.html#a321d3003b1a39af24e327f5952f97dd8',1,'hmac.c']]],
   ['hmac_5ffinal',['hmac_final',['../hmac_8h.html#a278e06c71b6d5d16b5e070d74454adbf',1,'hmac.c']]],

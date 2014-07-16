@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /ssd/Ordo/include/ordo.h Source File</title>
+<title>Ordo: include/ordo.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.1</span>
+   &#160;<span id="projectnumber">0.3.3</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -104,57 +103,62 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="enc__stream_8h.html">ordo/enc/enc_stream.h</a>&quot;</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="enc__block_8h.html">ordo/enc/enc_block.h</a>&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="pbkdf2_8h.html">ordo/kdf/pbkdf2.h</a>&quot;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hmac_8h.html">ordo/auth/hmac.h</a>&quot;</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">ordo/misc/utils.h</a>&quot;</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="os__random_8h.html">ordo/misc/os_random.h</a>&quot;</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="curve25519_8h.html">ordo/misc/curve25519.h</a>&quot;</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a71f4db0f616a9c628d13b4b794d9fbb9">ordo_enc_block</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, <span class="keyword">const</span> <span class="keywordtype">void</span> *cipher_params,</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                   <a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> mode, <span class="keyword">const</span> <span class="keywordtype">void</span> *mode_params,</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                   <span class="keywordtype">int</span> direction,</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *iv, <span class="keywordtype">size_t</span> iv_len,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                   <span class="keywordtype">void</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a72b5f74bfd9257d6b35e9efafcc6fb9c">ordo_enc_stream</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                    <span class="keywordtype">void</span> *inout, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a2c3b72e680b76290ed43385fc377a05e">ordo_digest</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                <span class="keywordtype">void</span> *digest);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a03cd97134b48d857831b22a5809d8044">ordo_hmac</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;              <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;              <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;              <span class="keywordtype">void</span> *fingerprint);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hkdf_8h.html">ordo/kdf/hkdf.h</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="pbkdf2_8h.html">ordo/kdf/pbkdf2.h</a>&quot;</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="utils_8h.html">ordo/misc/utils.h</a>&quot;</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="os__random_8h.html">ordo/misc/os_random.h</a>&quot;</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="curve25519_8h.html">ordo/misc/curve25519.h</a>&quot;</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a71f4db0f616a9c628d13b4b794d9fbb9">ordo_enc_block</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, <span class="keyword">const</span> <span class="keywordtype">void</span> *cipher_params,</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                   <a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> mode, <span class="keyword">const</span> <span class="keywordtype">void</span> *mode_params,</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                   <span class="keywordtype">int</span> direction,</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *iv, <span class="keywordtype">size_t</span> iv_len,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                   <span class="keywordtype">void</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a72b5f74bfd9257d6b35e9efafcc6fb9c">ordo_enc_stream</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    <span class="keywordtype">void</span> *inout, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a2c3b72e680b76290ed43385fc377a05e">ordo_digest</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                <span class="keywordtype">void</span> *digest);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ordo_8h.html#a03cd97134b48d857831b22a5809d8044">ordo_hmac</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> hash, <span class="keyword">const</span> <span class="keywordtype">void</span> *params,</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;              <span class="keyword">const</span> <span class="keywordtype">void</span> *key, <span class="keywordtype">size_t</span> key_len,</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;              <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;              <span class="keywordtype">void</span> *fingerprint);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:74</div></div>
 <div class="ttc" id="pbkdf2_8h_html"><div class="ttname"><a href="pbkdf2_8h.html">pbkdf2.h</a></div><div class="ttdoc">Module. </div></div>
+<div class="ttc" id="hkdf_8h_html"><div class="ttname"><a href="hkdf_8h.html">hkdf.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="enc__block_8h_html"><div class="ttname"><a href="enc__block_8h.html">enc_block.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="curve25519_8h_html"><div class="ttname"><a href="curve25519_8h.html">curve25519.h</a></div><div class="ttdoc">Misc. asymmetric module (temp) </div></div>
 <div class="ttc" id="query_8h_html"><div class="ttname"><a href="query_8h.html">query.h</a></div><div class="ttdoc">Utility. </div></div>
 <div class="ttc" id="utils_8h_html"><div class="ttname"><a href="utils_8h.html">utils.h</a></div><div class="ttdoc">Utility. </div></div>
 <div class="ttc" id="error_8h_html"><div class="ttname"><a href="error_8h.html">error.h</a></div><div class="ttdoc">Utility. </div></div>
+<div class="ttc" id="hmac_8h_html"><div class="ttname"><a href="hmac_8h.html">hmac.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="ordo_8h_html_a71f4db0f616a9c628d13b4b794d9fbb9"><div class="ttname"><a href="ordo_8h.html#a71f4db0f616a9c628d13b4b794d9fbb9">ordo_enc_block</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_enc_block(prim_t cipher, const void *cipher_params, prim_t mode, const void *mode_params, int direction, const void *key, size_t key_len, const void *iv, size_t iv_len, const void *in, size_t in_len, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ordo.c:11</div></div>
 <div class="ttc" id="ordo_8h_html_a03cd97134b48d857831b22a5809d8044"><div class="ttname"><a href="ordo_8h.html#a03cd97134b48d857831b22a5809d8044">ordo_hmac</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_hmac(prim_t hash, const void *params, const void *key, size_t key_len, const void *in, size_t in_len, void *fingerprint)</div><div class="ttdef"><b>Definition:</b> ordo.c:73</div></div>
@@ -166,7 +170,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 23 2014 11:31:55 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 16 2014 22:58:28 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Ordo: /ssd/Ordo/include/ordo/primitives/hash_functions.h Source File</title>
+<title>Ordo: include/ordo/primitives/hash_functions.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.1</span>
+   &#160;<span id="projectnumber">0.3.3</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -116,40 +115,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">int</span> <a class="code" href="hash__functions_8h.html#a0d048f223aa81366e37e403389e98598">hash_init</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;              <a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> primitive, <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                 <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                <span class="keywordtype">void</span> *digest);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> primitive,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                  <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#a62f67d871b26837e13e61463736b9fc0">hash_bsize</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                 <span class="keyword">const</span> <span class="keywordtype">void</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">void</span> <a class="code" href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a>(<span class="keyword">struct</span> HASH_STATE *state,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                <span class="keywordtype">void</span> *digest);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> primitive,</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                  <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="hash__functions_8h.html#a62f67d871b26837e13e61463736b9fc0">hash_bsize</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor"></span>}</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:73</div></div>
-<div class="ttc" id="hash__functions_8h_html_a77031706039df9adcaf773da0f5445fc"><div class="ttname"><a href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_query(prim_t primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:89</div></div>
-<div class="ttc" id="hash__functions_8h_html_a62f67d871b26837e13e61463736b9fc0"><div class="ttname"><a href="hash__functions_8h.html#a62f67d871b26837e13e61463736b9fc0">hash_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_bsize(void)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:111</div></div>
-<div class="ttc" id="hash__functions_8h_html_ab84990c894aaaa1a29f546836ad179a4"><div class="ttname"><a href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a></div><div class="ttdeci">ORDO_PUBLIC void hash_final(struct HASH_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:66</div></div>
-<div class="ttc" id="hash__functions_8h_html_a0d048f223aa81366e37e403389e98598"><div class="ttname"><a href="hash__functions_8h.html#a0d048f223aa81366e37e403389e98598">hash_init</a></div><div class="ttdeci">ORDO_PUBLIC int hash_init(struct HASH_STATE *state, prim_t primitive, const void *params)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:21</div></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:74</div></div>
+<div class="ttc" id="hash__functions_8h_html_a77031706039df9adcaf773da0f5445fc"><div class="ttname"><a href="hash__functions_8h.html#a77031706039df9adcaf773da0f5445fc">hash_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_query(prim_t primitive, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:106</div></div>
+<div class="ttc" id="hash__functions_8h_html_a62f67d871b26837e13e61463736b9fc0"><div class="ttname"><a href="hash__functions_8h.html#a62f67d871b26837e13e61463736b9fc0">hash_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t hash_bsize(void)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:132</div></div>
+<div class="ttc" id="hash__functions_8h_html_ab84990c894aaaa1a29f546836ad179a4"><div class="ttname"><a href="hash__functions_8h.html#ab84990c894aaaa1a29f546836ad179a4">hash_final</a></div><div class="ttdeci">ORDO_PUBLIC void hash_final(struct HASH_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:78</div></div>
+<div class="ttc" id="hash__functions_8h_html_a0d048f223aa81366e37e403389e98598"><div class="ttname"><a href="hash__functions_8h.html#a0d048f223aa81366e37e403389e98598">hash_init</a></div><div class="ttdeci">ORDO_PUBLIC int hash_init(struct HASH_STATE *state, prim_t primitive, const void *params)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:24</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="hash__functions_8h_html_a7c5e7766fb032e9936ea4ef9eb1e4f1f"><div class="ttname"><a href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a></div><div class="ttdeci">ORDO_PUBLIC void hash_update(struct HASH_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:43</div></div>
+<div class="ttc" id="hash__functions_8h_html_a7c5e7766fb032e9936ea4ef9eb1e4f1f"><div class="ttname"><a href="hash__functions_8h.html#a7c5e7766fb032e9936ea4ef9eb1e4f1f">hash_update</a></div><div class="ttdeci">ORDO_PUBLIC void hash_update(struct HASH_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> hash_functions.c:50</div></div>
 <div class="ttc" id="hash__params_8h_html"><div class="ttname"><a href="hash__params_8h.html">hash_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 23 2014 11:31:55 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 16 2014 22:58:28 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

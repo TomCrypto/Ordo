@@ -1,5 +1,6 @@
-<map id="/ssd/Ordo/include/ordo/primitives/hash_functions/hash_params.h" name="/ssd/Ordo/include/ordo/primitives/hash_functions/hash_params.h">
-<area shape="rect" id="node2" href="$md5_8h.html" title="Primitive. " alt="" coords="5,117,219,158"/>
-<area shape="rect" id="node3" href="$sha256_8h.html" title="Primitive. " alt="" coords="243,109,417,165"/>
-<area shape="rect" id="node4" href="$skein256_8h.html" title="Primitive. " alt="" coords="442,109,616,165"/>
+<map id="include/ordo/primitives/hash_functions/hash_params.h" name="include/ordo/primitives/hash_functions/hash_params.h">
+<area shape="rect" id="node2" href="$md5_8h.html" title="Primitive. " alt="" coords="5,97,159,138"/>
+<area shape="rect" id="node3" href="$sha1_8h.html" title="Primitive. " alt="" coords="184,97,341,138"/>
+<area shape="rect" id="node4" href="$sha256_8h.html" title="Primitive. " alt="" coords="365,97,536,138"/>
+<area shape="rect" id="node5" href="$skein256_8h.html" title="Primitive. " alt="" coords="560,97,741,138"/>
 </map>

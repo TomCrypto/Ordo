@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['readme',['README',['../md__ssd__ordo_src_shared__r_e_a_d_m_e.html',1,'']]],
   ['rc4_2eh',['rc4.h',['../rc4_8h.html',1,'']]],
   ['rc4_5fbsize',['rc4_bsize',['../rc4_8h.html#ae664ed5fc220837eb3da74c9dd432262',1,'rc4.c']]],
   ['rc4_5ffinal',['rc4_final',['../rc4_8h.html#a4ce31f65c9eec889907cdf7930738141',1,'rc4.c']]],
