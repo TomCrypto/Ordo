@@ -20,6 +20,7 @@ class Primitive:
 primitives = [
     Primitive('rc4',               'STREAM'                                           ),
     Primitive('md5',               'HASH',             block_len = 64, digest_len = 16),
+    Primitive('sha1',              'HASH',             block_len = 64, digest_len = 20),
     Primitive('sha256',            'HASH',             block_len = 64, digest_len = 32),
     Primitive('skein256',          'HASH',             block_len = 32, digest_len = 32),
     Primitive('aes',               'BLOCK',            block_len = 16                 ),

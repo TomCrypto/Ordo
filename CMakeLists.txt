@@ -163,6 +163,7 @@ SET(INCLUDE_FILES
     include/ordo/primitives/hash_functions/hash_params.h
     include/ordo/primitives/hash_functions/skein256.h
     include/ordo/primitives/hash_functions/sha256.h
+    include/ordo/primitives/hash_functions/sha1.h
     include/ordo/primitives/hash_functions/md5.h
     include/ordo/primitives/block_modes.h
     include/ordo/primitives/block_ciphers/threefish256.h
@@ -204,7 +205,7 @@ SET(IN_FILES
     curve25519.asm
 )
 
-SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
+SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA1 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
 
 FOREACH(PRIM ${PRIM_LIST})
     OPTION(WITH_${PRIM} "Include this primitive" ON)

@@ -23,6 +23,7 @@ int prim_avail(prim_t prim)
         case BLOCK_NULLCIPHER:             return WITH_NULLCIPHER;
         case BLOCK_THREEFISH256:           return WITH_THREEFISH256;
         case HASH_MD5:                     return WITH_MD5;
+        case HASH_SHA1:                    return WITH_SHA1;
         case HASH_SHA256:                  return WITH_SHA256;
         case HASH_SKEIN256:                return WITH_SKEIN256;
         case STREAM_RC4:                   return WITH_RC4;
@@ -47,6 +48,7 @@ const char *prim_name(prim_t prim)
         case BLOCK_NULLCIPHER:             return "NullCipher";
         case BLOCK_THREEFISH256:           return "Threefish-256";
         case HASH_MD5:                     return "MD5";
+        case HASH_SHA1:                    return "SHA-1";
         case HASH_SHA256:                  return "SHA-256";
         case HASH_SKEIN256:                return "Skein-256";
         case STREAM_RC4:                   return "RC4";
@@ -71,6 +73,7 @@ enum PRIM_TYPE prim_type(prim_t prim)
         case BLOCK_NULLCIPHER:             return PRIM_TYPE_BLOCK;
         case BLOCK_THREEFISH256:           return PRIM_TYPE_BLOCK;
         case HASH_MD5:                     return PRIM_TYPE_HASH;
+        case HASH_SHA1:                    return PRIM_TYPE_HASH;
         case HASH_SHA256:                  return PRIM_TYPE_HASH;
         case HASH_SKEIN256:                return PRIM_TYPE_HASH;
         case STREAM_RC4:                   return PRIM_TYPE_STREAM;
@@ -99,6 +102,9 @@ prim_t prim_from_name(const char *name)
         #endif
         #if WITH_MD5
         case 0x7360d733: return HASH_MD5;
+        #endif
+        #if WITH_SHA1
+        case 0xee353ec3: return HASH_SHA1;
         #endif
         #if WITH_SHA256
         case 0xc64cb93d: return HASH_SHA256;
@@ -136,6 +142,9 @@ const prim_t *prims_by_type(enum PRIM_TYPE type)
         #if WITH_MD5
         HASH_MD5,
         #endif
+        #if WITH_SHA1
+        HASH_SHA1,
+        #endif
         #if WITH_SHA256
         HASH_SHA256,
         #endif
@@ -167,7 +176,7 @@ const prim_t *prims_by_type(enum PRIM_TYPE type)
         0
     };
 
-    static const prim_t block_modes[] =
+    static const prim_t block_mode[] =
     {
         #if WITH_ECB
         BLOCK_MODE_ECB,
@@ -193,7 +202,7 @@ const prim_t *prims_by_type(enum PRIM_TYPE type)
         case PRIM_TYPE_HASH:             return hash;
         case PRIM_TYPE_STREAM:           return stream;
         case PRIM_TYPE_BLOCK:            return block;
-        case PRIM_TYPE_BLOCK_MODE:       return block_modes;
+        case PRIM_TYPE_BLOCK_MODE:       return block_mode;
     }
 
     return 0;

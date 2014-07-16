@@ -38,6 +38,7 @@ extern "C" {
 /*===----------------------------------------------------------------------===*/
 
 #define HASH_MD5                                                        0x8110
+#define HASH_SHA1                                                       0x8310
 #define HASH_SHA256                                                     0x8010
 #define HASH_SKEIN256                                                   0x8210
 

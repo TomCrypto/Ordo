@@ -11,6 +11,9 @@
 #if WITH_MD5
 #include "ordo/primitives/hash_functions/md5.h"
 #endif
+#if WITH_SHA1
+#include "ordo/primitives/hash_functions/sha1.h"
+#endif
 #if WITH_SHA256
 #include "ordo/primitives/hash_functions/sha256.h"
 #endif
@@ -26,6 +29,10 @@ int hash_init(struct HASH_STATE *state,
         #if WITH_MD5
         case HASH_MD5:
             return md5_init(&state->jmp.md5, params);
+        #endif
+        #if WITH_SHA1
+        case HASH_SHA1:
+            return sha1_init(&state->jmp.sha1, params);
         #endif
         #if WITH_SHA256
         case HASH_SHA256:
@@ -48,6 +55,11 @@ void hash_update(struct HASH_STATE *state,
         #if WITH_MD5
         case HASH_MD5:
             md5_update(&state->jmp.md5, buffer, len);
+            break;
+        #endif
+        #if WITH_SHA1
+        case HASH_SHA1:
+            sha1_update(&state->jmp.sha1, buffer, len);
             break;
         #endif
         #if WITH_SHA256
@@ -73,6 +85,11 @@ void hash_final(struct HASH_STATE *state,
             md5_final(&state->jmp.md5, digest);
             break;
         #endif
+        #if WITH_SHA1
+        case HASH_SHA1:
+            sha1_final(&state->jmp.sha1, digest);
+            break;
+        #endif
         #if WITH_SHA256
         case HASH_SHA256:
             sha256_final(&state->jmp.sha256, digest);
@@ -94,6 +111,10 @@ size_t hash_query(prim_t primitive,
         #if WITH_MD5
         case HASH_MD5:
             return md5_query(query, value);
+        #endif
+        #if WITH_SHA1
+        case HASH_SHA1:
+            return sha1_query(query, value);
         #endif
         #if WITH_SHA256
         case HASH_SHA256:

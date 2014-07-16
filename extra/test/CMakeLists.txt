@@ -11,6 +11,7 @@ SET(INCLUDE_FILES
 SET(SOURCE_FILES
     src/main.c
     src/test_vectors/md5.c
+    src/test_vectors/sha1.c
     src/test_vectors/sha256.c
     src/test_vectors/skein256.c
     src/test_vectors/hmac.c
