@@ -13,10 +13,9 @@ struct CTR_STATE
 {
     unsigned char keystream[BLOCK_BLOCK_LEN];
     unsigned char block[BLOCK_BLOCK_LEN];
-    uint64_t counter;
+    size_t block_size, ctr_len;
     size_t remaining;
-    size_t block_size;
-    size_t ctr_len;
+    uint64_t counter;
 };
 #endif /* annotation */
 
@@ -31,9 +30,8 @@ static void inc_counter(struct BLOCK_STATE *cipher_state,
      * 2^64 maximum (like all other lower limits in the library). */
 
     uint64_t ctr = tole64(state->counter);
-    size_t t;
-    memcpy(state->block, &ctr, state->ctr_len);
 
+    memcpy(state->block, &ctr, state->ctr_len);
     memcpy(state->keystream, state->block, state->block_size);
     block_forward(cipher_state, state->keystream);
     state->remaining = state->block_size;
@@ -71,16 +69,17 @@ void ctr_update(struct CTR_STATE *state,
 
     while (inlen != 0)
     {
-        size_t block_size = state->block_size;
-        size_t process = 0;
+        size_t process;
+        void *offset;
 
         if (state->remaining == 0)
             inc_counter(cipher_state, state);
 
         process = (inlen < state->remaining) ? inlen : state->remaining;
+        offset = offset(state->block, state->block_size - state->remaining);
 
         if (out != in) memcpy(out, in, process);
-        xor_buffer(out, offset(state->block, block_size - state->remaining), process);
+        xor_buffer(out, offset, process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
         inlen -= process;
@@ -104,7 +103,7 @@ size_t ctr_query(prim_t cipher,
 
     switch(query)
     {
-        case IV_LEN_Q: return bits(64);
+        case IV_LEN_Q: return block_size - bits(64);
         default      : return 0;
     }
 }
