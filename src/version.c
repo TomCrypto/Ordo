@@ -10,7 +10,7 @@
 
 #define MAJ 0
 #define MIN 3
-#define REV 2
+#define REV 3
 
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)

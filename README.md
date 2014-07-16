@@ -1,4 +1,4 @@
-Ordo v0.3.2
+Ordo v0.3.3
 ===========
 
 Symmetric Cryptography Library
@@ -11,12 +11,10 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 0.3.1:
- - completely new API, now fully static (no dynamic allocation ever happens), less indirection levels, and improved C89 conformance
- - the test driver is being reworked (work in progress)
- - the HMAC module has been slightly changed to apply the hash parameters on the outer hash instance, which allows for variable output length parameters
- - all functions have been namespaced, to prevent declaration and linking conflicts
- - added support for Intel compilers on Linux
+What's new in 0.3.3:
+ - added HKDF, SHA-1
+ - all hash functions now have a fixed, immutable output length, which simplifies code and reduces the likelihood of overflow or underflow (in exchange, HKDF can be used to stretch insufficiently large hash outputs in a safe and generic fashion - DRBG's are probably next on the list)
+ - improved some of the hash function code, particularly the padding implementation
 
 TODO:
  - work on tests (!)
@@ -29,9 +27,9 @@ This table doesn't include every single feature but gives a high level overview 
  Block Ciphers | Stream Ciphers | Hash Functions | Modes | Authentication | Key Derivation | Misc
  ------------- | -------------- | -------------- | ----- | -------------- | -------------- | ----
  AES           | RC4            | MD5            | ECB   | HMAC           | PBKDF2         | CSPRNG
- Threefish-256 | -              | SHA-256        | CBC   | -              | HKDF           | Curve25519
- -             | -              | Skein-256      | OFB   | -              | -              | -
- -             | -              | -              | CFB   | -              | -              | -
+ Threefish-256 | -              | SHA-1          | CBC   | -              | HKDF           | Curve25519
+ -             | -              | SHA-256        | OFB   | -              | -              | -
+ -             | -              | Skein-256      | CFB   | -              | -              | -
  -             | -              | -              | CTR   | -              | -              | -
 
 Documentation
