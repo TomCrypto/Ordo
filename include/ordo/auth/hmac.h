@@ -33,7 +33,7 @@ extern "C" {
 
 struct HMAC_CTX
 {
-    struct DIGEST_CTX dgt, outer;
+    struct DIGEST_CTX ctx;
     unsigned char key[HASH_BLOCK_LEN];
 };
 
@@ -47,8 +47,8 @@ struct HMAC_CTX
 ***
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
-*** @remarks The hash parameters apply to the outer hash operation only, which
-***          is the one used to hash the processed message and masked key.
+*** @remarks The hash parameters apply to the inner hash operation only, which
+***          is the one used to hash the raw message and masked key.
 **/
 ORDO_PUBLIC
 int hmac_init(struct HMAC_CTX *ctx,
