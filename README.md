@@ -19,6 +19,7 @@ What's new in 0.3.3:
 
 TODO:
  - work on tests (!)
+ - go over build system
 
 Feature Map
 -----------
