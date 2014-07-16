@@ -26,13 +26,15 @@ int kdf_hkdf(prim_t hash, const void *params,
 
     if (!key_len || !out_len) return ORDO_ARG;
 
-    if (!salt_len)
+    if (!salt_len && !salt)
     {
+        /* No salt provided - default to digest_len zero bytes. */
         if ((err = hmac_init(&ctx, buf, digest_len, hash, params)))
             return err;
     }
     else
     {
+        /* Salt provided (even if zero length) - just hash it. */
         if ((err = hmac_init(&ctx, salt, salt_len, hash, params)))
             return err;
     }

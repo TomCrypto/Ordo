@@ -50,6 +50,11 @@ extern "C" {
 ***
 *** @remarks The password or out buffers cannot be zero-length.
 ***
+*** @warning The HKDF algorithm distinguishes between zero-length salt, and no
+***          salt at all - thus, if you want to pass a zero-length salt (which
+***          is not recommended) pass a nonzero pointer with a zero length. If
+***          you want to pass no salt, pass a zero pointer with a zero length.
+***
 *** @warning There is a maximum output length, of 255 multiplied by the digest
 ***          length of the chosen hash function. This is by design.
 ***
