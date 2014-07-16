@@ -10,10 +10,13 @@
 *** not be  an issue.  This is a  rather flexible hash  with lots  of options.
 *** Currently, the only options supported are:
 ***
-*** - arbitrary output length (see \c SKEIN256_PARAMS)
-***
 *** - free access to  configuration block (in fact, \c  SKEIN256_PARAMS is the
-***   configuration block, and a default one is used if not provided)
+***   configuration block, and a default one is used if not provided) with the
+***   exception of the output length which must remain 256 bits.
+***
+*** Note arbitrary output length used to be supported, but is no longer, since
+*** parameters should not leak through the interface, and this feature is also
+*** available in a more generic way through key stretching modules like HKDF.
 **/
 /*===----------------------------------------------------------------------===*/
 

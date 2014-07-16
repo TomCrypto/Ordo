@@ -48,9 +48,7 @@ struct SKEIN256_PARAMS
     ***
     *** @warning This parameter affects the hash function's digest length.
     ***
-    *** @warning The actual output length will be in bytes, and this parameter
-    ***          \b will be  truncated to a byte boundary, so this should be a
-    ***          multiple of 8 to avoid any surprises.
+    *** @warning Must be 256 or \c skein256_init() will return \c ORDO_ARG.
     **/
     uint64_t out_len;
     /** Unused, should be left zero according to the Skein specification.
