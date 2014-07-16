@@ -139,70 +139,69 @@ ENDIF()
 
 SET(INCLUDE_FILES
     include/ordo.h
-    include/ordo/definitions.h
-    include/ordo/misc/utils.h
-    include/ordo/misc/endianness.h
-    include/ordo/misc/os_random.h
-    include/ordo/misc/curve25519.h
+    include/ordo/auth/hmac.h
+    include/ordo/common/error.h
+    include/ordo/common/identification.h
+    include/ordo/common/interface.h
+    include/ordo/common/query.h
+    include/ordo/common/version.h
+    include/ordo/digest/digest.h
     include/ordo/enc/enc_block.h
     include/ordo/enc/enc_stream.h
-    include/ordo/kdf/hkdf.h
-    include/ordo/kdf/pbkdf2.h
-    include/ordo/common/error.h
-    include/ordo/common/query.h
-    include/ordo/common/interface.h
-    include/ordo/common/identification.h
-    include/ordo/common/version.h
-    include/ordo/auth/hmac.h
     include/ordo/internal/alg.h
     include/ordo/internal/implementation.h
     include/ordo/internal/sys.h
-    include/ordo/digest/digest.h
-    include/ordo/primitives/stream_ciphers/rc4.h
-    include/ordo/primitives/stream_ciphers/stream_params.h
-    include/ordo/primitives/hash_functions/hash_params.h
-    include/ordo/primitives/hash_functions/skein256.h
-    include/ordo/primitives/hash_functions/sha256.h
-    include/ordo/primitives/hash_functions/sha1.h
-    include/ordo/primitives/hash_functions/md5.h
-    include/ordo/primitives/block_modes.h
-    include/ordo/primitives/block_ciphers/threefish256.h
+    include/ordo/kdf/pbkdf2.h
+    include/ordo/kdf/hkdf.h
+    include/ordo/misc/curve25519.h
+    include/ordo/misc/endianness.h
+    include/ordo/misc/os_random.h
+    include/ordo/misc/utils.h
+    include/ordo/primitives/block_ciphers.h
     include/ordo/primitives/block_ciphers/aes.h
     include/ordo/primitives/block_ciphers/block_params.h
     include/ordo/primitives/block_ciphers/nullcipher.h
-    include/ordo/primitives/hash_functions.h
-    include/ordo/primitives/block_modes/mode_params.h
-    include/ordo/primitives/block_modes/ctr.h
-    include/ordo/primitives/block_modes/ofb.h
-    include/ordo/primitives/block_modes/cfb.h
-    include/ordo/primitives/block_modes/ecb.h
+    include/ordo/primitives/block_ciphers/threefish256.h
+    include/ordo/primitives/block_modes.h
     include/ordo/primitives/block_modes/cbc.h
+    include/ordo/primitives/block_modes/cfb.h
+    include/ordo/primitives/block_modes/ctr.h
+    include/ordo/primitives/block_modes/ecb.h
+    include/ordo/primitives/block_modes/mode_params.h
+    include/ordo/primitives/block_modes/ofb.h
+    include/ordo/primitives/hash_functions.h
+    include/ordo/primitives/hash_functions/hash_params.h
+    include/ordo/primitives/hash_functions/md5.h
+    include/ordo/primitives/hash_functions/sha256.h
+    include/ordo/primitives/hash_functions/skein256.h
+    include/ordo/primitives/hash_functions/sha1.h
     include/ordo/primitives/stream_ciphers.h
-    include/ordo/primitives/block_ciphers.h
+    include/ordo/primitives/stream_ciphers/rc4.h
+    include/ordo/primitives/stream_ciphers/stream_params.h
+    include/ordo/definitions.h
 )
 
 SET(IN_FILES
-    alg.c
-    utils.c
-    block_ciphers.c
-    block_modes.c
-    digest.c
-    enc_block.c
-    enc_stream.c
-    endianness.c
-    error.c
-    identification.c
-    hash_functions.c
-    hash_params.c
-    hmac.c
-    ordo.c
-    os_random.c
-    pbkdf2.c
-    hkdf.c
-    stream_ciphers.c
-    version.c
-    curve25519.c
-    curve25519.asm
+    alg.c alg.asm
+    utils.c utils.asm
+    block_ciphers.c block_ciphers.asm
+    block_modes.c block_modes.asm
+    digest.c digest.asm
+    enc_block.c enc_block.asm
+    enc_stream.c enc_stream.asm
+    endianness.c endianness.asm
+    error.c error.asm
+    identification.c identification.asm
+    hash_functions.c hash_functions.asm
+    hash_params.c hash_params.asm
+    hmac.c hmac.asm
+    ordo.c ordo.asm
+    os_random.c os_random.asm
+    pbkdf2.c pbkdf2.asm
+    hkdf.c hkdf.asm
+    stream_ciphers.c stream_ciphers.asm
+    version.c version.asm
+    curve25519.c curve25519.asm
 )
 
 SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA1 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
