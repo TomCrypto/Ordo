@@ -59,9 +59,6 @@ extern "C" {
 ***          PBKDF2 specification.
 ***
 *** @remarks The \c out buffer should be at least \c out_len bytes long.
-***
-*** @warning Do not use hash parameters which modify the output length or this
-***          function's behavior is undefined (use \c out_len instead).
 **/
 ORDO_PUBLIC
 int kdf_pbkdf2(prim_t hash, const void *params,

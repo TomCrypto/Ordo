@@ -59,10 +59,6 @@ extern "C" {
 ***          length of the chosen hash function. This is by design.
 ***
 *** @remarks The \c out buffer should be at least \c out_len bytes long.
-***
-*** @warning Do not use hash parameters which modify the output length or this
-***          function's behavior is undefined (use \c out_len instead, this is
-***          the whole point of this algorithm).
 **/
 ORDO_PUBLIC
 int kdf_hkdf(prim_t hash, const void *params,

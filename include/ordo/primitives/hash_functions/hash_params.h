@@ -44,7 +44,7 @@ struct SKEIN256_PARAMS
     /** Reserved, should be left zero according to the Skein specification.
     **/
     uint8_t reserved[2];
-    /** Desired output length, in \b bits.
+    /** Hash function output length, in \b bits.
     ***
     *** @warning This parameter affects the hash function's digest length.
     ***

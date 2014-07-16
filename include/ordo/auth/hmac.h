@@ -76,9 +76,7 @@ void hmac_update(struct HMAC_CTX *ctx,
 *** @returns \c #ORDO_SUCCESS on success, else an error code.
 ***
 *** @remarks The fingerprint length is equal to the underlying hash function's
-***          digest length, which must be queried via \c hash_digest_length(),
-***          or to the provided length, if a parameter which modified the hash
-***          function's output length was passed to \c hmac_init().
+***          digest length, which can be queried via \c hash_digest_length().
 **/
 ORDO_PUBLIC
 int hmac_final(struct HMAC_CTX *ctx, void *fingerprint);

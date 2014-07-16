@@ -93,10 +93,7 @@ extern "C" {
 ***
 *** @remarks The  \c digest buffer  should  be large enough to  accomodate the
 ***          digest - you can query the hash function's  default digest length
-***          in bytes by the \c digest_length() function, note if you provided
-***          parameters which  modify the hash function's  digest length, then
-***          you should already know how long the digest will be (refer to the
-***          parameter's documentation).
+***          in bytes by the \c digest_length() function.
 ***
 *** @remarks Calling this function immediately after \c digest_init() is valid
 ***          and will  return the so-called "zero-length" digest, which is the
@@ -112,8 +109,7 @@ extern "C" {
 *** @param [in]     hash           A hash function primitive.
 ***
 *** @returns The length of the digest to be written in the \c digest parameter
-***          of \c digest_final(), if no parameters which affect output length
-***          were provided to \c digest_init().
+***          of \c digest_final().
 **/
 ORDO_PUBLIC
 size_t digest_length(prim_t hash);
