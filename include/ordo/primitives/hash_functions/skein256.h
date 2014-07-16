@@ -16,7 +16,8 @@
 ***
 *** Note arbitrary output length used to be supported, but is no longer, since
 *** parameters should not leak through the interface, and this feature is also
-*** available in a more generic way through key stretching modules like HKDF.
+*** available in a more generic way via key stretching modules such as HKDF or
+*** DRBG.
 **/
 /*===----------------------------------------------------------------------===*/
 
