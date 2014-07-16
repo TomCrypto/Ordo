@@ -35,7 +35,14 @@ struct SHA256_STATE
 int sha256_init(struct SHA256_STATE *state,
                 const void *params)
 {
-    memcpy(state->digest, sha256_iv, SHA256_DIGEST);
+    state->digest[0] = sha256_iv[0];
+    state->digest[1] = sha256_iv[1];
+    state->digest[2] = sha256_iv[2];
+    state->digest[3] = sha256_iv[3];
+    state->digest[4] = sha256_iv[4];
+    state->digest[5] = sha256_iv[5];
+    state->digest[6] = sha256_iv[6];
+    state->digest[7] = sha256_iv[7];
     state->block_len = 0;
     state->msg_len = 0;
 
@@ -78,22 +85,26 @@ void sha256_final(struct SHA256_STATE *state,
                   void *digest)
 {
     /* See the MD5 code for a description of Merkle padding. */
+
+    unsigned char padding[SHA256_BLOCK] = { 0x80 };
     uint64_t len = tobe64(bytes(state->msg_len));
-    uint8_t one = 0x80, zero = 0x00;
-    size_t t;
 
-    sha256_update(state, &one, sizeof(one));
+    size_t pad_len = SHA256_BLOCK - state->block_len - sizeof(uint64_t)
+                   + (state->block_len < SHA256_BLOCK - sizeof(uint64_t)
+                     ? 0 : SHA256_BLOCK);
 
-    while (state->block_len != SHA256_BLOCK - sizeof(uint64_t))
-    {
-        sha256_update(state, &zero, sizeof(zero));
-    }
-
+    sha256_update(state, padding, pad_len);
     sha256_update(state, &len, sizeof(len));
 
     /* SHA-256 takes big-endian input, convert it back. */
-    for (t = 0; t < SHA256_DIGEST / sizeof(uint32_t); ++t)
-        state->digest[t] = fmbe32(state->digest[t]);
+    state->digest[0] = fmbe32(state->digest[0]);
+    state->digest[1] = fmbe32(state->digest[1]);
+    state->digest[2] = fmbe32(state->digest[2]);
+    state->digest[3] = fmbe32(state->digest[3]);
+    state->digest[4] = fmbe32(state->digest[4]);
+    state->digest[5] = fmbe32(state->digest[5]);
+    state->digest[6] = fmbe32(state->digest[6]);
+    state->digest[7] = fmbe32(state->digest[7]);
 
     memcpy(digest, state->digest, SHA256_DIGEST);
 }
