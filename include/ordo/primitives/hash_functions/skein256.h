@@ -61,12 +61,6 @@ void skein256_update(struct SKEIN256_STATE *state,
                      size_t len);
 
 /** @see \c hash_final()
-***
-*** @remarks If no parameters are provided, the digest buffer must be at least
-***          32 bytes (256 bits) large. If parameters are provided, the buffer
-***          must be sufficiently large to store the output length required by
-***          the parameters (note the parameters specified an output length in
-***          \b bits).
 **/
 ORDO_PUBLIC
 void skein256_final(struct SKEIN256_STATE *state,

@@ -14,8 +14,8 @@ static void threefish256_key_schedule(const uint64_t key[4],
                                       const uint64_t tweak[2],
                                       uint64_t *subkeys) HOT_CODE;
 
-extern void threefish256_forward_ASM(void *block, const void *subkeys);
-extern void threefish256_inverse_ASM(void *block, const void *subkeys);
+extern void threefish256_forward_ASM(uint64_t *block, const uint64_t *subkeys);
+extern void threefish256_inverse_ASM(uint64_t *block, const uint64_t *subkeys);
 
 #if annotation
 struct THREEFISH256_STATE
@@ -27,30 +27,39 @@ struct THREEFISH256_STATE
 /*===----------------------------------------------------------------------===*/
 
 int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t *key, size_t key_len,
+                      const void *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
 {
-    if (threefish256_query(KEY_LEN_Q, key_len) != key_len)
-    {
-        return ORDO_KEY_LEN;
-    }
+    uint64_t data[4];
 
-    threefish256_key_schedule(key, (params == 0) ? 0 : params->tweak,
+    if (threefish256_query(KEY_LEN_Q, key_len) != key_len)
+        return ORDO_KEY_LEN;
+
+    memcpy(data, key, sizeof(data));
+    threefish256_key_schedule(data, (params == 0) ? 0 : params->tweak,
                               state->subkey);
 
     return ORDO_SUCCESS;
 }
 
 void threefish256_forward(const struct THREEFISH256_STATE *state,
-                          uint64_t *block)
+                          void *block)
 {
-    threefish256_forward_ASM(block, state->subkey);
+    uint64_t data[4];
+
+    memcpy(data, block, sizeof(data));
+    threefish256_forward_ASM(data, state->subkey);
+    memcpy(block, data, sizeof(data));
 }
 
 void threefish256_inverse(const struct THREEFISH256_STATE *state,
-                          uint64_t *block)
+                          void *block)
 {
-    threefish256_inverse_ASM(block, state->subkey);
+    uint64_t data[4];
+
+    memcpy(data, block, sizeof(data));
+    threefish256_inverse_ASM(data, state->subkey);
+    memcpy(block, data, sizeof(data));
 }
 
 void threefish256_final(struct THREEFISH256_STATE *state)

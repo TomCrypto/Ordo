@@ -55,11 +55,13 @@ void ecb_update(struct ECB_STATE *state,
 
     *out_len = 0;
 
-    while (state->available + in_len >= block_size + skip)
-    {
-        size_t process = block_size - state->available;
+    /* Do we have a partial block to fill in, and not the last
+     * block? */
 
-        memcpy(state->block + state->available, in, process);
+    if (state->available && (state->available + in_len >= block_size + skip))
+    {
+        /* Add the needed data to the buffer and encrypt/output */
+        memcpy(state->block + state->available, in, block_size - state->available);
 
         if (state->direction)
             block_forward(cipher_state, state->block);
@@ -70,10 +72,30 @@ void ecb_update(struct ECB_STATE *state,
         *out_len += block_size;
         out += block_size;
 
+        in_len -= block_size - state->available;
+        in += block_size - state->available;
         state->available = 0;
-        in_len -= process;
-        in += process;
     }
+
+    /* Now process every block quickly if we have at least 1 block! */
+
+    while (in_len > block_size + skip)
+    {
+        memcpy(out, in, block_size);
+
+        if (state->direction)
+            block_forward(cipher_state, out);
+        else
+            block_inverse(cipher_state, out);
+
+        *out_len += block_size;
+        out += block_size;
+
+        in_len -= block_size;
+        in += block_size;
+    }
+
+    /* Whatever is left over is saved. */
 
     memcpy(state->block + state->available, in, in_len);
     state->available += in_len;

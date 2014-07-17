@@ -42,20 +42,20 @@ extern "C" {
 **/
 ORDO_PUBLIC
 int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t *key, size_t key_len,
+                      const void *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params);
 
 /** @see \c block_forward()
 **/
 ORDO_PUBLIC
 void threefish256_forward(const struct THREEFISH256_STATE *state,
-                          uint64_t *block);
+                          void *block);
 
 /** @see \c block_inverse()
 **/
 ORDO_PUBLIC
 void threefish256_inverse(const struct THREEFISH256_STATE *state,
-                          uint64_t *block);
+                          void *block);
 
 /** @see \c block_final()
 **/

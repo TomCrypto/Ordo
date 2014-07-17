@@ -30,13 +30,15 @@ struct THREEFISH256_STATE
 /*===----------------------------------------------------------------------===*/
 
 int threefish256_init(struct THREEFISH256_STATE *state,
-                      const uint64_t *key, size_t key_len,
+                      const void *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
 {
     if (threefish256_query(KEY_LEN_Q, key_len) == key_len)
     {
         const uint64_t *tweak = params == 0 ? 0 : params->tweak;
-        threefish256_key_schedule(key, tweak, state->subkey);
+        uint64_t data[4];
+        memcpy(data, key, sizeof(data));
+        threefish256_key_schedule(data, tweak, state->subkey);
 
         return ORDO_SUCCESS;
     }
@@ -45,15 +47,23 @@ int threefish256_init(struct THREEFISH256_STATE *state,
 }
 
 void threefish256_forward(const struct THREEFISH256_STATE *state,
-                          uint64_t *block)
+                          void *block)
 {
-    threefish256_forward_C(block, state->subkey);
+    uint64_t data[4];
+
+    memcpy(data, block, sizeof(data));
+    threefish256_forward_C(data, state->subkey);
+    memcpy(block, data, sizeof(data));
 }
 
 void threefish256_inverse(const struct THREEFISH256_STATE *state,
-                          uint64_t *block)
+                          void *block)
 {
+    uint64_t data[4];
+
+    memcpy(data, block, sizeof(data));
     threefish256_inverse_C(block, state->subkey);
+    memcpy(block, data, sizeof(data));
 }
 
 void threefish256_final(struct THREEFISH256_STATE *state)
