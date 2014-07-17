@@ -54,6 +54,7 @@ void ecb_update(struct ECB_STATE *state,
     size_t skip = (state->direction ? 0 : state->padding);
 
     *out_len = 0;
+    if (!in_len) return;
 
     /* Do we have a partial block to fill in, and not the last
      * block? */
