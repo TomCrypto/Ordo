@@ -37,23 +37,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-#define HASH_MD5                                                        0x8110
-#define HASH_SHA1                                                       0x8310
-#define HASH_SHA256                                                     0x8010
-#define HASH_SKEIN256                                                   0x8210
-
-#define BLOCK_NULLCIPHER                                                0xFF20
-#define BLOCK_THREEFISH256                                              0x1A20
-#define BLOCK_AES                                                       0x0C20
-
-#define STREAM_RC4                                                      0x3130
-
-#define BLOCK_MODE_ECB                                                  0x8040
-#define BLOCK_MODE_CBC                                                  0x8140
-#define BLOCK_MODE_CTR                                                  0x8240
-#define BLOCK_MODE_CFB                                                  0x8340
-#define BLOCK_MODE_OFB                                                  0x8440
-
 /** @enum PRIM_TYPE
 ***
 *** Enumerates the different types of primitives (values start at 1).
@@ -72,6 +55,23 @@ enum PRIM_TYPE
 *** @brief Data type which holds a primitive identifier.
 **/
 typedef int prim_t;
+
+#define HASH_MD5                                              ((prim_t)0x8110)
+#define HASH_SHA1                                             ((prim_t)0x8310)
+#define HASH_SHA256                                           ((prim_t)0x8010)
+#define HASH_SKEIN256                                         ((prim_t)0x8210)
+
+#define BLOCK_NULLCIPHER                                      ((prim_t)0xFF20)
+#define BLOCK_THREEFISH256                                    ((prim_t)0x1A20)
+#define BLOCK_AES                                             ((prim_t)0x0C20)
+
+#define STREAM_RC4                                            ((prim_t)0x3130)
+
+#define BLOCK_MODE_ECB                                        ((prim_t)0x8040)
+#define BLOCK_MODE_CBC                                        ((prim_t)0x8140)
+#define BLOCK_MODE_CTR                                        ((prim_t)0x8240)
+#define BLOCK_MODE_CFB                                        ((prim_t)0x8340)
+#define BLOCK_MODE_OFB                                        ((prim_t)0x8440)
 
 /** Checks whether a primitive is available.
 ***

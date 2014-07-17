@@ -42,6 +42,14 @@ struct AES_PARAMS
     unsigned int rounds;
 };
 
+/** @brief Polymorphic block cipher parameter union.
+**/
+union BLOCK_PARAMS
+{
+    struct AES_PARAMS                    aes;
+    struct THREEFISH256_PARAMS           threefish256;
+};
+
 /*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus

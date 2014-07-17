@@ -57,6 +57,13 @@ struct SKEIN256_PARAMS
 };
 #pragma pack(pop)
 
+/** @brief Polymorphic hash function parameter union.
+**/
+union HASH_PARAMS
+{
+    struct SKEIN256_PARAMS               skein256;
+};
+
 /** Returns the default Skein-256 configuration block (parameters).
 **/
 ORDO_PUBLIC

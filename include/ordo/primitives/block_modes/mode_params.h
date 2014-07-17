@@ -46,6 +46,14 @@ struct CBC_PARAMS
     int padding;
 };
 
+/** @brief Polymorphic block mode parameter union.
+**/
+union BLOCK_MODE_PARAMS
+{
+    struct ECB_PARAMS                    ecb;
+    struct CBC_PARAMS                    cbc;
+};
+
 /*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus

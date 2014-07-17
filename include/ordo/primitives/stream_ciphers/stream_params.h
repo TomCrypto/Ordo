@@ -34,6 +34,13 @@ struct RC4_PARAMS
     unsigned int drop;
 };
 
+/** @brief Polymorphic stream cipher parameter union.
+**/
+union STREAM_PARAMS
+{
+    struct RC4_PARAMS                    rc4;
+};
+
 /*===----------------------------------------------------------------------===*/
 
 #ifdef __cplusplus
