@@ -49,13 +49,13 @@ int aes_init(struct AES_STATE *state,
 **/
 ORDO_PUBLIC
 void aes_forward(const struct AES_STATE *state,
-                 uint8_t *block);
+                 void *block);
 
 /** @see \c block_inverse()
 **/
 ORDO_PUBLIC
 void aes_inverse(const struct AES_STATE *state,
-                 uint8_t *block);
+                 void *block);
 
 /** @see \c block_final()
 **/

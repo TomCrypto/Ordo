@@ -56,14 +56,14 @@ int aes_init(struct AES_STATE *state,
     return ORDO_SUCCESS;
 }
 
-void aes_forward(const struct AES_STATE *state, uint8_t *block)
+void aes_forward(const struct AES_STATE *state, void *block)
 {
-    aes_forward_ASM(block, state->key, state->rounds);
+    aes_forward_ASM((uint8_t *)block, state->key, state->rounds);
 }
 
-void aes_inverse(const struct AES_STATE *state, uint8_t *block)
+void aes_inverse(const struct AES_STATE *state, void *block)
 {
-    aes_inverse_ASM(block, state->key, state->rounds);
+    aes_inverse_ASM((uint8_t *)block, state->key, state->rounds);
 }
 
 void aes_final(struct AES_STATE *state)
