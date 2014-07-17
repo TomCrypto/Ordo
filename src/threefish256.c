@@ -62,7 +62,7 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state,
     uint64_t data[4];
 
     memcpy(data, block, sizeof(data));
-    threefish256_inverse_C(block, state->subkey);
+    threefish256_inverse_C(data, state->subkey);
     memcpy(block, data, sizeof(data));
 }
 
