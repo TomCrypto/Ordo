@@ -136,7 +136,8 @@ static void term_rewind(void)
 static int term_tty(void)
 {
     #if defined(_MSC_VER)
-    return _isatty(1);
+    #define STDOUT_FILENO 1
+    return _isatty(STDOUT_FILENO);
     #else
     return isatty(STDOUT_FILENO);
     #endif
