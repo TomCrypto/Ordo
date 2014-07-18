@@ -22,6 +22,7 @@
 ***     ./benchmark SHA-256
 ***     ./benchmark AES/CTR
 ***     ./benchmark AES
+***     ./benchmark Threefish-256/inverse
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -111,9 +112,7 @@ void timer_init(double seconds)
     struct sigaction sig;
     struct itimerspec tm;
 
-    double frac = seconds - (long)seconds;
-
-    tm.it_interval.tv_nsec = frac / 1000000000;
+    tm.it_interval.tv_nsec = seconds - (long)seconds / 1000000000;
     tm.it_interval.tv_sec = (time_t)seconds;
     tm.it_value = tm.it_interval;
     timer_elapsed = 0;
@@ -173,6 +172,129 @@ void timer_free(void)
 #include <string.h>
 #include <stdio.h>
 #include "ordo.h"
+
+/*===----------------------------------------------------------------------===*/
+
+/* The functions below are used for parsing - the ACTION enum determines which
+ * operation will be benchmarked, while the different RECORD structs will hold
+ * information about how to benchmark it, e.g. what primitive. The last struct
+ * consists of a polymorphic union, as usual, with a short name ("m"). */
+
+enum ACTION
+{
+    ACTION_HASH,
+    ACTION_STREAM,
+    ACTION_BLOCK,
+    ACTION_BLOCK_MODE
+};
+
+struct HASH_RECORD
+{
+    prim_t prim;
+};
+
+struct STREAM_RECORD
+{
+    prim_t prim;
+};
+
+struct BLOCK_RECORD
+{
+    prim_t prim;
+    int inverse;
+};
+
+struct BLOCK_MODE_RECORD
+{
+    prim_t prim, mode;
+    int direction;
+};
+
+struct RECORD
+{
+    enum ACTION action;
+
+    union
+    {
+        struct HASH_RECORD hash;
+        struct STREAM_RECORD stream;
+        struct BLOCK_RECORD block;
+        struct BLOCK_MODE_RECORD block_mode;
+    } m;
+};
+
+/*===----------------------------------------------------------------------===*/
+
+static char *last_token;
+
+static char *next_token(char **str)
+{
+    last_token = *str;
+
+    if (*str)
+    {
+        char *delim = strstr(*str, "/");
+        *str = delim ? delim + 1 : 0;
+        if (delim) *delim = '\0';
+    }
+
+    return last_token;
+}
+
+static void rewind_token(char **str)
+{
+    *str = last_token;
+}
+
+static int parse_cmd(char **cmd, struct RECORD *rec)
+{
+    prim_t prim = prim_from_name(next_token(cmd));
+
+    switch (prim_type(prim))
+    {
+        case PRIM_TYPE_HASH:
+            rec->action = ACTION_HASH;
+            rec->m.hash.prim = prim;
+            break;
+        case PRIM_TYPE_STREAM:
+            rec->action = ACTION_STREAM;
+            rec->m.stream.prim = prim;
+            break;
+        case PRIM_TYPE_BLOCK:
+            if (!*cmd)
+            {
+                rec->action = ACTION_BLOCK;
+                rec->m.block.prim = prim;
+                rec->m.block.inverse = 0;
+                break;
+            }
+            else
+            {
+                char *next = next_token(cmd);
+                if (!strcmp(next, "inverse"))
+                {
+                    rec->action = ACTION_BLOCK;
+                    rec->m.block.prim = prim;
+                    rec->m.block.inverse = 1;
+                    break;
+                }
+                else
+                {
+                    prim_t mode = prim_from_name(next);
+                    if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
+                        return rewind_token(cmd), 0;
+                    rec->action = ACTION_BLOCK_MODE;
+                    rec->m.block_mode.prim = prim;
+                    rec->m.block_mode.mode = mode;
+                    break;
+                }
+            }
+        default:
+            return 0;
+    }
+
+    return !*cmd;
+}
 
 /*===----------------------------------------------------------------------===*/
 
@@ -290,7 +412,7 @@ static double stream_speed(prim_t prim, size_t block)
     return COMPUTE_SPEED(block * iterations, elapsed);
 }
 
-static double block_speed(prim_t prim)
+static double block_speed(prim_t prim, int inverse)
 {
     union BLOCK_PARAMS params;
     struct BLOCK_STATE state;
@@ -303,9 +425,18 @@ static double block_speed(prim_t prim)
     block_init(&state, buffer, key_len,
                prim, get_block_params(prim, &params));
 
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        block_forward(&state, buffer);
-    });
+    if (inverse)
+    {
+        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+            block_inverse(&state, buffer);
+        });
+    }
+    else
+    {
+        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+            block_forward(&state, buffer);
+        });
+    }
 
     block_final(&state);
 
@@ -339,107 +470,52 @@ static double mode_speed(prim_t prim, prim_t mode, size_t block)
 
 /*===----------------------------------------------------------------------===*/
 
-static void bench_hash(prim_t prim)
+static void bench_hash(const struct HASH_RECORD *rec)
 {
-    printf("Benchmarking hash function %s:\n\n", prim_name(prim));
-    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(prim,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(prim,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(prim,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(prim,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(prim, 65536));
+    printf("Benchmarking hash function %s:\n\n", prim_name(rec->prim));
+    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(rec->prim, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
-static void bench_stream(prim_t prim)
+static void bench_stream(const struct STREAM_RECORD *rec)
 {
-    printf("Benchmarking stream cipher %s:\n\n", prim_name(prim));
-    printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(prim,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(prim,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(prim,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(prim,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(prim, 65536));
+    printf("Benchmarking stream cipher %s:\n\n", prim_name(rec->prim));
+    printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(rec->prim, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
-static void bench_block(prim_t prim)
+static void bench_block(const struct BLOCK_RECORD *rec)
 {
-    printf("Benchmarking block cipher %s (raw):\n\n", prim_name(prim));
-    printf("\t*       (raw): %4.0f MiB/s\n", block_speed(prim));
+    printf("Benchmarking block cipher %s (raw, %s):\n\n",
+           prim_name(rec->prim), rec->inverse ? "inverse" : "forward");
+    printf("\t*       (raw): %4.0f MiB/s\n",
+           block_speed(rec->prim, rec->inverse));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
-static void bench_block_mode(prim_t prim, prim_t mode)
+static void bench_block_mode(const struct BLOCK_MODE_RECORD *rec)
 {
-    const char *pr_name = prim_name(prim);
-    const char *md_name = prim_name(mode);
-
-    printf("Benchmarking block cipher %s in %s mode:\n\n", pr_name, md_name);
-    printf("\t*    16 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", mode_speed(prim, mode, 65536));
+    printf("Benchmarking block cipher %s in %s mode:\n\n",
+           prim_name(rec->prim), prim_name(rec->mode));
+    printf("\t*    16 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
-}
-
-/*===----------------------------------------------------------------------===*/
-
-enum ACTION
-{
-    ACTION_HASH,
-    ACTION_STREAM,
-    ACTION_BLOCK_RAW,
-    ACTION_BLOCK_MODE
-};
-
-struct RECORD
-{
-    enum ACTION action;
-    prim_t prim, prim2;
-};
-
-static char *tokenize(char **str)
-{
-    char *start = *str;
-
-    if (*str)
-    {
-        char *delim = strstr(*str, "/");
-        *str = delim ? delim + 1 : 0;
-        if (delim) *delim = '\0';
-    }
-
-    return start;
-}
-
-static int parse_cmd(char **cmd, struct RECORD *rec)
-{
-    switch (prim_type(rec->prim = prim_from_name(tokenize(cmd))))
-    {
-        case PRIM_TYPE_HASH:
-            rec->action = ACTION_HASH;
-            break;
-        case PRIM_TYPE_STREAM:
-            rec->action = ACTION_STREAM;
-            break;
-        case PRIM_TYPE_BLOCK:
-            if (!*cmd)
-            {
-                rec->action = ACTION_BLOCK_RAW;
-                break; /* Raw mode block cipher */
-            }
-            else
-            {
-                if (prim_type(rec->prim2 = prim_from_name(tokenize(cmd)))
-                    != PRIM_TYPE_BLOCK_MODE) return 0;
-                rec->action = ACTION_BLOCK_MODE;
-                break; /* Block cipher + mode */
-            }
-        default:
-            return 0;
-    }
-
-    return !*cmd;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -493,16 +569,16 @@ int main(int argc, char *argv[])
         switch (rec.action)
         {
             case ACTION_HASH:
-                bench_hash(rec.prim);
+                bench_hash(&rec.m.hash);
                 break;
             case ACTION_STREAM:
-                bench_stream(rec.prim);
+                bench_stream(&rec.m.stream);
                 break;
-            case ACTION_BLOCK_RAW:
-                bench_block(rec.prim);
+            case ACTION_BLOCK:
+                bench_block(&rec.m.block);
                 break;
             case ACTION_BLOCK_MODE:
-                bench_block_mode(rec.prim, rec.prim2);
+                bench_block_mode(&rec.m.block_mode);
                 break;
         }
 
