@@ -37,6 +37,7 @@ static void timer_free(void);
 
 #include <windows.h>
 #include <signal.h>
+#include <stdio.h>
 
 static HANDLE timer_id;
 static volatile sig_atomic_t timer_elapsed;
