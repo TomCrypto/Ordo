@@ -41,23 +41,23 @@ static HANDLE timer_id;
 
 static volatile sig_atomic_t timer_elapsed;
 
-void timer_handler(void *unused1, DWORD unused2, DWORD unused3)
+void CALLBACK timer_handler(void *unused1, DWORD unused2, DWORD unused3)
 {
     timer_elapsed = 1;
 }
 
 void timer_init(double seconds)
 {
-    LARGE_INTEGER due_time; /* 100 nanosecond steps. */
-    due_time.QuadPart = (LONGLONG)(seconds * 10000000);
+    LARGE_INTEGER due_time; /* 100-nanosecond steps format. */
+    due_time.QuadPart = (-1) * (LONGLONG)(seconds * 10000000);
 
-    if (!(timer_id = CreateWaitableTimer(0, 1, 0)))
+    if (!(timer_id = CreateWaitableTimer(0, TRUE, 0)))
     {
         printf("CreateWaitableTimer failed (%u).\n", GetLastError());
         exit(EXIT_FAILURE);
     }
 
-    if (!SetWaitableTimer(timer_id, &due_time, 0, timer_handler, 0, 0))
+    if (!SetWaitableTimer(timer_id, &due_time, 0, timer_handler, 0, FALSE))
     {
         printf("SetWaitableTimer failed (%u).\n", GetLastError());
         exit(EXIT_FAILURE);
@@ -97,7 +97,7 @@ void timer_free(void)
 #include <time.h>
 
 static timer_t timer_id;
-
+static struct sigaction timer_old;
 static volatile sig_atomic_t timer_elapsed;
 
 static void timer_handler(int unused)
@@ -107,6 +107,7 @@ static void timer_handler(int unused)
 
 void timer_init(double seconds)
 {
+    struct sigevent evp = {0};
     struct sigaction sig;
     struct itimerspec tm;
 
@@ -121,7 +122,11 @@ void timer_init(double seconds)
     sigemptyset(&sig.sa_mask);
     sig.sa_flags = 0;
 
-    if (timer_create(CLOCK_MONOTONIC, 0, &timer_id))
+    evp.sigev_value.sival_ptr = &timer_id;
+    evp.sigev_notify = SIGEV_SIGNAL;
+    evp.sigev_signo = SIGALRM;
+
+    if (timer_create(CLOCK_MONOTONIC, &evp, &timer_id))
     {
         perror("timer_create");
         exit(EXIT_FAILURE);
@@ -133,7 +138,7 @@ void timer_init(double seconds)
         exit(EXIT_FAILURE);
     }
 
-    if (sigaction(SIGALRM, &sig, 0))
+    if (sigaction(SIGALRM, &sig, &timer_old))
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
@@ -154,6 +159,7 @@ double timer_now(void)
 
 void timer_free(void)
 {
+    sigaction(SIGALRM, &timer_old, 0);
     timer_delete(timer_id);
 }
 
@@ -406,9 +412,9 @@ static char *tokenize(char **str)
     return start;
 }
 
-static int parse_cmd(char *cmd, struct RECORD *record)
+static int parse_cmd(char **cmd, struct RECORD *record)
 {
-    switch (prim_type(record->prim = prim_from_name(tokenize(&cmd))))
+    switch (prim_type(record->prim = prim_from_name(tokenize(cmd))))
     {
         case PRIM_TYPE_HASH:
             record->action = ACTION_HASH;
@@ -417,15 +423,15 @@ static int parse_cmd(char *cmd, struct RECORD *record)
             record->action = ACTION_STREAM;
             break;
         case PRIM_TYPE_BLOCK:
-            if (!cmd)
+            if (!*cmd)
             {
                 record->action = ACTION_BLOCK_RAW;
                 break; /* Raw mode block cipher */
             }
             else
             {
-                if (prim_type(record->prim2 = prim_from_name(tokenize(&cmd)))
-                    != PRIM_TYPE_BLOCK_MODE) return 0; /* Wrong block mode */
+                if (prim_type(record->prim2 = prim_from_name(tokenize(cmd)))
+                    != PRIM_TYPE_BLOCK_MODE) return 0; /* Bad block mode */
                 record->action = ACTION_BLOCK_MODE;
                 break; /* Block cipher + mode */
             }
@@ -433,7 +439,7 @@ static int parse_cmd(char *cmd, struct RECORD *record)
             return 0;
     }
 
-    return !cmd;
+    return !*cmd;
 }
 
 /*===----------------------------------------------------------------------===*/
@@ -476,11 +482,12 @@ int main(int argc, char *argv[])
     while (*(++argv))
     {
         struct RECORD record;
+        char *cmd = *argv;
 
-        if (!parse_cmd(*argv, &record))
+        if (!parse_cmd(&cmd, &record))
         {
-            printf("Failed to parse '%s'.\n", *argv);
-            return EXIT_FAILURE; /* Parsing error. */
+            printf("Failed to parse '%s'.\n", cmd);
+            return EXIT_FAILURE; /* Parse error. */
         }
 
         switch (record.action)
