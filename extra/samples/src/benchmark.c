@@ -3,7 +3,7 @@
 *** @file
 *** @brief Sample
 ***
-*** This sample will benchmark a given primitive provided on the command-line,
+*** This sample will benchmark a given primitive provided via the command-line
 *** printing the time taken to process a specific amount of data under various
 *** conditions (for instance, varying the input buffer size, to study how much
 *** overhead is present in the library API).
@@ -11,77 +11,583 @@
 *** Shows how to enumerate algorithms, and how to use most of the library.
 ***
 *** Usage:
-***         ./benchmark [hash function]
-***         ./benchmark [stream cipher]
-***         ./benchmark [block cipher]
-***         ./benchmark [block cipher] [mode of operation]
+***         ./benchmark [CMD ...]
+***
+*** For instance, passing a hash function benchmarks it, while passing a block
+*** cipher alone will benchmark its forward permutation, while passing a block
+*** cipher with a mode of operation benchmarks encryption in that mode, etc...
+***
+*** Example commands:
+***
+***     ./benchmark SHA-256
+***     ./benchmark AES/CTR
+***     ./benchmark AES
+***     ./benchmark Threefish-256/inverse
 **/
 /*===----------------------------------------------------------------------===*/
 
+static void timer_init(double seconds);
+static int timer_has_elapsed(void);
+static double timer_now(void);
+static void timer_free(void);
+
+#if defined(_WIN32) /* On Windows, use system functions. */
+
+#include <windows.h>
+#include <signal.h>
+#include <stdio.h>
+
+static HANDLE timer_id;
+static volatile sig_atomic_t timer_elapsed;
+
+void CALLBACK timer_handler(void *aux, BOOLEAN unused)
+{
+    timer_elapsed = 1;
+}
+
+void timer_init(double seconds)
+{
+    timer_elapsed = 0;
+
+    if (!CreateTimerQueueTimer(&timer_id, 0, timer_handler, 0,
+                               (DWORD)(seconds * 1000), 0,
+                               WT_EXECUTEONLYONCE))
+    {
+        printf("CreateTimerQueueTimer failed.\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+
+int timer_has_elapsed(void)
+{
+    return timer_elapsed;
+}
+
+double timer_now(void)
+{
+    static LARGE_INTEGER freq = {0};
+    LARGE_INTEGER counter;
+
+    if (!freq.QuadPart)
+        QueryPerformanceFrequency(&freq);
+
+    QueryPerformanceCounter(&counter);
+    return (double)counter.QuadPart / freq.QuadPart;
+}
+
+void timer_free(void)
+{
+    DeleteTimerQueueTimer(0, timer_id, 0);
+}
+
+#elif defined(__OpenBSD__)
+
+#include <time.h>
+
+static double timer_delta, timer_start;
+
+void timer_init(double seconds)
+{
+    timer_start = timer_now();
+    timer_delta = seconds;
+}
+
+int timer_has_elapsed(void)
+{
+    return (timer_now() - timer_start) >= timer_delta;
+}
+
+double timer_now(void)
+{
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    return tv.tv_sec + tv.tv_nsec / 1000000000.0;
+}
+
+void timer_free(void)
+{
+    return;
+}
+
+#elif defined(__APPLE__)
+
+#include <sys/time.h>
+
+static double timer_delta, timer_start;
+
+void timer_init(double seconds)
+{
+    timer_start = timer_now();
+    timer_delta = seconds;
+}
+
+int timer_has_elapsed(void)
+{
+    return (timer_now() - timer_start) >= timer_delta;
+}
+
+double timer_now(void)
+{
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+    return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+void timer_free(void)
+{
+    return;
+}
+
+#else /* Assume we are on a POSIX 1993 compliant system. */
+
+#define _POSIX_C_SOURCE 1993109L
+
+#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 
-#include "ordo.h"
+static timer_t timer_id;
+static struct sigaction timer_old;
+static volatile sig_atomic_t timer_elapsed;
 
-/*===--------------------------- SCRATCH BUFFER ---------------------------===*/
-
-static char buffer[65536];
-
-/*===------------------- MISCELLANEOUS UTILITY FUNCTIONS ------------------===*/
-
-/* Yes, the infamous xmalloc. Just to allocate a few bytes to hold key/IV and
- * primitive parameter data (which is fairly dynamic). */
-static void *xmalloc(size_t size)
+static void timer_handler(int unused)
 {
-    void *ptr = malloc(size);
+    timer_elapsed = 1;
+}
 
-    if (!ptr)
+void timer_init(double seconds)
+{
+    struct sigevent evp = {0};
+    struct sigaction sig;
+    struct itimerspec tm;
+
+    tm.it_interval.tv_nsec = seconds - (long)seconds / 1000000000;
+    tm.it_interval.tv_sec = (time_t)seconds;
+    tm.it_value = tm.it_interval;
+    timer_elapsed = 0;
+
+    sig.sa_handler = timer_handler;
+    sigemptyset(&sig.sa_mask);
+    sig.sa_flags = 0;
+
+    evp.sigev_value.sival_ptr = &timer_id;
+    evp.sigev_notify = SIGEV_SIGNAL;
+    evp.sigev_signo = SIGALRM;
+
+    if (timer_create(CLOCK_MONOTONIC, &evp, &timer_id))
     {
-        printf("\t* Memory allocation failed!\n");
-        printf("\nAn error occurred.\n");
+        perror("timer_create");
         exit(EXIT_FAILURE);
     }
 
-    return ptr;
+    if (timer_settime(timer_id, 0, &tm, 0))
+    {
+        perror("timer_settime");
+        exit(EXIT_FAILURE);
+    }
+
+    if (sigaction(SIGALRM, &sig, &timer_old))
+    {
+        perror("sigaction");
+        exit(EXIT_FAILURE);
+    }
 }
 
-static void print_usage(int argc, char * const argv[])
+int timer_has_elapsed(void)
+{
+    return timer_elapsed;
+}
+
+double timer_now(void)
+{
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    return tv.tv_sec + tv.tv_nsec / 1000000000.0;
+}
+
+void timer_free(void)
+{
+    sigaction(SIGALRM, &timer_old, 0);
+    timer_delete(timer_id);
+}
+
+#undef _POSIX_C_SOURCE
+
+#endif
+
+/*===----------------------------------------------------------------------===*/
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include "ordo.h"
+
+/*===----------------------------------------------------------------------===*/
+
+/* The functions below are used for parsing - the ACTION enum determines which
+ * operation will be benchmarked, while the different RECORD structs will hold
+ * information about how to benchmark it, e.g. what primitive. The last struct
+ * consists of a polymorphic union, as usual, with a short name ("m"). */
+
+enum ACTION
+{
+    ACTION_BLOCK,
+    ACTION_STREAM,
+    ACTION_HASH,
+    ACTION_BLOCK_MODE
+};
+
+struct BLOCK_RECORD
+{
+    prim_t prim;
+    int inverse;
+};
+
+struct STREAM_RECORD
+{
+    prim_t prim;
+};
+
+struct HASH_RECORD
+{
+    prim_t prim;
+};
+
+struct BLOCK_MODE_RECORD
+{
+    prim_t prim, mode;
+    int direction;
+};
+
+struct RECORD
+{
+    enum ACTION action;
+
+    union
+    {
+        struct BLOCK_RECORD block;
+        struct STREAM_RECORD stream;
+        struct HASH_RECORD hash;
+        struct BLOCK_MODE_RECORD block_mode;
+    } m;
+};
+
+/*===----------------------------------------------------------------------===*/
+
+static char *last_token;
+
+static char *next_token(char **str)
+{
+    last_token = *str;
+
+    if (*str)
+    {
+        char *delim = strstr(*str, "/");
+        *str = delim ? delim + 1 : 0;
+        if (delim) *delim = '\0';
+    }
+
+    return last_token;
+}
+
+static void rewind_token(char **str)
+{
+    *str = last_token;
+}
+
+static int parse_cmd(char **cmd, struct RECORD *rec)
+{
+    prim_t prim = prim_from_name(next_token(cmd));
+
+    switch (prim_type(prim))
+    {
+        case PRIM_TYPE_HASH:
+            rec->action = ACTION_HASH;
+            rec->m.hash.prim = prim;
+            break;
+        case PRIM_TYPE_STREAM:
+            rec->action = ACTION_STREAM;
+            rec->m.stream.prim = prim;
+            break;
+        case PRIM_TYPE_BLOCK:
+            if (!*cmd)
+            {
+                rec->action = ACTION_BLOCK;
+                rec->m.block.prim = prim;
+                rec->m.block.inverse = 0;
+                break;
+            }
+            else
+            {
+                char *next = next_token(cmd);
+                if (!strcmp(next, "inverse"))
+                {
+                    rec->action = ACTION_BLOCK;
+                    rec->m.block.prim = prim;
+                    rec->m.block.inverse = 1;
+                    break;
+                }
+                else
+                {
+                    prim_t mode = prim_from_name(next);
+                    if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
+                        return rewind_token(cmd), 0;
+                    rec->action = ACTION_BLOCK_MODE;
+                    rec->m.block_mode.prim = prim;
+                    rec->m.block_mode.mode = mode;
+                    break;
+                }
+            }
+        default:
+            return 0;
+    }
+
+    return !*cmd;
+}
+
+/*===----------------------------------------------------------------------===*/
+
+/* The parameter-related functions below work as follows: they are first given
+ * a (stack-allocated!) polymorphic parameter union, and then do either of two
+ * things depending on whether there is anything special to add as parameter:
+ *
+ * - fill in the union depending on the primitive, and return params
+ * - nothing (i.e. default behaviour is desired), and return zero
+ *
+ * Then they can easily be used directly like this:
+ *
+ *     union xxx_PARAMS params;
+ *     ...
+ *     if (ordo_xxx(prim, xxx_params(prim, &params))) { ... }
+*/
+
+static union BLOCK_PARAMS *get_block_params(
+    prim_t prim, union BLOCK_PARAMS *params)
+{
+    return 0;
+}
+
+static union STREAM_PARAMS *get_stream_params(
+    prim_t prim, union STREAM_PARAMS *params)
+{
+    switch (prim)
+    {
+        case STREAM_RC4:
+            params->rc4.drop = 0;
+            return params;
+    }
+
+    return 0;
+}
+
+static union HASH_PARAMS *get_hash_params(
+    prim_t prim, union HASH_PARAMS *params)
+{
+    return 0;
+}
+
+static union BLOCK_MODE_PARAMS *get_mode_params(
+    prim_t prim, union BLOCK_MODE_PARAMS *params)
+{
+    switch (prim)
+    {
+        case BLOCK_MODE_ECB:
+            params->ecb.padding = 0;
+            return params;
+        case BLOCK_MODE_CBC:
+            params->cbc.padding = 0;
+            return params;
+    }
+
+    return 0;
+}
+
+/*===----------------------------------------------------------------------===*/
+
+/* We are going to need that much memory for the larger block tests anyway, so
+ * we might as well use this scratch buffer for the key/iv buffers as well. */
+static char buffer[65536];
+
+#define TIME_INTERVAL 10.0 /* seconds */
+
+#define TIME_BLOCK(counter, duration, elapsed, statement)\
+    counter = 0;\
+    timer_init(duration);\
+    elapsed = timer_now();\
+    while (++counter && !timer_has_elapsed())\
+        do { statement } while (0);\
+    elapsed = timer_now() - elapsed;\
+    timer_free();
+
+#define COMPUTE_SPEED(throughput, elapsed)\
+    ((double)(throughput) / ((double)(elapsed) * 1024 * 1024))
+
+#define FAIL(msg){\
+    printf("\t* %s\n\n", msg);\
+    exit(EXIT_FAILURE);\
+    }
+
+static double block_speed(prim_t prim, int inverse)
+{
+    union BLOCK_PARAMS params;
+    struct BLOCK_STATE state;
+    uint64_t iterations;
+    double elapsed;
+
+    size_t block_size = block_query(prim, BLOCK_SIZE_Q, (size_t)-1);
+    size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
+
+    if (block_init(&state, buffer, key_len,
+                   prim, get_block_params(prim, &params)))
+        FAIL("block_init failed.");
+
+    if (inverse)
+    {
+        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+            block_inverse(&state, buffer);
+        });
+    }
+    else
+    {
+        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+            block_forward(&state, buffer);
+        });
+    }
+
+    block_final(&state);
+
+    return COMPUTE_SPEED(block_size * iterations, elapsed);
+}
+
+static double stream_speed(prim_t prim, size_t block)
+{
+    union STREAM_PARAMS params;
+    struct ENC_STREAM_CTX ctx;
+    uint64_t iterations;
+    double elapsed;
+
+    size_t key_len = enc_stream_key_len(prim, (size_t)-1);
+
+    if (enc_stream_init(&ctx, buffer, key_len,
+                        prim, get_stream_params(prim, &params)))
+        FAIL("enc_stream_init failed.");
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        enc_stream_update(&ctx, buffer, block);
+    });
+
+    enc_stream_final(&ctx);
+
+    return COMPUTE_SPEED(block * iterations, elapsed);
+}
+
+static double hash_speed(prim_t prim, size_t block)
+{
+    union HASH_PARAMS params;
+    struct DIGEST_CTX ctx;
+    uint64_t iterations;
+    double elapsed;
+
+    if (digest_init(&ctx, prim, get_hash_params(prim, &params)))
+        FAIL("digest_init failed.");
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        digest_update(&ctx, buffer, block);
+    });
+
+    digest_final(&ctx, buffer);
+
+    return COMPUTE_SPEED(block * iterations, elapsed);
+}
+
+static double mode_speed(prim_t prim, prim_t mode, size_t block)
+{
+    union BLOCK_MODE_PARAMS mode_params;
+    union BLOCK_PARAMS block_params;
+    struct ENC_BLOCK_CTX ctx;
+    uint64_t iterations;
+    double elapsed;
+
+    size_t iv_len = block_mode_query(mode, prim, IV_LEN_Q, (size_t)-1);
+    size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
+    size_t dummy; /* We don't care about the output length. */
+
+    if (enc_block_init(&ctx, buffer, key_len, buffer, iv_len, 1,
+                       prim, get_block_params(prim, &block_params),
+                       mode, get_mode_params(prim, &mode_params)))
+        FAIL("enc_block_init failed.");
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        enc_block_update(&ctx, buffer, block, buffer, &dummy);
+    });
+
+    if (enc_block_final(&ctx, buffer, &dummy))
+        FAIL("enc_block_final failed.");
+
+    return COMPUTE_SPEED(block * iterations, elapsed);
+}
+
+/*===----------------------------------------------------------------------===*/
+
+static void bench_block(const struct BLOCK_RECORD *rec)
+{
+    printf("Benchmarking block cipher %s (raw, %s):\n\n",
+           prim_name(rec->prim), rec->inverse ? "inverse" : "forward");
+    printf("\t*       (raw): %4.0f MiB/s\n",
+           block_speed(rec->prim, rec->inverse));
+    printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
+}
+
+static void bench_stream(const struct STREAM_RECORD *rec)
+{
+    printf("Benchmarking stream cipher %s:\n\n", prim_name(rec->prim));
+    printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(rec->prim,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(rec->prim, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
+}
+
+static void bench_hash(const struct HASH_RECORD *rec)
+{
+    printf("Benchmarking hash function %s:\n\n", prim_name(rec->prim));
+    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(rec->prim, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
+}
+
+static void bench_block_mode(const struct BLOCK_MODE_RECORD *rec)
+{
+    printf("Benchmarking block cipher %s in %s mode:\n\n",
+           prim_name(rec->prim), prim_name(rec->mode));
+    printf("\t*    16 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n",
+           mode_speed(rec->prim, rec->mode, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
+}
+
+/*===----------------------------------------------------------------------===*/
+
+static void print_prims(const char *description, enum PRIM_TYPE type)
 {
     const prim_t *p;
 
-    printf("Usage:\n\n");
-    printf("\t%s [hash function]\n", argv[0]);
-    printf("\t%s [stream cipher]\n", argv[0]);
-    printf("\t%s [block cipher]\n", argv[0]);
-    printf("\t%s [block cipher] [mode of operation]\n", argv[0]);
-
-    printf("\nAvailable hash functions:\n\n\t");
-    for (p = prims_by_type(PRIM_TYPE_HASH); *p; ++p)
-    {
-        printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", ");
-        else printf("\n");
-    }
-
-    printf("\nAvailable stream ciphers:\n\n\t");
-    for (p = prims_by_type(PRIM_TYPE_STREAM); *p; ++p)
-    {
-        printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", ");
-        else printf("\n");
-    }
-
-    printf("\nAvailable block ciphers:\n\n\t");
-    for (p = prims_by_type(PRIM_TYPE_BLOCK); *p; ++p)
-    {
-        printf("%s", prim_name(*p));
-        if (*(p + 1)) printf(", ");
-        else printf("\n");
-    }
-
-    printf("\nAvailable modes of operation:\n\n\t");
-    for (p = prims_by_type(PRIM_TYPE_BLOCK_MODE); *p; ++p)
+    printf("\n%s\n\n\t", description);
+    for (p = prims_by_type(type); *p; ++p)
     {
         printf("%s", prim_name(*p));
         if (*(p + 1)) printf(", ");
@@ -89,264 +595,58 @@ static void print_usage(int argc, char * const argv[])
     }
 }
 
-/***                         TIME UTILITY FUNCTIONS                         ***/
-
-#define INTERVAL 3.0 /* seconds */
-
-#if defined(_WIN32) || defined(_WIN64)
-typedef int64_t my_time;
-#include <windows.h>
-
-static my_time now()
+static void print_usage(const char *argv0)
 {
-    LARGE_INTEGER t;
-    QueryPerformanceCounter(&t);
-    return t.QuadPart;
+    printf("Usage:\n\n\t%s [CMD ...]\n", argv0);
+
+    print_prims("Available block ciphers:",
+                PRIM_TYPE_BLOCK);
+    print_prims("Available stream ciphers:",
+                PRIM_TYPE_STREAM);
+    print_prims("Available hash functions:",
+                PRIM_TYPE_HASH);
+    print_prims("Available block modes:",
+                PRIM_TYPE_BLOCK_MODE);
 }
-
-static double get_elapsed(my_time start)
-{
-    LARGE_INTEGER t, f;
-    QueryPerformanceFrequency(&f);
-    QueryPerformanceCounter(&t);
-
-    return (double)(t.QuadPart - start) / f.QuadPart;
-}
-#else
-typedef uintmax_t my_time;
-
-static my_time now()
-{
-    return (my_time)clock();
-}
-
-static double get_elapsed(my_time start)
-{
-    return (now() - start) / (double)CLOCKS_PER_SEC;
-}
-#endif
-
-static double speed_MiB(uint64_t throughput, double elapsed)
-{
-    return ((double)throughput / (1024 * 1024)) / elapsed;
-}
-
-/*===---------------------- PRIMITIVE PARAMETER SETUP ---------------------===*/
-
-static void *hash_params(prim_t hash)
-{
-    return 0;
-}
-
-static void *block_params(prim_t cipher)
-{
-    return 0;
-}
-
-static void *block_mode_params(prim_t mode)
-{
-    if (mode == BLOCK_MODE_ECB)
-    {
-        struct ECB_PARAMS *ecb = xmalloc(sizeof(*ecb));
-        ecb->padding = 0;
-        return ecb;
-    }
-
-    if (mode == BLOCK_MODE_CBC)
-    {
-        struct CBC_PARAMS *cbc = xmalloc(sizeof(*cbc));
-        cbc->padding = 0;
-        return cbc;
-    }
-
-    return 0;
-}
-
-static void *stream_params(prim_t cipher)
-{
-    if (cipher == STREAM_RC4)
-    {
-        /* We don't want to benchmark dropping bytes of RC4
-         * as this would heavily penalize the short blocks.
-        */
-        struct RC4_PARAMS *rc4 = xmalloc(sizeof(*rc4));
-        rc4->drop = 0;
-        return rc4;
-    }
-
-    return 0;
-}
-
-/***                          LOW-LEVEL BENCHMARKS                          ***/
-
-static double hash_speed(prim_t hash, uint64_t block)
-{
-    void *params = hash_params(hash);
-    struct DIGEST_CTX ctx;
-
-    uint64_t iterations = 0;
-    double elapsed;
-    my_time start;
-
-    digest_init(&ctx, hash, params);
-
-    start = now();
-
-    while (++iterations && (get_elapsed(start) < INTERVAL))
-        digest_update(&ctx, buffer, (size_t)block);
-
-    elapsed = get_elapsed(start);
-
-    digest_final(&ctx, buffer);
-    free(params);
-
-    return speed_MiB(block * iterations, elapsed);
-}
-
-static double stream_speed(prim_t cipher, uint64_t block)
-{
-    void *params = stream_params(cipher);
-    struct ENC_STREAM_CTX ctx;
-
-    size_t key_len = enc_stream_key_len(cipher, (size_t)-1);
-
-    void *key = xmalloc(key_len);
-
-    uint64_t iterations = 0;
-    double elapsed;
-    my_time start;
-
-    enc_stream_init(&ctx, key, key_len, cipher, params);
-
-    start = now();
-
-    while (++iterations && (get_elapsed(start) < INTERVAL))
-        enc_stream_update(&ctx, buffer, (size_t)block);
-
-    elapsed = get_elapsed(start);
-
-    enc_stream_final(&ctx);
-    free(params);
-    free(key);
-
-    return speed_MiB(block * iterations, elapsed);
-}
-
-static double block_speed(prim_t cipher, prim_t mode, uint64_t block)
-{
-    void *cipher_params = block_params(cipher);
-    void *mode_params = block_mode_params(mode);
-    struct ENC_BLOCK_CTX ctx;
-
-    size_t key_len = block_query(cipher, KEY_LEN_Q, (size_t)-1);
-    size_t iv_len = block_mode_query(mode, cipher, IV_LEN_Q, (size_t)-1);
-
-    void *key = xmalloc(key_len);
-    void *iv = xmalloc(iv_len);
-
-    uint64_t iterations = 0;
-    double elapsed;
-    my_time start;
-    size_t out;
-
-    enc_block_init(&ctx, key, key_len, iv, iv_len,
-                   1, cipher, cipher_params, mode, mode_params);
-
-    start = now();
-
-    while (++iterations && (get_elapsed(start) < INTERVAL))
-        enc_block_update(&ctx, buffer, (size_t)block, buffer, &out);
-
-    elapsed = get_elapsed(start);
-
-    enc_block_final(&ctx, buffer, &out);
-    free(cipher_params);
-    free(mode_params);
-    free(key);
-    free(iv);
-
-    return speed_MiB(block * iterations, elapsed);
-}
-
-/*===-------------------- HIGH LEVEL BENCHMARK ROUTINES -------------------===*/
-
-static int bench_hash(prim_t hash, int argc, char * const argv[])
-{
-    if (argc > 2)
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking hash function %s:\n\n", argv[1]);
-    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(hash,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(hash,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(hash,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(hash,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(hash, 65536));
-    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
-
-    return EXIT_SUCCESS;
-}
-
-static int bench_stream(prim_t cipher, int argc, char * const argv[])
-{
-    if (argc > 2)
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking stream cipher %s:\n\n", argv[1]);
-    printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(cipher,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(cipher,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(cipher,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(cipher,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(cipher, 65536));
-    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
-
-    return EXIT_SUCCESS;
-}
-
-static int bench_block(prim_t cipher, int argc, char * const argv[])
-{
-    prim_t mode;
-
-    if (argc == 2)
-        return printf("Please specify one mode.\n"), EXIT_FAILURE;
-
-    if (argc > 3)
-        return printf("Please specify only one mode.\n"), EXIT_FAILURE;
-
-    mode = prim_from_name(argv[2]);
-
-    if (!mode || (prim_type(mode) != PRIM_TYPE_BLOCK_MODE))
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking block cipher %s in %s mode:\n\n", argv[1], argv[2]);
-    printf("\t*    16 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", block_speed(cipher, mode,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", block_speed(cipher, mode, 65536));
-    printf("\nPerformance rated over %.2f seconds.\n", INTERVAL);
-
-    return EXIT_SUCCESS;
-}
-
-/*===-------------------- MAIN FUNCTION AND DISPATCHER --------------------===*/
 
 int main(int argc, char *argv[])
 {
-    prim_t primitive;
-
-    if (argc < 2) return print_usage(argc, argv), EXIT_FAILURE;
-    primitive = prim_from_name(argv[1]); /* Parse primitive. */
-
-    switch (prim_type(primitive))
+    if (argc == 1)
     {
-        case PRIM_TYPE_HASH:
-            return bench_hash(primitive, argc, argv);
-        case PRIM_TYPE_STREAM:
-            return bench_stream(primitive, argc, argv);
-        case PRIM_TYPE_BLOCK:
-            return bench_block(primitive, argc, argv);
-        default:
-            printf("Unrecognized argument `%s`.\n", argv[1]);
-            return EXIT_FAILURE;
+        print_usage(argv[0]);
+        return EXIT_FAILURE;
     }
+
+    while (*(++argv))
+    {
+        struct RECORD rec;
+        char *cmd = *argv;
+
+        if (!parse_cmd(&cmd, &rec))
+        {
+            printf("Failed to parse '%s'.\n", cmd);
+            return EXIT_FAILURE; /* Parse error. */
+        }
+
+        switch (rec.action)
+        {
+            case ACTION_BLOCK:
+                bench_block(&rec.m.block);
+                break;
+            case ACTION_STREAM:
+                bench_stream(&rec.m.stream);
+                break;
+            case ACTION_HASH:
+                bench_hash(&rec.m.hash);
+                break;
+            case ACTION_BLOCK_MODE:
+                bench_block_mode(&rec.m.block_mode);
+                break;
+        }
+
+        if (*(argv + 1))
+            printf("\n");
+    }
+
+    return EXIT_SUCCESS;
 }
