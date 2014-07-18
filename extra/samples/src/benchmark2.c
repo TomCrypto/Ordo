@@ -364,7 +364,7 @@ static char buffer[65536];
     timer_free();
 
 #define COMPUTE_SPEED(throughput, elapsed)\
-    ((throughput) / ((elapsed) * 1024 * 1024))
+    ((double)(throughput) / ((double)(elapsed) * 1024 * 1024))
 
 #define FAIL(msg){\
     printf("\t* %s\n\n", msg);\

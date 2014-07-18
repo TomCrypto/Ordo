@@ -13,7 +13,7 @@
 #define key_bytes(rounds) (16 * ((rounds) + 1))
 
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, size_t rounds) HOT_CODE;
+                      size_t key_len, unsigned rounds) HOT_CODE;
 
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
