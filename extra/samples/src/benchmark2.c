@@ -81,6 +81,35 @@ void timer_free(void)
     DeleteTimerQueueTimer(0, timer_id, 0);
 }
 
+#elif defined(__OpenBSD__) /* No POSIX timers on OpenBSD */
+
+#include <time.h>
+
+static double timer_delta, timer_start;
+
+void timer_init(double seconds)
+{
+    timer_start = timer_now();
+    timer_delta = seconds;
+}
+
+int timer_has_elapsed(void)
+{
+    return (timer_now() - timer_start) >= timer_delta;
+}
+
+double timer_now(void)
+{
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    return tv.tv_sec + tv.tv_nsec / 1000000000.0;
+}
+
+void timer_free(void)
+{
+    return;
+}
+
 #else /* Assume we are on a POSIX 1993 compliant system. */
 
 #define _POSIX_C_SOURCE 1993109L

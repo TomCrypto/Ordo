@@ -230,6 +230,7 @@ static int test_notty(void)
         printf("PASSED\n");
     }
 
+    printf("\n");
     return EXIT_SUCCESS;
 }
 
