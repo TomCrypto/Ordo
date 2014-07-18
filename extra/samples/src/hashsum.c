@@ -35,13 +35,14 @@ static int process_file(const char *path, prim_t prim)
     struct DIGEST_CTX ctx;
     size_t t;
 
+    if (digest_init(&ctx, prim, 0))
+        return 0;
+
     if (!file)
     {
         perror(path);
         return 0;
     }
-
-    digest_init(&ctx, prim, 0);
 
     while (1)
     {

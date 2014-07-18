@@ -373,6 +373,11 @@ static char buffer[65536];
 #define COMPUTE_SPEED(throughput, elapsed)\
     ((throughput) / ((elapsed) * 1024 * 1024))
 
+#define FAIL(msg){\
+    printf("\t* %s\n\n", msg);\
+    exit(EXIT_FAILURE);\
+    }
+
 static double hash_speed(prim_t prim, size_t block)
 {
     union HASH_PARAMS params;
@@ -380,7 +385,8 @@ static double hash_speed(prim_t prim, size_t block)
     uint64_t iterations;
     double elapsed;
 
-    digest_init(&ctx, prim, get_hash_params(prim, &params));
+    if (digest_init(&ctx, prim, get_hash_params(prim, &params)))
+        FAIL("digest_init failed.");
 
     TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
         digest_update(&ctx, buffer, block);
@@ -400,8 +406,9 @@ static double stream_speed(prim_t prim, size_t block)
 
     size_t key_len = enc_stream_key_len(prim, (size_t)-1);
 
-    enc_stream_init(&ctx, buffer, key_len,
-                    prim, get_stream_params(prim, &params));
+    if (enc_stream_init(&ctx, buffer, key_len,
+                        prim, get_stream_params(prim, &params)))
+        FAIL("enc_stream_init failed.");
 
     TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
         enc_stream_update(&ctx, buffer, block);
@@ -422,8 +429,9 @@ static double block_speed(prim_t prim, int inverse)
     size_t block_size = block_query(prim, BLOCK_SIZE_Q, (size_t)-1);
     size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
 
-    block_init(&state, buffer, key_len,
-               prim, get_block_params(prim, &params));
+    if (block_init(&state, buffer, key_len,
+                   prim, get_block_params(prim, &params)))
+        FAIL("block_init failed.");
 
     if (inverse)
     {
@@ -455,15 +463,17 @@ static double mode_speed(prim_t prim, prim_t mode, size_t block)
     size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
     size_t dummy; /* We don't care about the output length. */
 
-    enc_block_init(&ctx, buffer, key_len, buffer, iv_len, 1,
-                   prim, get_block_params(prim, &block_params),
-                   mode, get_mode_params(prim, &mode_params));
+    if (enc_block_init(&ctx, buffer, key_len, buffer, iv_len, 1,
+                       prim, get_block_params(prim, &block_params),
+                       mode, get_mode_params(prim, &mode_params)))
+        FAIL("enc_block_init failed.");
 
     TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
         enc_block_update(&ctx, buffer, block, buffer, &dummy);
     });
 
-    enc_block_final(&ctx, buffer, &dummy);
+    if (enc_block_final(&ctx, buffer, &dummy))
+        FAIL("enc_block_final failed.");
 
     return COMPUTE_SPEED(block * iterations, elapsed);
 }
