@@ -16,10 +16,9 @@
 
 /** @cond **/
 #include "ordo/common/interface.h"
-#include "ordo/common/identification.h"
-#include "ordo/primitives/block_modes/mode_params.h"
 /** @endcond **/
 
+#include "ordo/primitives/block_modes/mode_params.h"
 #include "ordo/primitives/block_ciphers.h"
 
 #ifdef __cplusplus

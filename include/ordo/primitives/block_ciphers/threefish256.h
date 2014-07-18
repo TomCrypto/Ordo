@@ -19,7 +19,7 @@
 #include "ordo/common/interface.h"
 /** @endcond **/
 
-#include "ordo/primitives/block_ciphers/block_params.h"
+#include "ordo/primitives/block_ciphers.h"
 
 #ifdef __cplusplus
 extern "C" {

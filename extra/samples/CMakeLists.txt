@@ -6,19 +6,22 @@ SET(SOURCE_FILES "")
 
 SET(UTIL_FILES src/utils/timer.c)
 
+SET(INCLUDE_FILES src/utils/timer.h)
+
 LIST(APPEND SOURCE_FILES src/benchmark.c)
 ADD_EXECUTABLE(benchmark src/benchmark.c ${UTIL_FILES})
 
 LIST(APPEND SOURCE_FILES src/info.c)
-ADD_EXECUTABLE(info src/info.c ${UTIL_FILES})
+ADD_EXECUTABLE(info src/info.c)
 
 LIST(APPEND SOURCE_FILES src/hashsum.c)
-ADD_EXECUTABLE(hashsum src/hashsum.c ${UTIL_FILES})
+ADD_EXECUTABLE(hashsum src/hashsum.c)
 
 LIST(APPEND SOURCE_FILES src/version.c)
-ADD_EXECUTABLE(version src/version.c ${UTIL_FILES})
+ADD_EXECUTABLE(version src/version.c)
 
 SOURCE_GROUP("Source" FILES ${SOURCE_FILES})
+SOURCE_GROUP("Includes" FILES ${INCLUDE_FILES})
 
 SET(INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/include
                  ${CMAKE_CURRENT_SOURCE_DIR}/src)

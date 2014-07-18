@@ -24,8 +24,7 @@
 #include "ordo/common/interface.h"
 /** @endcond **/
 
-#include "ordo/primitives/block_modes/mode_params.h"
-#include "ordo/primitives/block_ciphers.h"
+#include "ordo/primitives/block_modes.h"
 
 #ifdef __cplusplus
 extern "C" {

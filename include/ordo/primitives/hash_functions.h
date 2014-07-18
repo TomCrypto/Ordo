@@ -14,8 +14,9 @@
 
 /** @cond **/
 #include "ordo/common/interface.h"
-#include "ordo/primitives/hash_functions/hash_params.h"
 /** @endcond **/
+
+#include "ordo/primitives/hash_functions/hash_params.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -15,8 +15,9 @@
 
 /** @cond **/
 #include "ordo/common/interface.h"
-#include "ordo/primitives/stream_ciphers/stream_params.h"
 /** @endcond **/
+
+#include "ordo/primitives/stream_ciphers/stream_params.h"
 
 #ifdef __cplusplus
 extern "C" {

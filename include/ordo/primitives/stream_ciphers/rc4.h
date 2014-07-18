@@ -23,7 +23,7 @@
 #include "ordo/common/interface.h"
 /** @endcond **/
 
-#include "ordo/primitives/stream_ciphers/stream_params.h"
+#include "ordo/primitives/stream_ciphers.h"
 
 #ifdef __cplusplus
 extern "C" {

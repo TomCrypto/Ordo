@@ -15,8 +15,9 @@
 
 /** @cond **/
 #include "ordo/common/interface.h"
-#include "ordo/primitives/block_ciphers/block_params.h"
 /** @endcond **/
+
+#include "ordo/primitives/block_ciphers/block_params.h"
 
 #ifdef __cplusplus
 extern "C" {
