@@ -84,9 +84,10 @@ void sha1_final(struct SHA1_STATE *state,
 
     unsigned char padding[SHA1_BLOCK] = { 0x80 };
     uint64_t len = tobe64(bytes(state->msg_len));
+    size_t block_len = (size_t)state->block_len;
 
-    size_t pad_len = SHA1_BLOCK - state->block_len - sizeof(uint64_t)
-                   + (state->block_len < SHA1_BLOCK - sizeof(uint64_t)
+    size_t pad_len = SHA1_BLOCK - block_len - sizeof(uint64_t)
+                   + (block_len < SHA1_BLOCK - sizeof(uint64_t)
                      ? 0 : SHA1_BLOCK);
 
     sha1_update(state, padding, pad_len);
