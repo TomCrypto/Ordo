@@ -81,7 +81,7 @@ void timer_free(void)
     DeleteTimerQueueTimer(0, timer_id, 0);
 }
 
-#elif defined(__OpenBSD__) || defined(__APPLE__)
+#elif defined(__OpenBSD__)
 
 #include <time.h>
 
@@ -103,6 +103,36 @@ double timer_now(void)
     struct timespec tv;
     clock_gettime(CLOCK_MONOTONIC, &tv);
     return tv.tv_sec + tv.tv_nsec / 1000000000.0;
+}
+
+void timer_free(void)
+{
+    return;
+}
+
+#elif defined(__APPLE__)
+
+#include <sys/time.h>
+
+static double timer_delta, timer_start;
+
+void timer_init(double seconds)
+{
+    timer_start = timer_now();
+    timer_delta = seconds;
+}
+
+int timer_has_elapsed(void)
+{
+    return (timer_now() - timer_start) >= timer_delta;
+}
+
+double timer_now(void)
+{
+    struct timeval tv;
+
+    gettimeofday(&tv, 0);
+    return tv.tv_sec + tv.tv_usec / 1000000.0;
 }
 
 void timer_free(void)
