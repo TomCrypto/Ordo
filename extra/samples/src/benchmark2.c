@@ -81,7 +81,7 @@ void timer_free(void)
     DeleteTimerQueueTimer(0, timer_id, 0);
 }
 
-#elif defined(__OpenBSD__) /* No POSIX timers on OpenBSD */
+#elif defined(__OpenBSD__) || defined(__APPLE__)
 
 #include <time.h>
 
