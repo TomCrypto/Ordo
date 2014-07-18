@@ -412,27 +412,27 @@ static char *tokenize(char **str)
     return start;
 }
 
-static int parse_cmd(char **cmd, struct RECORD *record)
+static int parse_cmd(char **cmd, struct RECORD *rec)
 {
-    switch (prim_type(record->prim = prim_from_name(tokenize(cmd))))
+    switch (prim_type(rec->prim = prim_from_name(tokenize(cmd))))
     {
         case PRIM_TYPE_HASH:
-            record->action = ACTION_HASH;
+            rec->action = ACTION_HASH;
             break;
         case PRIM_TYPE_STREAM:
-            record->action = ACTION_STREAM;
+            rec->action = ACTION_STREAM;
             break;
         case PRIM_TYPE_BLOCK:
             if (!*cmd)
             {
-                record->action = ACTION_BLOCK_RAW;
+                rec->action = ACTION_BLOCK_RAW;
                 break; /* Raw mode block cipher */
             }
             else
             {
-                if (prim_type(record->prim2 = prim_from_name(tokenize(cmd)))
-                    != PRIM_TYPE_BLOCK_MODE) return 0; /* Bad block mode */
-                record->action = ACTION_BLOCK_MODE;
+                if (prim_type(rec->prim2 = prim_from_name(tokenize(cmd)))
+                    != PRIM_TYPE_BLOCK_MODE) return 0;
+                rec->action = ACTION_BLOCK_MODE;
                 break; /* Block cipher + mode */
             }
         default:
@@ -481,28 +481,28 @@ int main(int argc, char *argv[])
 
     while (*(++argv))
     {
-        struct RECORD record;
+        struct RECORD rec;
         char *cmd = *argv;
 
-        if (!parse_cmd(&cmd, &record))
+        if (!parse_cmd(&cmd, &rec))
         {
             printf("Failed to parse '%s'.\n", cmd);
             return EXIT_FAILURE; /* Parse error. */
         }
 
-        switch (record.action)
+        switch (rec.action)
         {
             case ACTION_HASH:
-                bench_hash(record.prim);
+                bench_hash(rec.prim);
                 break;
             case ACTION_STREAM:
-                bench_stream(record.prim);
+                bench_stream(rec.prim);
                 break;
             case ACTION_BLOCK_RAW:
-                bench_block(record.prim);
+                bench_block(rec.prim);
                 break;
             case ACTION_BLOCK_MODE:
-                bench_block_mode(record.prim, record.prim2);
+                bench_block_mode(rec.prim, rec.prim2);
                 break;
         }
 
