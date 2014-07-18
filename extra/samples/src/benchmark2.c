@@ -53,7 +53,7 @@ void timer_init(double seconds)
                                (DWORD)(seconds * 1000), 0,
                                WT_EXECUTEONLYONCE))
     {
-        printf("CreateTimerQueueTimer failed (%u).\n", GetLastError());
+        printf("CreateTimerQueueTimer failed.\n");
         exit(EXIT_FAILURE);
     }
 }
