@@ -182,15 +182,16 @@ void timer_free(void)
 
 enum ACTION
 {
-    ACTION_HASH,
-    ACTION_STREAM,
     ACTION_BLOCK,
+    ACTION_STREAM,
+    ACTION_HASH,
     ACTION_BLOCK_MODE
 };
 
-struct HASH_RECORD
+struct BLOCK_RECORD
 {
     prim_t prim;
+    int inverse;
 };
 
 struct STREAM_RECORD
@@ -198,10 +199,9 @@ struct STREAM_RECORD
     prim_t prim;
 };
 
-struct BLOCK_RECORD
+struct HASH_RECORD
 {
     prim_t prim;
-    int inverse;
 };
 
 struct BLOCK_MODE_RECORD
@@ -216,9 +216,9 @@ struct RECORD
 
     union
     {
-        struct HASH_RECORD hash;
-        struct STREAM_RECORD stream;
         struct BLOCK_RECORD block;
+        struct STREAM_RECORD stream;
+        struct HASH_RECORD hash;
         struct BLOCK_MODE_RECORD block_mode;
     } m;
 };
@@ -378,47 +378,6 @@ static char buffer[65536];
     exit(EXIT_FAILURE);\
     }
 
-static double hash_speed(prim_t prim, size_t block)
-{
-    union HASH_PARAMS params;
-    struct DIGEST_CTX ctx;
-    uint64_t iterations;
-    double elapsed;
-
-    if (digest_init(&ctx, prim, get_hash_params(prim, &params)))
-        FAIL("digest_init failed.");
-
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        digest_update(&ctx, buffer, block);
-    });
-
-    digest_final(&ctx, buffer);
-
-    return COMPUTE_SPEED(block * iterations, elapsed);
-}
-
-static double stream_speed(prim_t prim, size_t block)
-{
-    union STREAM_PARAMS params;
-    struct ENC_STREAM_CTX ctx;
-    uint64_t iterations;
-    double elapsed;
-
-    size_t key_len = enc_stream_key_len(prim, (size_t)-1);
-
-    if (enc_stream_init(&ctx, buffer, key_len,
-                        prim, get_stream_params(prim, &params)))
-        FAIL("enc_stream_init failed.");
-
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        enc_stream_update(&ctx, buffer, block);
-    });
-
-    enc_stream_final(&ctx);
-
-    return COMPUTE_SPEED(block * iterations, elapsed);
-}
-
 static double block_speed(prim_t prim, int inverse)
 {
     union BLOCK_PARAMS params;
@@ -451,6 +410,47 @@ static double block_speed(prim_t prim, int inverse)
     return COMPUTE_SPEED(block_size * iterations, elapsed);
 }
 
+static double stream_speed(prim_t prim, size_t block)
+{
+    union STREAM_PARAMS params;
+    struct ENC_STREAM_CTX ctx;
+    uint64_t iterations;
+    double elapsed;
+
+    size_t key_len = enc_stream_key_len(prim, (size_t)-1);
+
+    if (enc_stream_init(&ctx, buffer, key_len,
+                        prim, get_stream_params(prim, &params)))
+        FAIL("enc_stream_init failed.");
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        enc_stream_update(&ctx, buffer, block);
+    });
+
+    enc_stream_final(&ctx);
+
+    return COMPUTE_SPEED(block * iterations, elapsed);
+}
+
+static double hash_speed(prim_t prim, size_t block)
+{
+    union HASH_PARAMS params;
+    struct DIGEST_CTX ctx;
+    uint64_t iterations;
+    double elapsed;
+
+    if (digest_init(&ctx, prim, get_hash_params(prim, &params)))
+        FAIL("digest_init failed.");
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        digest_update(&ctx, buffer, block);
+    });
+
+    digest_final(&ctx, buffer);
+
+    return COMPUTE_SPEED(block * iterations, elapsed);
+}
+
 static double mode_speed(prim_t prim, prim_t mode, size_t block)
 {
     union BLOCK_MODE_PARAMS mode_params;
@@ -480,14 +480,12 @@ static double mode_speed(prim_t prim, prim_t mode, size_t block)
 
 /*===----------------------------------------------------------------------===*/
 
-static void bench_hash(const struct HASH_RECORD *rec)
+static void bench_block(const struct BLOCK_RECORD *rec)
 {
-    printf("Benchmarking hash function %s:\n\n", prim_name(rec->prim));
-    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(rec->prim, 65536));
+    printf("Benchmarking block cipher %s (raw, %s):\n\n",
+           prim_name(rec->prim), rec->inverse ? "inverse" : "forward");
+    printf("\t*       (raw): %4.0f MiB/s\n",
+           block_speed(rec->prim, rec->inverse));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
@@ -502,12 +500,14 @@ static void bench_stream(const struct STREAM_RECORD *rec)
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
-static void bench_block(const struct BLOCK_RECORD *rec)
+static void bench_hash(const struct HASH_RECORD *rec)
 {
-    printf("Benchmarking block cipher %s (raw, %s):\n\n",
-           prim_name(rec->prim), rec->inverse ? "inverse" : "forward");
-    printf("\t*       (raw): %4.0f MiB/s\n",
-           block_speed(rec->prim, rec->inverse));
+    printf("Benchmarking hash function %s:\n\n", prim_name(rec->prim));
+    printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(rec->prim,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(rec->prim, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
@@ -578,14 +578,14 @@ int main(int argc, char *argv[])
 
         switch (rec.action)
         {
-            case ACTION_HASH:
-                bench_hash(&rec.m.hash);
+            case ACTION_BLOCK:
+                bench_block(&rec.m.block);
                 break;
             case ACTION_STREAM:
                 bench_stream(&rec.m.stream);
                 break;
-            case ACTION_BLOCK:
-                bench_block(&rec.m.block);
+            case ACTION_HASH:
+                bench_hash(&rec.m.hash);
                 break;
             case ACTION_BLOCK_MODE:
                 bench_block_mode(&rec.m.block_mode);
