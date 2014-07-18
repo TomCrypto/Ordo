@@ -33,8 +33,6 @@ static void timer_free(void);
 
 #if defined(_WIN32) /* On Windows, use system functions. */
 
-/* TODO: untested! */
-
 #include <windows.h>
 #include <signal.h>
 #include <stdio.h>
@@ -42,26 +40,20 @@ static void timer_free(void);
 static HANDLE timer_id;
 static volatile sig_atomic_t timer_elapsed;
 
-void CALLBACK timer_handler(void *unused1, DWORD unused2, DWORD unused3)
+void CALLBACK timer_handler(void *aux, BOOLEAN unused)
 {
     timer_elapsed = 1;
 }
 
 void timer_init(double seconds)
 {
-    LARGE_INTEGER due_time; /* 100-nanosecond steps format. */
-    due_time.QuadPart = (-1) * (LONGLONG)(seconds * 10000000);
     timer_elapsed = 0;
 
-    if (!(timer_id = CreateWaitableTimer(0, TRUE, 0)))
+    if (!CreateTimerQueueTimer(&timer_id, 0, timer_handler, 0,
+                               (DWORD)(seconds * 1000), 0,
+                               WT_EXECUTEONLYONCE))
     {
-        printf("CreateWaitableTimer failed (%u).\n", GetLastError());
-        exit(EXIT_FAILURE);
-    }
-
-    if (!SetWaitableTimer(timer_id, &due_time, 0, timer_handler, 0, FALSE))
-    {
-        printf("SetWaitableTimer failed (%u).\n", GetLastError());
+        printf("CreateTimerQueueTimer failed (%u).\n", GetLastError());
         exit(EXIT_FAILURE);
     }
 }
@@ -86,7 +78,7 @@ double timer_now(void)
 
 void timer_free(void)
 {
-    CloseHandle(timer_id);
+    DeleteTimerQueueTimer(0, timer_id, 0);
 }
 
 #else /* Assume we are on a POSIX 1993 compliant system. */
