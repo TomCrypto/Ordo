@@ -107,12 +107,12 @@ Include dependency graph for threefish256.h:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a50c4c5a86ccc2bb298137b7c60615215"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a50c4c5a86ccc2bb298137b7c60615215">threefish256_init</a> (struct THREEFISH256_STATE *state, const uint64_t *key, size_t key_len, const struct <a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a> *params)</td></tr>
-<tr class="separator:a50c4c5a86ccc2bb298137b7c60615215"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fdbe5cbce5e149ef6d67213018cba4e"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a4fdbe5cbce5e149ef6d67213018cba4e">threefish256_forward</a> (const struct THREEFISH256_STATE *state, uint64_t *block)</td></tr>
-<tr class="separator:a4fdbe5cbce5e149ef6d67213018cba4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98fe4e1b877142f180c2704aee2aba68"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a98fe4e1b877142f180c2704aee2aba68">threefish256_inverse</a> (const struct THREEFISH256_STATE *state, uint64_t *block)</td></tr>
-<tr class="separator:a98fe4e1b877142f180c2704aee2aba68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb08e635078666c6b6200eb1cf0dbcc5"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#aeb08e635078666c6b6200eb1cf0dbcc5">threefish256_init</a> (struct THREEFISH256_STATE *state, const void *key, size_t key_len, const struct <a class="el" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a> *params)</td></tr>
+<tr class="separator:aeb08e635078666c6b6200eb1cf0dbcc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19b9ed2936f68855ed0295f1b87f3fe0"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a19b9ed2936f68855ed0295f1b87f3fe0">threefish256_forward</a> (const struct THREEFISH256_STATE *state, void *block)</td></tr>
+<tr class="separator:a19b9ed2936f68855ed0295f1b87f3fe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5102a2ca34eb0214fd131afd4d36b18"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#ac5102a2ca34eb0214fd131afd4d36b18">threefish256_inverse</a> (const struct THREEFISH256_STATE *state, void *block)</td></tr>
+<tr class="separator:ac5102a2ca34eb0214fd131afd4d36b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87432b281cba5f8b274190084ced3382"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a87432b281cba5f8b274190084ced3382">threefish256_final</a> (struct THREEFISH256_STATE *state)</td></tr>
 <tr class="separator:a87432b281cba5f8b274190084ced3382"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b7a0b1a0157f3bee43b183839888cd0"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="threefish256_8h.html#a1b7a0b1a0157f3bee43b183839888cd0">threefish256_query</a> (int query, size_t value)</td></tr>
@@ -125,7 +125,7 @@ Functions</h2></td></tr>
 <p>Threefish-256 is a block cipher with a 256-bit block size and a 256-bit key size. It also has an optional 128-bit tweak, which can be set through the cipher parameters.</p>
 <p>The Threefish ciphers were originally designed to be used as a building block for the Skein hash function family. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a50c4c5a86ccc2bb298137b7c60615215"></a>
+<a class="anchor" id="aeb08e635078666c6b6200eb1cf0dbcc5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -138,7 +138,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint64_t *&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>key</em>, </td>
         </tr>
         <tr>
@@ -170,7 +170,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4fdbe5cbce5e149ef6d67213018cba4e"></a>
+<a class="anchor" id="a19b9ed2936f68855ed0295f1b87f3fe0"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -183,7 +183,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>block</em>&#160;</td>
         </tr>
         <tr>
@@ -197,7 +197,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a98fe4e1b877142f180c2704aee2aba68"></a>
+<a class="anchor" id="ac5102a2ca34eb0214fd131afd4d36b18"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -210,7 +210,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>block</em>&#160;</td>
         </tr>
         <tr>
@@ -290,7 +290,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 16 2014 22:58:28 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 18 2014 21:21:07 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

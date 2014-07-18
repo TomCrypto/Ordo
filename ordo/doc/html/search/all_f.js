@@ -25,6 +25,7 @@ var searchData=
   ['stream_5fciphers_2eh',['stream_ciphers.h',['../stream__ciphers_8h.html',1,'']]],
   ['stream_5ffinal',['stream_final',['../stream__ciphers_8h.html#a6d70e603f75cff7632461002a398b10d',1,'stream_ciphers.c']]],
   ['stream_5finit',['stream_init',['../stream__ciphers_8h.html#a8cde2765a87a7478ee26b4537ddf763f',1,'stream_ciphers.c']]],
+  ['stream_5fparams',['STREAM_PARAMS',['../union_s_t_r_e_a_m___p_a_r_a_m_s.html',1,'']]],
   ['stream_5fparams_2eh',['stream_params.h',['../stream__params_8h.html',1,'']]],
   ['stream_5fquery',['stream_query',['../stream__ciphers_8h.html#aee6a0385e1beafbb5456f1547d59628c',1,'stream_ciphers.c']]],
   ['stream_5fupdate',['stream_update',['../stream__ciphers_8h.html#a17802f61e7ad2060454ebc266c1d52b7',1,'stream_ciphers.c']]],

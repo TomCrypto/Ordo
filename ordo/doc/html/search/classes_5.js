@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['skein256_5fparams',['SKEIN256_PARAMS',['../struct_s_k_e_i_n256___p_a_r_a_m_s.html',1,'']]]
+  ['ordo_5fversion',['ORDO_VERSION',['../struct_o_r_d_o___v_e_r_s_i_o_n.html',1,'']]]
 ];

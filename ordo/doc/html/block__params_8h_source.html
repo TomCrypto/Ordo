@@ -112,22 +112,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="struct_a_e_s___p_a_r_a_m_s.html#a8c9bad69661e000e1c233d0726d43772">   42</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="struct_a_e_s___p_a_r_a_m_s.html#a8c9bad69661e000e1c233d0726d43772">rounds</a>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="union_b_l_o_c_k___p_a_r_a_m_s.html">   47</a></span>&#160;<span class="keyword">union </span><a class="code" href="union_b_l_o_c_k___p_a_r_a_m_s.html">BLOCK_PARAMS</a></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_a_e_s___p_a_r_a_m_s.html">AES_PARAMS</a>                    aes;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a>           threefish256;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s_html_a2ae3555262d658263484a0d5264b0b87"><div class="ttname"><a href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html#a2ae3555262d658263484a0d5264b0b87">THREEFISH256_PARAMS::tweak</a></div><div class="ttdeci">uint64_t tweak[2]</div><div class="ttdef"><b>Definition:</b> block_params.h:29</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="struct_a_e_s___p_a_r_a_m_s_html_a8c9bad69661e000e1c233d0726d43772"><div class="ttname"><a href="struct_a_e_s___p_a_r_a_m_s.html#a8c9bad69661e000e1c233d0726d43772">AES_PARAMS::rounds</a></div><div class="ttdeci">unsigned int rounds</div><div class="ttdef"><b>Definition:</b> block_params.h:42</div></div>
 <div class="ttc" id="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_t_h_r_e_e_f_i_s_h256___p_a_r_a_m_s.html">THREEFISH256_PARAMS</a></div><div class="ttdoc">Threefish-256 block cipher parameters. </div><div class="ttdef"><b>Definition:</b> block_params.h:25</div></div>
+<div class="ttc" id="union_b_l_o_c_k___p_a_r_a_m_s_html"><div class="ttname"><a href="union_b_l_o_c_k___p_a_r_a_m_s.html">BLOCK_PARAMS</a></div><div class="ttdoc">Polymorphic block cipher parameter union. </div><div class="ttdef"><b>Definition:</b> block_params.h:47</div></div>
 <div class="ttc" id="struct_a_e_s___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_a_e_s___p_a_r_a_m_s.html">AES_PARAMS</a></div><div class="ttdoc">AES block cipher parameters. </div><div class="ttdef"><b>Definition:</b> block_params.h:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 16 2014 22:58:28 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 18 2014 21:21:07 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
