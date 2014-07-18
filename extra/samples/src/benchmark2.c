@@ -38,7 +38,6 @@ static void timer_free(void);
 #include <signal.h>
 
 static HANDLE timer_id;
-
 static volatile sig_atomic_t timer_elapsed;
 
 void CALLBACK timer_handler(void *unused1, DWORD unused2, DWORD unused3)
@@ -50,6 +49,7 @@ void timer_init(double seconds)
 {
     LARGE_INTEGER due_time; /* 100-nanosecond steps format. */
     due_time.QuadPart = (-1) * (LONGLONG)(seconds * 10000000);
+    timer_elapsed = 0;
 
     if (!(timer_id = CreateWaitableTimer(0, TRUE, 0)))
     {
