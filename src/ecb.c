@@ -82,7 +82,8 @@ void ecb_update(struct ECB_STATE *state,
 
     while (in_len > block_size + skip)
     {
-        memcpy(out, in, block_size);
+        if (out != in)
+            memcpy(out, in, block_size);
 
         if (state->direction)
             block_forward(cipher_state, out);
