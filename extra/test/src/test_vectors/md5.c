@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/md5.c ------------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/md5.c -------------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

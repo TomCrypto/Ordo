@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/sha256.c ---------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/sha256.c ----------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

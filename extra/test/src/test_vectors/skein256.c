@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/skein256.c -------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/skein256.c --------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

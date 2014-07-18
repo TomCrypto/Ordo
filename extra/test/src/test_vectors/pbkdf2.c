@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/pbkdf2.c ---------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/pbkdf2.c ----------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

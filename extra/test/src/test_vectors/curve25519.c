@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/curve25519.c -----------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/curve25519.c ------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

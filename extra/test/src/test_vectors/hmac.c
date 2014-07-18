@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/hmac.c -----------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/hmac.c ------------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

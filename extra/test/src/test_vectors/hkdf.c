@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/hkdf.c -----------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/hkdf.c ------------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

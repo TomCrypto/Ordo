@@ -1,4 +1,4 @@
-/*===-- test/unit_tests/os_random.c --------------------*- PUBLIC -*- C -*-===*/
+/*===-- unit_tests/os_random.c ---------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

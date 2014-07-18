@@ -4,21 +4,24 @@ PROJECT(Samples C)
 
 SET(SOURCE_FILES "")
 
+SET(UTIL_FILES src/utils/timer.c)
+
 LIST(APPEND SOURCE_FILES src/benchmark.c)
-ADD_EXECUTABLE(benchmark src/benchmark.c)
+ADD_EXECUTABLE(benchmark src/benchmark.c ${UTIL_FILES})
 
 LIST(APPEND SOURCE_FILES src/info.c)
-ADD_EXECUTABLE(info src/info.c)
+ADD_EXECUTABLE(info src/info.c ${UTIL_FILES})
 
 LIST(APPEND SOURCE_FILES src/hashsum.c)
-ADD_EXECUTABLE(hashsum src/hashsum.c)
+ADD_EXECUTABLE(hashsum src/hashsum.c ${UTIL_FILES})
 
 LIST(APPEND SOURCE_FILES src/version.c)
-ADD_EXECUTABLE(version src/version.c)
+ADD_EXECUTABLE(version src/version.c ${UTIL_FILES})
 
 SOURCE_GROUP("Source" FILES ${SOURCE_FILES})
 
-SET(INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/include)
+SET(INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/include
+                 ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 TARGET_INCLUDE_DIRECTORIES(benchmark    PUBLIC ${INCLUDE_DIRS})
 TARGET_INCLUDE_DIRECTORIES(info         PUBLIC ${INCLUDE_DIRS})

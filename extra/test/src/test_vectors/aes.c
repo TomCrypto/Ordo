@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/aes.c ------------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/aes.c -------------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors

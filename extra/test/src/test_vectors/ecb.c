@@ -1,4 +1,4 @@
-/*===-- test/test_vectors/ecb.c ------------------------*- PUBLIC -*- C -*-===*/
+/*===-- test_vectors/ecb.c -------------------------------*- TEST -*- C -*-===*/
 /**
 *** @file
 *** @brief Test Vectors
