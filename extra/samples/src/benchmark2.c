@@ -11,10 +11,17 @@
 *** Shows how to enumerate algorithms, and how to use most of the library.
 ***
 *** Usage:
-***         ./benchmark [hash function]
-***         ./benchmark [stream cipher]
-***         ./benchmark [block cipher]
-***         ./benchmark [block cipher] [mode of operation]
+***         ./benchmark [CMD ...]
+***
+*** For instance, passing a hash function benchmarks it, while passing a block
+*** cipher alone will benchmark its forward permutation, while passing a block
+*** cipher with a mode of operation benchmarks encryption in that mode, etc...
+***
+*** Example commands:
+***
+***     ./benchmark SHA-256
+***     ./benchmark AES/CTR
+***     ./benchmark AES
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -157,6 +164,7 @@ void timer_free(void)
 /*===----------------------------------------------------------------------===*/
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "ordo.h"
 
@@ -223,7 +231,7 @@ static union BLOCK_MODE_PARAMS *get_mode_params(
  * we might as well use this scratch buffer for the key/iv buffers as well. */
 static char buffer[65536];
 
-#define TIME_INTERVAL 15.0 /* seconds */
+#define TIME_INTERVAL 10.0 /* seconds */
 
 #define TIME_BLOCK(counter, duration, elapsed, statement)\
     counter = 0;\
@@ -276,7 +284,29 @@ static double stream_speed(prim_t prim, size_t block)
     return COMPUTE_SPEED(block * iterations, elapsed);
 }
 
-static double block_speed(prim_t prim, prim_t mode, size_t block)
+static double block_speed(prim_t prim)
+{
+    union BLOCK_PARAMS params;
+    struct BLOCK_STATE state;
+    uint64_t iterations;
+    double elapsed;
+
+    size_t block_size = block_query(prim, BLOCK_SIZE_Q, (size_t)-1);
+    size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
+
+    block_init(&state, buffer, key_len,
+               prim, get_block_params(prim, &params));
+
+    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
+        block_forward(&state, buffer);
+    });
+
+    block_final(&state);
+
+    return COMPUTE_SPEED(block_size * iterations, elapsed);
+}
+
+static double mode_speed(prim_t prim, prim_t mode, size_t block)
 {
     union BLOCK_MODE_PARAMS mode_params;
     union BLOCK_PARAMS block_params;
@@ -303,71 +333,116 @@ static double block_speed(prim_t prim, prim_t mode, size_t block)
 
 /*===----------------------------------------------------------------------===*/
 
-static int bench_hash(prim_t prim, int argc, char * const argv[])
+static void bench_hash(prim_t prim)
 {
-    if (argc > 2)
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking hash function %s:\n\n", argv[1]);
+    printf("Benchmarking hash function %s:\n\n", prim_name(prim));
     printf("\t*    16 bytes: %4.0f MiB/s\n", hash_speed(prim,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", hash_speed(prim,   256));
     printf("\t*  1024 bytes: %4.0f MiB/s\n", hash_speed(prim,  1024));
     printf("\t*  4096 bytes: %4.0f MiB/s\n", hash_speed(prim,  4096));
     printf("\t* 65536 bytes: %4.0f MiB/s\n", hash_speed(prim, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
-
-    return EXIT_SUCCESS;
 }
 
-static int bench_stream(prim_t prim, int argc, char * const argv[])
+static void bench_stream(prim_t prim)
 {
-    if (argc > 2)
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking stream cipher %s:\n\n", argv[1]);
+    printf("Benchmarking stream cipher %s:\n\n", prim_name(prim));
     printf("\t*    16 bytes: %4.0f MiB/s\n", stream_speed(prim,    16));
     printf("\t*   256 bytes: %4.0f MiB/s\n", stream_speed(prim,   256));
     printf("\t*  1024 bytes: %4.0f MiB/s\n", stream_speed(prim,  1024));
     printf("\t*  4096 bytes: %4.0f MiB/s\n", stream_speed(prim,  4096));
     printf("\t* 65536 bytes: %4.0f MiB/s\n", stream_speed(prim, 65536));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
-
-    return EXIT_SUCCESS;
 }
 
-static int bench_block(prim_t prim, int argc, char * const argv[])
+static void bench_block(prim_t prim)
 {
-    prim_t mode;
-
-    if (argc == 2)
-        return printf("Please specify one mode.\n"), EXIT_FAILURE;
-
-    if (argc > 3)
-        return printf("Please specify only one mode.\n"), EXIT_FAILURE;
-
-    mode = prim_from_name(argv[2]);
-
-    if (!mode || (prim_type(mode) != PRIM_TYPE_BLOCK_MODE))
-        return printf("Unrecognized argument '%s'.\n", argv[2]), EXIT_FAILURE;
-
-    printf("Benchmarking block cipher %s in %s mode:\n\n", argv[1], argv[2]);
-    printf("\t*    16 bytes: %4.0f MiB/s\n", block_speed(prim, mode,    16));
-    printf("\t*   256 bytes: %4.0f MiB/s\n", block_speed(prim, mode,   256));
-    printf("\t*  1024 bytes: %4.0f MiB/s\n", block_speed(prim, mode,  1024));
-    printf("\t*  4096 bytes: %4.0f MiB/s\n", block_speed(prim, mode,  4096));
-    printf("\t* 65536 bytes: %4.0f MiB/s\n", block_speed(prim, mode, 65536));
+    printf("Benchmarking block cipher %s (raw):\n\n", prim_name(prim));
+    printf("\t*       (raw): %4.0f MiB/s\n", block_speed(prim));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
+}
 
-    return EXIT_SUCCESS;
+static void bench_block_mode(prim_t prim, prim_t mode)
+{
+    const char *pr_name = prim_name(prim);
+    const char *md_name = prim_name(mode);
+
+    printf("Benchmarking block cipher %s in %s mode:\n\n", pr_name, md_name);
+    printf("\t*    16 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,    16));
+    printf("\t*   256 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,   256));
+    printf("\t*  1024 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,  1024));
+    printf("\t*  4096 bytes: %4.0f MiB/s\n", mode_speed(prim, mode,  4096));
+    printf("\t* 65536 bytes: %4.0f MiB/s\n", mode_speed(prim, mode, 65536));
+    printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
 /*===----------------------------------------------------------------------===*/
 
-static void print_prim_list(const char *type_name, enum PRIM_TYPE type)
+enum ACTION
+{
+    ACTION_HASH,
+    ACTION_STREAM,
+    ACTION_BLOCK_RAW,
+    ACTION_BLOCK_MODE
+};
+
+struct RECORD
+{
+    enum ACTION action;
+    prim_t prim, prim2;
+};
+
+static char *tokenize(char **str)
+{
+    char *start = *str;
+
+    if (*str)
+    {
+        char *delim = strstr(*str, "/");
+        *str = delim ? delim + 1 : 0;
+        if (delim) *delim = '\0';
+    }
+
+    return start;
+}
+
+static int parse_cmd(char *cmd, struct RECORD *record)
+{
+    switch (prim_type(record->prim = prim_from_name(tokenize(&cmd))))
+    {
+        case PRIM_TYPE_HASH:
+            record->action = ACTION_HASH;
+            break;
+        case PRIM_TYPE_STREAM:
+            record->action = ACTION_STREAM;
+            break;
+        case PRIM_TYPE_BLOCK:
+            if (!cmd)
+            {
+                record->action = ACTION_BLOCK_RAW;
+                break; /* Raw mode block cipher */
+            }
+            else
+            {
+                if (prim_type(record->prim2 = prim_from_name(tokenize(&cmd)))
+                    != PRIM_TYPE_BLOCK_MODE) return 0; /* Wrong block mode */
+                record->action = ACTION_BLOCK_MODE;
+                break; /* Block cipher + mode */
+            }
+        default:
+            return 0;
+    }
+
+    return !cmd;
+}
+
+/*===----------------------------------------------------------------------===*/
+
+static void print_prims(const char *description, enum PRIM_TYPE type)
 {
     const prim_t *p;
 
-    printf("\nAvailable %s:\n\n\t", type_name);
+    printf("\n%s\n\n\t", description);
     for (p = prims_by_type(type); *p; ++p)
     {
         printf("%s", prim_name(*p));
@@ -378,35 +453,55 @@ static void print_prim_list(const char *type_name, enum PRIM_TYPE type)
 
 static void print_usage(const char *argv0)
 {
-    printf("Usage:\n\n");
-    printf("\t%s [hash function]\n", argv0);
-    printf("\t%s [stream cipher]\n", argv0);
-    printf("\t%s [block cipher]\n", argv0);
-    printf("\t%s [block cipher] [mode of operation]\n", argv0);
+    printf("Usage:\n\n\t%s [CMD ...]\n", argv0);
 
-    print_prim_list("block ciphers", PRIM_TYPE_BLOCK);
-    print_prim_list("stream ciphers", PRIM_TYPE_STREAM);
-    print_prim_list("hash functions", PRIM_TYPE_HASH);
-    print_prim_list("modes of operation", PRIM_TYPE_BLOCK_MODE);
+    print_prims("Available block ciphers:",
+                PRIM_TYPE_BLOCK);
+    print_prims("Available stream ciphers:",
+                PRIM_TYPE_STREAM);
+    print_prims("Available hash functions:",
+                PRIM_TYPE_HASH);
+    print_prims("Available block modes:",
+                PRIM_TYPE_BLOCK_MODE);
 }
 
 int main(int argc, char *argv[])
 {
-    prim_t primitive;
-
-    if (argc < 2) return print_usage(argv[0]), EXIT_FAILURE;
-    primitive = prim_from_name(argv[1]); /* To benchmark. */
-
-    switch (prim_type(primitive))
+    if (argc == 1)
     {
-        case PRIM_TYPE_HASH:
-            return bench_hash(primitive, argc, argv);
-        case PRIM_TYPE_STREAM:
-            return bench_stream(primitive, argc, argv);
-        case PRIM_TYPE_BLOCK:
-            return bench_block(primitive, argc, argv);
-        default:
-            printf("Unrecognized argument `%s`.\n", argv[1]);
-            return EXIT_FAILURE;
+        print_usage(argv[0]);
+        return EXIT_FAILURE;
     }
+
+    while (*(++argv))
+    {
+        struct RECORD record;
+
+        if (!parse_cmd(*argv, &record))
+        {
+            printf("Failed to parse '%s'.\n", *argv);
+            return EXIT_FAILURE; /* Parsing error. */
+        }
+
+        switch (record.action)
+        {
+            case ACTION_HASH:
+                bench_hash(record.prim);
+                break;
+            case ACTION_STREAM:
+                bench_stream(record.prim);
+                break;
+            case ACTION_BLOCK_RAW:
+                bench_block(record.prim);
+                break;
+            case ACTION_BLOCK_MODE:
+                bench_block_mode(record.prim, record.prim2);
+                break;
+        }
+
+        if (*(argv + 1))
+            printf("\n");
+    }
+
+    return EXIT_SUCCESS;
 }
