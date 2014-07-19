@@ -98,14 +98,14 @@ void sha256_final(struct SHA256_STATE *state,
     sha256_update(state, &len, sizeof(len));
 
     /* SHA-256 takes big-endian input, convert it back. */
-    state->digest[0] = fmbe32(state->digest[0]);
-    state->digest[1] = fmbe32(state->digest[1]);
-    state->digest[2] = fmbe32(state->digest[2]);
-    state->digest[3] = fmbe32(state->digest[3]);
-    state->digest[4] = fmbe32(state->digest[4]);
-    state->digest[5] = fmbe32(state->digest[5]);
-    state->digest[6] = fmbe32(state->digest[6]);
-    state->digest[7] = fmbe32(state->digest[7]);
+    state->digest[0] = tobe32(state->digest[0]);
+    state->digest[1] = tobe32(state->digest[1]);
+    state->digest[2] = tobe32(state->digest[2]);
+    state->digest[3] = tobe32(state->digest[3]);
+    state->digest[4] = tobe32(state->digest[4]);
+    state->digest[5] = tobe32(state->digest[5]);
+    state->digest[6] = tobe32(state->digest[6]);
+    state->digest[7] = tobe32(state->digest[7]);
 
     memcpy(digest, state->digest, SHA256_DIGEST);
 }

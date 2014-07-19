@@ -51,7 +51,7 @@ int aes_init(struct AES_STATE *state,
         else if (key_len == 32) state->rounds = 14;
     }
 
-    ExpandKey(key, state->key, key_len / 4, state->rounds);
+    ExpandKey((uint8_t *)key, state->key, key_len / 4, state->rounds);
 
     return ORDO_SUCCESS;
 }

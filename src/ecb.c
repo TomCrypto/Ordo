@@ -45,8 +45,8 @@ int ecb_init(struct ECB_STATE *state,
 
 void ecb_update(struct ECB_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t in_len,
-                unsigned char *out, size_t *out_len)
+                const void *in, size_t in_len,
+                void *out, size_t *out_len)
 {
     size_t block_size = state->block_size;
 
@@ -70,11 +70,11 @@ void ecb_update(struct ECB_STATE *state,
             block_inverse(cipher_state, state->block);
 
         memcpy(out, state->block, block_size);
+        out = offset(out, block_size);
         *out_len += block_size;
-        out += block_size;
 
+        in = offset(in, block_size - state->available);
         in_len -= block_size - state->available;
-        in += block_size - state->available;
         state->available = 0;
     }
 
@@ -90,11 +90,11 @@ void ecb_update(struct ECB_STATE *state,
         else
             block_inverse(cipher_state, out);
 
+        out = offset(out, block_size);
         *out_len += block_size;
-        out += block_size;
 
+        in = offset(in, block_size);
         in_len -= block_size;
-        in += block_size;
     }
 
     /* Whatever is left over is saved. */
@@ -105,7 +105,7 @@ void ecb_update(struct ECB_STATE *state,
 
 static int ecb_encrypt_final(struct ECB_STATE *state,
                              struct BLOCK_STATE *cipher_state,
-                             unsigned char *out, size_t *out_len)
+                             void *out, size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -134,7 +134,7 @@ static int ecb_encrypt_final(struct ECB_STATE *state,
 
 static int ecb_decrypt_final(struct ECB_STATE *state,
                              struct BLOCK_STATE *cipher_state,
-                             unsigned char *out, size_t *out_len)
+                             void *out, size_t *out_len)
 {
     if (!state->padding)
     {
@@ -176,7 +176,7 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
 
 int ecb_final(struct ECB_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *out_len)
+              void *out, size_t *out_len)
 {
     return (state->direction
             ? ecb_encrypt_final(state, cipher_state, out, out_len)

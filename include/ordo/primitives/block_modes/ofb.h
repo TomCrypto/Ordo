@@ -55,15 +55,15 @@ int ofb_init(struct OFB_STATE *state,
 ORDO_PUBLIC
 void ofb_update(struct OFB_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t in_len,
-                unsigned char *out, size_t *out_len);
+                const void *in, size_t in_len,
+                void *out, size_t *out_len);
 
 /** @see \c block_mode_final()
 **/
 ORDO_PUBLIC
 int ofb_final(struct OFB_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *out_len);
+              void *out, size_t *out_len);
 
 /** @see \c block_mode_query()
 **/

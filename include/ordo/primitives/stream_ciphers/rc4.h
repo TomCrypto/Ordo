@@ -49,14 +49,14 @@ extern "C" {
 **/
 ORDO_PUBLIC
 int rc4_init(struct RC4_STATE *state,
-             const uint8_t *key, size_t key_len,
+             const void *key, size_t key_len,
              const struct RC4_PARAMS *params);
 
 /** @see \c stream_update()
 **/
 ORDO_PUBLIC
 void rc4_update(struct RC4_STATE *state,
-                uint8_t *buffer, size_t len);
+                void *buffer, size_t len);
 
 /** @see \c stream_final()
 **/

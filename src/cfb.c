@@ -47,8 +47,8 @@ int cfb_init(struct CFB_STATE *state,
 
 static void cfb_encrypt_update(struct CFB_STATE *state,
                                struct BLOCK_STATE *cipher_state,
-                               const unsigned char *in, size_t inlen,
-                               unsigned char *out, size_t *outlen)
+                               const void *in, size_t inlen,
+                               void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
 
@@ -70,16 +70,16 @@ static void cfb_encrypt_update(struct CFB_STATE *state,
         memcpy(offset(state->iv, block_size - state->remaining), out, process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
+        out = offset(out, process);
+        in = offset(in, process);
         inlen -= process;
-        out += process;
-        in += process;
     }
 }
 
 static void cfb_decrypt_update(struct CFB_STATE *state,
                                struct BLOCK_STATE *cipher_state,
-                               const unsigned char *in, size_t inlen,
-                               unsigned char *out, size_t *outlen)
+                               const void *in, size_t inlen,
+                               void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
 
@@ -102,16 +102,16 @@ static void cfb_decrypt_update(struct CFB_STATE *state,
         memcpy(offset(state->iv, block_size - state->remaining), state->tmp, process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
+        out = offset(out, process);
+        in = offset(in, process);
         inlen -= process;
-        out += process;
-        in += process;
     }
 }
 
 void cfb_update(struct CFB_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t inlen,
-                unsigned char *out, size_t *outlen)
+                const void *in, size_t inlen,
+                void *out, size_t *outlen)
 {
     (state->direction
      ? cfb_encrypt_update(state, cipher_state, in, inlen, out, outlen)
@@ -120,7 +120,7 @@ void cfb_update(struct CFB_STATE *state,
 
 int cfb_final(struct CFB_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *outlen)
+              void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;

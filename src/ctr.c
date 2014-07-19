@@ -62,8 +62,8 @@ int ctr_init(struct CTR_STATE *state,
 
 void ctr_update(struct CTR_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t inlen,
-                unsigned char *out, size_t *outlen)
+                const void *in, size_t inlen,
+                void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
 
@@ -82,15 +82,15 @@ void ctr_update(struct CTR_STATE *state,
         xor_buffer(out, offset, process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
+        out = offset(out, process);
+        in = offset(in, process);
         inlen -= process;
-        out += process;
-        in += process;
     }
 }
 
 int ctr_final(struct CTR_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *outlen)
+              void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;

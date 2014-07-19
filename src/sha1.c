@@ -93,11 +93,11 @@ void sha1_final(struct SHA1_STATE *state,
     sha1_update(state, padding, pad_len);
     sha1_update(state, &len, sizeof(len));
 
-    state->digest[0] = fmbe32(state->digest[0]);
-    state->digest[1] = fmbe32(state->digest[1]);
-    state->digest[2] = fmbe32(state->digest[2]);
-    state->digest[3] = fmbe32(state->digest[3]);
-    state->digest[4] = fmbe32(state->digest[4]);
+    state->digest[0] = tobe32(state->digest[0]);
+    state->digest[1] = tobe32(state->digest[1]);
+    state->digest[2] = tobe32(state->digest[2]);
+    state->digest[3] = tobe32(state->digest[3]);
+    state->digest[4] = tobe32(state->digest[4]);
 
     memcpy(digest, state->digest, SHA1_DIGEST);
 }

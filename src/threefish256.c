@@ -33,17 +33,16 @@ int threefish256_init(struct THREEFISH256_STATE *state,
                       const void *key, size_t key_len,
                       const struct THREEFISH256_PARAMS *params)
 {
-    if (threefish256_query(KEY_LEN_Q, key_len) == key_len)
-    {
-        const uint64_t *tweak = params == 0 ? 0 : params->tweak;
-        uint64_t data[4];
-        memcpy(data, key, sizeof(data));
-        threefish256_key_schedule(data, tweak, state->subkey);
+    uint64_t data[4];
 
-        return ORDO_SUCCESS;
-    }
+    if (threefish256_query(KEY_LEN_Q, key_len) != key_len)
+        return ORDO_KEY_LEN;
 
-    return ORDO_KEY_LEN;
+    memcpy(data, key, sizeof(data));
+    threefish256_key_schedule(data, (params == 0) ? 0 : params->tweak,
+                              state->subkey);
+
+    return ORDO_SUCCESS;
 }
 
 void threefish256_forward(const struct THREEFISH256_STATE *state,

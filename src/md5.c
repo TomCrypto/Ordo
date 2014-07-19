@@ -35,7 +35,10 @@ struct MD5_STATE
 int md5_init(struct MD5_STATE *state,
              const void *params)
 {
-    memcpy(state->digest, md5_iv, MD5_DIGEST);
+    state->digest[0] = md5_iv[0];
+    state->digest[1] = md5_iv[1];
+    state->digest[2] = md5_iv[2];
+    state->digest[3] = md5_iv[3];
     state->block_len = 0;
     state->msg_len = 0;
 
@@ -92,17 +95,15 @@ void md5_final(struct MD5_STATE *state,
     md5_update(state, &one, sizeof(one));
 
     while (state->block_len != MD5_BLOCK - sizeof(uint64_t))
-    {
         md5_update(state, &zero, sizeof(zero));
-    }
 
     md5_update(state, &len, sizeof(len));
 
     /* Digest is in little-endian. */
-    for (len = 0; len < 4; ++len)
-    {
-        state->digest[len] = tole32(state->digest[len]);
-    }
+    state->digest[0] = tole32(state->digest[0]);
+    state->digest[1] = tole32(state->digest[1]);
+    state->digest[2] = tole32(state->digest[2]);
+    state->digest[3] = tole32(state->digest[3]);
 
     /* At this point there is no input data left in the state, everything has
      * been processed into the digest, which we can now return to the user. */

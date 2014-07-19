@@ -26,20 +26,22 @@ struct RC4_STATE
 /*===----------------------------------------------------------------------===*/
 
 int rc4_init(struct RC4_STATE *state,
-             const uint8_t *key, size_t key_len,
+             const void *key, size_t key_len,
              const struct RC4_PARAMS *params)
 {
     if ((key_len < bits(40)) || (key_len > bits(2048))) return ORDO_KEY_LEN;
     rc4_key_schedule(state, (params == 0) ? RC4_DROP_DEFAULT : params->drop,
-                     key, key_len);
+                     (uint8_t *)key, key_len);
 
     return ORDO_SUCCESS;
 }
 
 void rc4_update(struct RC4_STATE *state,
-                uint8_t *buffer, size_t len)
+                void *buffer, size_t len)
 {
-    while (len--) *(buffer++) ^= rc4_next(state);
+    uint8_t *bytes = (uint8_t *)buffer;
+
+    while (len--) *(bytes++) ^= rc4_next(state);
 }
 
 void rc4_final(struct RC4_STATE *state)

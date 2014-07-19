@@ -42,8 +42,8 @@ int ofb_init(struct OFB_STATE *state,
 
 void ofb_update(struct OFB_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t inlen,
-                unsigned char *out, size_t *outlen)
+                const void *in, size_t inlen,
+                void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
 
@@ -65,15 +65,15 @@ void ofb_update(struct OFB_STATE *state,
         xor_buffer(out, offset(state->iv, block_size - state->remaining), process);
         if (outlen) (*outlen) += process;
         state->remaining -= process;
+        out = offset(out, process);
+        in = offset(in, process);
         inlen -= process;
-        out += process;
-        in += process;
     }
 }
 
 int ofb_final(struct OFB_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *outlen)
+              void *out, size_t *outlen)
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;

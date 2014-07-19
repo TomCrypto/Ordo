@@ -48,8 +48,8 @@ int cbc_init(struct CBC_STATE *state,
 
 static void cbc_encrypt_update(struct CBC_STATE *state,
                                struct BLOCK_STATE *cipher_state,
-                               const unsigned char *in, size_t in_len,
-                               unsigned char *out, size_t *out_len)
+                               const void *in, size_t in_len,
+                               void *out, size_t *out_len)
 {
     size_t block_size = state->block_size;
     *out_len = 0;
@@ -66,12 +66,12 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
         memcpy(state->iv, state->block, block_size);
 
         memcpy(out, state->block, block_size);
+        out = offset(out, block_size);
         *out_len += block_size;
-        out += block_size;
 
+        in = offset(in, process);
         state->available = 0;
         in_len -= process;
-        in += process;
     }
 
     /* Add whatever is left into the temporary buffer */
@@ -81,8 +81,8 @@ static void cbc_encrypt_update(struct CBC_STATE *state,
 
 static void cbc_decrypt_update(struct CBC_STATE *state,
                                struct BLOCK_STATE *cipher_state,
-                               const unsigned char *in, size_t in_len,
-                               unsigned char *out, size_t *out_len)
+                               const void *in, size_t in_len,
+                               void *out, size_t *out_len)
 {
     size_t block_size = state->block_size;
     *out_len = 0;
@@ -104,12 +104,12 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
         memcpy(state->iv, out, block_size);
 
         memcpy(out, state->block, block_size);
+        out = offset(out, block_size);
         *out_len += block_size;
-        out += block_size;
 
+        in = offset(in, process);
         state->available = 0;
         in_len -= process;
-        in += process;
     }
 
     memcpy(state->block + state->available, in, in_len);
@@ -118,7 +118,7 @@ static void cbc_decrypt_update(struct CBC_STATE *state,
 
 static int cbc_encrypt_final(struct CBC_STATE *state,
                              struct BLOCK_STATE *cipher_state,
-                             unsigned char *out, size_t *out_len)
+                             void *out, size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -145,7 +145,7 @@ static int cbc_encrypt_final(struct CBC_STATE *state,
 
 static int cbc_decrypt_final(struct CBC_STATE *state,
                              struct BLOCK_STATE *cipher_state,
-                             unsigned char *out, size_t *out_len)
+                             void *out, size_t *out_len)
 {
     if (state->padding == 0)
     {
@@ -185,8 +185,8 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
 
 void cbc_update(struct CBC_STATE *state,
                 struct BLOCK_STATE *cipher_state,
-                const unsigned char *in, size_t in_len,
-                unsigned char *out, size_t *out_len)
+                const void *in, size_t in_len,
+                void *out, size_t *out_len)
 {
     (state->direction
      ? cbc_encrypt_update(state, cipher_state,
@@ -197,7 +197,7 @@ void cbc_update(struct CBC_STATE *state,
 
 int cbc_final(struct CBC_STATE *state,
               struct BLOCK_STATE *cipher_state,
-              unsigned char *out, size_t *out_len)
+              void *out, size_t *out_len)
 {
     return (state->direction
             ? cbc_encrypt_final(state, cipher_state, out, out_len)
