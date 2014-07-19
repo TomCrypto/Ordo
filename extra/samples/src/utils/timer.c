@@ -143,7 +143,7 @@ void timer_init(double seconds)
     struct sigaction sig;
     struct itimerspec tm;
 
-    tm.it_interval.tv_nsec = seconds - (long)seconds / 1000000000;
+    tm.it_interval.tv_nsec = (long)(seconds - (long)seconds) * 1000000000;
     tm.it_interval.tv_sec = (time_t)seconds;
     tm.it_value = tm.it_interval;
     timer_elapsed = 0;
