@@ -1,11 +1,10 @@
 /*===-- skein256.c ------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/hash_functions/skein256.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/primitives/hash_functions/skein256.h"
 #include "ordo/primitives/block_ciphers/threefish256.h"
 
 /*===----------------------------------------------------------------------===*/

@@ -1,10 +1,10 @@
 /*===-- digest.c --------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/digest/digest.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/digest/digest.h"
 
 /*===----------------------------------------------------------------------===*/
 

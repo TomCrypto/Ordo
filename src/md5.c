@@ -1,10 +1,10 @@
 /*===-- md5.c -----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/hash_functions/md5.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/hash_functions/md5.h"
 
 /*===----------------------------------------------------------------------===*/
 

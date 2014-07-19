@@ -4,6 +4,8 @@
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/internal/alg.h"
+
 /*===----------------------------------------------------------------------===*/
 
 void pswap8 (uint8_t  *a, uint8_t  *b) { uint8_t  c = *a; *a = *b; *b = c; }

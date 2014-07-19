@@ -1,10 +1,10 @@
 /*===-- threefish256.c ----------------------*- shared/unix/amd64 -*- C -*-===*/
 
-#include "ordo/primitives/block_ciphers/threefish256.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/block_ciphers/threefish256.h"
 
 /*===----------------------------------------------------------------------===*/
 

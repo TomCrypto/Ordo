@@ -1,10 +1,10 @@
 /*===-- utils.c ---------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/misc/utils.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/misc/utils.h"
 
 /*===----------------------------------------------------------------------===*/
 

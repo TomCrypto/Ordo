@@ -1,10 +1,10 @@
 /*===-- enc_stream.c ----------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/enc/enc_stream.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/enc/enc_stream.h"
 
 /*===----------------------------------------------------------------------===*/
 

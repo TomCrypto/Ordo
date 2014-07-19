@@ -1,10 +1,10 @@
 /*===-- endianness.c ----------------------------*- [net/free]bsd -*- C -*-===*/
 
-#include "ordo/misc/endianness.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/misc/endianness.h"
 
 #include <sys/types.h>
 #include <sys/endian.h>

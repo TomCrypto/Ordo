@@ -1,10 +1,10 @@
 /*===-- rc4.c -----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/stream_ciphers/rc4.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/stream_ciphers/rc4.h"
 
 /*===----------------------------------------------------------------------===*/
 

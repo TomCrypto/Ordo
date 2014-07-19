@@ -1,10 +1,10 @@
 /*===-- hmac.c ----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/auth/hmac.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/auth/hmac.h"
 
 /*===----------------------------------------------------------------------===*/
 

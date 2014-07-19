@@ -1,11 +1,10 @@
 /*===-- pbkdf2.c --------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/kdf/pbkdf2.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/kdf/pbkdf2.h"
 #include "ordo/auth/hmac.h"
 
 /*===----------------------------------------------------------------------===*/

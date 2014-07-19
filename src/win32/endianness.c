@@ -1,10 +1,10 @@
 /*===-- endianness.c ------------------------------------*- win32 -*- C -*-===*/
 
-#include "ordo/misc/endianness.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/misc/endianness.h"
 
 /*===----------------------------------------------------------------------===*/
 

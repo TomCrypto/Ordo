@@ -1,10 +1,10 @@
 /*===-- aes.c ------------------------*- shared/unix/amd64/aes-ni -*- C -*-===*/
 
-#include "ordo/primitives/block_ciphers/aes.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/block_ciphers/aes.h"
 
 /*===----------------------------------------------------------------------===*/
 

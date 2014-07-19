@@ -1,11 +1,10 @@
 /*===-- hkdf.c ----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/kdf/hkdf.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/kdf/hkdf.h"
 #include "ordo/auth/hmac.h"
 
 /*===----------------------------------------------------------------------===*/

@@ -1,11 +1,10 @@
 /*===-- curve25519.c ----------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/misc/curve25519.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/misc/curve25519.h"
 #include "ordo/misc/os_random.h"
 
 /*===----------------------------------------------------------------------===*/

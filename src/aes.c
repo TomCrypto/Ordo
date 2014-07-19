@@ -1,10 +1,10 @@
 /*===-- aes.c -----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/block_ciphers/aes.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/block_ciphers/aes.h"
 
 /*===----------------------------------------------------------------------===*/
 

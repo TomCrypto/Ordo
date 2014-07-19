@@ -1,10 +1,10 @@
 /*===-- os_random.c -----------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/misc/os_random.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/misc/os_random.h"
 
 /*===----------------------------------------------------------------------===*/
 

@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
 #include "ordo.h"
 
 static int process_file(const char *path, prim_t prim)

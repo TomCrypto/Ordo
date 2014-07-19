@@ -1,10 +1,10 @@
 /*===-- ordo.c ----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo.h"
 
 /*===----------------------------------------------------------------------===*/
 

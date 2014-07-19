@@ -1,10 +1,10 @@
 /*===-- enc_block.c -----------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/enc/enc_block.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/enc/enc_block.h"
 
 /*===----------------------------------------------------------------------===*/
 

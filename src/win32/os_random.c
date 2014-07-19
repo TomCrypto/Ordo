@@ -1,10 +1,10 @@
 /*===-- os_random.c -------------------------------------*- win32 -*- C -*-===*/
 
-#include "ordo/misc/os_random.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/misc/os_random.h"
 
 #include <windows.h>
 #include <wincrypt.h>

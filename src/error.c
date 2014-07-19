@@ -1,10 +1,10 @@
 /*===-- error.c ---------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/common/error.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/common/error.h"
 
 /*===----------------------------------------------------------------------===*/
 

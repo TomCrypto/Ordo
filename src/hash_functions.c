@@ -1,10 +1,10 @@
 /*===-- hash_functions.c ------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/hash_functions.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/hash_functions.h"
 
 /*===----------------------------------------------------------------------===*/
 

@@ -1,10 +1,10 @@
 /*===-- sha1.c ----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/hash_functions/sha1.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/hash_functions/sha1.h"
 
 /*===----------------------------------------------------------------------===*/
 

@@ -1,10 +1,10 @@
 /*===-- ctr.c -----------------------------------------*- generic -*- C -*-===*/
 
-#include "ordo/primitives/block_modes/ctr.h"
-
 /** @cond **/
 #include "ordo/internal/implementation.h"
 /** @endcond **/
+
+#include "ordo/primitives/block_modes/ctr.h"
 
 /*===----------------------------------------------------------------------===*/
 
