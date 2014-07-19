@@ -192,7 +192,6 @@ SET(IN_FILES
     error.c error.asm
     identification.c identification.asm
     hash_functions.c hash_functions.asm
-    hash_params.c hash_params.asm
     hmac.c hmac.asm
     ordo.c ordo.asm
     os_random.c os_random.asm

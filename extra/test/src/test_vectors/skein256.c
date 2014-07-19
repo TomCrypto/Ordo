@@ -32,13 +32,7 @@ static const struct TEST_VECTOR tests[] =
     "", 0,
     "\xc8\x87\x70\x87\xda\x56\xe0\x72\x87\x0d\xaa\x84\x3f\x17\x6e\x94"
     "\x53\x11\x59\x29\x09\x4c\x3a\x40\xc4\x63\xa1\x96\xc2\x9b\xf7\xba", 32,
-    1, {
-        { 'S', 'H', 'A', '3' },
-        { 1, 0 },
-        { 0 },
-        256,
-        { 0 }
-    }
+    1, SKEIN256_PARAMS_DEFAULT
 },
 {
     "\x00", 1,
@@ -49,13 +43,7 @@ static const struct TEST_VECTOR tests[] =
     "\xff", 1,
     "\x0b\x98\xdc\xd1\x98\xea\x0e\x50\xa7\xa2\x44\xc4\x44\xe2\x5c\x23"
     "\xda\x30\xc1\x0f\xc9\xa1\xf2\x70\xa6\x63\x7f\x1f\x34\xe6\x7e\xd2", 32,
-    1, {
-        { 'S', 'H', 'A', '3' },
-        { 1, 0 },
-        { 0 },
-        256,
-        { 0 }
-    }
+    1, SKEIN256_PARAMS_DEFAULT
 },
 {
     "\x00\x00\x00\x00", 4,

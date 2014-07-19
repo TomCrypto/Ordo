@@ -30,7 +30,8 @@ extern "C" {
 ***          these parameter fields stand for.
 ***
 *** @warning This structure is \b packed, to improve performance while hashing
-***          the configuration block, be careful when taking pointers to it.
+***          the configuration block, be careful if taking pointers to members
+***          of the structure as correct alignment is NOT guaranteed.
 **/
 #pragma pack(push,1)
 struct SKEIN256_PARAMS
@@ -64,10 +65,10 @@ union HASH_PARAMS
     struct SKEIN256_PARAMS               skein256;
 };
 
-/** Returns the default Skein-256 configuration block (parameters).
+/** @brief The default Skein-256 configuration block.
 **/
-ORDO_PUBLIC
-struct SKEIN256_PARAMS skein256_default(void);
+#define SKEIN256_PARAMS_DEFAULT\
+    {{ 0x53, 0x48, 0x41, 0x33 }, { 1, 0 }, { 0 }, 256, { 0 }}
 
 /*===----------------------------------------------------------------------===*/
 
