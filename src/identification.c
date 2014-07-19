@@ -69,21 +69,14 @@ enum PRIM_TYPE prim_type(prim_t prim)
     if (!prim_avail(prim))
         return 0;
 
-    switch (prim)
+    /* Bits 4..7 of the primitive identifier are the primitive type. */
+
+    switch ((prim >> 4) & 0xF)
     {
-        case BLOCK_AES:                    return PRIM_TYPE_BLOCK;
-        case BLOCK_NULLCIPHER:             return PRIM_TYPE_BLOCK;
-        case BLOCK_THREEFISH256:           return PRIM_TYPE_BLOCK;
-        case HASH_MD5:                     return PRIM_TYPE_HASH;
-        case HASH_SHA1:                    return PRIM_TYPE_HASH;
-        case HASH_SHA256:                  return PRIM_TYPE_HASH;
-        case HASH_SKEIN256:                return PRIM_TYPE_HASH;
-        case STREAM_RC4:                   return PRIM_TYPE_STREAM;
-        case BLOCK_MODE_ECB:               return PRIM_TYPE_BLOCK_MODE;
-        case BLOCK_MODE_CBC:               return PRIM_TYPE_BLOCK_MODE;
-        case BLOCK_MODE_CTR:               return PRIM_TYPE_BLOCK_MODE;
-        case BLOCK_MODE_CFB:               return PRIM_TYPE_BLOCK_MODE;
-        case BLOCK_MODE_OFB:               return PRIM_TYPE_BLOCK_MODE;
+        case 0x1: return PRIM_TYPE_HASH;
+        case 0x2: return PRIM_TYPE_BLOCK;
+        case 0x3: return PRIM_TYPE_STREAM;
+        case 0x4: return PRIM_TYPE_BLOCK_MODE;
     }
     
     return PRIM_TYPE_UNKNOWN;
