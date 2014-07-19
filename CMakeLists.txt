@@ -85,9 +85,11 @@ IF(COMPILER_GNU OR COMPILER_CLANG)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-long-long") # shut up!
+
+    # This is to cover GCC/Clang's egregious handling of {0}
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-field-initializers")
 
     IF(COMPILER_GNU AND NOT COMPAT)
