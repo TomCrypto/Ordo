@@ -22,7 +22,6 @@
 ***     ./benchmark SHA-256
 ***     ./benchmark AES/CTR
 ***     ./benchmark AES
-***     ./benchmark Threefish-256/inverse
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -48,10 +47,11 @@ enum ACTION
     ACTION_BLOCK_MODE
 };
 
+/* No special parameters here yet, but it is now easy to add more. */
+
 struct BLOCK_RECORD
 {
     prim_t prim;
-    int inverse;
 };
 
 struct STREAM_RECORD
@@ -67,7 +67,6 @@ struct HASH_RECORD
 struct BLOCK_MODE_RECORD
 {
     prim_t prim, mode;
-    int direction;
 };
 
 struct RECORD
@@ -125,29 +124,17 @@ static int parse_cmd(char **cmd, struct RECORD *rec)
             {
                 rec->action = ACTION_BLOCK;
                 rec->m.block.prim = prim;
-                rec->m.block.inverse = 0;
                 break;
             }
             else
             {
-                char *next = next_token(cmd);
-                if (!strcmp(next, "inverse"))
-                {
-                    rec->action = ACTION_BLOCK;
-                    rec->m.block.prim = prim;
-                    rec->m.block.inverse = 1;
-                    break;
-                }
-                else
-                {
-                    prim_t mode = prim_from_name(next);
-                    if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
-                        return rewind_token(cmd), 0;
-                    rec->action = ACTION_BLOCK_MODE;
-                    rec->m.block_mode.prim = prim;
-                    rec->m.block_mode.mode = mode;
-                    break;
-                }
+                prim_t mode = prim_from_name(next_token(cmd));
+                if (prim_type(mode) != PRIM_TYPE_BLOCK_MODE)
+                    return rewind_token(cmd), 0;
+                rec->action = ACTION_BLOCK_MODE;
+                rec->m.block_mode.prim = prim;
+                rec->m.block_mode.mode = mode;
+                break;
             }
         default:
             return 0;
@@ -216,27 +203,17 @@ static union BLOCK_MODE_PARAMS *get_mode_params(
 /*===----------------------------------------------------------------------===*/
 
 /* We are going to need that much memory for the larger block tests anyway, so
- * we might as well use this scratch buffer for the key/iv buffers as well. */
+ * we might as well reuse this scratch buffer for the key and iv buffers too.
+*/
+
 static char buffer[65536];
+static char *key = buffer;
+static char *iv  = buffer;
 
-#define TIME_INTERVAL 10.0 /* seconds */
+#define TIME_INTERVAL 10.0 /* Seconds per benchmark, higher = more precise. */
 
-#define TIME_BLOCK(counter, duration, elapsed, statement)\
-    counter = 0;\
-    timer_init(duration);\
-    elapsed = timer_now();\
-    while (++counter && !timer_has_elapsed())\
-        do { statement } while (0);\
-    elapsed = timer_now() - elapsed;\
-    timer_free();
-
-#define COMPUTE_SPEED(throughput, elapsed)\
-    ((double)(throughput) / ((double)(elapsed) * 1024 * 1024))
-
-#define FAIL(msg){\
-    printf("\t* %s\n\n", msg);\
-    exit(EXIT_FAILURE);\
-    }
+#define CHECK(cond) /* Error checking (by failing informatively on error). */\
+    if (cond) exit((printf("\t* %s failed.\n\n", #cond), EXIT_FAILURE))
 
 static double block_speed(prim_t prim, int inverse)
 {
@@ -248,26 +225,25 @@ static double block_speed(prim_t prim, int inverse)
     size_t block_size = block_query(prim, BLOCK_SIZE_Q, (size_t)-1);
     size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
 
-    if (block_init(&state, buffer, key_len,
-                   prim, get_block_params(prim, &params)))
-        FAIL("block_init failed.");
+    CHECK(block_init(&state, key, key_len,
+          prim, get_block_params(prim, &params)));
 
     if (inverse)
     {
-        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-            block_inverse(&state, buffer);
-        });
+        TIMER_START(elapsed, iterations, TIME_INTERVAL)
+        block_inverse(&state, buffer);
+        TIMER_STOP(elapsed)
     }
     else
     {
-        TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-            block_forward(&state, buffer);
-        });
+        TIMER_START(elapsed, iterations, TIME_INTERVAL)
+        block_forward(&state, buffer);
+        TIMER_STOP(elapsed)
     }
 
     block_final(&state);
 
-    return COMPUTE_SPEED(block_size * iterations, elapsed);
+    return (double)(block_size * iterations) / (elapsed * 1024 * 1024);
 }
 
 static double stream_speed(prim_t prim, size_t block)
@@ -279,17 +255,16 @@ static double stream_speed(prim_t prim, size_t block)
 
     size_t key_len = enc_stream_key_len(prim, (size_t)-1);
 
-    if (enc_stream_init(&ctx, buffer, key_len,
-                        prim, get_stream_params(prim, &params)))
-        FAIL("enc_stream_init failed.");
+    CHECK(enc_stream_init(&ctx, key, key_len,
+          prim, get_stream_params(prim, &params)));
 
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        enc_stream_update(&ctx, buffer, block);
-    });
+    TIMER_START(elapsed, iterations, TIME_INTERVAL)
+    enc_stream_update(&ctx, buffer, block);
+    TIMER_STOP(elapsed)
 
     enc_stream_final(&ctx);
 
-    return COMPUTE_SPEED(block * iterations, elapsed);
+    return (double)(block * iterations) / (elapsed * 1024 * 1024);
 }
 
 static double hash_speed(prim_t prim, size_t block)
@@ -299,16 +274,15 @@ static double hash_speed(prim_t prim, size_t block)
     uint64_t iterations;
     double elapsed;
 
-    if (digest_init(&ctx, prim, get_hash_params(prim, &params)))
-        FAIL("digest_init failed.");
+    CHECK(digest_init(&ctx, prim, get_hash_params(prim, &params)));
 
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        digest_update(&ctx, buffer, block);
-    });
+    TIMER_START(elapsed, iterations, TIME_INTERVAL)
+    digest_update(&ctx, buffer, block);
+    TIMER_STOP(elapsed)
 
     digest_final(&ctx, buffer);
 
-    return COMPUTE_SPEED(block * iterations, elapsed);
+    return (double)(block * iterations) / (elapsed * 1024 * 1024);
 }
 
 static double mode_speed(prim_t prim, prim_t mode, size_t block)
@@ -323,29 +297,26 @@ static double mode_speed(prim_t prim, prim_t mode, size_t block)
     size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
     size_t dummy; /* We don't care about the output length. */
 
-    if (enc_block_init(&ctx, buffer, key_len, buffer, iv_len, 1,
-                       prim, get_block_params(prim, &block_params),
-                       mode, get_mode_params(prim, &mode_params)))
-        FAIL("enc_block_init failed.");
+    CHECK(enc_block_init(&ctx, key, key_len, iv, iv_len, 1,
+          prim, get_block_params(prim, &block_params),
+          mode, get_mode_params(prim, &mode_params)));
 
-    TIME_BLOCK(iterations, TIME_INTERVAL, elapsed, {
-        enc_block_update(&ctx, buffer, block, buffer, &dummy);
-    });
+    TIMER_START(elapsed, iterations, TIME_INTERVAL)
+    enc_block_update(&ctx, buffer, block, buffer, &dummy);
+    TIMER_STOP(elapsed)
 
-    if (enc_block_final(&ctx, buffer, &dummy))
-        FAIL("enc_block_final failed.");
+    CHECK(enc_block_final(&ctx, buffer, &dummy));
 
-    return COMPUTE_SPEED(block * iterations, elapsed);
+    return (double)(block * iterations) / (elapsed * 1024 * 1024);
 }
 
 /*===----------------------------------------------------------------------===*/
 
 static void bench_block(const struct BLOCK_RECORD *rec)
 {
-    printf("Benchmarking block cipher %s (raw, %s):\n\n",
-           prim_name(rec->prim), rec->inverse ? "inverse" : "forward");
-    printf("\t*       (raw): %4.0f MiB/s\n",
-           block_speed(rec->prim, rec->inverse));
+    printf("Benchmarking block cipher %s (raw):\n\n", prim_name(rec->prim));
+    printf("\t*   (forward): %4.0f MiB/s\n", block_speed(rec->prim, 0));
+    printf("\t*   (inverse): %4.0f MiB/s\n", block_speed(rec->prim, 1));
     printf("\nPerformance rated over %.2f seconds.\n", TIME_INTERVAL);
 }
 
@@ -427,13 +398,13 @@ int main(int argc, char *argv[])
 
     while (*(++argv))
     {
-        struct RECORD rec;
-        char *cmd = *argv;
+        struct RECORD rec = {0};
+        char *input_cmd = *argv;
 
-        if (!parse_cmd(&cmd, &rec))
+        if (!parse_cmd(&input_cmd, &rec))
         {
-            printf("Failed to parse '%s'.\n", cmd);
-            return EXIT_FAILURE; /* Parse error. */
+            printf("Failed to parse '%s'.\n", input_cmd);
+            return EXIT_FAILURE; /* A parsing failure. */
         }
 
         switch (rec.action)
