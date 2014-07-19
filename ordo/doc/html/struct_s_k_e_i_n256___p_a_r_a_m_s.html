@@ -109,7 +109,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Skein-256 hash function parameters. </p>
 <dl class="section remark"><dt>Remarks</dt><dd>Refer to the Skein specification to know more about what each of these parameter fields stand for.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>This structure is <b>packed</b>, to improve performance while hashing the configuration block, be careful when taking pointers to it. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This structure is <b>packed</b>, to improve performance while hashing the configuration block, be careful if taking pointers to members of the structure as correct alignment is NOT guaranteed. </dd></dl>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="acb0835e1b7380162225a8d84bfe17f28"></a>
 <div class="memitem">
@@ -185,7 +185,7 @@ Must be 256 or <code><a class="el" href="skein256_8h.html#a4bdd1723530846a6e0496
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 18:21:13 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 19 2014 19:04:18 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

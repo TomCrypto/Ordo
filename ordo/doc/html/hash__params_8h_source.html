@@ -106,45 +106,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#pragma pack(push,1)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">   36</a></span>&#160;<span class="preprocessor"></span><span class="keyword">struct </span><a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">   40</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">schema</a>[4];</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">   43</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">version</a>[2];</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">   46</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">reserved</a>[2];</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">   53</a></span>&#160;    uint64_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">out_len</a>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">   56</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">unused</a>[16];</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#pragma pack(pop)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="union_h_a_s_h___p_a_r_a_m_s.html">   62</a></span>&#160;<span class="keyword">union </span><a class="code" href="union_h_a_s_h___p_a_r_a_m_s.html">HASH_PARAMS</a></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a>               skein256;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">struct </span><a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a> <a class="code" href="hash__params_8h.html#af39e987fe81d0da7b9209c7b02c36c63">skein256_default</a>(void);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_acb0835e1b7380162225a8d84bfe17f28"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">SKEIN256_PARAMS::schema</a></div><div class="ttdeci">uint8_t schema[4]</div><div class="ttdef"><b>Definition:</b> hash_params.h:40</div></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></div><div class="ttdoc">Skein-256 hash function parameters. </div><div class="ttdef"><b>Definition:</b> hash_params.h:36</div></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_aa3f41d91c6aaeb58c5f5e32c2a7c3a29"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">SKEIN256_PARAMS::out_len</a></div><div class="ttdeci">uint64_t out_len</div><div class="ttdef"><b>Definition:</b> hash_params.h:53</div></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#pragma pack(push,1)</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">   37</a></span>&#160;<span class="preprocessor"></span><span class="keyword">struct </span><a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">   41</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">schema</a>[4];</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">   44</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">version</a>[2];</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">   47</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">reserved</a>[2];</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">   54</a></span>&#160;    uint64_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">out_len</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">   57</a></span>&#160;    uint8_t <a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">unused</a>[16];</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#pragma pack(pop)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="union_h_a_s_h___p_a_r_a_m_s.html">   63</a></span>&#160;<span class="keyword">union </span><a class="code" href="union_h_a_s_h___p_a_r_a_m_s.html">HASH_PARAMS</a></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">struct </span><a class="code" href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a>               skein256;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="hash__params_8h.html#a2d0337c5d45a74858b65e93cae6c233b">   70</a></span>&#160;<span class="preprocessor">#define SKEIN256_PARAMS_DEFAULT\</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">    {{ 0x53, 0x48, 0x41, 0x33 }, { 1, 0 }, { 0 }, 256, { 0 }}</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_acb0835e1b7380162225a8d84bfe17f28"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#acb0835e1b7380162225a8d84bfe17f28">SKEIN256_PARAMS::schema</a></div><div class="ttdeci">uint8_t schema[4]</div><div class="ttdef"><b>Definition:</b> hash_params.h:41</div></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html">SKEIN256_PARAMS</a></div><div class="ttdoc">Skein-256 hash function parameters. </div><div class="ttdef"><b>Definition:</b> hash_params.h:37</div></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_aa3f41d91c6aaeb58c5f5e32c2a7c3a29"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#aa3f41d91c6aaeb58c5f5e32c2a7c3a29">SKEIN256_PARAMS::out_len</a></div><div class="ttdeci">uint64_t out_len</div><div class="ttdef"><b>Definition:</b> hash_params.h:54</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_ac166ca5394f982fe5194555cc45dd225"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">SKEIN256_PARAMS::version</a></div><div class="ttdeci">uint8_t version[2]</div><div class="ttdef"><b>Definition:</b> hash_params.h:43</div></div>
-<div class="ttc" id="union_h_a_s_h___p_a_r_a_m_s_html"><div class="ttname"><a href="union_h_a_s_h___p_a_r_a_m_s.html">HASH_PARAMS</a></div><div class="ttdoc">Polymorphic hash function parameter union. </div><div class="ttdef"><b>Definition:</b> hash_params.h:62</div></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_a8d7e0415efaf6e08cb6510401f765c28"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">SKEIN256_PARAMS::reserved</a></div><div class="ttdeci">uint8_t reserved[2]</div><div class="ttdef"><b>Definition:</b> hash_params.h:46</div></div>
-<div class="ttc" id="hash__params_8h_html_af39e987fe81d0da7b9209c7b02c36c63"><div class="ttname"><a href="hash__params_8h.html#af39e987fe81d0da7b9209c7b02c36c63">skein256_default</a></div><div class="ttdeci">ORDO_PUBLIC struct SKEIN256_PARAMS skein256_default(void)</div><div class="ttdef"><b>Definition:</b> hash_params.c:11</div></div>
-<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_abe7a74bc485ee8d8b8cf3cc15751e1c8"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">SKEIN256_PARAMS::unused</a></div><div class="ttdeci">uint8_t unused[16]</div><div class="ttdef"><b>Definition:</b> hash_params.h:56</div></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_ac166ca5394f982fe5194555cc45dd225"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#ac166ca5394f982fe5194555cc45dd225">SKEIN256_PARAMS::version</a></div><div class="ttdeci">uint8_t version[2]</div><div class="ttdef"><b>Definition:</b> hash_params.h:44</div></div>
+<div class="ttc" id="union_h_a_s_h___p_a_r_a_m_s_html"><div class="ttname"><a href="union_h_a_s_h___p_a_r_a_m_s.html">HASH_PARAMS</a></div><div class="ttdoc">Polymorphic hash function parameter union. </div><div class="ttdef"><b>Definition:</b> hash_params.h:63</div></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_a8d7e0415efaf6e08cb6510401f765c28"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#a8d7e0415efaf6e08cb6510401f765c28">SKEIN256_PARAMS::reserved</a></div><div class="ttdeci">uint8_t reserved[2]</div><div class="ttdef"><b>Definition:</b> hash_params.h:47</div></div>
+<div class="ttc" id="struct_s_k_e_i_n256___p_a_r_a_m_s_html_abe7a74bc485ee8d8b8cf3cc15751e1c8"><div class="ttname"><a href="struct_s_k_e_i_n256___p_a_r_a_m_s.html#abe7a74bc485ee8d8b8cf3cc15751e1c8">SKEIN256_PARAMS::unused</a></div><div class="ttdeci">uint8_t unused[16]</div><div class="ttdef"><b>Definition:</b> hash_params.h:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 18:21:13 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
