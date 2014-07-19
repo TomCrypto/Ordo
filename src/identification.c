@@ -4,6 +4,8 @@
 #include "ordo/internal/implementation.h"
 /** @endcond **/
 
+#include "ordo/common/identification.h"
+
 /*===----------------------------------------------------------------------===*/
 
 static uint32_t fnv32(const char *s)

@@ -11,7 +11,8 @@
 *** prim_t primitive types, specifically, parsing them and checking types.
 ***
 *** Usage:
-***         ./hashsum [--algorithm MD5/SHA-256/etc] [FILE ...]
+***
+***     ./hashsum [--algorithm MD5/SHA-256/etc] [FILE ...]
 **/
 /*===----------------------------------------------------------------------===*/
 

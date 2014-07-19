@@ -11,7 +11,8 @@
 *** Shows how to enumerate algorithms, and how to use most of the library.
 ***
 *** Usage:
-***         ./benchmark [CMD ...]
+***
+***     ./benchmark [CMD ...]
 ***
 *** For instance, passing a hash function benchmarks it, while passing a block
 *** cipher alone will benchmark its forward permutation, while passing a block
