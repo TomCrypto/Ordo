@@ -1,4 +1,9 @@
 <map id="include/ordo/primitives/block_modes.h" name="include/ordo/primitives/block_modes.h">
-<area shape="rect" id="node2" href="$enc__block_8h.html" title="Module. " alt="" coords="10,97,152,138"/>
-<area shape="rect" id="node3" href="$ordo_8h.html" title="Wrapper. " alt="" coords="30,187,132,213"/>
+<area shape="rect" id="node2" href="$enc__block_8h.html" title="Module. " alt="" coords="5,97,147,138"/>
+<area shape="rect" id="node4" href="$cbc_8h.html" title="Primitive. " alt="" coords="172,97,324,138"/>
+<area shape="rect" id="node5" href="$cfb_8h.html" title="Primitive. " alt="" coords="348,97,500,138"/>
+<area shape="rect" id="node6" href="$ctr_8h.html" title="Primitive. " alt="" coords="524,97,676,138"/>
+<area shape="rect" id="node7" href="$ecb_8h.html" title="Primitive. " alt="" coords="700,97,852,138"/>
+<area shape="rect" id="node8" href="$ofb_8h.html" title="Primitive. " alt="" coords="876,97,1028,138"/>
+<area shape="rect" id="node3" href="$ordo_8h.html" title="Wrapper. " alt="" coords="25,187,127,213"/>
 </map>

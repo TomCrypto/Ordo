@@ -96,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_MD5_H</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hash__params_8h.html">ordo/primitives/hash_functions/hash_params.h</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hash__functions_8h.html">ordo/primitives/hash_functions.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
@@ -138,17 +138,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="md5_8h_html_ab2dcd1528f97430298dfe78363e8c2fe"><div class="ttname"><a href="md5_8h.html#ab2dcd1528f97430298dfe78363e8c2fe">md5_final</a></div><div class="ttdeci">ORDO_PUBLIC void md5_final(struct MD5_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> md5.c:81</div></div>
+<div class="ttc" id="md5_8h_html_ab2dcd1528f97430298dfe78363e8c2fe"><div class="ttname"><a href="md5_8h.html#ab2dcd1528f97430298dfe78363e8c2fe">md5_final</a></div><div class="ttdeci">ORDO_PUBLIC void md5_final(struct MD5_STATE *state, void *digest)</div><div class="ttdef"><b>Definition:</b> md5.c:84</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="md5_8h_html_ae155b733bd04875312977c952ac2d07d"><div class="ttname"><a href="md5_8h.html#ae155b733bd04875312977c952ac2d07d">md5_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t md5_bsize(void)</div><div class="ttdef"><b>Definition:</b> md5.c:123</div></div>
-<div class="ttc" id="md5_8h_html_a1b635f28eb438f33dd87b3b1fd389329"><div class="ttname"><a href="md5_8h.html#a1b635f28eb438f33dd87b3b1fd389329">md5_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t md5_query(int query, size_t value)</div><div class="ttdef"><b>Definition:</b> md5.c:112</div></div>
-<div class="ttc" id="md5_8h_html_a8280b15b1b583bab8640db3f577cf8c9"><div class="ttname"><a href="md5_8h.html#a8280b15b1b583bab8640db3f577cf8c9">md5_update</a></div><div class="ttdeci">ORDO_PUBLIC void md5_update(struct MD5_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> md5.c:45</div></div>
-<div class="ttc" id="hash__params_8h_html"><div class="ttname"><a href="hash__params_8h.html">hash_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
+<div class="ttc" id="hash__functions_8h_html"><div class="ttname"><a href="hash__functions_8h.html">hash_functions.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
+<div class="ttc" id="md5_8h_html_ae155b733bd04875312977c952ac2d07d"><div class="ttname"><a href="md5_8h.html#ae155b733bd04875312977c952ac2d07d">md5_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t md5_bsize(void)</div><div class="ttdef"><b>Definition:</b> md5.c:124</div></div>
+<div class="ttc" id="md5_8h_html_a1b635f28eb438f33dd87b3b1fd389329"><div class="ttname"><a href="md5_8h.html#a1b635f28eb438f33dd87b3b1fd389329">md5_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t md5_query(int query, size_t value)</div><div class="ttdef"><b>Definition:</b> md5.c:113</div></div>
+<div class="ttc" id="md5_8h_html_a8280b15b1b583bab8640db3f577cf8c9"><div class="ttname"><a href="md5_8h.html#a8280b15b1b583bab8640db3f577cf8c9">md5_update</a></div><div class="ttdeci">ORDO_PUBLIC void md5_update(struct MD5_STATE *state, const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> md5.c:48</div></div>
 <div class="ttc" id="md5_8h_html_ae3668d8c7740da090eda672bc6c8d1e4"><div class="ttname"><a href="md5_8h.html#ae3668d8c7740da090eda672bc6c8d1e4">md5_init</a></div><div class="ttdeci">ORDO_PUBLIC int md5_init(struct MD5_STATE *state, const void *params)</div><div class="ttdef"><b>Definition:</b> md5.c:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 18 2014 21:21:07 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 19 2014 18:21:13 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

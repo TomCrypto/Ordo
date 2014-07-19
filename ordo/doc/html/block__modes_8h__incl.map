@@ -1,3 +1,5 @@
 <map id="include/ordo/primitives/block_modes.h" name="include/ordo/primitives/block_modes.h">
-<area shape="rect" id="node2" href="$block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="10,97,152,138"/>
+<area shape="rect" id="node2" href="$mode__params_8h.html" title="Primitive Parameters. " alt="" coords="4,97,168,138"/>
+<area shape="rect" id="node3" href="$block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="194,97,336,138"/>
+<area shape="rect" id="node4" href="$block__params_8h.html" title="Primitive Parameters. " alt="" coords="182,187,348,229"/>
 </map>

@@ -1,7 +1,10 @@
 <map id="include/ordo/primitives/block_modes/mode_params.h" name="include/ordo/primitives/block_modes/mode_params.h">
-<area shape="rect" id="node2" href="$cbc_8h.html" title="Primitive. " alt="" coords="5,97,157,138"/>
-<area shape="rect" id="node3" href="$cfb_8h.html" title="Primitive. " alt="" coords="181,97,333,138"/>
-<area shape="rect" id="node4" href="$ctr_8h.html" title="Primitive. " alt="" coords="357,97,509,138"/>
-<area shape="rect" id="node5" href="$ecb_8h.html" title="Primitive. " alt="" coords="533,97,685,138"/>
-<area shape="rect" id="node6" href="$ofb_8h.html" title="Primitive. " alt="" coords="709,97,861,138"/>
+<area shape="rect" id="node2" href="$block__modes_8h.html" title="Abstraction Layer. " alt="" coords="436,97,588,138"/>
+<area shape="rect" id="node3" href="$enc__block_8h.html" title="Module. " alt="" coords="5,187,147,229"/>
+<area shape="rect" id="node5" href="$cbc_8h.html" title="Primitive. " alt="" coords="172,187,324,229"/>
+<area shape="rect" id="node6" href="$cfb_8h.html" title="Primitive. " alt="" coords="348,187,500,229"/>
+<area shape="rect" id="node7" href="$ctr_8h.html" title="Primitive. " alt="" coords="524,187,676,229"/>
+<area shape="rect" id="node8" href="$ecb_8h.html" title="Primitive. " alt="" coords="700,187,852,229"/>
+<area shape="rect" id="node9" href="$ofb_8h.html" title="Primitive. " alt="" coords="876,187,1028,229"/>
+<area shape="rect" id="node4" href="$ordo_8h.html" title="Wrapper. " alt="" coords="25,277,127,304"/>
 </map>

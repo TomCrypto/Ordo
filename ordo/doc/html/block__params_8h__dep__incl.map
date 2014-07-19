@@ -1,5 +1,14 @@
 <map id="include/ordo/primitives/block_ciphers/block_params.h" name="include/ordo/primitives/block_ciphers/block_params.h">
-<area shape="rect" id="node2" href="$aes_8h.html" title="Primitive. " alt="" coords="5,97,157,138"/>
-<area shape="rect" id="node3" href="$nullcipher_8h.html" title="Primitive. " alt="" coords="181,97,357,138"/>
-<area shape="rect" id="node4" href="$threefish256_8h.html" title="Primitive. " alt="" coords="381,97,573,138"/>
+<area shape="rect" id="node2" href="$block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="297,97,449,138"/>
+<area shape="rect" id="node3" href="$aes_8h.html" title="Primitive. " alt="" coords="5,187,157,229"/>
+<area shape="rect" id="node4" href="$nullcipher_8h.html" title="Primitive. " alt="" coords="181,187,357,229"/>
+<area shape="rect" id="node5" href="$threefish256_8h.html" title="Primitive. " alt="" coords="381,187,573,229"/>
+<area shape="rect" id="node6" href="$block__modes_8h.html" title="Abstraction Layer. " alt="" coords="597,187,749,229"/>
+<area shape="rect" id="node7" href="$enc__block_8h.html" title="Module. " alt="" coords="166,278,308,319"/>
+<area shape="rect" id="node9" href="$cbc_8h.html" title="Primitive. " alt="" coords="333,278,485,319"/>
+<area shape="rect" id="node10" href="$cfb_8h.html" title="Primitive. " alt="" coords="509,278,661,319"/>
+<area shape="rect" id="node11" href="$ctr_8h.html" title="Primitive. " alt="" coords="685,278,837,319"/>
+<area shape="rect" id="node12" href="$ecb_8h.html" title="Primitive. " alt="" coords="861,278,1013,319"/>
+<area shape="rect" id="node13" href="$ofb_8h.html" title="Primitive. " alt="" coords="1037,278,1189,319"/>
+<area shape="rect" id="node8" href="$ordo_8h.html" title="Wrapper. " alt="" coords="186,368,288,395"/>
 </map>

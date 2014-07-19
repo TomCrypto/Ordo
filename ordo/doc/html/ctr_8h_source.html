@@ -96,68 +96,66 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ORDO_CTR_MODE_H</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="interface_8h.html">ordo/common/interface.h</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mode__params_8h.html">ordo/primitives/block_modes/mode_params.h</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="block__ciphers_8h.html">ordo/primitives/block_ciphers.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define ctr_init                         ordo_ctr_init</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_update                       ordo_ctr_update</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_final                        ordo_ctr_final</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_query                        ordo_ctr_query</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_bsize                        ordo_ctr_bsize</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ctr_8h.html#ac3aa671dba7a1e0fe6be7d4ddd825589">ctr_init</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;             <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;             <span class="keyword">const</span> <span class="keywordtype">void</span> *iv, <span class="keywordtype">size_t</span> iv_len,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;             <span class="keywordtype">int</span> dir,</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;             <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ctr_8h.html#a78ab2ed710bf12b4151ba71a279c0a08">ctr_update</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ctr_8h.html#a4910e90e80c931d038422c74d93f70a4">ctr_final</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;              <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;              <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="ctr_8h.html#a935eb05aab3bc2c101a53b897745b64b">ctr_query</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher,</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                 <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;ORDO_PUBLIC</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="ctr_8h.html#a6cb9f4c5fc96fb2a2ee7f6281c90378a">ctr_bsize</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="block__modes_8h.html">ordo/primitives/block_modes.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define ctr_init                         ordo_ctr_init</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_update                       ordo_ctr_update</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_final                        ordo_ctr_final</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_query                        ordo_ctr_query</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define ctr_bsize                        ordo_ctr_bsize</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ctr_8h.html#ac3aa671dba7a1e0fe6be7d4ddd825589">ctr_init</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;             <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;             <span class="keyword">const</span> <span class="keywordtype">void</span> *iv, <span class="keywordtype">size_t</span> iv_len,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;             <span class="keywordtype">int</span> dir,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;             <span class="keyword">const</span> <span class="keywordtype">void</span> *params);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ctr_8h.html#ac2c237e04c4e2fbaa211d7db7befc7ed">ctr_update</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                <span class="keyword">const</span> <span class="keywordtype">void</span> *in, <span class="keywordtype">size_t</span> in_len,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                <span class="keywordtype">void</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">int</span> <a class="code" href="ctr_8h.html#a6531bdb062b10df60481015df368785a">ctr_final</a>(<span class="keyword">struct</span> CTR_STATE *state,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;              <span class="keyword">struct</span> BLOCK_STATE *cipher_state,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;              <span class="keywordtype">void</span> *out, <span class="keywordtype">size_t</span> *out_len);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="ctr_8h.html#a935eb05aab3bc2c101a53b897745b64b">ctr_query</a>(<a class="code" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher,</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                 <span class="keywordtype">int</span> query, <span class="keywordtype">size_t</span> value);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;ORDO_PUBLIC</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="ctr_8h.html#a6cb9f4c5fc96fb2a2ee7f6281c90378a">ctr_bsize</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:57</div></div>
 <div class="ttc" id="ctr_8h_html_ac3aa671dba7a1e0fe6be7d4ddd825589"><div class="ttname"><a href="ctr_8h.html#ac3aa671dba7a1e0fe6be7d4ddd825589">ctr_init</a></div><div class="ttdeci">ORDO_PUBLIC int ctr_init(struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const void *iv, size_t iv_len, int dir, const void *params)</div><div class="ttdef"><b>Definition:</b> ctr.c:42</div></div>
-<div class="ttc" id="ctr_8h_html_a4910e90e80c931d038422c74d93f70a4"><div class="ttname"><a href="ctr_8h.html#a4910e90e80c931d038422c74d93f70a4">ctr_final</a></div><div class="ttdeci">ORDO_PUBLIC int ctr_final(struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, unsigned char *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ctr.c:91</div></div>
-<div class="ttc" id="mode__params_8h_html"><div class="ttname"><a href="mode__params_8h.html">mode_params.h</a></div><div class="ttdoc">Primitive Parameters. </div></div>
+<div class="ttc" id="ctr_8h_html_a6531bdb062b10df60481015df368785a"><div class="ttname"><a href="ctr_8h.html#a6531bdb062b10df60481015df368785a">ctr_final</a></div><div class="ttdeci">ORDO_PUBLIC int ctr_final(struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ctr.c:91</div></div>
 <div class="ttc" id="ctr_8h_html_a935eb05aab3bc2c101a53b897745b64b"><div class="ttname"><a href="ctr_8h.html#a935eb05aab3bc2c101a53b897745b64b">ctr_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t ctr_query(prim_t cipher, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> ctr.c:99</div></div>
-<div class="ttc" id="block__ciphers_8h_html"><div class="ttname"><a href="block__ciphers_8h.html">block_ciphers.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="ctr_8h_html_a78ab2ed710bf12b4151ba71a279c0a08"><div class="ttname"><a href="ctr_8h.html#a78ab2ed710bf12b4151ba71a279c0a08">ctr_update</a></div><div class="ttdeci">ORDO_PUBLIC void ctr_update(struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const unsigned char *in, size_t in_len, unsigned char *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ctr.c:63</div></div>
 <div class="ttc" id="ctr_8h_html_a6cb9f4c5fc96fb2a2ee7f6281c90378a"><div class="ttname"><a href="ctr_8h.html#a6cb9f4c5fc96fb2a2ee7f6281c90378a">ctr_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t ctr_bsize(void)</div><div class="ttdef"><b>Definition:</b> ctr.c:111</div></div>
+<div class="ttc" id="ctr_8h_html_ac2c237e04c4e2fbaa211d7db7befc7ed"><div class="ttname"><a href="ctr_8h.html#ac2c237e04c4e2fbaa211d7db7befc7ed">ctr_update</a></div><div class="ttdeci">ORDO_PUBLIC void ctr_update(struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const void *in, size_t in_len, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ctr.c:63</div></div>
+<div class="ttc" id="block__modes_8h_html"><div class="ttname"><a href="block__modes_8h.html">block_modes.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 18 2014 21:21:07 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 19 2014 18:21:13 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

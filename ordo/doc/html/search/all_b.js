@@ -2,10 +2,10 @@ var searchData=
 [
   ['ofb_2eh',['ofb.h',['../ofb_8h.html',1,'']]],
   ['ofb_5fbsize',['ofb_bsize',['../ofb_8h.html#a3d59a4ad4f4d18ca206c0a23c453679b',1,'ofb.c']]],
-  ['ofb_5ffinal',['ofb_final',['../ofb_8h.html#a21b4c6da8007249808c7554628537d4a',1,'ofb.c']]],
+  ['ofb_5ffinal',['ofb_final',['../ofb_8h.html#aeafe5b9913e157ac243f1014bf300504',1,'ofb.c']]],
   ['ofb_5finit',['ofb_init',['../ofb_8h.html#a9767ff19e9af8fec5d5ff2897f4fb00c',1,'ofb.c']]],
   ['ofb_5fquery',['ofb_query',['../ofb_8h.html#a77d41ecf03e75be926cb791dc36d08ec',1,'ofb.c']]],
-  ['ofb_5fupdate',['ofb_update',['../ofb_8h.html#ae98def09c72c16962974c5cd820f7b99',1,'ofb.c']]],
+  ['ofb_5fupdate',['ofb_update',['../ofb_8h.html#a3de6f0ee59bad2db6a779e4dbe9f7ff9',1,'ofb.c']]],
   ['offset',['offset',['../alg_8h.html#a5a270a1d9cc596c3c84a9348d8c0c7fb',1,'alg.h']]],
   ['ordo_2eh',['ordo.h',['../ordo_8h.html',1,'']]],
   ['ordo_5farg',['ORDO_ARG',['../error_8h.html#a7e07095466ca14dd043a75140b9874a3a09caf7708829b687ed26f91d4d096437',1,'error.h']]],

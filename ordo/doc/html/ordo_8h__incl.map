@@ -3,16 +3,20 @@
 <area shape="rect" id="node3" href="$error_8h.html" title="Utility. " alt="" coords="187,80,329,107"/>
 <area shape="rect" id="node4" href="$query_8h.html" title="Utility. " alt="" coords="354,80,501,107"/>
 <area shape="rect" id="node5" href="$enc__stream_8h.html" title="Module. " alt="" coords="527,80,680,107"/>
-<area shape="rect" id="node7" href="$enc__block_8h.html" title="Module. " alt="" coords="705,80,852,107"/>
-<area shape="rect" id="node10" href="$hmac_8h.html" title="Module. " alt="" coords="876,80,999,107"/>
-<area shape="rect" id="node13" href="$hkdf_8h.html" title="Module. " alt="" coords="1023,80,1132,107"/>
-<area shape="rect" id="node14" href="$pbkdf2_8h.html" title="Module. " alt="" coords="1156,80,1279,107"/>
-<area shape="rect" id="node15" href="$utils_8h.html" title="Utility. " alt="" coords="1303,80,1421,107"/>
-<area shape="rect" id="node16" href="$os__random_8h.html" title="Module. " alt="" coords="1446,80,1604,107"/>
-<area shape="rect" id="node17" href="$curve25519_8h.html" title="Misc. asymmetric module (temp) " alt="" coords="1629,80,1789,107"/>
-<area shape="rect" id="node6" href="$stream__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="529,155,679,197"/>
-<area shape="rect" id="node8" href="$block__modes_8h.html" title="Abstraction Layer. " alt="" coords="705,155,847,197"/>
-<area shape="rect" id="node9" href="$block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="703,246,845,287"/>
-<area shape="rect" id="node11" href="$digest_8h.html" title="Module. " alt="" coords="872,163,1007,189"/>
-<area shape="rect" id="node12" href="$hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="871,246,1009,287"/>
+<area shape="rect" id="node8" href="$enc__block_8h.html" title="Module. " alt="" coords="705,80,852,107"/>
+<area shape="rect" id="node13" href="$hmac_8h.html" title="Module. " alt="" coords="876,80,999,107"/>
+<area shape="rect" id="node17" href="$hkdf_8h.html" title="Module. " alt="" coords="1023,80,1132,107"/>
+<area shape="rect" id="node18" href="$pbkdf2_8h.html" title="Module. " alt="" coords="1156,80,1279,107"/>
+<area shape="rect" id="node19" href="$utils_8h.html" title="Utility. " alt="" coords="1303,80,1421,107"/>
+<area shape="rect" id="node20" href="$os__random_8h.html" title="Module. " alt="" coords="1446,80,1604,107"/>
+<area shape="rect" id="node21" href="$curve25519_8h.html" title="Misc. asymmetric module (temp) " alt="" coords="1629,80,1789,107"/>
+<area shape="rect" id="node6" href="$stream__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="519,155,669,197"/>
+<area shape="rect" id="node7" href="$stream__params_8h.html" title="Primitive Parameters. " alt="" coords="447,246,623,287"/>
+<area shape="rect" id="node9" href="$block__modes_8h.html" title="Abstraction Layer. " alt="" coords="707,155,849,197"/>
+<area shape="rect" id="node10" href="$mode__params_8h.html" title="Primitive Parameters. " alt="" coords="647,246,811,287"/>
+<area shape="rect" id="node11" href="$block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="837,246,979,287"/>
+<area shape="rect" id="node12" href="$block__params_8h.html" title="Primitive Parameters. " alt="" coords="817,337,983,378"/>
+<area shape="rect" id="node14" href="$digest_8h.html" title="Module. " alt="" coords="971,163,1105,189"/>
+<area shape="rect" id="node15" href="$hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="1019,246,1157,287"/>
+<area shape="rect" id="node16" href="$hash__params_8h.html" title="Primitive Parameters. " alt="" coords="1007,337,1181,378"/>
 </map>

@@ -1,5 +1,9 @@
 <map id="include/ordo/primitives/hash_functions.h" name="include/ordo/primitives/hash_functions.h">
 <area shape="rect" id="node2" href="$digest_8h.html" title="Module. " alt="" coords="24,97,153,138"/>
+<area shape="rect" id="node5" href="$md5_8h.html" title="Primitive. " alt="" coords="179,97,332,138"/>
+<area shape="rect" id="node6" href="$sha1_8h.html" title="Primitive. " alt="" coords="357,97,515,138"/>
+<area shape="rect" id="node7" href="$sha256_8h.html" title="Primitive. " alt="" coords="539,97,709,138"/>
+<area shape="rect" id="node8" href="$skein256_8h.html" title="Primitive. " alt="" coords="733,97,915,138"/>
 <area shape="rect" id="node3" href="$hmac_8h.html" title="Module. " alt="" coords="5,187,173,213"/>
 <area shape="rect" id="node4" href="$ordo_8h.html" title="Wrapper. " alt="" coords="38,261,140,288"/>
 </map>

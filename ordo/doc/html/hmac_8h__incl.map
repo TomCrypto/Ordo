@@ -1,4 +1,5 @@
 <map id="include/ordo/auth/hmac.h" name="include/ordo/auth/hmac.h">
-<area shape="rect" id="node2" href="$digest_8h.html" title="Module. " alt="" coords="21,80,156,107"/>
-<area shape="rect" id="node3" href="$hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="20,155,159,197"/>
+<area shape="rect" id="node2" href="$digest_8h.html" title="Module. " alt="" coords="24,80,159,107"/>
+<area shape="rect" id="node3" href="$hash__functions_8h.html" title="Abstraction Layer. " alt="" coords="23,155,161,197"/>
+<area shape="rect" id="node4" href="$hash__params_8h.html" title="Primitive Parameters. " alt="" coords="5,246,179,287"/>
 </map>

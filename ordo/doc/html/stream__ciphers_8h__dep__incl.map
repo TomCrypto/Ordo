@@ -1,4 +1,5 @@
 <map id="include/ordo/primitives/stream_ciphers.h" name="include/ordo/primitives/stream_ciphers.h">
-<area shape="rect" id="node2" href="$enc__stream_8h.html" title="Module. " alt="" coords="10,97,152,138"/>
-<area shape="rect" id="node3" href="$ordo_8h.html" title="Wrapper. " alt="" coords="30,187,132,213"/>
+<area shape="rect" id="node2" href="$enc__stream_8h.html" title="Module. " alt="" coords="5,97,147,138"/>
+<area shape="rect" id="node4" href="$rc4_8h.html" title="Primitive. " alt="" coords="172,97,324,138"/>
+<area shape="rect" id="node3" href="$ordo_8h.html" title="Wrapper. " alt="" coords="25,187,127,213"/>
 </map>

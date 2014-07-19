@@ -94,14 +94,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Primitive.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="mode__params_8h_source.html">ordo/primitives/block_modes/mode_params.h</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="block__ciphers_8h_source.html">ordo/primitives/block_ciphers.h</a>&quot;</code><br/>
+<div class="textblock"><code>#include &quot;<a class="el" href="block__modes_8h_source.html">ordo/primitives/block_modes.h</a>&quot;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ctr.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="ctr_8h__incl.png" border="0" usemap="#include_2ordo_2primitives_2block__modes_2ctr_8h" alt=""/></div>
 <map name="include_2ordo_2primitives_2block__modes_2ctr_8h" id="include_2ordo_2primitives_2block__modes_2ctr_8h">
-<area shape="rect" id="node2" href="mode__params_8h.html" title="Primitive Parameters. " alt="" coords="5,97,169,138"/><area shape="rect" id="node3" href="block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="195,97,337,138"/></map>
+<area shape="rect" id="node2" href="block__modes_8h.html" title="Abstraction Layer. " alt="" coords="105,97,247,138"/><area shape="rect" id="node3" href="mode__params_8h.html" title="Primitive Parameters. " alt="" coords="4,187,168,229"/><area shape="rect" id="node4" href="block__ciphers_8h.html" title="Abstraction Layer. " alt="" coords="194,187,336,229"/><area shape="rect" id="node5" href="block__params_8h.html" title="Primitive Parameters. " alt="" coords="182,278,348,319"/></map>
 </div>
 </div>
 <p><a href="ctr_8h_source.html">Go to the source code of this file.</a></p>
@@ -110,10 +109,10 @@ Include dependency graph for ctr.h:</div>
 Functions</h2></td></tr>
 <tr class="memitem:ac3aa671dba7a1e0fe6be7d4ddd825589"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#ac3aa671dba7a1e0fe6be7d4ddd825589">ctr_init</a> (struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const void *iv, size_t iv_len, int dir, const void *params)</td></tr>
 <tr class="separator:ac3aa671dba7a1e0fe6be7d4ddd825589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78ab2ed710bf12b4151ba71a279c0a08"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#a78ab2ed710bf12b4151ba71a279c0a08">ctr_update</a> (struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const unsigned char *in, size_t in_len, unsigned char *out, size_t *out_len)</td></tr>
-<tr class="separator:a78ab2ed710bf12b4151ba71a279c0a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4910e90e80c931d038422c74d93f70a4"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#a4910e90e80c931d038422c74d93f70a4">ctr_final</a> (struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, unsigned char *out, size_t *out_len)</td></tr>
-<tr class="separator:a4910e90e80c931d038422c74d93f70a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c237e04c4e2fbaa211d7db7befc7ed"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#ac2c237e04c4e2fbaa211d7db7befc7ed">ctr_update</a> (struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, const void *in, size_t in_len, void *out, size_t *out_len)</td></tr>
+<tr class="separator:ac2c237e04c4e2fbaa211d7db7befc7ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6531bdb062b10df60481015df368785a"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#a6531bdb062b10df60481015df368785a">ctr_final</a> (struct CTR_STATE *state, struct BLOCK_STATE *cipher_state, void *out, size_t *out_len)</td></tr>
+<tr class="separator:a6531bdb062b10df60481015df368785a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a935eb05aab3bc2c101a53b897745b64b"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#a935eb05aab3bc2c101a53b897745b64b">ctr_query</a> (<a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> cipher, int query, size_t value)</td></tr>
 <tr class="separator:a935eb05aab3bc2c101a53b897745b64b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cb9f4c5fc96fb2a2ee7f6281c90378a"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ctr_8h.html#a6cb9f4c5fc96fb2a2ee7f6281c90378a">ctr_bsize</a> (void)</td></tr>
@@ -123,7 +122,7 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Primitive. </p>
 <p>The CTR mode generates a keystream by repeatedly encrypting a counter starting from some initialization vector, effectively turning a block cipher into a stream cipher. As such, CTR mode requires no padding, and outlen will always be equal to inlen.</p>
 <p>Note that the CTR keystream is independent of the plaintext, and is also spatially coherent (using a given initialization vector on a len-byte message will "use up" len bytes of the keystream) so care must be taken to avoid reusing the initialization vector in an insecure way. This also means the block cipher's inverse permutation is never used.</p>
-<p><code><a class="el" href="ctr_8h.html#a4910e90e80c931d038422c74d93f70a4">ctr_final()</a></code> accepts 0 as an argument for <code>out_len</code> since by design the CTR mode of operation does not produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected. </p>
+<p><code><a class="el" href="ctr_8h.html#a6531bdb062b10df60481015df368785a">ctr_final()</a></code> accepts 0 as an argument for <code>out_len</code> since by design the CTR mode of operation does not produce any final data. However, if a valid pointer is passed, its value will be set to zero as expected. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="ac3aa671dba7a1e0fe6be7d4ddd825589"></a>
 <div class="memitem">
@@ -176,7 +175,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a78ab2ed710bf12b4151ba71a279c0a08"></a>
+<a class="anchor" id="ac2c237e04c4e2fbaa211d7db7befc7ed"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -195,7 +194,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>in</em>, </td>
         </tr>
         <tr>
@@ -207,7 +206,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
@@ -227,7 +226,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4910e90e80c931d038422c74d93f70a4"></a>
+<a class="anchor" id="a6531bdb062b10df60481015df368785a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -246,7 +245,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>out</em>, </td>
         </tr>
         <tr>
@@ -321,7 +320,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 18 2014 21:21:07 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 19 2014 18:21:13 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
