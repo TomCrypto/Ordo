@@ -29,28 +29,43 @@ int test_macros(void)
     return 1;
 }
 
+static void gen_msg(unsigned char *buf, size_t msg_len, size_t block_len)
+{
+    uint8_t val = 1, pad =  (uint8_t)(block_len - msg_len);
+    size_t pad_len = block_len - msg_len;
+
+    while (msg_len--)
+        *(buf++) = (val = 3 * val + 1);
+
+    while (pad_len--)
+        *(buf++) = pad;
+}
+
 int test_pad_check(void);
 int test_pad_check(void)
 {
-    unsigned char buffer[256];
-    uint16_t r, val;
+    unsigned char buffer[32];
+    size_t t, p;
 
-    for (r = 0; r < 256; ++r)
-        for (val = 1; val < 256; ++val)
+    for (t = 1; t < 32; ++t)
+    {
+        gen_msg(buffer, t, sizeof(buffer));
+        ASSERT_EQ(pad_check(buffer, sizeof(buffer)), t);
+    }
+
+    for (t = 1; t < 32; ++t)
+        for (p = t; p < 32; ++p)
         {
-            memset(buffer, (uint8_t)val, (size_t)val);
+            gen_msg(buffer, t, sizeof(buffer));
+            buffer[p] ^= 0x01; /* Corruption */
 
-            /* This should pass because all bytes have the same value. */
-            ASSERT(pad_check(buffer, (uint8_t)val));
-
-            if (r < val)
-            {
-                buffer[r] = (uint8_t)r;
-
-                /* This should fail as not all bytes have the same value. */
-                ASSERT(!pad_check(buffer, (uint8_t)val));
-            }
+            ASSERT(!pad_check(buffer, sizeof(buffer)));
         }
+
+    ASSERT(!pad_check(buffer, 0));
+    ASSERT(!pad_check(buffer, 32));
+    ASSERT(!pad_check(buffer, 33));
+    ASSERT(!pad_check(buffer, 256));
 
     return 1;
 }

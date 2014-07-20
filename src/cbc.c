@@ -154,30 +154,18 @@ static int cbc_decrypt_final(struct CBC_STATE *state,
     }
     else
     {
-        size_t block_size = state->block_size;
-        uint8_t padding;
+        size_t msg_length;
 
         block_inverse(cipher_state, state->block);
-        xor_buffer(state->block, state->iv, block_size);
+        xor_buffer(state->block, state->iv, state->block_size);
 
-        padding = (uint8_t)(*(state->block + block_size - 1));
-
-        if ((padding == 0) || (padding > block_size))
-        {
-            *out_len = 0;
-           return ORDO_PADDING;
-        }
-
-        if (pad_check(state->block + block_size - padding, padding))
-        {
-            *out_len = block_size - padding;
-            memcpy(out, state->block, *out_len);
-        }
-        else
+        if (!(msg_length = pad_check(state->block, state->block_size)))
         {
             *out_len = 0;
             return ORDO_PADDING;
         }
+
+        memcpy(out, state->block, *out_len = msg_length);
     }
 
     return ORDO_SUCCESS;

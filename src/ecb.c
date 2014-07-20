@@ -143,32 +143,17 @@ static int ecb_decrypt_final(struct ECB_STATE *state,
     }
     else
     {
-        size_t block_size = state->block_size;
-        uint8_t padding;
+        size_t msg_length;
 
         block_inverse(cipher_state, state->block);
 
-        /* Fetch the padding byte at the end of the block, and verify. */
-        padding = (uint8_t)(*(state->block + block_size - 1));
-
-        /* Padding is clearly invalid - reject it immediately. */
-        if ((padding == 0) || (padding > block_size))
+        if (!(msg_length = pad_check(state->block, state->block_size)))
         {
             *out_len = 0;
             return ORDO_PADDING;
         }
 
-        if (pad_check(state->block + block_size - padding, padding))
-        {
-            /* Strip off the padding. */
-            *out_len = block_size - padding;
-            memcpy(out, state->block, *out_len);
-        }
-        else
-        {
-            *out_len = 0;
-            return ORDO_PADDING;
-        }
+        memcpy(out, state->block, *out_len = msg_length);
     }
 
     return ORDO_SUCCESS;

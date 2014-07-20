@@ -71,14 +71,14 @@ ORDO_HIDDEN uint64_t ror64(uint64_t x, int n);
 **/
 #define offset(ptr, len) ((unsigned char *)ptr + len)
 
-/** Checks whether a buffer conforms to PKCS padding.
+/** Checks whether a buffer conforms to PKCS #7 padding.
 ***
-*** @param [in]     buffer         The buffer to check, starting  at the first
-***                                padding byte.
-*** @param [in]     padding        The padding byte value to check this buffer
-***                                against (between 1 and 255).
+*** @param [in]     buffer         The buffer to verify, starting at the first
+***                                data byte (not at the first padding byte).
+*** @param [in]     len            The length in bytes of the buffer.
 ***
-*** @returns \c 1 if the buffer is valid, \c 0 otherwise.
+*** @returns The message length if the buffer is valid, or \c 0 otherwise. The
+***          message can therefore be recovered as the first N bytes.
 ***
 *** @remarks PKCS padding  is defined as  appending \c N bytes of  padding data
 ***          at the end of the message, each with  binary value \c N, with \c N
@@ -89,7 +89,7 @@ ORDO_HIDDEN uint64_t ror64(uint64_t x, int n);
 *** @warning This implies the buffer must be at least \c padding bytes long.
 **/
 ORDO_HIDDEN
-int pad_check(const unsigned char *buffer, uint8_t padding);
+size_t pad_check(const void *buffer, size_t len);
 
 /** Performs a bitwise exclusive-or of one buffer onto another.
 ***
