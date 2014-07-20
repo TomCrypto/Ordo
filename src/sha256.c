@@ -11,8 +11,8 @@
 #define SHA256_DIGEST (bits(256))
 #define SHA256_BLOCK  (bits(512))
 
-static void sha256_compress(const uint32_t block[16],
-                            uint32_t digest[8]) HOT_CODE;
+static void sha256_compress(const uint32_t * RESTRICT block,
+                            uint32_t * RESTRICT digest) HOT_CODE;
 
 static const uint32_t sha256_iv[8] =
 {
@@ -151,7 +151,8 @@ static const uint32_t sha256_table[64] =
 #define ma(x, y, z) ((x & y) ^ (x & z) ^ (y & z))
 #define ch(x, y, z) ((x & y) ^ (~x & z))
 
-void sha256_compress(const uint32_t block[16], uint32_t digest[8])
+void sha256_compress(const uint32_t * RESTRICT block,
+                     uint32_t * RESTRICT digest)
 {
     size_t t;
 

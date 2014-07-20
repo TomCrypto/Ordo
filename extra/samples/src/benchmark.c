@@ -138,7 +138,7 @@ static int parse_cmd(char **cmd, struct RECORD *rec)
                 break;
             }
         default:
-            return 0;
+            return rewind_token(cmd), 0;
     }
 
     return !*cmd;

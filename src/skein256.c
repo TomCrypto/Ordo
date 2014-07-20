@@ -33,9 +33,10 @@ static void make_tweak(uint64_t tweak[2],
                        uint64_t first,
                        uint64_t final) HOT_CODE;
 
-static void skein256_compress(const uint64_t *block,
-                              uint64_t *state,
-                              uint64_t *tweak) HOT_CODE;
+static void skein256_compress(const uint64_t * RESTRICT block,
+                              uint64_t * RESTRICT state,
+                              uint64_t * RESTRICT tweak)
+HOT_CODE;
 
 #if annotation
 struct SKEIN256_STATE
@@ -44,7 +45,6 @@ struct SKEIN256_STATE
     uint64_t block[4];
     uint64_t block_len;
     uint64_t msg_len;
-    uint64_t out_len; /* TODO: remove once not needed */
 };
 #endif /* annotation */
 
@@ -53,7 +53,6 @@ struct SKEIN256_STATE
 int skein256_init(struct SKEIN256_STATE *state,
                   const struct SKEIN256_PARAMS *params)
 {
-    state->out_len = SKEIN256_INTERNAL;
     state->block_len = 0;
     state->msg_len = 0;
 
@@ -137,8 +136,6 @@ void skein256_final(struct SKEIN256_STATE *state,
                     void *digest)
 {
     uint64_t tweak[2];
-    uint64_t ctr = 0;
-    uint64_t out[4];
 
     /* Here, we need to process one complete block - the Skein specification
      * mandates zero-fill, so erase any residual input data in the state. */
@@ -157,26 +154,22 @@ void skein256_final(struct SKEIN256_STATE *state,
 
     skein256_compress(state->block, state->state, tweak);
 
-    /* We'll use the state block as scratch storage now. All words should be
-     * zero, but the first one will be modified while creating the output. */
-    memset(state->block, 0x00, SKEIN256_BLOCK);
-
-    /* TODO: optimize below since output length is now fixed at 256 bits. */
-    
-    /* This is to implement the arbitrary output length feature. This is done
-     * by (loosely stated) running the Threefish-256 cipher in counter mode. */
-    while (state->out_len != 0)
     {
-        size_t cpy = smin((size_t)state->out_len, SKEIN256_BLOCK);
+        uint64_t out[4];
 
-        state->block[0] = ctr++;
-        memcpy(out, state->state, SKEIN256_INTERNAL);
+        state->block[0] = 0;
+        state->block[1] = 0;
+        state->block[2] = 0;
+        state->block[3] = 0;
+
+        out[0] = state->state[0];
+        out[1] = state->state[1];
+        out[2] = state->state[2];
+        out[3] = state->state[3];
 
         make_tweak(tweak, SKEIN_UBI_OUT, sizeof(uint64_t), 1, 1);
         skein256_compress(state->block, out, tweak);
-
-        memcpy(offset(digest, (ctr - 1) * SKEIN256_BLOCK), out, cpy);
-        state->out_len -= cpy; /* Will always reach zero, see above. */
+        memcpy(digest, out, SKEIN256_BLOCK);
     }
 }
 
@@ -207,9 +200,9 @@ void make_tweak(uint64_t tweak[2],
     tweak[1] = tole64((final << 63) | (first << 62) | (type  << 56));
 }
 
-void skein256_compress(const uint64_t *block,
-                       uint64_t *state,
-                       uint64_t *tweak)
+void skein256_compress(const uint64_t * RESTRICT block,
+                       uint64_t * RESTRICT state,
+                       uint64_t * RESTRICT tweak)
 {
     struct THREEFISH256_PARAMS params;
     struct THREEFISH256_STATE cipher;
@@ -222,7 +215,5 @@ void skein256_compress(const uint64_t *block,
     threefish256_forward(&cipher, state);
     threefish256_final(&cipher);
 
-    xor_buffer((unsigned char *)state,
-               (const unsigned char *)block,
-               SKEIN256_INTERNAL);
+    xor_buffer(state, block, SKEIN256_INTERNAL);
 }

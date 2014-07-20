@@ -16,8 +16,8 @@ static const uint32_t md5_iv[4] =
     0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476
 };
 
-static void md5_compress(const uint32_t block[16],
-                         uint32_t digest[4]) HOT_CODE;
+static void md5_compress(const uint32_t * RESTRICT block,
+                         uint32_t * RESTRICT digest) HOT_CODE;
 
 #if annotation
 struct MD5_STATE
@@ -129,7 +129,8 @@ size_t md5_bsize(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void md5_compress(const uint32_t block[16], uint32_t digest[4])
+void md5_compress(const uint32_t * RESTRICT block,
+                  uint32_t * RESTRICT digest)
 {
     uint32_t a = digest[0];
     uint32_t b = digest[1];

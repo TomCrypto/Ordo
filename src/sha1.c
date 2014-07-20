@@ -11,8 +11,8 @@
 #define SHA1_DIGEST (bits(160))
 #define SHA1_BLOCK  (bits(512))
 
-static void sha1_compress(const uint32_t block[16],
-                          uint32_t digest[5]) HOT_CODE;
+static void sha1_compress(const uint32_t * RESTRICT block,
+                          uint32_t * RESTRICT digest) HOT_CODE;
 
 static const uint32_t sha1_iv[5] =
 {
@@ -125,7 +125,8 @@ size_t sha1_bsize(void)
 #define F3(x, y, z) ((x & y) | (x & z) | (y & z))
 #define F4(x, y, z) F2(x, y, z)
 
-void sha1_compress(const uint32_t block[16], uint32_t digest[5])
+void sha1_compress(const uint32_t * RESTRICT block,
+                   uint32_t * RESTRICT digest)
 {
     size_t t;
 
