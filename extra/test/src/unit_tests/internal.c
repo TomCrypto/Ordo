@@ -85,19 +85,13 @@ int test_xor_buffer(void)
 
         out = a ^ b; /* Expected output. */
 
-        xor_buffer((unsigned char *)&a, (const unsigned char *)&b,
-                   sizeof(uint32_t));
+        xor_buffer(&a, &b, sizeof(uint32_t));
         ASSERT_EQ(a, out);
     }
 
-    /* Check the function works properly when fed the same buffers. */
-    xor_buffer((unsigned char *)&a, (const unsigned char *)&a,
-               sizeof(uint32_t));
-    ASSERT_EQ(a, 0);
-
     /* Finally, check the function does nothing on zero-length inputs. */
     a = 0x5a;
-    xor_buffer((unsigned char *)&a, (const unsigned char *)&a, 0);
+    xor_buffer(&a, &b, 0);
     ASSERT_EQ(a, 0x5a);
 
     return 1;

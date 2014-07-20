@@ -30,10 +30,10 @@ extern "C" {
     #endif
 #endif
 
-ORDO_HIDDEN void pswap8 (uint8_t  *a, uint8_t  *b);
-ORDO_HIDDEN void pswap16(uint16_t *a, uint16_t *b);
-ORDO_HIDDEN void pswap32(uint32_t *a, uint32_t *b);
-ORDO_HIDDEN void pswap64(uint64_t *a, uint64_t *b);
+ORDO_HIDDEN void pswap8 (uint8_t  * RESTRICT a, uint8_t  * RESTRICT b);
+ORDO_HIDDEN void pswap16(uint16_t * RESTRICT a, uint16_t * RESTRICT b);
+ORDO_HIDDEN void pswap32(uint32_t * RESTRICT a, uint32_t * RESTRICT b);
+ORDO_HIDDEN void pswap64(uint64_t * RESTRICT a, uint64_t * RESTRICT b);
 
 ORDO_HIDDEN size_t smin(size_t a, size_t b);
 ORDO_HIDDEN size_t smax(size_t a, size_t b);
@@ -99,12 +99,10 @@ size_t pad_check(const void *buffer, size_t len);
 ***
 *** @remarks This is conceptually equivalent to \c dst \c ^= \c src.
 ***
-*** @warning The source and destination buffers may be the same (in which case
-***          the buffer will contain \c len zeroes), but otherwise they cannot
-***          overlap.
+*** @warning The source and destination buffers may not overlap.
 **/
 ORDO_HIDDEN
-void xor_buffer(unsigned char *dst, const unsigned char *src, size_t len);
+void xor_buffer(void * RESTRICT dst, const void * RESTRICT src, size_t len);
 
 /** Increments a  buffer of arbitrary  length, as though it were a \c len byte
 *** integer stored as a byte array.

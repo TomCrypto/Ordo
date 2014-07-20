@@ -10,12 +10,18 @@
 
 #define AES_BLOCK (bits(128))
 
-static void ExpandKey(const uint8_t *key, uint8_t *ext,
-                      size_t key_len, unsigned rounds) HOT_CODE;
-
-static void aes_forward_C(uint8_t *block, const uint8_t *key, unsigned rounds)
+static void ExpandKey(const uint8_t * RESTRICT key,
+                      uint8_t * RESTRICT ext,
+                      size_t key_len, unsigned rounds)
 HOT_CODE;
-static void aes_inverse_C(uint8_t *block, const uint8_t *key, unsigned rounds)
+
+static void aes_forward_C(uint8_t * RESTRICT block,
+                          const uint8_t * RESTRICT key,
+                          unsigned rounds)
+HOT_CODE;
+static void aes_inverse_C(uint8_t * RESTRICT block,
+                          const uint8_t * RESTRICT key,
+                          unsigned rounds)
 HOT_CODE;
 
 #if annotation
@@ -559,7 +565,8 @@ static void InvMixSubColumns (uint8_t *state)
     for (t = 0; t < 16; ++t) state[t] = ibox[tmp[t]];
 }
 
-static void AddRoundKey (uint8_t *state, const uint8_t *key)
+static void AddRoundKey (uint8_t * RESTRICT state,
+                         const uint8_t * RESTRICT key)
 {
     size_t t;
 
@@ -571,7 +578,8 @@ static const uint8_t ks[11] =
     0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
 };
 
-void ExpandKey(const uint8_t *key, uint8_t *ext,
+void ExpandKey(const uint8_t * RESTRICT key,
+               uint8_t * RESTRICT ext,
                size_t key_len, unsigned rounds)
 {
     size_t t;
@@ -610,7 +618,9 @@ void ExpandKey(const uint8_t *key, uint8_t *ext,
     }
 }
 
-void aes_forward_C(uint8_t *block, const uint8_t *key, unsigned rounds)
+void aes_forward_C(uint8_t * RESTRICT block,
+                   const uint8_t * RESTRICT key,
+                   unsigned rounds)
 {
     unsigned t;
 
@@ -631,7 +641,9 @@ void aes_forward_C(uint8_t *block, const uint8_t *key, unsigned rounds)
     }
 }
 
-void aes_inverse_C(uint8_t *block, const uint8_t *key, unsigned rounds)
+void aes_inverse_C(uint8_t * RESTRICT block,
+                   const uint8_t * RESTRICT key,
+                   unsigned rounds)
 {
     unsigned t;
 

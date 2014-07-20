@@ -10,12 +10,16 @@
 
 #define THREEFISH256_BLOCK (bits(256))
 
-static void threefish256_key_schedule(const uint64_t key[4],
-                                      const uint64_t tweak[2],
-                                      uint64_t *subkeys) HOT_CODE;
+static void threefish256_key_schedule(const uint64_t *key,
+                                      const uint64_t *tweak,
+                                      uint64_t * RESTRICT subkeys)
+HOT_CODE;
 
-extern void threefish256_forward_ASM(uint64_t *block, const uint64_t *subkeys);
-extern void threefish256_inverse_ASM(uint64_t *block, const uint64_t *subkeys);
+extern void threefish256_forward_ASM(uint64_t * RESTRICT block,
+                                     const uint64_t * RESTRICT subkeys);
+
+extern void threefish256_inverse_ASM(uint64_t * RESTRICT block,
+                                     const uint64_t * RESTRICT subkeys);
 
 #if annotation
 struct THREEFISH256_STATE
@@ -92,9 +96,9 @@ size_t threefish256_bsize(void)
 
 #define K_S (UINT64_C(0x1BD11BDAA9FC1A22))
 
-void threefish256_key_schedule(const uint64_t key[4],
-                               const uint64_t tweak[2],
-                               uint64_t *subkeys)
+void threefish256_key_schedule(const uint64_t *key,
+                               const uint64_t *tweak,
+                               uint64_t * RESTRICT subkeys)
 {
     uint64_t tweak_w[3];
     uint64_t key_w[5];
