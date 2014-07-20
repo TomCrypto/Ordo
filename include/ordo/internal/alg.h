@@ -30,10 +30,10 @@ extern "C" {
     #endif
 #endif
 
-ORDO_HIDDEN void pswap8 (uint8_t  * RESTRICT a, uint8_t  * RESTRICT b);
-ORDO_HIDDEN void pswap16(uint16_t * RESTRICT a, uint16_t * RESTRICT b);
-ORDO_HIDDEN void pswap32(uint32_t * RESTRICT a, uint32_t * RESTRICT b);
-ORDO_HIDDEN void pswap64(uint64_t * RESTRICT a, uint64_t * RESTRICT b);
+ORDO_HIDDEN void pswap8 (uint8_t  *a, uint8_t  *b);
+ORDO_HIDDEN void pswap16(uint16_t *a, uint16_t *b);
+ORDO_HIDDEN void pswap32(uint32_t *a, uint32_t *b);
+ORDO_HIDDEN void pswap64(uint64_t *a, uint64_t *b);
 
 ORDO_HIDDEN size_t smin(size_t a, size_t b);
 ORDO_HIDDEN size_t smax(size_t a, size_t b);

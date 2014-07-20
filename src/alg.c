@@ -8,25 +8,25 @@
 
 /*===----------------------------------------------------------------------===*/
 
-void pswap8 (uint8_t  * RESTRICT a, uint8_t  * RESTRICT b)
+void pswap8 (uint8_t  *a, uint8_t  *b)
 {
     uint8_t  c = *a;
     *a = *b; *b = c;
 }
 
-void pswap16(uint16_t * RESTRICT a, uint16_t * RESTRICT b)
+void pswap16(uint16_t *a, uint16_t *b)
 {
     uint16_t c = *a;
     *a = *b; *b = c;
 }
 
-void pswap32(uint32_t * RESTRICT a, uint32_t * RESTRICT b)
+void pswap32(uint32_t *a, uint32_t *b)
 {
     uint32_t c = *a;
     *a = *b; *b = c;
 }
 
-void pswap64(uint64_t * RESTRICT a, uint64_t * RESTRICT b)
+void pswap64(uint64_t *a, uint64_t *b)
 {
     uint64_t c = *a;
     *a = *b; *b = c;
