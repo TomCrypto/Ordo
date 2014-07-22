@@ -53,11 +53,6 @@ static int check(const struct TEST_VECTOR *test)
 {
     unsigned char calc_pub1[32], calc_pub2[32], calc_shared[32];
 
-    #if defined(__clang__) /* TODO: Known issues */
-    if (!strcmp(ordo_version()->arch, "amd64"))
-        return 1;
-    #endif
-
     curve25519_pub(calc_pub1, test->priv1);
     curve25519_pub(calc_pub2, test->priv2);
 

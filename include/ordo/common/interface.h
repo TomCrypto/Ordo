@@ -43,7 +43,7 @@
         #define ORDO_PUBLIC
         #define ORDO_HIDDEN
     #endif
-#elif defined(__clang__) || defined(__GNUC__)
+#elif defined(__clang__) || defined(__INTEL_COMPILER) || defined(__GNUC__)
     #if defined(BUILD_SHARED)
         #define ORDO_PUBLIC __attribute__((visibility("default")))
         #define ORDO_HIDDEN __attribute__((visibility("hidden")))
@@ -58,12 +58,14 @@
     #error "Unsupported compiler!"
 #endif
 
-/* TODO: add restrict (pointer aliasing) support for MSVC/Clang/ICC */
+/* TODO: add restrict (pointer aliasing) support for MSVC */
 
-#if defined(__GNUC__)
+#if defined(__clang__)
     #define RESTRICT __restrict__
-#elif defined(__clang__) || defined(__INTEL_COMPILER)
-    #define RESTRICT /* TODO */
+#elif defined(__INTEL_COMPILER)
+    #define RESTRICT restrict
+#elif defined(__GNUC__)
+    #define RESTRICT __restrict__
 #elif defined(_MSC_VER)
     #define RESTRICT /*__restrict*/
 #endif

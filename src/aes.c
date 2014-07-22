@@ -565,12 +565,10 @@ static void InvMixSubColumns (uint8_t *state)
     for (t = 0; t < 16; ++t) state[t] = ibox[tmp[t]];
 }
 
-static void AddRoundKey (uint8_t * RESTRICT state,
-                         const uint8_t * RESTRICT key)
+static void AddRoundKey (uint8_t *state,
+                         const uint8_t *key)
 {
-    size_t t;
-
-    for (t = 0; t < 16; ++t) state[t] ^= key[t];
+    xor_buffer(state, key, 16);
 }
 
 static const uint8_t ks[11] =

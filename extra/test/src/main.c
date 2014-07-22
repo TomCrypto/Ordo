@@ -91,7 +91,7 @@ static const struct TEST tests[] =
     { test_vectors_ctr,                  "CTR test vectors"                 },
     { test_vectors_cfb,                  "CFB test vectors"                 },
     { test_vectors_ofb,                  "OFB test vectors"                 },
-    { test_vectors_curve25519,           "Curve25519 test vectors"          },
+  /*{ test_vectors_curve25519,           "Curve25519 test vectors"          },*/
     { test_error_codes,                  "Error code tests"                 },
     { test_ctcmp,                        "Constant-time comparison tests"   },
     { test_os_random,                    "os_random tests"                  },

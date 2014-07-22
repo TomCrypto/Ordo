@@ -57,9 +57,9 @@
 /*===----------------------------------------------------------------------===*/
 
 #if defined(__clang__)\
+ || defined(__INTEL_COMPILER)\
  || defined(__GNUC__)\
- || defined(__MINGW32__)\
- || defined(__INTEL_COMPILER)
+ || defined(__MINGW32__)
     #define ALIGN(x) __attribute__((aligned(x)))
 #elif defined(_MSC_VER)
     #define ALIGN(x) __declspec(align(x))
