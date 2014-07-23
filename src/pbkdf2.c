@@ -18,14 +18,19 @@ int kdf_pbkdf2(prim_t hash, const void *params,
     int err;
 
     unsigned char buf[HASH_DIGEST_LEN], feedback[HASH_DIGEST_LEN];
-    const size_t digest_len = digest_length(hash);
     struct HMAC_CTX ctx, cst;
+    size_t digest_len;
 
     /* The output counter is a 32-bit counter which for some reason starts
      * at 1, putting an upper bound on the maximum output length allowed. */
     uint32_t counter = 1;
 
     if (!pwd_len || !iterations || !out_len) return ORDO_ARG;
+
+    if (prim_type(hash) != PRIM_TYPE_HASH)
+        return ORDO_ARG;
+
+    digest_len = digest_length(hash);
 
     /* This HMAC initialization need be done only once, because for each
      * iteration the key is always the same (the password). Thanks to

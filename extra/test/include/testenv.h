@@ -35,6 +35,9 @@
 #define ASSERT_SUCCESS(retval) \
     do { if (retval) return 0; } while (0)
 
+#define ASSERT_FAILURE(retval) \
+    do { if (!retval) return 0; } while (0)
+
 #define ASSERT_BUF_EQ(x, e, len) \
     do { if (memcmp(x, e, len) != 0) return 0; } while (0)
 

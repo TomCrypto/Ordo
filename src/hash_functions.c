@@ -44,7 +44,7 @@ int hash_init(struct HASH_STATE *state,
         #endif
     }
     
-    return ORDO_FAIL;
+    return ORDO_ARG;
 }
 
 void hash_update(struct HASH_STATE *state,

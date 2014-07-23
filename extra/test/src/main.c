@@ -22,6 +22,10 @@
 
 #include "testenv.h"
 
+#ifndef ORDO_STATIC_LIB
+    #error "Tests require static linkage to the library!"
+#endif
+
 /*===---------------------------- TEST ARRAY ----------------------------===*/
 
 typedef int (* TEST_FUNCTION)(void);
@@ -36,6 +40,12 @@ struct TEST
 
 static int test_init(void) { return 1; }
 static int test_fini(void) { return 1; }
+
+extern int test_error_codes(void);
+extern int test_macros(void);
+extern int test_pad_check(void);
+extern int test_xor_buffer(void);
+extern int test_inc_buffer(void);
 
 extern int test_vectors_md5(void);
 extern int test_vectors_sha1(void);
@@ -54,14 +64,9 @@ extern int test_vectors_cfb(void);
 extern int test_vectors_ofb(void);
 extern int test_vectors_curve25519(void);
 
-#if defined(ORDO_STATIC_LIB)
-extern int test_macros(void);
-extern int test_pad_check(void);
-extern int test_xor_buffer(void);
-extern int test_inc_buffer(void);
-#endif
+extern int test_pbkdf2_precond(void);
+extern int test_hkdf_precond(void);
 
-extern int test_error_codes(void);
 extern int test_ctcmp(void);
 extern int test_os_random(void);
 
@@ -70,12 +75,11 @@ extern int test_os_random(void);
 static const struct TEST tests[] =
 {
     { test_init,                         "Initialization"                   },
-    #if defined(ORDO_STATIC_LIB)
+    { test_error_codes,                  "Error code tests"                 },
     { test_macros,                       "Macro tests"                      },
     { test_pad_check,                    "pad_check tests"                  },
     { test_xor_buffer,                   "xor_buffer tests"                 },
     { test_inc_buffer,                   "inc_buffer tests"                 },
-    #endif
     { test_vectors_md5,                  "MD5 test vectors"                 },
     { test_vectors_sha1,                 "SHA-1 test vectors"               },
     { test_vectors_sha256,               "SHA-256 test vectors"             },
@@ -92,7 +96,8 @@ static const struct TEST tests[] =
     { test_vectors_cfb,                  "CFB test vectors"                 },
     { test_vectors_ofb,                  "OFB test vectors"                 },
   /*{ test_vectors_curve25519,           "Curve25519 test vectors"          },*/
-    { test_error_codes,                  "Error code tests"                 },
+    { test_pbkdf2_precond,               "PBKDF2 unit tests"                },
+    { test_hkdf_precond,                 "HKDF unit tests"                  },
     { test_ctcmp,                        "Constant-time comparison tests"   },
     { test_os_random,                    "os_random tests"                  },
     { test_fini,                         "All tests completed"              }

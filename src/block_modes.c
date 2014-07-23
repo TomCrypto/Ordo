@@ -54,7 +54,7 @@ int block_mode_init(struct BLOCK_MODE_STATE *state,
         #endif
     }
     
-    return ORDO_FAIL;
+    return ORDO_ARG;
 }
 
 void block_mode_update(struct BLOCK_MODE_STATE *state,
@@ -120,7 +120,7 @@ int block_mode_final(struct BLOCK_MODE_STATE *state,
         #endif
     }
 
-    return ORDO_FAIL;
+    return ORDO_ARG;
 }
 
 size_t block_mode_query(prim_t mode, prim_t cipher,

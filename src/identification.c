@@ -202,3 +202,56 @@ const prim_t *prims_by_type(enum PRIM_TYPE type)
 
     return 0;
 }
+
+prim_t prim_default(enum PRIM_TYPE type)
+{
+    switch (type)
+    {
+        case PRIM_TYPE_UNKNOWN:
+            return 0;
+        case PRIM_TYPE_HASH:
+            #if WITH_SHA256
+            return HASH_SHA256;
+            #elif WITH_SHA1
+            return HASH_SHA1;
+            #elif WITH_SKEIN256
+            return HASH_SKEIN256;
+            #elif WITH_MD5
+            return HASH_MD5;
+            #else
+            return 0;
+            #endif
+        case PRIM_TYPE_STREAM:
+            #if WITH_RC4
+            return STREAM_RC4;
+            #else
+            return 0;
+            #endif
+        case PRIM_TYPE_BLOCK:
+            #if WITH_AES
+            return BLOCK_AES;
+            #elif WITH_THREEFISH256
+            return BLOCK_THREEFISH256;
+            #elif WITH_NULLCIPHER
+            return BLOCK_NULLCIPHER; /* ... */
+            #else
+            return 0;
+            #endif
+        case PRIM_TYPE_BLOCK_MODE:
+            #if WITH_CTR
+            return BLOCK_MODE_CTR;
+            #elif WITH_CFB
+            return BLOCK_MODE_CFB;
+            #elif WITH_OFB
+            return BLOCK_MODE_OFB;
+            #elif WITH_CBC
+            return BLOCK_MODE_CBC;
+            #elif WITH_ECB
+            return BLOCK_MODE_ECB;
+            #else
+            return 0;
+            #endif
+    }
+
+    return 0;
+}

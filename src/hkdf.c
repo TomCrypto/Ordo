@@ -17,13 +17,18 @@ int kdf_hkdf(prim_t hash, const void *params,
 {
     int err;
 
-    const size_t digest_len = digest_length(hash);
     unsigned char buf[HASH_DIGEST_LEN] = {0};
     unsigned char prk[HASH_DIGEST_LEN];
     struct HMAC_CTX ctx, cst;
     uint8_t counter = 1;
+    size_t digest_len;
 
     if (!key_len || !out_len) return ORDO_ARG;
+
+    if (prim_type(hash) != PRIM_TYPE_HASH)
+        return ORDO_ARG;
+
+    digest_len = digest_length(hash);
 
     if (!salt_len && !salt)
     {

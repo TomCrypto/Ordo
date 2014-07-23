@@ -12,10 +12,13 @@ int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
               prim_t hash, const void *params)
 {
-    size_t block_size = hash_query(hash, BLOCK_SIZE_Q, 0);
-
     int err = ORDO_SUCCESS;
-    size_t t;
+    size_t t, block_size;
+
+    if (prim_type(hash) != PRIM_TYPE_HASH)
+        return ORDO_ARG;
+
+    block_size = hash_query(hash, BLOCK_SIZE_Q, 0);
 
     /* The key may be smaller than the hash's block size, pad with zeroes. */
     memset(ctx->key, 0x00, block_size);

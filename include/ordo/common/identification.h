@@ -56,6 +56,12 @@ enum PRIM_TYPE
 **/
 typedef int prim_t;
 
+/** Value representing an unknown primitive, defined as zero.
+***
+*** @remarks You can use this to check for errors or for comparisons.
+**/
+#define PRIM_UNKNOWN                                          ((prim_t)0x0000)
+
 #define HASH_MD5                                              ((prim_t)0x8110)
 #define HASH_SHA1                                             ((prim_t)0x8310)
 #define HASH_SHA256                                           ((prim_t)0x8010)
@@ -126,6 +132,27 @@ prim_t prim_from_name(const char *name);
 **/
 ORDO_PUBLIC
 const prim_t *prims_by_type(enum PRIM_TYPE type);
+
+/** Returns the default available primitive of a given type.
+***
+*** @param [in]     type           A primitive type.
+***
+*** @returns The default primitive, or zero if none exists.
+***
+*** @warning It is recommended to keep at least one primitive of every type in
+***          the library, in order for some software (e.g. the test driver) to
+***          work properly, but this is not strictly required (so that heavily
+***          stripped builds of the library will still work properly).
+***
+*** @warning The return value of this function depends on which primitives are
+***          available, and even though they are loosely prioritized, based on
+***          an arbitrary strength/performance scale, there is *absolutely* no
+***          guarantee the primitive returned will be suitable for use (in the
+***          context of your application). Use this when you do not care about
+***          the characteristics of a primitive beyond its type.
+**/
+ORDO_PUBLIC
+prim_t prim_default(enum PRIM_TYPE type);
 
 /*===----------------------------------------------------------------------===*/
 

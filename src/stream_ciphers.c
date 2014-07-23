@@ -24,7 +24,7 @@ int stream_init(struct STREAM_STATE *state,
         #endif
     }
     
-    return ORDO_FAIL;
+    return ORDO_ARG;
 }
 
 void stream_update(struct STREAM_STATE *state,

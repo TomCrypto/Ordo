@@ -38,7 +38,7 @@ int block_init(struct BLOCK_STATE *state,
         #endif
     }
     
-    return ORDO_FAIL;
+    return ORDO_ARG;
 }
 
 void block_forward(const struct BLOCK_STATE *state,

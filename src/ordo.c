@@ -25,14 +25,17 @@ int ordo_enc_block(prim_t cipher, const void *cipher_params,
                               iv, iv_len,
                               direction,
                               cipher, cipher_params,
-                              mode, mode_params))) return err;
+                              mode, mode_params)))
+        return err;
 
     enc_block_update(&ctx, in, in_len, out, out_len);
     end_pos += *out_len;
 
     if ((err = enc_block_final(&ctx,
                                offset(out, end_pos),
-                               out_len))) return err;
+                               out_len)))
+        return err;
+
     *out_len += end_pos;
 
     return err;
@@ -42,32 +45,34 @@ int ordo_enc_stream(prim_t cipher, const void *params,
                     const void *key, size_t key_len,
                     void *buffer, size_t len)
 {
+    int err;
+
     struct ENC_STREAM_CTX ctx;
-    int err = ORDO_SUCCESS;
+    
+    if ((err = enc_stream_init(&ctx, key, key_len, cipher, params)))
+        return err;
 
-    if (!(err = enc_stream_init(&ctx, key, key_len, cipher, params)))
-    {
-        enc_stream_update(&ctx, buffer, len);
-        enc_stream_final(&ctx);
-    }
+    enc_stream_update(&ctx, buffer, len);
+    enc_stream_final(&ctx);
 
-    return err;
+    return ORDO_SUCCESS;
 }
 
 int ordo_digest(prim_t hash, const void *params,
                 const void *in, size_t len,
                 void *digest)
 {
-    int err = ORDO_SUCCESS;
+    int err;
+
     struct DIGEST_CTX ctx;
 
-    if (!(err = digest_init(&ctx, hash, params)))
-    {
-        digest_update(&ctx, in, len);
-        digest_final(&ctx, digest);
-    }
+    if ((err = digest_init(&ctx, hash, params)))
+        return err;
 
-    return err;
+    digest_update(&ctx, in, len);
+    digest_final(&ctx, digest);
+
+    return ORDO_SUCCESS;
 }
 
 int ordo_hmac(prim_t hash, const void *params,
@@ -75,14 +80,17 @@ int ordo_hmac(prim_t hash, const void *params,
               const void *in, size_t len,
               void *fingerprint)
 {
-    int err = ORDO_SUCCESS;
+    int err;
+
     struct HMAC_CTX ctx;
 
-    if (!(err = hmac_init(&ctx, key, key_len, hash, params)))
-    {
-        hmac_update(&ctx, in, len);
-        err = hmac_final(&ctx, fingerprint);
-    }
+    if ((err = hmac_init(&ctx, key, key_len, hash, params)))
+        return err;
 
-    return err;
+
+    hmac_update(&ctx, in, len);
+    if ((err = hmac_final(&ctx, fingerprint)))
+        return err;
+
+    return ORDO_SUCCESS;
 }
