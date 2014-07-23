@@ -29,7 +29,7 @@ static void inc_counter(struct BLOCK_STATE *cipher_state,
     /* We assert the counter limit will never be reached, since it is always
      * 2^64 maximum (like all other lower limits in the library). */
 
-    uint32_t ctr_le = tole64(state->counter);
+    uint64_t ctr_le = tole64(state->counter);
 
     memcpy(state->block, &ctr_le, state->ctr_len);
     memcpy(state->keystream, state->block, state->block_size);
