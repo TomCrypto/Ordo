@@ -29,11 +29,9 @@ static void inc_counter(struct BLOCK_STATE *cipher_state,
     /* We assert the counter limit will never be reached, since it is always
      * 2^64 maximum (like all other lower limits in the library). */
 
-    /* NOTE: the threefish implementation assumes the input block is already
-     * in host endianness, so we don't need to mess with the counter here as
-     * it is also 64 bits wide. */
+    uint32_t ctr_le = tole64(state->counter);
 
-    memcpy(state->block, &state->counter, state->ctr_len);
+    memcpy(state->block, &ctr_le, state->ctr_len);
     memcpy(state->keystream, state->block, state->block_size);
     block_forward(cipher_state, state->keystream);
     state->remaining = state->block_size;
