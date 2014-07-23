@@ -22,10 +22,6 @@
 
 #include "testenv.h"
 
-#ifndef ORDO_STATIC_LIB
-    #error "Tests require static linkage to the library!"
-#endif
-
 /*===---------------------------- TEST ARRAY ----------------------------===*/
 
 typedef int (* TEST_FUNCTION)(void);

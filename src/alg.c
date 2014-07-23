@@ -71,19 +71,20 @@ size_t pad_check(const void *buffer, size_t len)
 {
     /* PCKS #7 padding verification (constant time) */
 
-    if (len < 256)
+    if ((len > 0) && (len < 256))
     {
         uint8_t block[255] = {0};
         memcpy(block, buffer, len);
 
         {
-            uint8_t padding = block[len - 1]; /* Last byte */
-            uint8_t acc = (padding == 0) || (padding >= len);
+            uint8_t padding = block[len - 1]; /* Final byte. */
+            uint8_t acc = (padding == 0) || (padding > len);
             size_t t, pad_offset = len - (size_t)padding;
 
             for (t = pad_offset; t < len; ++t)
                 acc |= (block[t] ^ padding);
 
+            if (pad_offset == 0) pad_offset = len;
             return (acc == 0) ? pad_offset : 0;
         }
     }

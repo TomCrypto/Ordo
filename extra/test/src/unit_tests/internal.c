@@ -9,13 +9,15 @@
 
 #include "testenv.h"
 
-/*===----------------------------------------------------------------------===*/
+#if !defined(ORDO_STATIC_LIB)
+    #error "Tests require static linkage to the library!"
+#else
+    #define ORDO_INTERNAL_ACCESS
+#endif
 
-#if defined(ORDO_STATIC_LIB)
-
-#define ORDO_INTERNAL_ACCESS
 #include "ordo/internal/implementation.h"
-#undef ORDO_INTERNAL_ACCESS
+
+/*===----------------------------------------------------------------------===*/
 
 int test_macros(void);
 int test_macros(void)
@@ -44,28 +46,34 @@ static void gen_msg(unsigned char *buf, size_t msg_len, size_t block_len)
 int test_pad_check(void);
 int test_pad_check(void)
 {
-    unsigned char buffer[32];
+    unsigned char buffer[256];
     size_t t, p;
 
     for (t = 1; t < 32; ++t)
     {
-        gen_msg(buffer, t, sizeof(buffer));
-        ASSERT_EQ(pad_check(buffer, sizeof(buffer)), t);
+        gen_msg(buffer, t, 32);
+        ASSERT_EQ(pad_check(buffer, 32), t);
     }
 
     for (t = 1; t < 32; ++t)
         for (p = t; p < 32; ++p)
         {
-            gen_msg(buffer, t, sizeof(buffer));
-            buffer[p] ^= 0x01; /* Corruption */
+            gen_msg(buffer, t, 32);
+            buffer[p] ^= 0x01;
 
-            ASSERT(!pad_check(buffer, sizeof(buffer)));
+            ASSERT(!pad_check(buffer, 32));
         }
+
+    gen_msg(buffer, 40, 80);
 
     ASSERT(!pad_check(buffer, 0));
     ASSERT(!pad_check(buffer, 32));
     ASSERT(!pad_check(buffer, 33));
     ASSERT(!pad_check(buffer, 256));
+    ASSERT(!pad_check(buffer, 257));
+
+    memset(buffer, 0xB1, 177);
+    ASSERT_EQ(pad_check(buffer, 177), 177);
 
     return 1;
 }
@@ -146,5 +154,3 @@ int test_inc_buffer(void)
 
     return 1;
 }
-
-#endif

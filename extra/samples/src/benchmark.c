@@ -150,7 +150,7 @@ static int parse_cmd(char **cmd, struct RECORD *rec)
  * a (stack-allocated!) polymorphic parameter union, and then do either of two
  * things depending on whether there is anything special to add as parameter:
  *
- * - fill in the union depending on the primitive, and return params
+ * - fill in the union depending on the primitive, and return that member
  * - nothing (i.e. default behaviour is desired), and return zero
  *
  * Then they can easily be used directly like this:
@@ -160,42 +160,38 @@ static int parse_cmd(char **cmd, struct RECORD *rec)
  *     if (ordo_xxx(prim, xxx_params(prim, &params))) { ... }
 */
 
-static union BLOCK_PARAMS *get_block_params(
-    prim_t prim, union BLOCK_PARAMS *params)
+static void *get_block_params(prim_t prim, union BLOCK_PARAMS *params)
 {
     return 0;
 }
 
-static union STREAM_PARAMS *get_stream_params(
-    prim_t prim, union STREAM_PARAMS *params)
+static void *get_stream_params(prim_t prim, union STREAM_PARAMS *params)
 {
     switch (prim)
     {
         case STREAM_RC4:
             params->rc4.drop = 0;
-            return params;
+            return &params->rc4;
     }
 
     return 0;
 }
 
-static union HASH_PARAMS *get_hash_params(
-    prim_t prim, union HASH_PARAMS *params)
+static void *get_hash_params(prim_t prim, union HASH_PARAMS *params)
 {
     return 0;
 }
 
-static union BLOCK_MODE_PARAMS *get_mode_params(
-    prim_t prim, union BLOCK_MODE_PARAMS *params)
+static void *get_mode_params(prim_t prim, union BLOCK_MODE_PARAMS *params)
 {
     switch (prim)
     {
         case BLOCK_MODE_ECB:
             params->ecb.padding = 0;
-            return params;
+            return &params->ecb;
         case BLOCK_MODE_CBC:
             params->cbc.padding = 0;
-            return params;
+            return &params->cbc;
     }
 
     return 0;
