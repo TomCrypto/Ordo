@@ -58,8 +58,6 @@
     #error "Unsupported compiler!"
 #endif
 
-/* TODO: add restrict (pointer aliasing) support for MSVC */
-
 #if defined(__clang__)
     #define RESTRICT __restrict__
 #elif defined(__INTEL_COMPILER)
@@ -67,7 +65,7 @@
 #elif defined(__GNUC__)
     #define RESTRICT __restrict__
 #elif defined(_MSC_VER)
-    #define RESTRICT /*__restrict*/
+    #define RESTRICT __restrict
 #endif
 
 #undef BUILD_SHARED

@@ -90,7 +90,7 @@ size_t threefish256_bsize(void)
 
 /*===----------------------------------------------------------------------===*/
 
-void threefish256_forward_C(uint64_t *block,
+void threefish256_forward_C(uint64_t * RESTRICT block,
                             const uint64_t * RESTRICT subkeys)
 {
     size_t t;
