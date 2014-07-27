@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -144,19 +144,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:57</div></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:58</div></div>
 <div class="ttc" id="ecb_8h_html_ae10c7304c4997221cc7e950482c21fde"><div class="ttname"><a href="ecb_8h.html#ae10c7304c4997221cc7e950482c21fde">ecb_init</a></div><div class="ttdeci">ORDO_PUBLIC int ecb_init(struct ECB_STATE *state, struct BLOCK_STATE *cipher_state, const void *iv, size_t iv_len, int dir, const struct ECB_PARAMS *params)</div><div class="ttdef"><b>Definition:</b> ecb.c:26</div></div>
 <div class="ttc" id="struct_e_c_b___p_a_r_a_m_s_html"><div class="ttname"><a href="struct_e_c_b___p_a_r_a_m_s.html">ECB_PARAMS</a></div><div class="ttdoc">ECB parameters. </div><div class="ttdef"><b>Definition:</b> mode_params.h:25</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="ecb_8h_html_a61c0374d17df427d274fdf17f653bcb4"><div class="ttname"><a href="ecb_8h.html#a61c0374d17df427d274fdf17f653bcb4">ecb_update</a></div><div class="ttdeci">ORDO_PUBLIC void ecb_update(struct ECB_STATE *state, struct BLOCK_STATE *cipher_state, const void *in, size_t in_len, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ecb.c:46</div></div>
-<div class="ttc" id="ecb_8h_html_aff8f2b08566a2261db80755bc6d69bd9"><div class="ttname"><a href="ecb_8h.html#aff8f2b08566a2261db80755bc6d69bd9">ecb_final</a></div><div class="ttdeci">ORDO_PUBLIC int ecb_final(struct ECB_STATE *state, struct BLOCK_STATE *cipher_state, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ecb.c:177</div></div>
-<div class="ttc" id="ecb_8h_html_aa0f031cd42ec73c4a2d47c0045e410c1"><div class="ttname"><a href="ecb_8h.html#aa0f031cd42ec73c4a2d47c0045e410c1">ecb_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t ecb_bsize(void)</div><div class="ttdef"><b>Definition:</b> ecb.c:197</div></div>
+<div class="ttc" id="ecb_8h_html_aff8f2b08566a2261db80755bc6d69bd9"><div class="ttname"><a href="ecb_8h.html#aff8f2b08566a2261db80755bc6d69bd9">ecb_final</a></div><div class="ttdeci">ORDO_PUBLIC int ecb_final(struct ECB_STATE *state, struct BLOCK_STATE *cipher_state, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ecb.c:162</div></div>
+<div class="ttc" id="ecb_8h_html_aa0f031cd42ec73c4a2d47c0045e410c1"><div class="ttname"><a href="ecb_8h.html#aa0f031cd42ec73c4a2d47c0045e410c1">ecb_bsize</a></div><div class="ttdeci">ORDO_PUBLIC size_t ecb_bsize(void)</div></div>
 <div class="ttc" id="block__modes_8h_html"><div class="ttname"><a href="block__modes_8h.html">block_modes.h</a></div><div class="ttdoc">Abstraction Layer. </div></div>
-<div class="ttc" id="ecb_8h_html_a142f249aea8b492e38d7f4774b514f2f"><div class="ttname"><a href="ecb_8h.html#a142f249aea8b492e38d7f4774b514f2f">ecb_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t ecb_query(prim_t cipher, int query, size_t value)</div><div class="ttdef"><b>Definition:</b> ecb.c:186</div></div>
+<div class="ttc" id="ecb_8h_html_a142f249aea8b492e38d7f4774b514f2f"><div class="ttname"><a href="ecb_8h.html#a142f249aea8b492e38d7f4774b514f2f">ecb_query</a></div><div class="ttdeci">ORDO_PUBLIC size_t ecb_query(prim_t cipher, int query, size_t value)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 27 2014 23:46:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -150,7 +150,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:57</div></div>
+<div class="ttc" id="identification_8h_html_a3f6caa286c5386ec93aa5a7159b3e2bc"><div class="ttname"><a href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a></div><div class="ttdeci">int prim_t</div><div class="ttdoc">Data type which holds a primitive identifier. </div><div class="ttdef"><b>Definition:</b> identification.h:58</div></div>
 <div class="ttc" id="pbkdf2_8h_html"><div class="ttname"><a href="pbkdf2_8h.html">pbkdf2.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="hkdf_8h_html"><div class="ttname"><a href="hkdf_8h.html">hkdf.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="enc__block_8h_html"><div class="ttname"><a href="enc__block_8h.html">enc_block.h</a></div><div class="ttdoc">Module. </div></div>
@@ -161,16 +161,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="hmac_8h_html"><div class="ttname"><a href="hmac_8h.html">hmac.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
 <div class="ttc" id="ordo_8h_html_a71f4db0f616a9c628d13b4b794d9fbb9"><div class="ttname"><a href="ordo_8h.html#a71f4db0f616a9c628d13b4b794d9fbb9">ordo_enc_block</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_enc_block(prim_t cipher, const void *cipher_params, prim_t mode, const void *mode_params, int direction, const void *key, size_t key_len, const void *iv, size_t iv_len, const void *in, size_t in_len, void *out, size_t *out_len)</div><div class="ttdef"><b>Definition:</b> ordo.c:11</div></div>
-<div class="ttc" id="ordo_8h_html_a03cd97134b48d857831b22a5809d8044"><div class="ttname"><a href="ordo_8h.html#a03cd97134b48d857831b22a5809d8044">ordo_hmac</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_hmac(prim_t hash, const void *params, const void *key, size_t key_len, const void *in, size_t in_len, void *fingerprint)</div><div class="ttdef"><b>Definition:</b> ordo.c:73</div></div>
+<div class="ttc" id="ordo_8h_html_a03cd97134b48d857831b22a5809d8044"><div class="ttname"><a href="ordo_8h.html#a03cd97134b48d857831b22a5809d8044">ordo_hmac</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_hmac(prim_t hash, const void *params, const void *key, size_t key_len, const void *in, size_t in_len, void *fingerprint)</div><div class="ttdef"><b>Definition:</b> ordo.c:78</div></div>
 <div class="ttc" id="version_8h_html"><div class="ttname"><a href="version_8h.html">version.h</a></div><div class="ttdoc">Utility. </div></div>
 <div class="ttc" id="enc__stream_8h_html"><div class="ttname"><a href="enc__stream_8h.html">enc_stream.h</a></div><div class="ttdoc">Module. </div></div>
 <div class="ttc" id="os__random_8h_html"><div class="ttname"><a href="os__random_8h.html">os_random.h</a></div><div class="ttdoc">Module. </div></div>
-<div class="ttc" id="ordo_8h_html_a2c3b72e680b76290ed43385fc377a05e"><div class="ttname"><a href="ordo_8h.html#a2c3b72e680b76290ed43385fc377a05e">ordo_digest</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_digest(prim_t hash, const void *params, const void *in, size_t in_len, void *digest)</div><div class="ttdef"><b>Definition:</b> ordo.c:57</div></div>
-<div class="ttc" id="ordo_8h_html_a72b5f74bfd9257d6b35e9efafcc6fb9c"><div class="ttname"><a href="ordo_8h.html#a72b5f74bfd9257d6b35e9efafcc6fb9c">ordo_enc_stream</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_enc_stream(prim_t cipher, const void *params, const void *key, size_t key_len, void *inout, size_t len)</div><div class="ttdef"><b>Definition:</b> ordo.c:41</div></div>
+<div class="ttc" id="ordo_8h_html_a2c3b72e680b76290ed43385fc377a05e"><div class="ttname"><a href="ordo_8h.html#a2c3b72e680b76290ed43385fc377a05e">ordo_digest</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_digest(prim_t hash, const void *params, const void *in, size_t in_len, void *digest)</div><div class="ttdef"><b>Definition:</b> ordo.c:61</div></div>
+<div class="ttc" id="ordo_8h_html_a72b5f74bfd9257d6b35e9efafcc6fb9c"><div class="ttname"><a href="ordo_8h.html#a72b5f74bfd9257d6b35e9efafcc6fb9c">ordo_enc_stream</a></div><div class="ttdeci">ORDO_PUBLIC int ordo_enc_stream(prim_t cipher, const void *params, const void *key, size_t key_len, void *inout, size_t len)</div><div class="ttdef"><b>Definition:</b> ordo.c:44</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 27 2014 23:46:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

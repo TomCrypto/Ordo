@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -132,29 +132,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="alg_8h.html#a5a270a1d9cc596c3c84a9348d8c0c7fb">   72</a></span>&#160;<span class="preprocessor">#define offset(ptr, len) ((unsigned char *)ptr + len)</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;ORDO_HIDDEN</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">int</span> <a class="code" href="alg_8h.html#ae2ec6e1b1d7139b1300d1dfbb7edd9ca">pad_check</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buffer, uint8_t padding);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="alg_8h.html#a323ba706a4c810188fbb5466aa0127e0">pad_check</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;ORDO_HIDDEN</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keywordtype">void</span> <a class="code" href="alg_8h.html#a0d484298304f590f35e08cc8d60c1a06">xor_buffer</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *dst, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *src, <span class="keywordtype">size_t</span> len);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;ORDO_HIDDEN</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keywordtype">void</span> <a class="code" href="alg_8h.html#a55ac4b8d5586f07e34c6922d1d17c980">inc_buffer</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;ORDO_HIDDEN</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">void</span> <a class="code" href="alg_8h.html#aa460b2231490c19678f5e30cf56c1c05">xor_buffer</a>(<span class="keywordtype">void</span> * RESTRICT dst, <span class="keyword">const</span> <span class="keywordtype">void</span> * RESTRICT src, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;ORDO_HIDDEN</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="keywordtype">void</span> <a class="code" href="alg_8h.html#a55ac4b8d5586f07e34c6922d1d17c980">inc_buffer</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *buffer, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">/*===----------------------------------------------------------------------===*/</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="alg_8h_html_ae2ec6e1b1d7139b1300d1dfbb7edd9ca"><div class="ttname"><a href="alg_8h.html#ae2ec6e1b1d7139b1300d1dfbb7edd9ca">pad_check</a></div><div class="ttdeci">ORDO_HIDDEN int pad_check(const unsigned char *buffer, uint8_t padding)</div><div class="ttdef"><b>Definition:</b> alg.c:51</div></div>
 <div class="ttc" id="interface_8h_html"><div class="ttname"><a href="interface_8h.html">interface.h</a></div><div class="ttdoc">API. </div></div>
-<div class="ttc" id="alg_8h_html_a0d484298304f590f35e08cc8d60c1a06"><div class="ttname"><a href="alg_8h.html#a0d484298304f590f35e08cc8d60c1a06">xor_buffer</a></div><div class="ttdeci">ORDO_HIDDEN void xor_buffer(unsigned char *dst, const unsigned char *src, size_t len)</div><div class="ttdef"><b>Definition:</b> alg.c:64</div></div>
-<div class="ttc" id="alg_8h_html_a55ac4b8d5586f07e34c6922d1d17c980"><div class="ttname"><a href="alg_8h.html#a55ac4b8d5586f07e34c6922d1d17c980">inc_buffer</a></div><div class="ttdeci">ORDO_HIDDEN void inc_buffer(unsigned char *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> alg.c:69</div></div>
+<div class="ttc" id="alg_8h_html_aa460b2231490c19678f5e30cf56c1c05"><div class="ttname"><a href="alg_8h.html#aa460b2231490c19678f5e30cf56c1c05">xor_buffer</a></div><div class="ttdeci">ORDO_HIDDEN void xor_buffer(void *RESTRICT dst, const void *RESTRICT src, size_t len)</div><div class="ttdef"><b>Definition:</b> alg.c:95</div></div>
+<div class="ttc" id="alg_8h_html_a55ac4b8d5586f07e34c6922d1d17c980"><div class="ttname"><a href="alg_8h.html#a55ac4b8d5586f07e34c6922d1d17c980">inc_buffer</a></div><div class="ttdeci">ORDO_HIDDEN void inc_buffer(unsigned char *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> alg.c:102</div></div>
+<div class="ttc" id="alg_8h_html_a323ba706a4c810188fbb5466aa0127e0"><div class="ttname"><a href="alg_8h.html#a323ba706a4c810188fbb5466aa0127e0">pad_check</a></div><div class="ttdeci">ORDO_HIDDEN size_t pad_check(const void *buffer, size_t len)</div><div class="ttdef"><b>Definition:</b> alg.c:70</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 27 2014 23:46:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

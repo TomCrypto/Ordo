@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -99,6 +100,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><a href="identification_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a2f60ad2c8e47476da6dcc4c5bebd08f1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identification_8h.html#a2f60ad2c8e47476da6dcc4c5bebd08f1">PRIM_UNKNOWN</a></td></tr>
+<tr class="separator:a2f60ad2c8e47476da6dcc4c5bebd08f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a3f6caa286c5386ec93aa5a7159b3e2bc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f6caa286c5386ec93aa5a7159b3e2bc"></a>
@@ -123,13 +129,30 @@ Functions</h2></td></tr>
 <tr class="separator:a425f0ae8e664cb6e774a7b0e61670071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fe656d4dcf73a14c7a8a04d2456b3d4"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC const <a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identification_8h.html#a2fe656d4dcf73a14c7a8a04d2456b3d4">prims_by_type</a> (enum <a class="el" href="identification_8h.html#a5756c227f5fc0f09e0c59689aa956012">PRIM_TYPE</a> type)</td></tr>
 <tr class="separator:a2fe656d4dcf73a14c7a8a04d2456b3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a2e4a13b6dec886394727d8618c719b"><td class="memItemLeft" align="right" valign="top">ORDO_PUBLIC <a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="identification_8h.html#a1a2e4a13b6dec886394727d8618c719b">prim_default</a> (enum <a class="el" href="identification_8h.html#a5756c227f5fc0f09e0c59689aa956012">PRIM_TYPE</a> type)</td></tr>
+<tr class="separator:a1a2e4a13b6dec886394727d8618c719b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility. </p>
 <p>This header contains definitions assigning an identifier to each primitive in the library - hash functions, block ciphers, modes of operation, and so on - which can then be used in higher level API's for abstraction purposes and more expressive code. This header also provides functionality relating to primitive management, e.g. which primitives are available, etc...</p>
 <p>Note the zero ID will always stand for an error situation e.g. a primitive is not available. The zero ID is <b>never</b> a valid primitive identifier.</p>
 <p>This also allows for a quick overview of what is implemented in Ordo. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a2f60ad2c8e47476da6dcc4c5bebd08f1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PRIM_UNKNOWN</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Value representing an unknown primitive, defined as zero.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>You can use this to check for errors or for comparisons. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="a5756c227f5fc0f09e0c59689aa956012"></a>
 <div class="memitem">
 <div class="memproto">
@@ -268,10 +291,37 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a1a2e4a13b6dec886394727d8618c719b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ORDO_PUBLIC <a class="el" href="identification_8h.html#a3f6caa286c5386ec93aa5a7159b3e2bc">prim_t</a> prim_default </td>
+          <td>(</td>
+          <td class="paramtype">enum <a class="el" href="identification_8h.html#a5756c227f5fc0f09e0c59689aa956012">PRIM_TYPE</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the default available primitive of a given type.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>A primitive type.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The default primitive, or zero if none exists.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>It is recommended to keep at least one primitive of every type in the library, in order for some software (e.g. the test driver) to work properly, but this is not strictly required (so that heavily stripped builds of the library will still work properly).</dd>
+<dd>
+The return value of this function depends on which primitives are available, and even though they are loosely prioritized, based on an arbitrary strength/performance scale, there is <em>absolutely</em> no guarantee the primitive returned will be suitable for use (in the context of your application). Use this when you do not care about the characteristics of a primitive beyond its type. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 27 2014 23:46:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

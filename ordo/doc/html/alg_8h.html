@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Ordo
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
    <div id="projectbrief">Symmetric Cryptography Library</div>
   </td>
@@ -109,10 +109,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae2ec6e1b1d7139b1300d1dfbb7edd9ca"><td class="memItemLeft" align="right" valign="top">ORDO_HIDDEN int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alg_8h.html#ae2ec6e1b1d7139b1300d1dfbb7edd9ca">pad_check</a> (const unsigned char *buffer, uint8_t padding)</td></tr>
-<tr class="separator:ae2ec6e1b1d7139b1300d1dfbb7edd9ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d484298304f590f35e08cc8d60c1a06"><td class="memItemLeft" align="right" valign="top">ORDO_HIDDEN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alg_8h.html#a0d484298304f590f35e08cc8d60c1a06">xor_buffer</a> (unsigned char *dst, const unsigned char *src, size_t len)</td></tr>
-<tr class="separator:a0d484298304f590f35e08cc8d60c1a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a323ba706a4c810188fbb5466aa0127e0"><td class="memItemLeft" align="right" valign="top">ORDO_HIDDEN size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alg_8h.html#a323ba706a4c810188fbb5466aa0127e0">pad_check</a> (const void *buffer, size_t len)</td></tr>
+<tr class="separator:a323ba706a4c810188fbb5466aa0127e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa460b2231490c19678f5e30cf56c1c05"><td class="memItemLeft" align="right" valign="top">ORDO_HIDDEN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alg_8h.html#aa460b2231490c19678f5e30cf56c1c05">xor_buffer</a> (void *RESTRICT dst, const void *RESTRICT src, size_t len)</td></tr>
+<tr class="separator:aa460b2231490c19678f5e30cf56c1c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55ac4b8d5586f07e34c6922d1d17c980"><td class="memItemLeft" align="right" valign="top">ORDO_HIDDEN void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alg_8h.html#a55ac4b8d5586f07e34c6922d1d17c980">inc_buffer</a> (unsigned char *buffer, size_t len)</td></tr>
 <tr class="separator:a55ac4b8d5586f07e34c6922d1d17c980"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -193,21 +193,21 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ae2ec6e1b1d7139b1300d1dfbb7edd9ca"></a>
+<a class="anchor" id="a323ba706a4c810188fbb5466aa0127e0"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ORDO_HIDDEN int pad_check </td>
+          <td class="memname">ORDO_HIDDEN size_t pad_check </td>
           <td>(</td>
-          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramtype">const void *&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>padding</em>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -216,34 +216,34 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Checks whether a buffer conforms to PKCS padding.</p>
+<p>Checks whether a buffer conforms to PKCS #7 padding.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>The buffer to check, starting at the first padding byte. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">padding</td><td>The padding byte value to check this buffer against (between 1 and 255).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">buffer</td><td>The buffer to verify, starting at the first data byte (not at the first padding byte). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">len</td><td>The length in bytes of the buffer.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>1</code> if the buffer is valid, <code>0</code> otherwise.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The message length if the buffer is valid, or <code>0</code> otherwise. The message can therefore be recovered as the first N bytes.</dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>PKCS padding is defined as appending <code>N</code> bytes of padding data at the end of the message, each with binary value <code>N</code>, with <code>N</code> between <code>1</code> and the block size of the block cipher used such that the length of the message plus <code>N</code> is a multiple of the block cipher's block size.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This implies the buffer must be at least <code>padding</code> bytes long. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a0d484298304f590f35e08cc8d60c1a06"></a>
+<a class="anchor" id="aa460b2231490c19678f5e30cf56c1c05"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">ORDO_HIDDEN void xor_buffer </td>
           <td>(</td>
-          <td class="paramtype">unsigned char *&#160;</td>
+          <td class="paramtype">void *RESTRICT&#160;</td>
           <td class="paramname"><em>dst</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const unsigned char *&#160;</td>
+          <td class="paramtype">const void *RESTRICT&#160;</td>
           <td class="paramname"><em>src</em>, </td>
         </tr>
         <tr>
@@ -269,7 +269,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This is conceptually equivalent to <code>dst</code> <code>^=</code> <code>src</code>.</dd></dl>
-<dl class="section warning"><dt>Warning</dt><dd>The source and destination buffers may be the same (in which case the buffer will contain <code>len</code> zeroes), but otherwise they cannot overlap. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The source and destination buffers may not overlap. </dd></dl>
 
 </div>
 </div>
@@ -311,7 +311,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 19 2014 19:04:17 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jul 27 2014 23:46:11 for Ordo by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['skein256_5fparams_5fdefault',['SKEIN256_PARAMS_DEFAULT',['../hash__params_8h.html#a2d0337c5d45a74858b65e93cae6c233b',1,'hash_params.h']]]
+  ['prim_5funknown',['PRIM_UNKNOWN',['../identification_8h.html#a2f60ad2c8e47476da6dcc4c5bebd08f1',1,'identification.h']]]
 ];
