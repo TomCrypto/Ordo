@@ -1,4 +1,4 @@
-Ordo v0.3.4
+Ordo v0.4.0
 ===========
 
 Symmetric Cryptography Library
@@ -10,6 +10,9 @@ Status
 ------
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
+
+What's new in 0.4.0:
+ - replaced primitive query system with much better limit API
 
 What's new in 0.3.4:
  - added HKDF, SHA-1

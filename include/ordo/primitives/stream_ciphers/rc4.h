@@ -34,7 +34,7 @@ extern "C" {
 #define rc4_init                         ordo_rc4_init
 #define rc4_update                       ordo_rc4_update
 #define rc4_final                        ordo_rc4_final
-#define rc4_query                        ordo_rc4_query
+#define rc4_limits                       ordo_rc4_limits
 #define rc4_bsize                        ordo_rc4_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -63,10 +63,10 @@ void rc4_update(struct RC4_STATE *state,
 ORDO_PUBLIC
 void rc4_final(struct RC4_STATE *state);
 
-/** @see \c stream_query()
+/** @see \c stream_limits()
 **/
 ORDO_PUBLIC
-size_t rc4_query(int query, size_t value);
+int rc4_limits(struct STREAM_LIMITS *limits);
 
 /** Gets the size in bytes of an \c RC4_STATE.
 ***

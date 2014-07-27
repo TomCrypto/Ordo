@@ -64,16 +64,12 @@ extern "C" {
 **/
 #define ordo_enc_stream_final stream_final
 
-/** Queries a stream cipher for its key length.
+/** Returns the key length of a stream cipher.
 ***
-*** @param [in]     cipher         The stream cipher to query.
+*** @param [in]     cipher         A stream cipher primitive.
 *** @param [in]     key_len        A suggested key length.
 ***
-*** @returns \c  key_len if and only if \c  key_len is a valid  key length for
-***          this  stream  cipher. Otherwise, returns  the nearest  valid  key
-***          length  greater than \c  key_len. However, if  no such key length
-***          exists, it will  return the  largest key  length  admitted by the
-***          stream cipher.
+*** @returns A suitable key length to use for this cipher.
 **/
 ORDO_PUBLIC
 size_t enc_stream_key_len(prim_t cipher,

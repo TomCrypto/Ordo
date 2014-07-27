@@ -43,7 +43,7 @@ int hash_init(struct HASH_STATE *state,
             return skein256_init(&state->jmp.skein256, params);
         #endif
     }
-    
+
     return ORDO_ARG;
 }
 
@@ -103,28 +103,27 @@ void hash_final(struct HASH_STATE *state,
     }
 }
 
-size_t hash_query(prim_t primitive,
-                  int query, size_t value)
+int hash_limits(prim_t primitive, struct HASH_LIMITS *limits)
 {
     switch (primitive)
     {
         #if WITH_MD5
         case HASH_MD5:
-            return md5_query(query, value);
+            return md5_limits(limits);
         #endif
         #if WITH_SHA1
         case HASH_SHA1:
-            return sha1_query(query, value);
+            return sha1_limits(limits);
         #endif
         #if WITH_SHA256
         case HASH_SHA256:
-            return sha256_query(query, value);
+            return sha256_limits(limits);
         #endif
         #if WITH_SKEIN256
         case HASH_SKEIN256:
-            return skein256_query(query, value);
+            return skein256_limits(limits);
         #endif
     }
-    
-    return (size_t)-1;
+
+    return ORDO_ARG;
 }

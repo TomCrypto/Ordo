@@ -77,9 +77,9 @@ const char *ordo_error_msg(int code);
 ***          keys, you  should consider hashing  your key in  some fashion
 ***          before using it for encryption, for instance using a KDF.
 ***
-*** @remarks The \c  block_query() function  can be used  to select a good
-***          key  length  for a given  block cipher via the  \c #KEY_LEN_Q
-***          query code. For stream ciphers, use \c stream_query().
+*** @remarks The \c  block_limits() function can be used  to select a good
+***          key length  for a given block cipher. For stream ciphers, use
+***          the \c stream_limits() function.
 ***
 *** @var ORDO_ERROR::ORDO_PADDING
 ***

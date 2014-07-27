@@ -37,7 +37,7 @@ int block_init(struct BLOCK_STATE *state,
             return threefish256_init(&state->jmp.threefish256, key, key_len, params);
         #endif
     }
-    
+
     return ORDO_ARG;
 }
 
@@ -109,24 +109,23 @@ void block_final(struct BLOCK_STATE *state)
     }
 }
 
-size_t block_query(prim_t primitive,
-                   int query, size_t value)
+int block_limits(prim_t primitive, struct BLOCK_LIMITS *limits)
 {
     switch (primitive)
     {
         #if WITH_AES
         case BLOCK_AES:
-            return aes_query(query, value);
+            return aes_limits(limits);
         #endif
         #if WITH_NULLCIPHER
         case BLOCK_NULLCIPHER:
-            return nullcipher_query(query, value);
+            return nullcipher_limits(limits);
         #endif
         #if WITH_THREEFISH256
         case BLOCK_THREEFISH256:
-            return threefish256_query(query, value);
+            return threefish256_limits(limits);
         #endif
     }
 
-    return (size_t)-1;
+    return ORDO_ARG;
 }

@@ -42,7 +42,7 @@ extern "C" {
 #define cbc_init                         ordo_cbc_init
 #define cbc_update                       ordo_cbc_update
 #define cbc_final                        ordo_cbc_final
-#define cbc_query                        ordo_cbc_query
+#define cbc_limits                       ordo_cbc_limits
 #define cbc_bsize                        ordo_cbc_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -71,11 +71,10 @@ int cbc_final(struct CBC_STATE *state,
               struct BLOCK_STATE *cipher_state,
               void *out, size_t *out_len);
 
-/** @see \c block_mode_query()
+/** @see \c block_mode_limits()
 **/
 ORDO_PUBLIC
-size_t cbc_query(prim_t cipher,
-                 int query, size_t value);
+int cbc_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of a \c CBC_STATE.
 ***

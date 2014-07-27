@@ -29,7 +29,7 @@ extern "C" {
 #define nullcipher_forward               ordo_nullcipher_forward
 #define nullcipher_inverse               ordo_nullcipher_inverse
 #define nullcipher_final                 ordo_nullcipher_final
-#define nullcipher_query                 ordo_nullcipher_query
+#define nullcipher_limits                ordo_nullcipher_limits
 #define nullcipher_bsize                 ordo_nullcipher_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -60,10 +60,10 @@ void nullcipher_inverse(const struct NULLCIPHER_STATE *state,
 ORDO_PUBLIC
 void nullcipher_final(struct NULLCIPHER_STATE *state);
 
-/** @see \c block_query()
+/** @see \c block_limits()
 **/
 ORDO_PUBLIC
-size_t nullcipher_query(int query, size_t value);
+int nullcipher_limits(struct BLOCK_LIMITS *limits);
 
 /** Gets the size in bytes of a \c NULLCIPHER_STATE.
 ***

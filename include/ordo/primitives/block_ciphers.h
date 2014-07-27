@@ -29,7 +29,7 @@ extern "C" {
 #define block_forward                    ordo_block_forward
 #define block_inverse                    ordo_block_inverse
 #define block_final                      ordo_block_final
-#define block_query                      ordo_block_query
+#define block_limits                     ordo_block_limits
 #define block_bsize                      ordo_block_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -78,19 +78,15 @@ void block_inverse(const struct BLOCK_STATE *state,
 ORDO_PUBLIC
 void block_final(struct BLOCK_STATE *state);
 
-/** Queries a block cipher for suitable parameters.
+/** Gets the limit structure for a block cipher.
 ***
 *** @param [in]     primitive      A block cipher primitive.
-*** @param [in]     query          A query code.
-*** @param [in]     value          A suggested value.
+*** @param [out]    limits         A limit structure.
 ***
-*** @returns A suitable parameter of type \c query based on \c value.
-***
-*** @see query.h
+*** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-size_t block_query(prim_t primitive,
-                   int query, size_t value);
+int block_limits(prim_t primitive, struct BLOCK_LIMITS *limits);
 
 /** Gets the size in bytes of a \c BLOCK_STATE.
 ***

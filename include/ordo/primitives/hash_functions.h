@@ -27,7 +27,7 @@ extern "C" {
 #define hash_init                        ordo_hash_init
 #define hash_update                      ordo_hash_update
 #define hash_final                       ordo_hash_final
-#define hash_query                       ordo_hash_query
+#define hash_limits                      ordo_hash_limits
 #define hash_bsize                       ordo_hash_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -73,19 +73,15 @@ ORDO_PUBLIC
 void hash_final(struct HASH_STATE *state,
                 void *digest);
 
-/** Queries a hash function for suitable parameters.
+/** Gets the limit structure for a hash function.
 ***
 *** @param [in]     primitive      A hash function primitive.
-*** @param [in]     query          A query code.
-*** @param [in]     value          A suggested value.
+*** @param [out]    limits         A limit structure.
 ***
-*** @returns A suitable parameter of type \c query based on \c value.
-***
-*** @see query.h
+*** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-size_t hash_query(prim_t primitive,
-                  int query, size_t value);
+int hash_limits(prim_t primitive, struct HASH_LIMITS *limits);
 
 /** Gets the size in bytes of a \c HASH_STATE.
 ***

@@ -29,7 +29,7 @@ extern "C" {
 #define aes_forward                      ordo_aes_forward
 #define aes_inverse                      ordo_aes_inverse
 #define aes_final                        ordo_aes_final
-#define aes_query                        ordo_aes_query
+#define aes_limits                       ordo_aes_limits
 #define aes_bsize                        ordo_aes_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -62,10 +62,10 @@ void aes_inverse(const struct AES_STATE *state,
 ORDO_PUBLIC
 void aes_final(struct AES_STATE *state);
 
-/** @see \c block_query()
+/** @see \c block_limits()
 **/
 ORDO_PUBLIC
-size_t aes_query(int query, size_t value);
+int aes_limits(struct BLOCK_LIMITS *limits);
 
 /** Gets the size in bytes of an \c AES_STATE.
 ***

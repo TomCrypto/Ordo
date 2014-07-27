@@ -27,20 +27,28 @@ int cfb_init(struct CFB_STATE *state,
              int dir,
              const void *params)
 {
-    size_t block_size = block_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
-    state->block_size = block_size;
-    state->remaining = 0;
+    int err;
 
-    if (cfb_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len)
+    struct BLOCK_MODE_LIMITS limits;
+    struct BLOCK_LIMITS block_lims;
+
+    if ((err = cfb_limits(cipher_state->primitive, &limits)))
+        return err;
+    if ((err = block_limits(cipher_state->primitive, &block_lims)))
+        return err;
+
+    state->block_size = block_lims.block_size;
+
+    if (!limit_check(iv_len, limits.iv_min, limits.iv_max, limits.iv_mul))
         return ORDO_ARG;
 
     state->direction = dir;
 
-    memset(state->iv, 0x00, block_size);
+    memset(state->iv, 0x00, state->block_size);
     memcpy(state->iv, iv, iv_len);
 
     block_forward(cipher_state, state->iv);
-    state->remaining = block_size;
+    state->remaining = state->block_size;
 
     return ORDO_SUCCESS;
 }

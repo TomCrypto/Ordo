@@ -55,12 +55,28 @@ int enc_block_final(struct ENC_BLOCK_CTX *ctx,
 size_t enc_block_key_len(prim_t cipher,
                          size_t key_len)
 {
-    return block_query(cipher, KEY_LEN_Q, key_len);
+    struct BLOCK_LIMITS limits;
+
+    if (block_limits(cipher, &limits))
+        return 0;
+
+    return limit_constrain(key_len,
+                           limits.key_min,
+                           limits.key_max,
+                           limits.key_mul);
 }
 
 size_t enc_block_iv_len(prim_t cipher,
                         prim_t mode,
                         size_t iv_len)
 {
-    return block_mode_query(mode, cipher, IV_LEN_Q, iv_len);
+    struct BLOCK_MODE_LIMITS limits;
+
+    if (block_mode_limits(mode, cipher, &limits))
+        return 0;
+
+    return limit_constrain(iv_len,
+                           limits.iv_min,
+                           limits.iv_max,
+                           limits.iv_mul);
 }

@@ -92,8 +92,8 @@ extern "C" {
 *** @param [out]    digest         The output buffer for the digest.
 ***
 *** @remarks The  \c digest buffer  should  be large enough to  accomodate the
-***          digest - you can query the hash function's  default digest length
-***          in bytes by the \c digest_length() function.
+***          digest - you can obtain the hash function's default digest length
+***          in bytes by calling the \c digest_length() function.
 ***
 *** @remarks Calling this function immediately after \c digest_init() is valid
 ***          and will  return the so-called "zero-length" digest, which is the

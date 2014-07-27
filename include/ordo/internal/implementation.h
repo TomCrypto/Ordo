@@ -37,6 +37,8 @@
 #define pswap16                          ordo_pswap16_internal
 #define pswap32                          ordo_pswap32_internal
 #define pswap64                          ordo_pswap64_internal
+#define limit_constrain                  ordo_limit_constrain_internal
+#define limit_check                      ordo_limit_check_internal
 #define pad_check                        ordo_pad_check_internal
 #define xor_buffer                       ordo_xor_buffer_internal
 #define inc_buffer                       ordo_inc_buffer_internal
@@ -46,7 +48,6 @@
 /** @cond **/
 #include "ordo/misc/endianness.h"
 #include "ordo/common/error.h"
-#include "ordo/common/query.h"
 #include "ordo/internal/alg.h"
 #include "ordo/internal/sys.h"
 

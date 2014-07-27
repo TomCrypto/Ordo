@@ -30,7 +30,7 @@ extern "C" {
 #define block_mode_init                  ordo_block_mode_init
 #define block_mode_update                ordo_block_mode_update
 #define block_mode_final                 ordo_block_mode_final
-#define block_mode_query                 ordo_block_mode_query
+#define block_mode_limits                ordo_block_mode_limits
 #define block_mode_bsize                 ordo_block_mode_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -94,20 +94,18 @@ int block_mode_final(struct BLOCK_MODE_STATE *state,
                      struct BLOCK_STATE *cipher_state,
                      void *out, size_t *out_len);
 
-/** Queries a block mode for suitable parameters.
+/** Gets the limit structure for a block mode (instantiated with a given block
+*** cipher, since block modes cannot have concrete limits without a cipher).
 ***
-*** @param [in]     mode           A block mode primitive.
+*** @param [in]     primitive      A block mode primitive.
 *** @param [in]     cipher         A block cipher primitive.
-*** @param [in]     query          A query code.
-*** @param [in]     value          A suggested value.
+*** @param [out]    limits         A limit structure.
 ***
-*** @returns A suitable parameter of type \c query based on \c value.
-***
-*** @see query.h
+*** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-size_t block_mode_query(prim_t mode, prim_t cipher,
-                        int query, size_t value);
+int block_mode_limits(prim_t primitive, prim_t cipher,
+                      struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of a \c BLOCK_MODE_STATE.
 ***

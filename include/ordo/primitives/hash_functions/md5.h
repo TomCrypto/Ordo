@@ -25,7 +25,7 @@ extern "C" {
 #define md5_init                         ordo_md5_init
 #define md5_update                       ordo_md5_update
 #define md5_final                        ordo_md5_final
-#define md5_query                        ordo_md5_query
+#define md5_limits                       ordo_md5_limits
 #define md5_bsize                        ordo_md5_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -51,10 +51,10 @@ ORDO_PUBLIC
 void md5_final(struct MD5_STATE *state,
                void *digest);
 
-/** @see \c hash_query()
+/** @see \c hash_limits()
 **/
 ORDO_PUBLIC
-size_t md5_query(int query, size_t value);
+int md5_limits(struct HASH_LIMITS *limits);
 
 /** Gets the size in bytes of an \c MD5_STATE.
 ***

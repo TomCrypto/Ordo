@@ -214,15 +214,15 @@ static unsigned char *iv  = buffer;
 
 static double block_speed(prim_t prim, int inverse)
 {
+    struct BLOCK_LIMITS limits;
     union BLOCK_PARAMS params;
     struct BLOCK_STATE state;
     uint64_t iterations;
     double elapsed;
 
-    size_t block_size = block_query(prim, BLOCK_SIZE_Q, (size_t)-1);
-    size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
+    CHECK(block_limits(prim, &limits));
 
-    CHECK(block_init(&state, key, key_len,
+    CHECK(block_init(&state, key, limits.key_max,
           prim, get_block_params(prim, &params)));
 
     if (inverse)
@@ -240,7 +240,7 @@ static double block_speed(prim_t prim, int inverse)
 
     block_final(&state);
 
-    return (double)(block_size * iterations) / (elapsed * 1024 * 1024);
+    return (double)(limits.block_size * iterations) / (elapsed * 1024 * 1024);
 }
 
 static double stream_speed(prim_t prim, size_t block)
@@ -290,9 +290,9 @@ static double mode_speed(prim_t prim, prim_t mode, size_t block)
     uint64_t iterations;
     double elapsed;
 
-    size_t iv_len = block_mode_query(mode, prim, IV_LEN_Q, (size_t)-1);
-    size_t key_len = block_query(prim, KEY_LEN_Q, (size_t)-1);
-    size_t dummy; /* We don't care about the output length. */
+    size_t iv_len = enc_block_iv_len(mode, prim, (size_t)-1);
+    size_t key_len = enc_block_key_len(prim, (size_t)-1);
+    size_t dummy; /* Don't care about output length. */
 
     CHECK(enc_block_init(&ctx, key, key_len, iv, iv_len, 1,
           prim, get_block_params(prim, &block_params),

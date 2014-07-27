@@ -14,186 +14,205 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#include "ordo/common/query.h"
+#include "ordo/common/limits.h"
+#include "ordo/primitives/block_modes.h"
+#include "ordo/primitives/block_ciphers.h"
+#include "ordo/primitives/stream_ciphers.h"
+#include "ordo/primitives/hash_functions.h"
 
 #if WITH_ECB
 #include "ordo/primitives/block_modes/ecb.h"
-size_t ecb_query(prim_t cipher, int query, size_t value)
+int ecb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits)
 {
-    switch(query)
-    {
-        case IV_LEN_Q: return 0;
-        default      : return 0;
-    }
+    if (prim_type(cipher) != PRIM_TYPE_BLOCK)
+        return ORDO_ARG;
+
+    limits->iv_min = 0;
+    limits->iv_max = 0;
+    limits->iv_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_CBC
 #include "ordo/primitives/block_modes/cbc.h"
-size_t cbc_query(prim_t cipher, int query, size_t value)
+int cbc_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits)
 {
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
+    struct BLOCK_LIMITS block_lims;
+    int err;
+
+    if (prim_type(cipher) != PRIM_TYPE_BLOCK)
+        return ORDO_ARG;
+
+    if ((err = block_limits(cipher, &block_lims)))
+        return err;
+
+    limits->iv_min = block_lims.block_size;
+    limits->iv_max = block_lims.block_size;
+    limits->iv_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_CTR
 #include "ordo/primitives/block_modes/ctr.h"
-size_t ctr_query(prim_t cipher, int query, size_t value)
+int ctr_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits)
 {
-    size_t block_size = block_query(cipher, BLOCK_SIZE_Q, 0);
+    struct BLOCK_LIMITS block_lims;
+    int err;
 
-    switch(query)
-    {
-        case IV_LEN_Q: return block_size - bits(64);
-        default      : return 0;
-    }
+    if (prim_type(cipher) != PRIM_TYPE_BLOCK)
+        return ORDO_ARG;
+
+    if ((err = block_limits(cipher, &block_lims)))
+        return err;
+
+    /* Assertion: block_limits.block_size >= 64 bits */
+
+    limits->iv_min = block_lims.block_size - bits(64);
+    limits->iv_max = block_lims.block_size - bits(64);
+    limits->iv_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_CFB
 #include "ordo/primitives/block_modes/cfb.h"
-size_t cfb_query(prim_t cipher, int query, size_t value)
+int cfb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits)
 {
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
+    struct BLOCK_LIMITS block_lims;
+    int err;
+
+    if (prim_type(cipher) != PRIM_TYPE_BLOCK)
+        return ORDO_ARG;
+
+    if ((err = block_limits(cipher, &block_lims)))
+        return err;
+
+    limits->iv_min = block_lims.block_size;
+    limits->iv_max = block_lims.block_size;
+    limits->iv_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_OFB
 #include "ordo/primitives/block_modes/ofb.h"
-size_t ofb_query(prim_t cipher, int query, size_t value)
+int ofb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits)
 {
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
+    struct BLOCK_LIMITS block_lims;
+    int err;
+
+    if (prim_type(cipher) != PRIM_TYPE_BLOCK)
+        return ORDO_ARG;
+
+    if ((err = block_limits(cipher, &block_lims)))
+        return err;
+
+    limits->iv_min = block_lims.block_size;
+    limits->iv_max = block_lims.block_size;
+    limits->iv_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_MD5
 #include "ordo/primitives/hash_functions/md5.h"
-size_t md5_query(int query, size_t value)
+int md5_limits(struct HASH_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(512);
-        case DIGEST_LEN_Q: return bits(128);
+    limits->block_size = bits(512);
+    limits->digest_len = bits(128);
 
-        default: return 0;
-    }
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_SHA1
 #include "ordo/primitives/hash_functions/sha1.h"
-size_t sha1_query(int query, size_t value)
+int sha1_limits(struct HASH_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(512);
-        case DIGEST_LEN_Q: return bits(160);
+    limits->block_size = bits(512);
+    limits->digest_len = bits(160);
 
-        default: return 0;
-    }
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_SHA256
 #include "ordo/primitives/hash_functions/sha256.h"
-size_t sha256_query(int query, size_t value)
+int sha256_limits(struct HASH_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(512);
-        case DIGEST_LEN_Q: return bits(256);
+    limits->block_size = bits(512);
+    limits->digest_len = bits(256);
 
-        default: return 0;
-    }
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_SKEIN256
 #include "ordo/primitives/hash_functions/skein256.h"
-size_t skein256_query(int query, size_t value)
+int skein256_limits(struct HASH_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(256);
-        case DIGEST_LEN_Q: return bits(256);
-        default          : return 0;
-    }
+    limits->block_size = bits(256);
+    limits->digest_len = bits(256);
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_RC4
 #include "ordo/primitives/stream_ciphers/rc4.h"
-size_t rc4_query(int query, size_t key_len)
+int rc4_limits(struct STREAM_LIMITS *limits)
 {
-    switch (query)
-    {
-        case KEY_LEN_Q:
-            if (key_len < bits(40))
-                return bits(40);
-            if (key_len > bits(2048))
-                return bits(2048);
-            return key_len;
-        default:
-            return 0;
-    }
+    limits->key_min = bits(40);
+    limits->key_max = bits(2048);
+    limits->key_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_AES
 #include "ordo/primitives/block_ciphers/aes.h"
-size_t aes_query(int query, size_t value)
+int aes_limits(struct BLOCK_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q:
-            return bits(128);
-        case KEY_LEN_Q:
-            if (value <= 16)
-                return bits(128);
-            if (value <= 24)
-                return bits(192);
-            return bits(256);
-        default:
-            return 0;
-    }
+    limits->block_size = bits(128);
+    limits->key_min = bits(128);
+    limits->key_max = bits(256);
+    limits->key_mul = bits(64);
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_NULLCIPHER
 #include "ordo/primitives/block_ciphers/nullcipher.h"
-size_t nullcipher_query(int query, size_t value)
+int nullcipher_limits(struct BLOCK_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(128);
-        case KEY_LEN_Q   : return bits(0);
-        default          : return 0;
-    }
+    limits->block_size = bits(128);
+    limits->key_min = bits(0);
+    limits->key_max = bits(0);
+    limits->key_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
 #if WITH_THREEFISH256
 #include "ordo/primitives/block_ciphers/threefish256.h"
-size_t threefish256_query(int query, size_t value)
+int threefish256_limits(struct BLOCK_LIMITS *limits)
 {
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return bits(256);
-        case KEY_LEN_Q   : return bits(256);
-        default          : return 0;
-    }
+    limits->block_size = bits(256);
+    limits->key_min = bits(256);
+    limits->key_max = bits(256);
+    limits->key_mul = 1;
+
+    return ORDO_SUCCESS;
 }
 #endif
 
@@ -202,7 +221,9 @@ size_t threefish256_query(int query, size_t value)
 #include "ordo/digest/digest.h"
 size_t digest_length(prim_t hash)
 {
-    return hash_query(hash, DIGEST_LEN_Q, 0);
+    struct HASH_LIMITS limits;
+
+    return (!hash_limits(hash, &limits)) ? limits.digest_len : 0;
 }
 
 /*===----------------------------------------------------------------------===*/

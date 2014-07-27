@@ -113,6 +113,7 @@ if __name__ == "__main__":
     definitions += '#define ORDO_DEFINITIONS_H\n'
     definitions += '\n'
     definitions += '#include "ordo/common/identification.h"\n'
+    definitions += '#include "ordo/common/limits.h"\n'
 
     definitions += '\n'
     definitions += '#define HASH_BLOCK_LEN  {0}\n'.format(get_block_len(built_prims,  'HASH'))

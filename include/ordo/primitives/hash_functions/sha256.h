@@ -25,7 +25,7 @@ extern "C" {
 #define sha256_init                      ordo_sha256_init
 #define sha256_update                    ordo_sha256_update
 #define sha256_final                     ordo_sha256_final
-#define sha256_query                     ordo_sha256_query
+#define sha256_limits                    ordo_sha256_limits
 #define sha256_bsize                     ordo_sha256_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -51,10 +51,10 @@ ORDO_PUBLIC
 void sha256_final(struct SHA256_STATE *state,
                   void *digest);
 
-/** @see \c hash_query()
+/** @see \c hash_limits()
 **/
 ORDO_PUBLIC
-size_t sha256_query(int query, size_t value);
+int sha256_limits(struct HASH_LIMITS *limits);
 
 /** Gets the size in bytes of a \c SHA256_STATE.
 ***

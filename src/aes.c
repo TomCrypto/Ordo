@@ -36,7 +36,7 @@ int aes_init(struct AES_STATE *state,
              const void *key, size_t key_len,
              const struct AES_PARAMS *params)
 {
-    if (aes_query(KEY_LEN_Q, key_len) != key_len)
+    if (!limit_check(key_len, bits(128), bits(256), bits(64)))
         return ORDO_KEY_LEN;
 
     if (params)

@@ -11,5 +11,13 @@
 size_t enc_stream_key_len(prim_t cipher,
                           size_t key_len)
 {
-    return stream_query(cipher, KEY_LEN_Q, key_len);
+    struct STREAM_LIMITS limits;
+
+    if (stream_limits(cipher, &limits))
+        return 0;
+
+    return limit_constrain(key_len,
+                           limits.key_min,
+                           limits.key_max,
+                           limits.key_mul);
 }

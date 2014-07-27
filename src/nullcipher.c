@@ -21,7 +21,8 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
                     const void *key, size_t key_len,
                     const void *params)
 {
-    if (nullcipher_query(KEY_LEN_Q, key_len) != key_len) return ORDO_KEY_LEN;
+    if (!limit_check(key_len, bits(0), bits(0), 1))
+        return ORDO_KEY_LEN;
 
     state->dummy = 0x42;
     return ORDO_SUCCESS;

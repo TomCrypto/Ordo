@@ -36,7 +36,7 @@ extern "C" {
 #define cfb_init                         ordo_cfb_init
 #define cfb_update                       ordo_cfb_update
 #define cfb_final                        ordo_cfb_final
-#define cfb_query                        ordo_cfb_query
+#define cfb_limits                       ordo_cfb_limits
 #define cfb_bsize                        ordo_cfb_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -65,11 +65,10 @@ int cfb_final(struct CFB_STATE *state,
               struct BLOCK_STATE *cipher_state,
               void *out, size_t *out_len);
 
-/** @see \c block_mode_query()
+/** @see \c block_mode_limits()
 **/
 ORDO_PUBLIC
-size_t cfb_query(prim_t cipher,
-                 int query, size_t value);
+int cfb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of a \c CFB_STATE.
 ***

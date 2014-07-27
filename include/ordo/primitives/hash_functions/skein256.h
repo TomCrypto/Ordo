@@ -39,7 +39,7 @@ extern "C" {
 #define skein256_init                    ordo_skein256_init
 #define skein256_update                  ordo_skein256_update
 #define skein256_final                   ordo_skein256_final
-#define skein256_query                   ordo_skein256_query
+#define skein256_limits                  ordo_skein256_limits
 #define skein256_bsize                    ordo_skein256_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -66,10 +66,10 @@ ORDO_PUBLIC
 void skein256_final(struct SKEIN256_STATE *state,
                     void *digest);
 
-/** @see \c hash_query()
+/** @see \c hash_limits()
 **/
 ORDO_PUBLIC
-size_t skein256_query(int query, size_t value);
+int skein256_limits(struct HASH_LIMITS *limits);
 
 /** Gets the size in bytes of a \c SKEIN256_STATE.
 ***

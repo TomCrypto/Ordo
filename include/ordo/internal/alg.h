@@ -71,6 +71,30 @@ ORDO_HIDDEN uint64_t ror64(uint64_t x, int n);
 **/
 #define offset(ptr, len) ((unsigned char *)ptr + len)
 
+/** Constrains the input to a (min, max, mul) limit description.
+***
+*** @param [in]     in             The input to constrain.
+*** @param [in]     min            The minimum limit.
+*** @param [in]     max            The maximum limit.
+*** @param [in]     mul            The multiple limit.
+***
+*** @returns The constrained input.
+**/
+ORDO_HIDDEN
+size_t limit_constrain(size_t in, size_t min, size_t max, size_t mul);
+
+/** Checks whether the input satisfies a (min, max, mul) limit description.
+***
+*** @param [in]     in             The input to constrain.
+*** @param [in]     min            The minimum limit.
+*** @param [in]     max            The maximum limit.
+*** @param [in]     mul            The multiple limit.
+***
+*** @returns Zero if the input is invalid, one otherwise.
+**/
+ORDO_HIDDEN
+int limit_check(size_t in, size_t min, size_t max, size_t mul);
+
 /** Checks whether a buffer conforms to PKCS #7 padding.
 ***
 *** @param [in]     buffer         The buffer to verify, starting at the first

@@ -38,7 +38,7 @@ extern "C" {
 #define ctr_init                         ordo_ctr_init
 #define ctr_update                       ordo_ctr_update
 #define ctr_final                        ordo_ctr_final
-#define ctr_query                        ordo_ctr_query
+#define ctr_limits                       ordo_ctr_limits
 #define ctr_bsize                        ordo_ctr_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -67,11 +67,10 @@ int ctr_final(struct CTR_STATE *state,
               struct BLOCK_STATE *cipher_state,
               void *out, size_t *out_len);
 
-/** @see \c block_mode_query()
+/** @see \c block_mode_limits()
 **/
 ORDO_PUBLIC
-size_t ctr_query(prim_t cipher,
-                 int query, size_t value);
+int ctr_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of a \c CTR_STATE.
 ***

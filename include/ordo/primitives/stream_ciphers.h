@@ -28,7 +28,7 @@ extern "C" {
 #define stream_init                      ordo_stream_init
 #define stream_update                    ordo_stream_update
 #define stream_final                     ordo_stream_final
-#define stream_query                     ordo_stream_query
+#define stream_limits                    ordo_stream_limits
 #define stream_bsize                     ordo_stream_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -72,19 +72,15 @@ void stream_update(struct STREAM_STATE *state,
 ORDO_PUBLIC
 void stream_final(struct STREAM_STATE *state);
 
-/** Queries a stream cipher for suitable parameters.
+/** Gets the limit structure for a stream cipher.
 ***
 *** @param [in]     primitive      A stream cipher primitive.
-*** @param [in]     query          A query code.
-*** @param [in]     value          A suggested value.
+*** @param [out]    limits         A limit structure.
 ***
-*** @returns A suitable parameter of type \c query based on \c value.
-***
-*** @see query.h
+*** @returns \c #ORDO_SUCCESS on success, else an error code.
 **/
 ORDO_PUBLIC
-size_t stream_query(prim_t primitive,
-                    int query, size_t value);
+int stream_limits(prim_t primitive, struct STREAM_LIMITS *limits);
 
 /** Gets the size in bytes of a \c STREAM_STATE.
 ***

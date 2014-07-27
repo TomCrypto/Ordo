@@ -35,7 +35,7 @@ extern "C" {
 #define ecb_init                         ordo_ecb_init
 #define ecb_update                       ordo_ecb_update
 #define ecb_final                        ordo_ecb_final
-#define ecb_query                        ordo_ecb_query
+#define ecb_limits                       ordo_ecb_limits
 #define ecb_bsize                        ordo_ecb_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -64,11 +64,10 @@ int ecb_final(struct ECB_STATE *state,
               struct BLOCK_STATE *cipher_state,
               void *out, size_t *out_len);
 
-/** @see \c block_mode_query()
+/** @see \c block_mode_limits()
 **/
 ORDO_PUBLIC
-size_t ecb_query(prim_t cipher,
-                 int query, size_t value);
+int ecb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of a \c ECB_STATE.
 ***

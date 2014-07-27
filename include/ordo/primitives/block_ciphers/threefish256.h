@@ -31,7 +31,7 @@ extern "C" {
 #define threefish256_forward             ordo_threefish256_forward
 #define threefish256_inverse             ordo_threefish256_inverse
 #define threefish256_final               ordo_threefish256_final
-#define threefish256_query               ordo_threefish256_query
+#define threefish256_limits              ordo_threefish256_limits
 #define threefish256_bsize               ordo_threefish256_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -62,10 +62,10 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state,
 ORDO_PUBLIC
 void threefish256_final(struct THREEFISH256_STATE *state);
 
-/** @see \c block_query()
+/** @see \c block_limits()
 **/
 ORDO_PUBLIC
-size_t threefish256_query(int query, size_t value);
+int threefish256_limits(struct BLOCK_LIMITS *limits);
 
 /** Gets the size in bytes of a \c THREEFISH256_STATE.
 ***

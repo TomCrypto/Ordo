@@ -39,6 +39,8 @@ static int test_fini(void) { return 1; }
 
 extern int test_error_codes(void);
 extern int test_macros(void);
+extern int test_limit_constrain(void);
+extern int test_limit_check(void);
 extern int test_pad_check(void);
 extern int test_xor_buffer(void);
 extern int test_inc_buffer(void);
@@ -73,6 +75,8 @@ static const struct TEST tests[] =
     { test_init,                         "Initialization"                   },
     { test_error_codes,                  "Error code tests"                 },
     { test_macros,                       "Macro tests"                      },
+    { test_limit_constrain,              "limit_constrain tests"            },
+    { test_limit_check,                  "limit_check tests"                },
     { test_pad_check,                    "pad_check tests"                  },
     { test_xor_buffer,                   "xor_buffer tests"                 },
     { test_inc_buffer,                   "inc_buffer tests"                 },

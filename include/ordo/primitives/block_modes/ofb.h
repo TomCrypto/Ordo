@@ -36,7 +36,7 @@ extern "C" {
 #define ofb_init                         ordo_ofb_init
 #define ofb_update                       ordo_ofb_update
 #define ofb_final                        ordo_ofb_final
-#define ofb_query                        ordo_ofb_query
+#define ofb_limits                       ordo_ofb_limits
 #define ofb_bsize                        ordo_ofb_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -65,11 +65,10 @@ int ofb_final(struct OFB_STATE *state,
               struct BLOCK_STATE *cipher_state,
               void *out, size_t *out_len);
 
-/** @see \c block_mode_query()
+/** @see \c block_mode_limits()
 **/
 ORDO_PUBLIC
-size_t ofb_query(prim_t cipher,
-                 int query, size_t value);
+int ofb_limits(prim_t cipher, struct BLOCK_MODE_LIMITS *limits);
 
 /** Gets the size in bytes of an \c OFB_STATE.
 ***

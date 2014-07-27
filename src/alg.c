@@ -67,6 +67,24 @@ uint64_t ror64(uint64_t x, int n)
 
 /*===----------------------------------------------------------------------===*/
 
+size_t limit_constrain(size_t in, size_t min, size_t max, size_t mul)
+{
+    if (in <= min)
+        return min;
+
+    if (in >= max)
+        return max;
+
+    return in + ((in % mul) ? mul - in % mul : 0);
+}
+
+int limit_check(size_t in, size_t min, size_t max, size_t mul)
+{
+    return (in == limit_constrain(in, min, max, mul));
+}
+
+/*===----------------------------------------------------------------------===*/
+
 size_t pad_check(const void *buffer, size_t len)
 {
     /* PCKS #7 padding verification (constant time) */

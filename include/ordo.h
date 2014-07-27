@@ -32,8 +32,8 @@
 /** @endcond **/
 
 #include "ordo/common/version.h"
+#include "ordo/common/limits.h"
 #include "ordo/common/error.h"
-#include "ordo/common/query.h"
 
 #include "ordo/enc/enc_stream.h"
 #include "ordo/enc/enc_block.h"

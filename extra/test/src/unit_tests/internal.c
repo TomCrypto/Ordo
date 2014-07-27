@@ -31,6 +31,66 @@ int test_macros(void)
     return 1;
 }
 
+int test_limit_constrain(void);
+int test_limit_constrain(void)
+{
+    ASSERT_EQ(limit_constrain(6, 8, 16, 4), 8);
+    ASSERT_EQ(limit_constrain(20, 8, 16, 4), 16);
+    ASSERT_EQ(limit_constrain(9, 8, 16, 4), 12);
+
+    ASSERT_EQ(limit_constrain(10, 13, 13, 1), 13);
+    ASSERT_EQ(limit_constrain(19, 13, 13, 1), 13);
+    ASSERT_EQ(limit_constrain(13, 13, 13, 1), 13);
+
+    ASSERT_EQ(limit_constrain(15, 20, 40, 1), 20);
+    ASSERT_EQ(limit_constrain(45, 20, 40, 1), 40);
+    ASSERT_EQ(limit_constrain(25, 20, 40, 1), 25);
+    ASSERT_EQ(limit_constrain(31, 20, 40, 1), 31);
+
+    ASSERT_EQ(limit_constrain(15, 20, 40, 2), 20);
+    ASSERT_EQ(limit_constrain(45, 20, 40, 2), 40);
+    ASSERT_EQ(limit_constrain(25, 20, 40, 2), 26);
+    ASSERT_EQ(limit_constrain(31, 20, 40, 2), 32);
+
+    ASSERT_EQ(limit_constrain(0, 0, 6, 3), 0);
+    ASSERT_EQ(limit_constrain(2, 0, 6, 3), 3);
+    ASSERT_EQ(limit_constrain(4, 0, 6, 3), 6);
+    ASSERT_EQ(limit_constrain(6, 0, 6, 3), 6);
+    ASSERT_EQ(limit_constrain(8, 0, 6, 3), 6);
+
+    return 1;
+}
+
+int test_limit_check(void);
+int test_limit_check(void)
+{
+    ASSERT_EQ(limit_check(6, 8, 16, 4), 0);
+    ASSERT_EQ(limit_check(20, 8, 16, 4), 0);
+    ASSERT_EQ(limit_check(9, 8, 16, 4), 0);
+
+    ASSERT_EQ(limit_check(10, 13, 13, 1), 0);
+    ASSERT_EQ(limit_check(19, 13, 13, 1), 0);
+    ASSERT_EQ(limit_check(13, 13, 13, 1), 1);
+
+    ASSERT_EQ(limit_check(15, 20, 40, 1), 0);
+    ASSERT_EQ(limit_check(45, 20, 40, 1), 0);
+    ASSERT_EQ(limit_check(25, 20, 40, 1), 1);
+    ASSERT_EQ(limit_check(31, 20, 40, 1), 1);
+
+    ASSERT_EQ(limit_check(15, 20, 40, 2), 0);
+    ASSERT_EQ(limit_check(45, 20, 40, 2), 0);
+    ASSERT_EQ(limit_check(25, 20, 40, 2), 0);
+    ASSERT_EQ(limit_check(31, 20, 40, 2), 0);
+
+    ASSERT_EQ(limit_check(0, 0, 6, 3), 1);
+    ASSERT_EQ(limit_check(2, 0, 6, 3), 0);
+    ASSERT_EQ(limit_check(4, 0, 6, 3), 0);
+    ASSERT_EQ(limit_check(6, 0, 6, 3), 1);
+    ASSERT_EQ(limit_check(8, 0, 6, 3), 0);
+
+    return 1;
+}
+
 static void gen_msg(unsigned char *buf, size_t msg_len, size_t block_len)
 {
     uint8_t val = 1, pad =  (uint8_t)(block_len - msg_len);

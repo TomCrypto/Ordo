@@ -120,7 +120,7 @@ ORDO_PUBLIC
 int enc_block_final(struct ENC_BLOCK_CTX *ctx,
                     void *out, size_t *out_len);
 
-/** Queries the key length of a block cipher.
+/** Returns the key length of a block cipher.
 ***
 *** @param [in]     cipher         A block cipher primitive.
 *** @param [in]     key_len        A suggested key length.
@@ -131,7 +131,7 @@ ORDO_PUBLIC
 size_t enc_block_key_len(prim_t cipher,
                          size_t key_len);
 
-/** Queries the IV length of a block mode and block cipher.
+/** Returns the IV length of a block mode and block cipher.
 ***
 *** @param [in]     cipher         A block cipher primitive.
 *** @param [in]     mode           A block mode primitive.

@@ -23,7 +23,7 @@ int stream_init(struct STREAM_STATE *state,
             return rc4_init(&state->jmp.rc4, key, key_len, params);
         #endif
     }
-    
+
     return ORDO_ARG;
 }
 
@@ -52,16 +52,15 @@ void stream_final(struct STREAM_STATE *state)
     }
 }
 
-size_t stream_query(prim_t primitive,
-                    int query, size_t value)
+int stream_limits(prim_t primitive, struct STREAM_LIMITS *limits)
 {
     switch (primitive)
     {
         #if WITH_RC4
         case STREAM_RC4:
-            return rc4_query(query, value);
+            return rc4_limits(limits);
         #endif
     }
-    
-    return (size_t)-1;
+
+    return ORDO_ARG;
 }

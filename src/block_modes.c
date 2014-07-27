@@ -53,7 +53,7 @@ int block_mode_init(struct BLOCK_MODE_STATE *state,
             return ofb_init(&state->jmp.ofb, cipher_state, iv, iv_len, direction, params);
         #endif
     }
-    
+
     return ORDO_ARG;
 }
 
@@ -123,32 +123,32 @@ int block_mode_final(struct BLOCK_MODE_STATE *state,
     return ORDO_ARG;
 }
 
-size_t block_mode_query(prim_t mode, prim_t cipher,
-                        int query, size_t value)
+int block_mode_limits(prim_t mode, prim_t cipher,
+                      struct BLOCK_MODE_LIMITS *limits)
 {
     switch (mode)
     {
         #if WITH_ECB
         case BLOCK_MODE_ECB:
-            return ecb_query(cipher, query, value);
+            return ecb_limits(cipher, limits);
         #endif
         #if WITH_CBC
         case BLOCK_MODE_CBC:
-            return cbc_query(cipher, query, value);
+            return cbc_limits(cipher, limits);
         #endif
         #if WITH_CTR
         case BLOCK_MODE_CTR:
-            return ctr_query(cipher, query, value);
+            return ctr_limits(cipher, limits);
         #endif
         #if WITH_CFB
         case BLOCK_MODE_CFB:
-            return cfb_query(cipher, query, value);
+            return cfb_limits(cipher, limits);
         #endif
         #if WITH_OFB
         case BLOCK_MODE_OFB:
-            return ofb_query(cipher, query, value);
+            return ofb_limits(cipher, limits);
         #endif
     }
-    
-    return (size_t)-1;
+
+    return ORDO_ARG;
 }

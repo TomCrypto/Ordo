@@ -45,12 +45,22 @@ int ctr_init(struct CTR_STATE *state,
              int dir,
              const void *params)
 {
-    size_t block_size = block_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
-    if (ctr_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len)
+    int err;
+
+    struct BLOCK_MODE_LIMITS limits;
+    struct BLOCK_LIMITS block_lims;
+
+    if ((err = ctr_limits(cipher_state->primitive, &limits)))
+        return err;
+    if ((err = block_limits(cipher_state->primitive, &block_lims)))
+        return err;
+
+    state->block_size = block_lims.block_size;
+
+    if (!limit_check(iv_len, limits.iv_min, limits.iv_max, limits.iv_mul))
         return ORDO_ARG;
 
-    state->ctr_len = block_size - iv_len;
-    state->block_size = block_size;
+    state->ctr_len = state->block_size - iv_len;
     state->remaining = 0;
     state->counter = 0;
 

@@ -108,7 +108,7 @@ IF(COMPILER_GNU OR COMPILER_CLANG)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
     ENDIF()
 ELSEIF(COMPILER_INTEL)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")    
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -restrict -ansi-alias")
@@ -144,7 +144,7 @@ SET(INCLUDE_FILES
     include/ordo/common/error.h
     include/ordo/common/identification.h
     include/ordo/common/interface.h
-    include/ordo/common/query.h
+    include/ordo/common/limits.h
     include/ordo/common/version.h
     include/ordo/digest/digest.h
     include/ordo/enc/enc_block.h
@@ -322,7 +322,7 @@ IF(FEATURES)
     JOIN("${FEATURES}" " " FEATURE_LIST)
 
     ADD_TOKEN(ORDO_FEATURE_LIST="${FEATURE_LIST}")
-    
+
     SET(FEATURE_ARRAY, "")
     FOREACH(FEATURE ${FEATURES})
         SET(FEATURE_ARRAY ${FEATURE_ARRAY}\"${FEATURE}\",)
@@ -334,7 +334,7 @@ ENDIF()
 IF(SYSTEM_GENERIC)
     INCLUDE(TestBigEndian)
     test_big_endian(TEST_ENDIAN)
-    
+
     IF(TEST_ENDIAN)
         ADD_TOKEN(ORDO_BIG_ENDIAN)
     ELSE()

@@ -25,7 +25,7 @@ extern "C" {
 #define sha1_init                        ordo_sha1_init
 #define sha1_update                      ordo_sha1_update
 #define sha1_final                       ordo_sha1_final
-#define sha1_query                       ordo_sha1_query
+#define sha1_limits                      ordo_sha1_limits
 #define sha1_bsize                       ordo_sha1_bsize
 
 /*===----------------------------------------------------------------------===*/
@@ -51,10 +51,10 @@ ORDO_PUBLIC
 void sha1_final(struct SHA1_STATE *state,
                 void *digest);
 
-/** @see \c hash_query()
+/** @see \c hash_limits()
 **/
 ORDO_PUBLIC
-size_t sha1_query(int query, size_t value);
+int sha1_limits(struct HASH_LIMITS *limits);
 
 /** Gets the size in bytes of a \c SHA1_STATE.
 ***

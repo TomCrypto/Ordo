@@ -29,11 +29,21 @@ int ecb_init(struct ECB_STATE *state,
              int direction,
              const struct ECB_PARAMS *params)
 {
-    state->block_size = block_query(cipher_state->primitive, BLOCK_SIZE_Q, 0);
+    int err;
+
+    struct BLOCK_MODE_LIMITS limits;
+    struct BLOCK_LIMITS block_lims;
+
+    if ((err = ecb_limits(cipher_state->primitive, &limits)))
+        return err;
+    if ((err = block_limits(cipher_state->primitive, &block_lims)))
+        return err;
+
+    state->block_size = block_lims.block_size;
 
     /* ECB accepts no IV - it is an error to pass it one. Note for consistency
      * only the iv_len parameter is checked - iv itself is in fact ignored. */
-    if (ecb_query(cipher_state->primitive, IV_LEN_Q, iv_len) != iv_len)
+    if (!limit_check(iv_len, limits.iv_min, limits.iv_max, limits.iv_mul))
         return ORDO_ARG;
 
     state->available = 0;

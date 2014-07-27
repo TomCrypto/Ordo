@@ -32,7 +32,7 @@ int threefish256_init(struct THREEFISH256_STATE *state,
 {
     uint64_t data[4];
 
-    if (threefish256_query(KEY_LEN_Q, key_len) != key_len)
+    if (!limit_check(key_len, bits(256), bits(256), 1))
         return ORDO_KEY_LEN;
 
     memcpy(data, key, sizeof(data));
