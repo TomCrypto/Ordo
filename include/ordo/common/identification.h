@@ -34,6 +34,7 @@ extern "C" {
 #define prim_type                        ordo_prim_type
 #define prim_from_name                   ordo_prim_from_name
 #define prims_by_type                    ordo_prims_by_type
+#define prim_default                     ordo_prim_default
 
 /*===----------------------------------------------------------------------===*/
 

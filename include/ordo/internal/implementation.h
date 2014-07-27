@@ -56,6 +56,10 @@
 
 /*===----------------------------------------------------------------------===*/
 
+#ifdef OPAQUE
+    #undef OPAQUE
+#endif
+
 #if defined(__clang__)\
  || defined(__INTEL_COMPILER)\
  || defined(__GNUC__)\

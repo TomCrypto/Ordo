@@ -87,8 +87,8 @@ int ordo_hmac(prim_t hash, const void *params,
     if ((err = hmac_init(&ctx, key, key_len, hash, params)))
         return err;
 
-
     hmac_update(&ctx, in, len);
+
     if ((err = hmac_final(&ctx, fingerprint)))
         return err;
 

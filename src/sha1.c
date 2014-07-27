@@ -19,7 +19,7 @@ static const uint32_t sha1_iv[5] =
     0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0
 };
 
-#if annotation
+#ifdef OPAQUE
 struct SHA1_STATE
 {
     uint32_t digest[5];
@@ -27,7 +27,7 @@ struct SHA1_STATE
     uint64_t block_len;
     uint64_t msg_len;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -100,22 +100,6 @@ void sha1_final(struct SHA1_STATE *state,
     state->digest[4] = tobe32(state->digest[4]);
 
     memcpy(digest, state->digest, SHA1_DIGEST);
-}
-
-size_t sha1_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return SHA1_BLOCK;
-        case DIGEST_LEN_Q: return SHA1_DIGEST;
-
-        default: return 0;
-    }
-}
-
-size_t sha1_bsize(void)
-{
-    return sizeof(struct SHA1_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

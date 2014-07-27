@@ -130,8 +130,3 @@ size_t block_query(prim_t primitive,
 
     return (size_t)-1;
 }
-
-size_t block_bsize(void)
-{
-    return sizeof(struct BLOCK_STATE);
-}

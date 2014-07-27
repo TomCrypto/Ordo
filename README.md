@@ -1,4 +1,4 @@
-Ordo v0.3.3
+Ordo v0.3.4
 ===========
 
 Symmetric Cryptography Library
@@ -11,13 +11,15 @@ Status
 
 [![Build Status](https://travis-ci.org/TomCrypto/Ordo.png?branch=master)](https://travis-ci.org/TomCrypto/Ordo)
 
-What's new in 0.3.3:
+What's new in 0.3.4:
  - added HKDF, SHA-1
  - all hash functions now have a fixed, immutable output length, which simplifies code and reduces the likelihood of overflow or underflow (in exchange, HKDF can be used to stretch insufficiently large hash outputs in a safe and generic fashion - DRBG's are probably next on the list)
  - improved some of the hash function code, particularly the padding implementation
  - restored HMAC to apply hash parameters to the inner hash (result of the above)
  - added a `prim_default()` function to get default primitives
  - added some unit tests for a few modules (work in progress)
+ - simplified the library implementation a bit
+ - fixed a few bugs
 
 TODO:
  - work on tests (!)

@@ -31,12 +31,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct HMAC_CTX
-{
-    struct DIGEST_CTX ctx;
-    unsigned char key[HASH_BLOCK_LEN];
-};
-
 /** Initializes an HMAC context, provided optional parameters.
 ***
 *** @param [in]     ctx            An allocated HMAC context.

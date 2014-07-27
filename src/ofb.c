@@ -8,14 +8,14 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if annotation
+#ifdef OPAQUE
 struct OFB_STATE
 {
     unsigned char iv[BLOCK_BLOCK_LEN];
     size_t remaining;
     size_t block_size;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -77,19 +77,4 @@ int ofb_final(struct OFB_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-size_t ofb_query(prim_t cipher,
-                 int query, size_t value)
-{
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
-}
-
-size_t ofb_bsize(void)
-{
-    return sizeof(struct OFB_STATE);
 }

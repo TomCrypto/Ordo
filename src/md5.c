@@ -19,7 +19,7 @@ static const uint32_t md5_iv[4] =
 static void md5_compress(const uint32_t * RESTRICT block,
                          uint32_t * RESTRICT digest) HOT_CODE;
 
-#if annotation
+#ifdef OPAQUE
 struct MD5_STATE
 {
     /* Here block_len is used to track incomplete input blocks, whereas
@@ -29,7 +29,7 @@ struct MD5_STATE
     uint64_t block_len;
     uint64_t msg_len;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -109,22 +109,6 @@ void md5_final(struct MD5_STATE *state,
     /* At this point there is no input data left in the state, everything has
      * been processed into the digest, which we can now return to the user. */
     memcpy(digest, state->digest, MD5_DIGEST);
-}
-
-size_t md5_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return MD5_BLOCK;
-        case DIGEST_LEN_Q: return MD5_DIGEST;
-
-        default: return 0;
-    }
-}
-
-size_t md5_bsize(void)
-{
-    return sizeof(struct MD5_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

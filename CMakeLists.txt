@@ -82,7 +82,7 @@ OPTION(NATIVE "Native Optimization" ON)
 OPTION(COMPAT "For Older Compilers" OFF)
 
 IF(COMPILER_GNU OR COMPILER_CLANG)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall -Wextra")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
@@ -108,11 +108,10 @@ IF(COMPILER_GNU OR COMPILER_CLANG)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
     ENDIF()
 ELSEIF(COMPILER_INTEL)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -restrict")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi-alias")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -Wall -Wextra")    
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89 -pedantic")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -restrict -ansi-alias")
 
     IF(LTO AND NOT COMPAT)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ipo")
@@ -203,6 +202,7 @@ SET(IN_FILES
     stream_ciphers.c stream_ciphers.asm
     version.c version.asm
     curve25519.c curve25519.asm
+    features.c
 )
 
 SET(PRIM_LIST AES NULLCIPHER THREEFISH256 MD5 SHA1 SHA256 SKEIN256 RC4 ECB CBC CTR CFB OFB)
@@ -297,7 +297,6 @@ ENDFUNCTION()
 
 ADD_TOKEN(_CRT_SECURE_NO_WARNINGS)
 ADD_TOKEN(BUILDING_${LIB_NAME})
-ADD_TOKEN(annotation=0)
 
 FOREACH(PRIM ${PRIM_LIST})
     IF(WITH_${PRIM})

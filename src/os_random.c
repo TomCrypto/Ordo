@@ -10,7 +10,7 @@
 
 int os_random(void *out, size_t len)
 {
-    return ORDO_FAIL; /* This is supposed to be overridden */
+    return ORDO_FAIL;
 }
 
 int os_secure_random(void *out, size_t len)

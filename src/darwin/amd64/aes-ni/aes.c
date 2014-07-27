@@ -8,21 +8,19 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#define AES_BLOCK (bits(128))
-
 static void ExpandKey(const uint8_t *key, uint8_t *ext,
                       size_t key_len, unsigned rounds) HOT_CODE;
 
 extern void aes_forward_ASM(void *block, const void *key, uint64_t rounds);
 extern void aes_inverse_ASM(void *block, const void *key, uint64_t rounds);
 
-#if annotation
+#ifdef OPAQUE
 struct AES_STATE
 {
     unsigned char key[336];
-    size_t rounds;
+    unsigned rounds;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -67,28 +65,6 @@ void aes_inverse(const struct AES_STATE *state, void *block)
 void aes_final(struct AES_STATE *state)
 {
     return;
-}
-
-size_t aes_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return AES_BLOCK;
-
-        case KEY_LEN_Q:
-        {
-            if (value <= 16) return 16;
-            if (value <= 24) return 24;
-            return 32;
-        }
-
-        default: return 0;
-    }
-}
-
-size_t aes_bsize(void)
-{
-    return sizeof(struct AES_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

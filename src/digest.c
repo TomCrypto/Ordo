@@ -8,7 +8,6 @@
 
 /*===----------------------------------------------------------------------===*/
 
-size_t digest_length(prim_t hash)
-{
-    return hash_query(hash, DIGEST_LEN_Q, 0);
-}
+#ifdef OPAQUE
+#define DIGEST_CTX HASH_STATE
+#endif

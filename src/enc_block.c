@@ -8,6 +8,16 @@
 
 /*===----------------------------------------------------------------------===*/
 
+#ifdef OPAQUE
+struct ENC_BLOCK_CTX
+{
+    struct BLOCK_STATE cipher;
+    struct BLOCK_MODE_STATE mode;
+};
+#endif
+
+/*===----------------------------------------------------------------------===*/
+
 int enc_block_init(struct ENC_BLOCK_CTX *ctx,
                    const void *key, size_t key_len,
                    const void *iv, size_t iv_len,
@@ -53,9 +63,4 @@ size_t enc_block_iv_len(prim_t cipher,
                         size_t iv_len)
 {
     return block_mode_query(mode, cipher, IV_LEN_Q, iv_len);
-}
-
-size_t enc_block_bsize(void)
-{
-    return sizeof(struct ENC_BLOCK_CTX);
 }

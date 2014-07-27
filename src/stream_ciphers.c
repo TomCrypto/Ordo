@@ -65,8 +65,3 @@ size_t stream_query(prim_t primitive,
     
     return (size_t)-1;
 }
-
-size_t stream_bsize(void)
-{
-    return sizeof(struct STREAM_STATE);
-}

@@ -14,14 +14,14 @@ static void rc4_key_schedule(struct RC4_STATE *state, unsigned drop,
                              const uint8_t *key, size_t key_len) HOT_CODE;
 static uint8_t rc4_next(struct RC4_STATE *state) HOT_CODE;
 
-#if annotation
+#ifdef OPAQUE
 struct RC4_STATE
 {
     uint8_t i;
     uint8_t j;
     uint8_t s[256];
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -47,26 +47,6 @@ void rc4_update(struct RC4_STATE *state,
 void rc4_final(struct RC4_STATE *state)
 {
     return;
-}
-
-size_t rc4_query(int query, size_t key_len)
-{
-    switch (query)
-    {
-        case KEY_LEN_Q:
-        {
-            if (key_len < bits(40))   return bits(40);
-            if (key_len > bits(2048)) return bits(2048);
-            return key_len;
-        }
-
-        default: return 0;
-    }
-}
-
-size_t rc4_bsize(void)
-{
-    return sizeof(struct RC4_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

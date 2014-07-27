@@ -44,12 +44,6 @@ extern "C" {
 
 /*===----------------------------------------------------------------------===*/
 
-struct ENC_BLOCK_CTX
-{
-    struct BLOCK_STATE cipher;
-    struct BLOCK_MODE_STATE mode;
-};
-
 /** Initializes a block encryption context.
 ***
 *** @param [in,out] ctx            A block encryption context.

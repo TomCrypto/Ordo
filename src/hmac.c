@@ -8,6 +8,16 @@
 
 /*===----------------------------------------------------------------------===*/
 
+#ifdef OPAQUE
+struct HMAC_CTX
+{
+    struct DIGEST_CTX ctx;
+    unsigned char key[HASH_BLOCK_LEN];
+};
+#endif
+
+/*===----------------------------------------------------------------------===*/
+
 int hmac_init(struct HMAC_CTX *ctx,
               const void *key, size_t key_len,
               prim_t hash, const void *params)
@@ -70,9 +80,4 @@ int hmac_final(struct HMAC_CTX *ctx, void *digest)
     digest_final(&ctx->ctx, digest);
 
     return ORDO_SUCCESS;
-}
-
-size_t hmac_bsize(void)
-{
-    return sizeof(struct HMAC_CTX);
 }

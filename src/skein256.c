@@ -38,7 +38,7 @@ static void skein256_compress(const uint64_t * RESTRICT block,
                               uint64_t * RESTRICT tweak)
 HOT_CODE;
 
-#if annotation
+#ifdef OPAQUE
 struct SKEIN256_STATE
 {
     uint64_t state[4];
@@ -46,7 +46,7 @@ struct SKEIN256_STATE
     uint64_t block_len;
     uint64_t msg_len;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -171,21 +171,6 @@ void skein256_final(struct SKEIN256_STATE *state,
         skein256_compress(state->block, out, tweak);
         memcpy(digest, out, SKEIN256_BLOCK);
     }
-}
-
-size_t skein256_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return SKEIN256_BLOCK;
-        case DIGEST_LEN_Q: return SKEIN256_INTERNAL;
-        default          : return 0;
-    }
-}
-
-size_t skein256_bsize(void)
-{
-    return sizeof(struct SKEIN256_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

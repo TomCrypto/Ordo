@@ -8,7 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if annotation
+#ifdef OPAQUE
 struct CBC_STATE
 {
     unsigned char iv[BLOCK_BLOCK_LEN];
@@ -20,7 +20,7 @@ struct CBC_STATE
     size_t padding;
     int direction;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -190,19 +190,4 @@ int cbc_final(struct CBC_STATE *state,
     return (state->direction
             ? cbc_encrypt_final(state, cipher_state, out, out_len)
             : cbc_decrypt_final(state, cipher_state, out, out_len));
-}
-
-size_t cbc_query(prim_t cipher,
-                 int query, size_t value)
-{
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
-}
-
-size_t cbc_bsize(void)
-{
-    return sizeof(struct CBC_STATE);
 }

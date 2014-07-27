@@ -203,9 +203,9 @@ static void *get_mode_params(prim_t prim, union BLOCK_MODE_PARAMS *params)
  * we might as well reuse this scratch buffer for the key and iv buffers too.
 */
 
-static char buffer[65536];
-static char *key = buffer;
-static char *iv  = buffer;
+static unsigned char buffer[65536];
+static unsigned char *key = buffer;
+static unsigned char *iv  = buffer;
 
 #define TIME_INTERVAL 10.0 /* Seconds per benchmark, higher = more precise. */
 

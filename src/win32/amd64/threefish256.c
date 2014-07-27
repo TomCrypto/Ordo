@@ -8,8 +8,6 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#define THREEFISH256_BLOCK (bits(256))
-
 static void threefish256_key_schedule(const uint64_t *key,
                                       const uint64_t *tweak,
                                       uint64_t * RESTRICT subkeys)
@@ -20,12 +18,12 @@ extern void threefish256_forward_ASM(uint64_t * RESTRICT block,
 extern void threefish256_inverse_ASM(uint64_t * RESTRICT block,
                                      const uint64_t * RESTRICT subkeys);
 
-#if annotation
+#ifdef OPAQUE
 struct THREEFISH256_STATE
 {
     uint64_t subkey[19 * 4];
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -68,21 +66,6 @@ void threefish256_inverse(const struct THREEFISH256_STATE *state,
 void threefish256_final(struct THREEFISH256_STATE *state)
 {
     return;
-}
-
-size_t threefish256_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return THREEFISH256_BLOCK;
-        case KEY_LEN_Q   : return 32;
-        default          : return 0;
-    }
-}
-
-size_t threefish256_bsize(void)
-{
-    return sizeof(struct THREEFISH256_STATE);
 }
 
 /*===----------------------------------------------------------------------===*/

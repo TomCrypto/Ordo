@@ -8,7 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if annotation
+#ifdef OPAQUE
 struct ECB_STATE
 {
     unsigned char block[BLOCK_BLOCK_LEN];
@@ -19,7 +19,7 @@ struct ECB_STATE
     size_t padding;
     int direction;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -166,20 +166,4 @@ int ecb_final(struct ECB_STATE *state,
     return (state->direction
             ? ecb_encrypt_final(state, cipher_state, out, out_len)
             : ecb_decrypt_final(state, cipher_state, out, out_len));
-}
-
-size_t ecb_query(prim_t cipher,
-                 int query, size_t value)
-{
-    switch(query)
-    {
-        case IV_LEN_Q: return 0;
-
-        default: return 0;
-    }
-}
-
-size_t ecb_bsize(void)
-{
-    return sizeof(struct ECB_STATE);
 }

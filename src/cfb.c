@@ -8,7 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if annotation
+#ifdef OPAQUE
 struct CFB_STATE
 {
     unsigned char iv[BLOCK_BLOCK_LEN];
@@ -17,7 +17,7 @@ struct CFB_STATE
     size_t block_size;
     int direction;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -124,19 +124,4 @@ int cfb_final(struct CFB_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-size_t cfb_query(prim_t cipher,
-                 int query, size_t value)
-{
-    switch(query)
-    {
-        case IV_LEN_Q: return block_query(cipher, BLOCK_SIZE_Q, 0);
-        default      : return 0;
-    }
-}
-
-size_t cfb_bsize(void)
-{
-    return sizeof(struct CFB_STATE);
 }

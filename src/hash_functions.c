@@ -128,8 +128,3 @@ size_t hash_query(prim_t primitive,
     
     return (size_t)-1;
 }
-
-size_t hash_bsize(void)
-{
-    return sizeof(struct HASH_STATE);
-}

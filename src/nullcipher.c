@@ -8,14 +8,12 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#define NULLCIPHER_BLOCK (bits(128)) /* This is arbitrary. */
-
-#if annotation
+#ifdef OPAQUE
 struct NULLCIPHER_STATE
 {
-    uint8_t dummy;
+    unsigned char dummy;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -25,7 +23,7 @@ int nullcipher_init(struct NULLCIPHER_STATE *state,
 {
     if (nullcipher_query(KEY_LEN_Q, key_len) != key_len) return ORDO_KEY_LEN;
 
-    state->dummy = 42;
+    state->dummy = 0x42;
     return ORDO_SUCCESS;
 }
 
@@ -42,19 +40,4 @@ void nullcipher_inverse(const struct NULLCIPHER_STATE *state, void *block)
 void nullcipher_final(struct NULLCIPHER_STATE *state)
 {
     return;
-}
-
-size_t nullcipher_query(int query, size_t value)
-{
-    switch(query)
-    {
-        case BLOCK_SIZE_Q: return NULLCIPHER_BLOCK;
-        case KEY_LEN_Q   : return 0;
-        default          : return 0;
-    }
-}
-
-size_t nullcipher_bsize(void)
-{
-    return sizeof(struct NULLCIPHER_STATE);
 }

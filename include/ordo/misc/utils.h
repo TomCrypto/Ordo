@@ -3,8 +3,8 @@
 *** @file
 *** @brief Utility
 ***
-*** This header contains utility functions that are of use to developers which
-*** will use the library, for instance, constant-time comparisons and so on.
+*** This header contains utility functions, which are of use to developers who
+*** will use the library, for instance, constant-time comparisons, and so on.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -31,7 +31,7 @@ extern "C" {
 ***
 *** @returns Returns a positive value if the buffers match, \c 0 otherwise.
 ***
-*** @warning You cannot use this function to determine if x < y.
+*** @warning This function is for equality only, not ordering.
 **/
 ORDO_PUBLIC
 int ctcmp(const void *x, const void *y, size_t len);

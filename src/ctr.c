@@ -8,7 +8,7 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if annotation
+#ifdef OPAQUE
 struct CTR_STATE
 {
     unsigned char keystream[BLOCK_BLOCK_LEN];
@@ -17,7 +17,7 @@ struct CTR_STATE
     size_t remaining;
     uint64_t counter;
 };
-#endif /* annotation */
+#endif
 
 /*===----------------------------------------------------------------------===*/
 
@@ -94,21 +94,4 @@ int ctr_final(struct CTR_STATE *state,
 {
     if (outlen) *outlen = 0;
     return ORDO_SUCCESS;
-}
-
-size_t ctr_query(prim_t cipher,
-                 int query, size_t value)
-{
-    size_t block_size = block_query(cipher, BLOCK_SIZE_Q, 0);
-
-    switch(query)
-    {
-        case IV_LEN_Q: return block_size - bits(64);
-        default      : return 0;
-    }
-}
-
-size_t ctr_bsize(void)
-{
-    return sizeof(struct CTR_STATE);
 }
