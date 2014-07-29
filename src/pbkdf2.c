@@ -40,7 +40,7 @@ int kdf_pbkdf2(prim_t hash, const void *params,
     while (out_len)
     {
         uint32_t ctr_endian = tobe32(counter); /* Big endian counter */
-        size_t i;
+        uintmax_t iters = iterations;
 
         ++counter;
         ctx = cst;
@@ -53,7 +53,7 @@ int kdf_pbkdf2(prim_t hash, const void *params,
         if ((err = hmac_final(&ctx, feedback))) return err;
         memcpy(buf, feedback, digest_len);
 
-        for (i = 1; i < iterations; ++i)
+        while (--iters)
         {
             ctx = cst;
 
