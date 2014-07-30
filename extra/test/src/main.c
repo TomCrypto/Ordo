@@ -65,6 +65,9 @@ extern int test_vectors_curve25519(void);
 extern int test_pbkdf2_precond(void);
 extern int test_hkdf_precond(void);
 
+extern int test_ordo_digest(void);
+extern int test_ordo_hmac(void);
+
 extern int test_ctcmp(void);
 extern int test_os_random(void);
 
@@ -99,6 +102,8 @@ static const struct TEST tests[] =
     { test_pbkdf2_precond,               "PBKDF2 unit tests"                },
     { test_hkdf_precond,                 "HKDF unit tests"                  },
     { test_ctcmp,                        "Constant-time comparison tests"   },
+    { test_ordo_digest,                  "Ordo API tests (digest)"          },
+    { test_ordo_hmac,                    "Ordo API tests (hmac)"            },
     { test_os_random,                    "os_random tests"                  },
     { test_fini,                         "All tests completed"              }
 };

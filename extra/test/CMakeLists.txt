@@ -28,6 +28,7 @@ SET(SOURCE_FILES
     src/test_vectors/curve25519.c
     src/unit_tests/pbkdf2.c
     src/unit_tests/hkdf.c
+    src/unit_tests/ordo.c
     src/unit_tests/misc.c
     src/unit_tests/internal.c
     src/unit_tests/os_random.c
