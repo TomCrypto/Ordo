@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#-*- coding:utf-8 -*-
 
 from __future__ import print_function
 
@@ -21,7 +21,7 @@ def regenerate_build_folder():
         os.mkdir(build_dir)
 
     with open(path.join(build_dir, '.gitignore'), 'w') as f:
-        f.write('*\n!.gitignore\n')
+        f.write('*\n!.gitignore\n')  # Recreate a .gitignore
 
 def log(level, fmt, *args, **kwargs):
     if verbose:
@@ -52,7 +52,7 @@ class chdir:
 
 import subprocess
 import platform
-import sys, os
+import os, sys
 import shutil
 
 os_list = ['linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd', 'generic']
@@ -76,18 +76,45 @@ def get_os():
     else:
         return None
 
-def get_cc():
-    """ Returns the default C compiler using the CC environment variable.
-        If the environment variable does not exist, returns None, or "msvc"
-        on windows. """
-    #return os.environ['CC']
-    if "CC" in os.environ:
+def program_exists(name):
+    try:
+        run_cmd(name, [])
+        return True
+    except IOError:
+        return False
+
+def get_c_compiler():
+    """Returns the name of the default C compiler on the system."""
+    if ("CC" in os.environ) and program_exists(os.environ['CC']):
         return os.environ['CC']
-    else:
-        return 'gcc'
+
+    if program_exists('cc'):
+        return 'cc'
+
+    # On Windows, maybe check for MSVC in one of the popular paths here
+
+    return None
+
+def get_compiler_id(compiler):
+    if not program_exists(compiler):
+        return (None, None)
+
+    output = run_cmd(compiler, ['--version']).decode('utf-8')
+    header = output.split('\n')[0]
+
+    if 'GCC' in output:
+        return ('gcc', header)
+    if 'clang' in output:
+        return ('clang', header)
+    if 'Intel' in output:
+        return ('intel', header)
+    if 'MSVC' in output:
+        return ('msvc', header)
+
+    return (None, None)
 
 def run_cmd(cmd, args, stream=False):
-    process = subprocess.Popen([cmd] + args, stdout=subprocess.PIPE)
+    process = subprocess.Popen([cmd] + args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if stream:
         while process.poll() is None:
@@ -178,6 +205,37 @@ headers = [
     '../include/ordo/primitives/stream_ciphers/rc4.h',
     '../include/ordo/primitives/stream_ciphers/stream_params.h',
     '../include/ordo/definitions.h'
+]
+
+test_srcdir = '../extra/test/src/'
+
+test_source = [
+    'main.c',
+    'test_vectors/md5.c',
+    'test_vectors/sha1.c',
+    'test_vectors/sha256.c',
+    'test_vectors/skein256.c',
+    'test_vectors/hmac.c',
+    'test_vectors/hkdf.c',
+    'test_vectors/pbkdf2.c',
+    'test_vectors/rc4.c',
+    'test_vectors/aes.c',
+    'test_vectors/threefish256.c',
+    'test_vectors/ecb.c',
+    'test_vectors/cbc.c',
+    'test_vectors/ctr.c',
+    'test_vectors/cfb.c',
+    'test_vectors/ofb.c',
+    'test_vectors/curve25519.c',
+    'unit_tests/pbkdf2.c',
+    'unit_tests/hkdf.c',
+    'unit_tests/misc.c',
+    'unit_tests/internal.c',
+    'unit_tests/os_random.c'
+]
+
+test_headers = [
+    '../extra/test/include/testenv.h'
 ]
 
 #===============================================================================
@@ -322,21 +380,34 @@ def resolve(definitions_path, built_files):
 def gen_makefile(ctx):
     with open(path.join(build_dir, 'Makefile'), 'w') as f:
         f.write('HEADERS = {0}\n'.format(' '.join(headers)))
+        f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
         f.write('CFLAGS = -O3 -Wall -Wextra -std=c89 -pedantic -fvisibility=hidden -Wno-unused-parameter -Wno-long-long -DORDO_STATIC_LIB -DBUILDING_ORDO -DORDO_LITTLE_ENDIAN\n')
         f.write('CFLAGS += -DWITH_AES=1 -DWITH_THREEFISH256=1 -DWITH_NULLCIPHER=1 -DWITH_RC4=1 -DWITH_MD5=1 -DWITH_SHA1=1 -DWITH_SHA256=1 -DWITH_SKEIN256=1 -DWITH_ECB=1 -DWITH_CBC=1 -DWITH_CTR=1 -DWITH_CFB=1 -DWITH_OFB=1 -DORDO_SYSTEM=\\\"linux\\\" -DORDO_ARCH=\\\"generic\\\"\n')
+        f.write('TEST_CFLAGS = -O3 -Wall -Wextra -std=c89 -pedantic -Wno-unused-parameter -Wno-long-long -Wno-missing-field-initializers -DORDO_STATIC_LIB\n')
         f.write('\n')
+        f.write('all: static test\n\n')
         f.write('static: libordo_s.a\n\n')
         f.write('obj:\n\tmkdir obj\n\n')
-    
+
         objfiles = []
         for srcfile in source_files:
             objfile = 'obj/' + srcfile.replace('.c', '.o')
             objfiles.append(objfile)
             f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, '../src/' + srcfile))
-            f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.cc))
-        
+            f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
+
         f.write('libordo_s.a: {0}\n'.format(' '.join(objfiles)))
         f.write('\tar rcs libordo_s.a {0}\n'.format(' '.join(objfiles)))
+
+        test_objfiles = []
+        for srcfile in test_source:
+            objfile = 'obj/' + srcfile.replace('.c', '.o').replace('/', '_')
+            test_objfiles.append(objfile)
+            f.write('{0}: {1} $(HEADERS) $(TEST_HEADERS) | obj\n'.format(objfile, path.join(test_srcdir, srcfile)))
+            f.write('\t{0} $(TEST_CFLAGS) -I../include -I../extra/test/include -c $< -o $@\n\n'.format(ctx.compiler))
+
+        f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
+        f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
 
     resolve('include/ordo/definitions.h', ['src/' + src for src in source_files])
 
@@ -346,17 +417,18 @@ def bld_makefile(ctx, targets):
 
 def ins_makefile(ctx):
     with chdir(build_dir):
-        run_cmd('make', ['install'])
+        run_cmd('make', ['install'])  # Must handle dependencies!
 
 def tst_makefile(ctx):
-    run_cmd(path.join(build_dir, 'test/test'), [])
+    bld_makefile(ctx, ['test'])
+    run_cmd(path.join(build_dir, 'test'), [])  # Must build tests before!
 
 # VS/etc.
 
-gen_output = {'makefile': gen_makefile}
-bld_output = {'makefile': bld_makefile}
-ins_output = {'makefile': ins_makefile}
-tst_output = {'makefile': tst_makefile}
+generate    = {'makefile': gen_makefile}
+run_build   = {'makefile': bld_makefile}
+run_install = {'makefile': ins_makefile}
+run_tests   = {'makefile': tst_makefile}
 
 #===============================================================================
 #========================== HIGH-LEVEL BUILD PROCESS ===========================
@@ -365,81 +437,68 @@ tst_output = {'makefile': tst_makefile}
 import pickle
 
 class BuildContext:
-    def __init__(self):
-        pass
+    pass
 
 def configure(args):
-    if path.exists(path.join(build_dir, build_ctx)):
-        log('info', "Already configured, cleaning.")
-        clean(args)
-
+    """Generates (and returns) a build context from the arguments."""
     ctx = BuildContext()
 
-    if args.platform == None:
+    if args.platform is None:
         ctx.system = get_os()
     else:
         ctx.system = args.platform[0]
 
-    ctx.cc = get_cc()
+    cc = get_c_compiler() if args.compiler is None else args.compiler[0]
+    ctx.compiler, header = get_compiler_id(cc)
+
+    if ctx.compiler is None:
+        print(".. FAILED to detect C compiler.")
+        print(".. please configure with --compiler")
+        raise BuildError("An error occurred during configuration")
+    else:
+        print(".. C compiler is: {0}".format(header))
+
+    ctx.shared = args.shared
 
     print("Your system is ", ctx.system)
 
-    print("The compiler is ", ctx.cc)
-
-    print(run_cmd(ctx.cc, ['--version']))
-
     ctx.output = 'makefile'
-
-    gen_output[ctx.output](ctx)
 
     with open(path.join(build_dir, build_ctx), mode='wb') as f:
         pickle.dump(ctx, f)
 
-def build(args):
-    if not path.exists(path.join(build_dir, build_ctx)):
-        raise BuildError("Please configure first before building.")
-
-    with open(path.join(build_dir, build_ctx), 'rb') as f:
-        log('info', "Parsing build info in '{0}'.", f.name)
-        ctx = pickle.load(f)
-
-    # Remember to filter and validate targets (lib shared/static, tests/etc.)
-
-    bld_output[ctx.output](ctx, args.targets)
-
-def install(args):
-    if not path.exists(path.join(build_dir, build_ctx)):
-        raise BuildError("Please configure first before installing.")
-
-    with open(path.join(build_dir, build_ctx), 'rb') as f:
-        log('info', "Parsing build info in '{0}'.", f.name)
-        ctx = pickle.load(f)
-
-    ins_output[ctx.output](ctx)
-
-def test(args):
-    if not path.exists(path.join(build_dir, build_ctx)):
-        raise BuildError("Please configure first before testing.")
-
-    with open(path.join(build_dir, build_ctx), 'rb') as f:
-        log('info', "Parsing build info in '{0}'.", f.name)
-        ctx = pickle.load(f)
-
-    # Should amount to running a binary, but location may be system dependent
-    # Also check that we have built (really, run the build each time, it should
-    # update itself automatically and only rebuild what is needed)
-    # (keep a flag in the build context indicating whether we built at least once)
-    tst_output[ctx.output](ctx)
+    return ctx
 
 def make_doc(args):
+    """Attempts to generate documentation by calling doxygen."""
+
     # Try and locate doxygen
     doxygen_path = 'doxygen'
 
     run_cmd('doxygen', [])
 
-def clean(args):
+def clean_build():
+    """Deletes the build folder and recreates an empty one."""
     shutil.rmtree(build_dir)
     regenerate_build_folder()
+
+def get_targets(ctx, targets):
+    """Parses a target list and filters out unknown targets."""
+    out = []
+
+    for target in targets:
+        if target == 'static':
+            out.append('static')
+        elif (target == 'shared') and ctx.shared:
+            out.append('shared')
+        elif target == 'test':
+            out.append('test')
+        elif target == 'samples':
+            out.append('samples')
+        else:
+            log('warn', "Target '{0}' will not be built.", target)
+
+    return ['all'] if len(out) == 0 else out
 
 from argparse import ArgumentParser
 import argparse
@@ -448,22 +507,19 @@ def main():
     global verbose
 
     master = ArgumentParser(description="Build script for the Ordo library.")
-    parsers = master.add_subparsers(dest='command')  # List of all commands
+    parsers = master.add_subparsers(dest='command')  # One for each command
     master.add_argument('-v', '--verbose', action='store_true',
                         help="display additional information")
 
-    cfg = parsers.add_parser('configure',
-                             help="configure the library before building it")
-    bld = parsers.add_parser('build',
-                             help="build one or more targets automatically")
-    ins = parsers.add_parser('install',
-                             help="install library headers and binaries")
-    tst = parsers.add_parser('test',
-                             help="run the library's test driver")
-    cln = parsers.add_parser('clean',
-                             help="remove all generated build files")
-    doc = parsers.add_parser('doc',
-                             help="generate the documentation")
+    cfg = parsers.add_parser('configure', help="configure the library")
+    bld = parsers.add_parser('build',     help="build one or more targets")
+    ins = parsers.add_parser('install',   help="install library on system")
+    tst = parsers.add_parser('test',      help="run the Ordo test driver")
+    cln = parsers.add_parser('clean',     help="remove all build files")
+    doc = parsers.add_parser('doc',       help="generate documentation")
+
+    cfg.add_argument('-c', '--compiler', nargs=1, type=str, metavar='',
+                     help="path to C compiler to use for building")
 
     cfg.add_argument('-p', '--platform', nargs=1, type=str, metavar='',
                      help="operating system to configure for ({0})".\
@@ -476,7 +532,7 @@ def main():
     cfg.add_argument('-n', '--native', action='store_true',
                      help="optimize for this system")
 
-    cfg.add_argument('-c', '--compat', action='store_true',
+    cfg.add_argument('-u', '--compat', action='store_true',
                      help="for (very) old compilers")
 
     cfg.add_argument('-l', '--lto', action='store_true',
@@ -485,12 +541,16 @@ def main():
     cfg.add_argument('--aes-ni', action='store_true',
                      help="use the AES-NI hardware instructions")
 
+    cfg.add_argument('--shared', action='store_true',
+                     help="also build as a shared library")
+
     bld.add_argument('targets', nargs=argparse.REMAINDER,
                      help="set of targets to build")
 
     args = master.parse_args()
     regenerate_build_folder()
     verbose = args.verbose
+    cmd = args.command
 
     # TODO: extend makefile to handle tests to have it working with gcc,
     #       then make it work with clang/icc and add all other targets
@@ -498,15 +558,30 @@ def main():
     #        assembly support, to achieve feature parity with the
     #        cmake version with makefiles, before doing Windows)
 
-    operation = {'configure': configure,
-                 'build':     build,
-                 'install':   install,
-                 'test':      test,
-                 'clean':     clean,
-                 'doc':       make_doc}
-
     try:
-        operation[args.command](args)
+        if cmd in ['configure']:  # Erase previous config
+            if path.exists(path.join(build_dir, build_ctx)):
+                log('info', 'Already configured, cleaning')
+                clean_build()
+            ctx = configure(args)
+            generate[ctx.output](ctx)
+        elif cmd in ['build', 'install', 'test']:  # Need config
+            if not path.exists(path.join(build_dir, build_ctx)):
+                raise BuildError("Please configure before '{0}'.".format(cmd))
+            else:
+                with open(path.join(build_dir, build_ctx), 'rb') as f:
+                    log('info', "Parsing build info in '{0}'.", f.name)
+                    ctx = pickle.load(f)
+            if cmd == 'build':
+                run_build[ctx.output](ctx, get_targets(ctx, args.targets))
+            elif cmd == 'install':
+                run_install[ctx.output](ctx)  # Install libraries
+            elif cmd == 'test':
+                run_tests[ctx.output](ctx)  # Build & run tests
+        elif cmd in ['doc']:
+            make_doc(args)
+        elif cmd in ['clean']:
+            clean_build()
     except BuildError as e:
         print(e)
 
