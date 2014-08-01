@@ -130,13 +130,13 @@ def get_compiler_id(compiler):
     out = run_cmd(compiler, ['--version'])[1]
     header = out.split('\n')[0]
 
-    if 'GCC' in out:
+    if 'gcc' in out.lower():
         return ('gcc', header)
-    if 'clang' in out:
+    if 'clang' in out.lower():
         return ('clang', header)
-    if 'Intel' in out:
+    if 'intel' in out.lower():
         return ('intel', header)
-    if 'MSVC' in out:
+    if 'msvc' in out.lower():
         return ('msvc', header)
 
     return (None, None)
