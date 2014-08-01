@@ -690,7 +690,7 @@ def main():
 
     cfg.add_argument('-l', '--lto', action='store_true',
                      help="use link-time optimization",
-                     default=True)
+                     default=False)
 
     cfg.add_argument('--aes-ni', action='store_true',
                      help="use the AES-NI hardware instructions",
