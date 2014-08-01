@@ -1,5 +1,0 @@
-OPTION(AES_NI "Use the AES-NI hardware instructions" OFF)
-
-IF(AES_NI)
-    LIST(APPEND FEATURES "aes-ni")
-ENDIF()

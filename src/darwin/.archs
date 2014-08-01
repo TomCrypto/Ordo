@@ -1,8 +1,0 @@
-# Please note: this file, and the corresponding arch folders, will likely get
-# referenced from a few other *nix'es through symlinks, as in general the ABI
-# is the same, so the implementations are in fact identical.
-
-SET_PROPERTY(CACHE ARCH PROPERTY STRINGS
-             ${ARCH_GENERIC}
-             "amd64"
-)

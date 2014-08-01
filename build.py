@@ -151,11 +151,32 @@ def run_cmd(cmd, args=[], stdout_func=None):
 #============================= LIBRARY RESOURCES ===============================
 #===============================================================================
 
+# List of source files along with their resolution order, a lower number means
+# the source file contains opaque structs which should be resolved first. Here
+# the numbers are assigned according to dependencies and are not all needed.
+
+src_priority = {
+    'alg.c': 0, 'utils.c': 0, 'features.c': 0, 'error.c': 0,
+    'version.c': 0, 'endianness.c': 0, 'identification.c': 0,
+    'os_random.c': 1, 'curve25519.c': 1, 'sha1.c': 2, 'curve25519.asm': 1,
+    'sha256.c': 2, 'md5.c': 2, 'skein256.c': 2,
+    'rc4.c': 2, 'aes.c': 2, 'threefish256.c': 2, 'threefish256.asm': 2,
+    'nullcipher.c': 2, 'ecb.c': 2, 'cbc.c': 2, 'ctr.c': 2, 'rc4.asm': 2,
+    'cfb.c': 2, 'ofb.c': 2,
+    'block_ciphers.c': 3, 'block_modes.c': 3, 'stream_ciphers.c': 3,
+    'hash_functions.c': 4,
+    'enc_block.c': 5, 'enc_stream.c': 5, 'digest.c': 5,
+    'hmac.c': 6, 'hkdf.c': 6, 'pbkdf2.c': 7,
+    'ordo.c': 8
+}
+
 class SourceTree:
     def __init__(self):
         self.srcdir = 'src'
 
         self.src = {}
+
+        self.src['all'] = src_priority.keys()
 
         for platform in platform_list:
             if platform == 'generic':
@@ -175,17 +196,6 @@ class SourceTree:
                 print("Files for {0}/{1} = {2}\n".format(platform, arch, self.src[(platform, arch)]))
 
         # All source files, in order of dependency
-
-        self.src['all'] = [
-            'alg.c', 'utils.c', 'features.c', 'error.c', 'version.c',
-            'endianness.c', 'identification.c', 'os_random.c',
-            'curve25519.c', 'sha1.c', 'sha256.c', 'md5.c', 'skein256.c',
-            'rc4.c', 'aes.c', 'threefish256.c', 'nullcipher.c',
-            'ecb.c', 'cbc.c', 'ctr.c', 'cfb.c', 'ofb.c',
-            'block_ciphers.c', 'block_modes.c', 'stream_ciphers.c', 'hash_functions.c',
-            'enc_block.c', 'enc_stream.c', 'digest.c',
-            'hmac.c', 'hkdf.c', 'pbkdf2.c',
-            'ordo.c']
 
 headers = [
     '../include/ordo.h',
@@ -350,25 +360,7 @@ def get_digest_len(built_prims, prim_type):
     return retval
 
 def source_sort(name):
-    if name in ['alg.c', 'utils.c', 'features.c', 'error.c', 'version.c',
-                'endianness.c', 'identification.c']:
-        return 0
-    elif name in ['sha1.c', 'sha256.c', 'md5.c', 'skein256.c', 'rc4.c',
-                  'aes.c', 'threefish256.c', 'nullcipher.c', 'ecb.c',
-                  'cbc.c', 'ctr.c', 'cfb.c', 'ofb.c']:
-        return 1
-    elif name in ['block_ciphers.c', 'block_modes.c', 'stream_ciphers.c', 'hash_functions.c']:
-        return 2
-    elif name in ['enc_block.c', 'enc_stream.c', 'digest.c']:
-        return 3
-    elif name in ['hmac.c', 'hkdf.c', 'pbkdf2.c']:
-        return 4
-    elif name in ['os_random.c', 'curve25519.c']:
-        return 5
-    elif name in ['ordo.c']:
-        return 6
-    else:
-        return 999
+    return src_priority[path.basename(name)]
 
 def resolve(definitions_path, built_files):
     """Analyze a list of built source files and output a definition header."""
@@ -487,7 +479,7 @@ def gen_makefile(ctx):
         f.write('HEADERS = {0}\n'.format(' '.join(headers)))
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
-        f.write('TEST_CFLAGS = -O3 -Wall -Wextra -std=c89 -pedantic -Wno-unused-parameter -Wno-long-long -Wno-missing-field-initializers -DORDO_STATIC_LIB\n')
+        f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
         f.write('\n')
         f.write('all: static test\n\n')
         f.write('static: libordo_s.a\n\n')
@@ -495,10 +487,16 @@ def gen_makefile(ctx):
 
         objfiles = []
         for srcfile in to_build:
-            objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
-            objfiles.append(objfile)
-            f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, path.join('../', srcfile)))
-            f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
+            if '.c' in srcfile:
+                objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
+                objfiles.append(objfile)
+                f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, path.join('../', srcfile)))
+                f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
+            elif '.asm' in srcfile:
+                objfile = 'obj/' + safe_path(srcfile.replace('.asm', '.asm.o'))
+                objfiles.append(objfile)
+                f.write('{0}: {1} | obj\n'.format(objfile, path.join('../', srcfile)))
+                f.write('\t{0} -f {1} $< -o $@\n\n'.format(ctx.assembler, ctx.obj_format))
 
         f.write('libordo_s.a: {0}\n'.format(' '.join(objfiles)))
         f.write('\tar rcs libordo_s.a {0}\n'.format(' '.join(objfiles)))
@@ -553,6 +551,9 @@ class BuildContext:
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]
+
+        self.assembler = 'nasm'
+        self.obj_format = 'elf64'
 
 def configure(args):
     """Generates (and returns) a build context from the arguments."""
