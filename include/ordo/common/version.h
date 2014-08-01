@@ -34,15 +34,15 @@ struct ORDO_VERSION
     **/
     const char *version;
 
-    /** The target system e.g. "linux".
+    /** The target platform e.g. "linux".
     **/
-    const char *system;
+    const char *platform;
 
     /** The target architecture e.g. "amd64".
     **/
     const char *arch;
 
-    /** A string which contains version, system and architecture.
+    /** A string which contains version, platform and architecture.
     **/
     const char *build;
 

@@ -30,13 +30,13 @@ static const struct ORDO_VERSION version =
 {
     VERSION_ID,
     VERSION,
-    ORDO_SYSTEM,
+    ORDO_PLATFORM,
     #if defined(ORDO_ARCH)
     ORDO_ARCH,
     #else
     "generic",
     #endif
-    "ordo-"VERSION"-"ORDO_SYSTEM
+    "ordo-"VERSION"-"ORDO_PLATFORM
     #if defined(ORDO_ARCH)
     "-"ORDO_ARCH
     #endif

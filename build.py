@@ -481,7 +481,7 @@ def gen_makefile(ctx):
         pass  # TODO (windows)
 
     defines = ['-DORDO_STATIC_LIB', '-DBUILDING_ORDO',
-               '-DORDO_SYSTEM=\\\"{0}\\\"'.format(ctx.platform),
+               '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
                '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch)]
 
     if ctx.platform == 'generic':
@@ -609,7 +609,7 @@ class BuildContext:
 
 
 def configure(args):
-    """Generates (and returns) a build context from the arguments."""
+    """Generates and returns a build context from the arguments."""
     ctx = BuildContext(args)
 
     if ctx.lto and ctx.compat:
@@ -643,7 +643,6 @@ def configure(args):
 
 def make_doc(args):
     """Attempts to generate documentation by calling doxygen."""
-
     if not program_exists('doxygen'):
         raise BuildError("Doxygen is required to build the documentation")
     else:
@@ -660,8 +659,6 @@ def main():
 
     master = ArgumentParser(description="Build script for the Ordo library.")
     parsers = master.add_subparsers(dest='command')  # One for each command
-    master.add_argument('-v', '--verbose', action='store_true',
-                        help="display additional information")
 
     cfg = parsers.add_parser('configure', help="configure the library")
     bld = parsers.add_parser('build',     help="build one or more targets")
@@ -701,31 +698,36 @@ def main():
                      help="set of targets to build",
                      choices=['static', 'shared', 'test', 'samples'])
 
+    master.add_argument('-v', '--verbose', action='store_true',
+                        help="display additional information")
+
     args = master.parse_args()
     regenerate_build_folder()
     verbose = args.verbose
     cmd = args.command
 
     try:
-        if cmd in ['configure']:  # Erase previous config
+        if cmd in ['configure']:
             if path.exists(path.join(build_dir, build_ctx)):
                 log('info', 'Already configured, cleaning')
                 clean_build()
+
             ctx = configure(args)
             generate[ctx.out](ctx)
-        elif cmd in ['build', 'install', 'test']:  # Need config
+        elif cmd in ['build', 'install', 'test']:
             if not path.exists(path.join(build_dir, build_ctx)):
                 raise BuildError("Please configure before '{0}'.".format(cmd))
             else:
                 with open(path.join(build_dir, build_ctx), 'rb') as f:
                     log('info', "Parsing build info in '{0}'.", f.name)
                     ctx = pickle.load(f)
+
             if cmd == 'build':
-                run_build[ctx.out](ctx, args.targets)  # Build targets
+                run_build[ctx.out](ctx, args.targets)
             elif cmd == 'install':
-                run_install[ctx.out](ctx)  # Install libraries
+                run_install[ctx.out](ctx)
             elif cmd == 'test':
-                run_tests[ctx.out](ctx)  # Build & run tests
+                run_tests[ctx.out](ctx)
         elif cmd in ['doc']:
             make_doc(args)
         elif cmd in ['clean']:

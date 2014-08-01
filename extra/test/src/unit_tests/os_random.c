@@ -6,7 +6,7 @@
 *** This unit does rudimentary testing on the os_random module.
 ***
 *** Note: this unit test will do nothing if the library is built for a generic
-*** platform, as there is of course no os_random implementation in that case.
+*** platform, as there is, of course, no os_random implementation for it.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -17,7 +17,7 @@
 int test_os_random(void);
 int test_os_random(void)
 {
-    if (strcmp(ordo_version()->system, "generic"))
+    if (strcmp(ordo_version()->platform, "generic"))
     {
         uint8_t buffer[1024] = {0};
         size_t t;
