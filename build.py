@@ -178,25 +178,6 @@ def run_cmd(cmd, args=[], stdout_func=None):
 # ============================ LIBRARY RESOURCES ==============================
 # =============================================================================
 
-# List of source files along with their resolution order, a lower number means
-# the source file contains opaque structs which should be resolved first. Here
-# the numbers are assigned according to dependencies and are not all needed.
-
-src_priority = {
-    'alg': 0, 'utils': 0, 'features': 0, 'error': 0,
-    'version': 0, 'endianness': 0, 'identification': 0,
-    'os_random': 1, 'curve25519': 1, 'sha1': 2, 'curve25519': 1,
-    'sha256': 2, 'md5': 2, 'skein256': 2,
-    'rc4': 2, 'aes': 2, 'threefish256': 2, 'threefish256': 2,
-    'nullcipher': 2, 'ecb': 2, 'cbc': 2, 'ctr': 2, 'rc4': 2,
-    'cfb': 2, 'ofb': 2,
-    'block_ciphers': 3, 'block_modes': 3, 'stream_ciphers': 3,
-    'hash_functions': 4,
-    'enc_block': 5, 'enc_stream': 5, 'digest': 5,
-    'hmac': 6, 'hkdf': 6, 'pbkdf2': 7,
-    'ordo': 8
-}
-
 
 class SourceTree:
     def __init__(self):
@@ -400,6 +381,26 @@ def get_digest_len(built_prims, prim_type):
     return retval
 
 
+# List of source files along with their resolution order, a lower number means
+# the source file contains opaque structs which should be resolved first. Here
+# the numbers are assigned according to dependencies and are not all needed.
+
+src_priority = {
+    'alg': 0, 'utils': 0, 'features': 0, 'error': 0,
+    'version': 0, 'endianness': 0, 'identification': 0,
+    'os_random': 1, 'curve25519': 1, 'sha1': 2, 'curve25519': 1,
+    'sha256': 2, 'md5': 2, 'skein256': 2,
+    'rc4': 2, 'aes': 2, 'threefish256': 2, 'threefish256': 2,
+    'nullcipher': 2, 'ecb': 2, 'cbc': 2, 'ctr': 2, 'rc4': 2,
+    'cfb': 2, 'ofb': 2,
+    'block_ciphers': 3, 'block_modes': 3, 'stream_ciphers': 3,
+    'hash_functions': 4,
+    'enc_block': 5, 'enc_stream': 5, 'digest': 5,
+    'hmac': 6, 'hkdf': 6, 'pbkdf2': 7,
+    'ordo': 8
+}
+
+
 def source_sort(name):
     return src_priority[path.splitext(path.basename(name))[0]]
 
@@ -577,6 +578,7 @@ def tst_makefile(ctx):
 
 # VS/etc.
 
+
 generate    = {'makefile': gen_makefile}
 run_build   = {'makefile': bld_makefile}
 run_install = {'makefile': ins_makefile}
@@ -705,6 +707,22 @@ def main():
     regenerate_build_folder()
     verbose = args.verbose
     cmd = args.command
+
+    # TODO: handle CPU features and fill in versioning information like
+    #       ORDO_FEATURE_ARRAY and so on, and tidy up code/improve the
+    #       makefile generation and other misc. things
+    #
+    #       Then, add all of the special parameters, implement the
+    #       sample targets, and verify the script works everywhere on
+    #       linux/bsd/mac with gcc. E.g. ctx.obj_format on 32-bit/mac.
+    #
+    #       Then, implement the flags for clang and icc, and delete the
+    #       CMakeLists and check if it passes on CI, and improve the
+    #       function to find programs on the filesystem.
+    #
+    #       Debug the script (using makefiles/mingw) on Windows.
+    #
+    #       Implement VS solution generation on Windows.
 
     try:
         if cmd in ['configure']:
