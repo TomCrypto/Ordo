@@ -55,12 +55,12 @@ import platform
 import os, sys
 import shutil
 
-os_list = ['linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd', 'generic']
+os_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 
 arch_list = ['generic', 'amd64']
 
 def get_os():
-    """ Returns the current OS as a library platform string, or None. """
+    """Returns the current OS as a library platform string, or "generic"."""
     if platform.system() == 'Linux':
         return 'linux'
     elif platform.system() == 'Windows':
@@ -74,7 +74,7 @@ def get_os():
     elif platform.system() == 'NetBSD':
         return 'netbsd'
     else:
-        return None
+        return "generic"
 
 def program_exists(name):
     try:
@@ -378,11 +378,43 @@ def resolve(definitions_path, built_files):
 #===============================================================================
 
 def gen_makefile(ctx):
+    if ctx.compiler in ['gcc', 'clang']:
+        cflags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
+                  '-fvisibility=hidden', '-Wno-unused-parameter',
+                  '-Wno-long-long', '-Wno-missing-braces',
+                  '-Wno-missing-field-initializers']
+        if ctx.lto:
+            if ctx.compiler in ['gcc']:
+                cflags += ['-flto -ffat-lto-objects']
+            else:
+                cflags += ['-flto']
+        if not ctx.compat:
+            cflags += ['-march=native']
+    elif (ctx.compiler == 'icc'):
+        pass  # TODO (icc)
+    elif (ctx.compiler == 'msvc'):
+        pass  # TODO (windows)
+
+    defines = ['-DORDO_STATIC_LIB', '-DBUILDING_ORDO',
+               '-DORDO_SYSTEM=\\\"{0}\\\"'.format(ctx.platform),
+               '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch)]
+
+    if ctx.platform == 'generic':
+        defines += ['-DORDO_LITTLE_ENDIAN' if ctx.endian == 'little' else
+                    '-DORDO_BIG_ENDIAN']
+
+    # TODO: implement selection logic here?
+
+    defines += ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
+                '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
+                '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
+                '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
+                '-DWITH_OFB=1']
+
     with open(path.join(build_dir, 'Makefile'), 'w') as f:
         f.write('HEADERS = {0}\n'.format(' '.join(headers)))
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
-        f.write('CFLAGS = -O3 -Wall -Wextra -std=c89 -pedantic -fvisibility=hidden -Wno-unused-parameter -Wno-long-long -DORDO_STATIC_LIB -DBUILDING_ORDO -DORDO_LITTLE_ENDIAN\n')
-        f.write('CFLAGS += -DWITH_AES=1 -DWITH_THREEFISH256=1 -DWITH_NULLCIPHER=1 -DWITH_RC4=1 -DWITH_MD5=1 -DWITH_SHA1=1 -DWITH_SHA256=1 -DWITH_SKEIN256=1 -DWITH_ECB=1 -DWITH_CBC=1 -DWITH_CTR=1 -DWITH_CFB=1 -DWITH_OFB=1 -DORDO_SYSTEM=\\\"linux\\\" -DORDO_ARCH=\\\"generic\\\"\n')
+        f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
         f.write('TEST_CFLAGS = -O3 -Wall -Wextra -std=c89 -pedantic -Wno-unused-parameter -Wno-long-long -Wno-missing-field-initializers -DORDO_STATIC_LIB\n')
         f.write('\n')
         f.write('all: static test\n\n')
@@ -437,30 +469,42 @@ run_tests   = {'makefile': tst_makefile}
 import pickle
 
 class BuildContext:
-    pass
+    def __init__(self, args):
+        """This function simply copies the arguments into a build context."""
+        self.lto = args.lto
+        self.compat = args.compat
+        self.shared = args.shared
+
+        cc = get_c_compiler() if args.compiler is None else args.compiler[0]
+        self.compiler, self.compiler_info = get_compiler_id(cc)
+
+        self.platform = args.platform[0]
+        self.arch = args.arch[0]
 
 def configure(args):
     """Generates (and returns) a build context from the arguments."""
-    ctx = BuildContext()
+    ctx = BuildContext(args)
 
-    if args.platform is None:
-        ctx.system = get_os()
-    else:
-        ctx.system = args.platform[0]
+    if ctx.lto and ctx.compat:
+        raise BuildError("Link-time optimization and compatibility mode are mutually exclusive")
 
-    cc = get_c_compiler() if args.compiler is None else args.compiler[0]
-    ctx.compiler, header = get_compiler_id(cc)
+    if ctx.platform == 'generic':
+        print("Note: compiling for generic platform")
+        print("      (external utilities will not be available)")
+
+        if args.endian is None:
+            raise BuildError("Error: please specify target endianness for generic platform")
+
+        ctx.endian = args.endian[0]
 
     if ctx.compiler is None:
         print(".. FAILED to detect C compiler.")
         print(".. please configure with --compiler")
         raise BuildError("An error occurred during configuration")
     else:
-        print(".. C compiler is: {0}".format(header))
+        print(".. C compiler is: {0}".format(ctx.compiler_info))
 
-    ctx.shared = args.shared
-
-    print("Your system is ", ctx.system)
+    print("Your platform is ", ctx.platform)
 
     ctx.output = 'makefile'
 
@@ -522,27 +566,32 @@ def main():
                      help="path to C compiler to use for building")
 
     cfg.add_argument('-p', '--platform', nargs=1, type=str, metavar='',
-                     help="operating system to configure for ({0})".\
-                     format(', '.join(os_list)))
+                     help="operating system/platform to configure for",
+                     default=[get_os()], choices=os_list)
+
+    cfg.add_argument('-e', '--endian', nargs=1, type=str, metavar='',
+                     help="target endianness (for generic platform)",
+                     default=None, choices=['little', 'big'])
 
     cfg.add_argument('-a', '--arch', nargs=1, type=str, metavar='',
-                     help="architecture to configure for ({0})".\
-                     format(', '.join(arch_list)))
-
-    cfg.add_argument('-n', '--native', action='store_true',
-                     help="optimize for this system")
+                     help="architecture to configure for",
+                     default=['generic'], choices=arch_list)
 
     cfg.add_argument('-u', '--compat', action='store_true',
-                     help="for (very) old compilers")
+                     help="for (very) old compilers",
+                     default=False)
 
     cfg.add_argument('-l', '--lto', action='store_true',
-                     help="use link-time optimization")
+                     help="use link-time optimization",
+                     default=True)
 
     cfg.add_argument('--aes-ni', action='store_true',
-                     help="use the AES-NI hardware instructions")
+                     help="use the AES-NI hardware instructions",
+                     default=False)
 
     cfg.add_argument('--shared', action='store_true',
-                     help="also build as a shared library")
+                     help="also build as a shared library",
+                     default=False)
 
     bld.add_argument('targets', nargs=argparse.REMAINDER,
                      help="set of targets to build")
@@ -552,11 +601,9 @@ def main():
     verbose = args.verbose
     cmd = args.command
 
-    # TODO: extend makefile to handle tests to have it working with gcc,
-    #       then make it work with clang/icc and add all other targets
-    #       (then implement the source file selection algorithm and
-    #        assembly support, to achieve feature parity with the
-    #        cmake version with makefiles, before doing Windows)
+    # TODO: then implement the source file selection algorithm and
+    #       assembly support, to achieve feature parity with the
+    #       cmake version with makefiles, before doing Windows
 
     try:
         if cmd in ['configure']:  # Erase previous config
