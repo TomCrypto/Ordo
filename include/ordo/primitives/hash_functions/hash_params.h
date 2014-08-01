@@ -28,12 +28,7 @@ extern "C" {
 ***
 *** @remarks Refer to the Skein specification to  know more about what each of
 ***          these parameter fields stand for.
-***
-*** @warning This structure is \b packed, to improve performance while hashing
-***          the configuration block, be careful if taking pointers to members
-***          of the structure as correct alignment is NOT guaranteed.
 **/
-#pragma pack(push,1)
 struct SKEIN256_PARAMS
 {
     /** The schema identifier, on four bytes.
@@ -56,7 +51,6 @@ struct SKEIN256_PARAMS
     **/
     uint8_t unused[16];
 };
-#pragma pack(pop)
 
 /** @brief Polymorphic hash function parameter union.
 **/

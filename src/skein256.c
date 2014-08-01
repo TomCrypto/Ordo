@@ -59,13 +59,24 @@ int skein256_init(struct SKEIN256_STATE *state,
     if (params)
     {
         uint64_t tweak[2];
+        uint64_t len_tmp;
 
         if (bits(params->out_len) != SKEIN256_INTERNAL)
             return ORDO_ARG;
 
         /* Generate the initial state from the configuration block. */
         memset(state->state, 0, SKEIN256_BLOCK);
-        memcpy(state->block, params, SKEIN256_BLOCK);
+        memcpy((unsigned char *)state->block + 0,
+               &params->schema, sizeof(params->schema));
+        memcpy((unsigned char *)state->block + 4,
+               &params->version, sizeof(params->version));
+        memcpy((unsigned char *)state->block + 6,
+               &params->reserved, sizeof(params->reserved));
+        len_tmp = tole64(params->out_len);
+        memcpy((unsigned char *)state->block + 8,
+               &len_tmp, sizeof(len_tmp));
+        memcpy((unsigned char *)state->block + 16,
+               &params->unused, sizeof(params->unused));
         make_tweak(tweak, SKEIN_UBI_CFG, SKEIN256_BLOCK, 1, 1);
         skein256_compress(state->block, state->state, tweak);
     }
