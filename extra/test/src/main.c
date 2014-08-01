@@ -186,7 +186,7 @@ static void show_progress(size_t pos, size_t total)
         }
 
         printf("]");
-		fflush(stdout);
+        fflush(stdout);
     }
 }
 
@@ -233,6 +233,7 @@ static int test_notty(void)
         }
 
         printf("PASSED\n");
+        fflush(stdout);
     }
 
     printf("\n");
