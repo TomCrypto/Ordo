@@ -4,6 +4,9 @@
 *** @brief Test Vectors
 ***
 *** This unit does rudimentary testing on the os_random module.
+***
+*** Note: this unit test will do nothing if the library is built for a generic
+*** platform, as there is of course no os_random implementation in that case.
 **/
 /*===----------------------------------------------------------------------===*/
 
@@ -14,13 +17,18 @@
 int test_os_random(void);
 int test_os_random(void)
 {
-    uint8_t buffer[1024] = {0};
-    size_t t;
+    if (strcmp(ordo_version()->system, "generic"))
+    {
+        uint8_t buffer[1024] = {0};
+        size_t t;
 
-    ASSERT_SUCCESS(os_random(&buffer, sizeof(buffer)));
+        ASSERT_SUCCESS(os_random(&buffer, sizeof(buffer)));
 
-    for (t = 0; t < sizeof(buffer); ++t)
-        if (buffer[t] != 0) return 1;
+        for (t = 0; t < sizeof(buffer); ++t)
+            if (buffer[t] != 0) return 1;
 
-    ASSERT(0);
+        return 0;
+    }
+
+    return 1;
 }
