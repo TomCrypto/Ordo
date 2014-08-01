@@ -23,6 +23,10 @@ def regenerate_build_folder():
     with open(path.join(build_dir, '.gitignore'), 'w') as f:
         f.write('*\n!.gitignore\n')  # Recreate a .gitignore
 
+def safe_path(s):
+    """Converts a filesystem path to a safe (first-level) file name."""
+    return s.replace('/', '_')
+
 def log(level, fmt, *args, **kwargs):
     if verbose:
         if level == 'info':
@@ -55,11 +59,11 @@ import platform
 import os, sys
 import shutil
 
-os_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
+platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 
 arch_list = ['generic', 'amd64']
 
-def get_os():
+def get_platform():
     """Returns the current OS as a library platform string, or "generic"."""
     if platform.system() == 'Linux':
         return 'linux'
@@ -99,69 +103,89 @@ def get_compiler_id(compiler):
     if not program_exists(compiler):
         return (None, None)
 
-    output = run_cmd(compiler, ['--version']).decode('utf-8')
-    header = output.split('\n')[0]
+    out = run_cmd(compiler, ['--version'])[1]
+    header = out.split('\n')[0]
 
-    if 'GCC' in output:
+    if 'GCC' in out:
         return ('gcc', header)
-    if 'clang' in output:
+    if 'clang' in out:
         return ('clang', header)
-    if 'Intel' in output:
+    if 'Intel' in out:
         return ('intel', header)
-    if 'MSVC' in output:
+    if 'MSVC' in out:
         return ('msvc', header)
 
     return (None, None)
 
-def run_cmd(cmd, args, stream=False):
-    process = subprocess.Popen([cmd] + args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+def stream(line):
+    """Utility function for run_cmd which streams its input to stdout."""
+    print(line, end='')
 
-    if stream:
-        while process.poll() is None:
-            print(process.stdout.readline().rstrip())
-        print(process.stdout.readline().rstrip())
-    else:
-        return process.communicate()[0].rstrip()
+def run_cmd(cmd, args=[], stdout_func=None):
+    """Executes a shell command and returns its output (and errors)."""
+    process = subprocess.Popen([cmd] + args,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT)
+
+    stdout = ''
+
+    for buf in iter(process.stdout.readline, ''):
+        line = buf.decode('utf-8')
+
+        if (not line) or ((stdout_func is not None) and stdout_func(line)):
+            break
+
+        stdout += line
+
+    stdout_buf = process.communicate()[0]
+    final_line = stdout_buf.decode('utf-8')
+    if final_line:
+        if (stdout_func is not None):
+            stdout_func(final_line);
+
+        stdout += final_line
+
+    return (process.returncode, stdout)
 
 #===============================================================================
 #============================= LIBRARY RESOURCES ===============================
 #===============================================================================
 
-source_files = [
-    'alg.c',
-    'utils.c',
-    'block_ciphers.c',
-    'block_modes.c',
-    'digest.c',
-    'enc_block.c',
-    'enc_stream.c',
-    'endianness.c',
-    'error.c',
-    'identification.c',
-    'hash_functions.c',
-    'hmac.c',
-    'ordo.c',
-    'os_random.c',
-    'pbkdf2.c',
-    'hkdf.c',
-    'stream_ciphers.c',
-    'version.c',
-    'curve25519.c',
-    'features.c',
-    'sha1.c',
-    'sha256.c',
-    'md5.c',
-    'skein256.c',
-    'rc4.c',
-    'aes.c',
-    'threefish256.c',
-    'nullcipher.c',
-    'ecb.c',
-    'cbc.c',
-    'ctr.c',
-    'cfb.c',
-    'ofb.c'
-]
+class SourceTree:
+    def __init__(self):
+        self.srcdir = 'src'
+
+        self.src = {}
+
+        for platform in platform_list:
+            if platform == 'generic':
+                pth = self.srcdir
+            else:
+                pth = path.join(self.srcdir, platform)
+
+            self.src[(platform, 'generic')] = [path.join(pth, f) for f in os.listdir(pth) if path.isfile(path.join(pth, f))]
+
+            for arch in arch_list:
+                apth = path.join(pth, arch)
+                if not path.isdir(apth):
+                    continue
+
+                self.src[(platform, arch)] = [path.join(apth, f) for f in os.listdir(apth) if path.isfile(path.join(apth, f))]
+
+                print("Files for {0}/{1} = {2}\n".format(platform, arch, self.src[(platform, arch)]))
+
+        # All source files, in order of dependency
+
+        self.src['all'] = [
+            'alg.c', 'utils.c', 'features.c', 'error.c', 'version.c',
+            'endianness.c', 'identification.c', 'os_random.c',
+            'curve25519.c', 'sha1.c', 'sha256.c', 'md5.c', 'skein256.c',
+            'rc4.c', 'aes.c', 'threefish256.c', 'nullcipher.c',
+            'ecb.c', 'cbc.c', 'ctr.c', 'cfb.c', 'ofb.c',
+            'block_ciphers.c', 'block_modes.c', 'stream_ciphers.c', 'hash_functions.c',
+            'enc_block.c', 'enc_stream.c', 'digest.c',
+            'hmac.c', 'hkdf.c', 'pbkdf2.c',
+            'ordo.c']
 
 headers = [
     '../include/ordo.h',
@@ -325,8 +349,31 @@ def get_digest_len(built_prims, prim_type):
 
     return retval
 
+def source_sort(name):
+    if name in ['alg.c', 'utils.c', 'features.c', 'error.c', 'version.c',
+                'endianness.c', 'identification.c']:
+        return 0
+    elif name in ['sha1.c', 'sha256.c', 'md5.c', 'skein256.c', 'rc4.c',
+                  'aes.c', 'threefish256.c', 'nullcipher.c', 'ecb.c',
+                  'cbc.c', 'ctr.c', 'cfb.c', 'ofb.c']:
+        return 1
+    elif name in ['block_ciphers.c', 'block_modes.c', 'stream_ciphers.c', 'hash_functions.c']:
+        return 2
+    elif name in ['enc_block.c', 'enc_stream.c', 'digest.c']:
+        return 3
+    elif name in ['hmac.c', 'hkdf.c', 'pbkdf2.c']:
+        return 4
+    elif name in ['os_random.c', 'curve25519.c']:
+        return 5
+    elif name in ['ordo.c']:
+        return 6
+    else:
+        return 999
+
 def resolve(definitions_path, built_files):
     """Analyze a list of built source files and output a definition header."""
+    built_files = sorted(built_files, key=source_sort)
+
     built_prims = []
     other_files = []
 
@@ -378,6 +425,8 @@ def resolve(definitions_path, built_files):
 #===============================================================================
 
 def gen_makefile(ctx):
+    tree = SourceTree()
+
     if ctx.compiler in ['gcc', 'clang']:
         cflags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
                   '-fvisibility=hidden', '-Wno-unused-parameter',
@@ -405,6 +454,29 @@ def gen_makefile(ctx):
 
     # TODO: implement selection logic here?
 
+    to_build = []
+
+    for srcfile in tree.src['all']:
+        found = False
+        if ctx.arch != 'generic':
+            for afile in tree.src[(ctx.platform, ctx.arch)]:
+                if srcfile in afile:
+                    to_build.append(afile)
+                    found = True
+        if found:
+            continue
+        for afile in tree.src[(ctx.platform, 'generic')]:
+            if srcfile in afile:
+                to_build.append(afile)
+                found = True
+        if found:
+            continue
+        for afile in tree.src[('generic', 'generic')]:
+            if srcfile in afile:
+                to_build.append(afile)
+
+    print("to_build = {0}".format(to_build))
+
     defines += ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
                 '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
                 '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
@@ -422,10 +494,10 @@ def gen_makefile(ctx):
         f.write('obj:\n\tmkdir obj\n\n')
 
         objfiles = []
-        for srcfile in source_files:
-            objfile = 'obj/' + srcfile.replace('.c', '.o')
+        for srcfile in to_build:
+            objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
             objfiles.append(objfile)
-            f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, '../src/' + srcfile))
+            f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, path.join('../', srcfile)))
             f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
 
         f.write('libordo_s.a: {0}\n'.format(' '.join(objfiles)))
@@ -441,19 +513,19 @@ def gen_makefile(ctx):
         f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
         f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
 
-    resolve('include/ordo/definitions.h', ['src/' + src for src in source_files])
+    resolve('include/ordo/definitions.h', to_build)
 
 def bld_makefile(ctx, targets):
     with chdir(build_dir):
-        run_cmd('make', targets)
+        run_cmd('make', targets, stdout_func=stream)
 
 def ins_makefile(ctx):
     with chdir(build_dir):
-        run_cmd('make', ['install'])  # Must handle dependencies!
+        run_cmd('make', ['install'], stdout_func=stream)  # Must handle dependencies!
 
 def tst_makefile(ctx):
     bld_makefile(ctx, ['test'])
-    run_cmd(path.join(build_dir, 'test'), [])  # Must build tests before!
+    run_cmd(path.join(build_dir, 'test'), [], stdout_func=stream)  # Must build tests before!
 
 # VS/etc.
 
@@ -466,7 +538,8 @@ run_tests   = {'makefile': tst_makefile}
 #========================== HIGH-LEVEL BUILD PROCESS ===========================
 #===============================================================================
 
-import pickle
+from argparse import ArgumentParser
+import argparse, pickle
 
 class BuildContext:
     def __init__(self, args):
@@ -506,7 +579,7 @@ def configure(args):
 
     print("Your platform is ", ctx.platform)
 
-    ctx.output = 'makefile'
+    ctx.out = 'makefile'
 
     with open(path.join(build_dir, build_ctx), mode='wb') as f:
         pickle.dump(ctx, f)
@@ -516,10 +589,10 @@ def configure(args):
 def make_doc(args):
     """Attempts to generate documentation by calling doxygen."""
 
-    # Try and locate doxygen
-    doxygen_path = 'doxygen'
-
-    run_cmd('doxygen', [])
+    if not program_exists('doxygen'):
+        raise BuildError("Doxygen is required to build the documentation")
+    else:
+        run_cmd('doxygen', stdout_func=stream)
 
 def clean_build():
     """Deletes the build folder and recreates an empty one."""
@@ -544,9 +617,6 @@ def get_targets(ctx, targets):
 
     return ['all'] if len(out) == 0 else out
 
-from argparse import ArgumentParser
-import argparse
-
 def main():
     global verbose
 
@@ -567,7 +637,7 @@ def main():
 
     cfg.add_argument('-p', '--platform', nargs=1, type=str, metavar='',
                      help="operating system/platform to configure for",
-                     default=[get_os()], choices=os_list)
+                     default=[get_platform()], choices=platform_list)
 
     cfg.add_argument('-e', '--endian', nargs=1, type=str, metavar='',
                      help="target endianness (for generic platform)",
@@ -611,7 +681,7 @@ def main():
                 log('info', 'Already configured, cleaning')
                 clean_build()
             ctx = configure(args)
-            generate[ctx.output](ctx)
+            generate[ctx.out](ctx)
         elif cmd in ['build', 'install', 'test']:  # Need config
             if not path.exists(path.join(build_dir, build_ctx)):
                 raise BuildError("Please configure before '{0}'.".format(cmd))
@@ -620,11 +690,11 @@ def main():
                     log('info', "Parsing build info in '{0}'.", f.name)
                     ctx = pickle.load(f)
             if cmd == 'build':
-                run_build[ctx.output](ctx, get_targets(ctx, args.targets))
+                run_build[ctx.out](ctx, get_targets(ctx, args.targets))
             elif cmd == 'install':
-                run_install[ctx.output](ctx)  # Install libraries
+                run_install[ctx.out](ctx)  # Install libraries
             elif cmd == 'test':
-                run_tests[ctx.output](ctx)  # Build & run tests
+                run_tests[ctx.out](ctx)  # Build & run tests
         elif cmd in ['doc']:
             make_doc(args)
         elif cmd in ['clean']:
