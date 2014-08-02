@@ -104,11 +104,64 @@ def get_platform():
         return "generic"
 
 
+def get_default_prefix():
+    if get_platform() in ['linux', 'darwin', 'freebsd', 'openbsd', 'netbsd']:
+        return '/usr/local/bin'
+    elif get_platform() in ['win32']:
+        return 'C:\\Program Files (x86)\\Ordo'
+    elif get_platform() in ['generic']:
+        return None
+
+
+def is_program(path, name):
+    """Detect whether the binary at path is the program called name."""
+    out1 = run_cmd(path, ['-version'])[1].lower()
+    out2 = run_cmd(path, ['-v'])[1].lower()
+    if name.lower() in out1:
+        return True
+    if name.lower() in out2:
+        return True
+    return False
+
+def get_version(path):
+    """Returns the version/identifier string of a given program."""
+    return run_cmd(path, ['-v'])[1].lower().split('\n')[0]
+
+def find_program(paths, name):
+    """Generalized function to find programs from potential paths."""
+    for path in paths:
+        if program_exists(path) and is_program(path, name):
+            return path
+    return None
+
+def find_nasm():
+    """Attempt to find the NASM assembler, return None on failure."""
+    paths = ['nasm']
+    
+    if get_platform() == 'win32':
+        paths.append('nasm.exe')
+        paths.append('C:\\Program Files\\nasm\\nasm.exe')
+        paths.append('C:\\Program Files (x86)\\nasm\\nasm.exe')
+    
+    return find_program(paths, 'nasm')
+
+def get_obj_format(platform, arch):
+    """Retrieves the correct object file format for the assembler."""
+    if arch == 'amd64':
+        if platform in ['linux', 'freebsd', 'netbsd', 'openbsd']:
+            return 'elf64'
+        elif platform in ['darwin']:
+            return 'macho64'
+        elif platform in ['win32']:
+            return 'win64'
+    else:  # No other architecture yet (add e.g. i386..)
+        raise BuildError('No assembler format for {0}'.format(arch))
+
 def program_exists(name):
     try:
         run_cmd(name, [])
         return True
-    except IOError:
+    except (IOError, OSError):
         return False
 
 
@@ -188,20 +241,18 @@ class SourceTree:
         self.src = {}
         self.headers = {}
         self.prefix = prefix
-        self.srcdir = 'src'
-        self.src['all'] = set()
+        self.srcdir = path.join(prefix, 'src')
+        self.headerdir = path.join(prefix, 'include')
 
-        self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
-        print(self.src['lib'])
+        # Collect all the library files, including definition header
+        # (note the files are all given as full paths from the root)
 
-        # Collect the library headers, including definition header
-        # (note the headers are given as full paths from the root)
-
-        self.headers['lib'] = set([path.join('..', root, filename)
+        self.headers['lib'] = set([path.join(root, filename)
                                    for root, dirnames, filenames
-                                   in os.walk('include')
-                                       for filename in filenames])
+                                   in os.walk(self.headerdir)
+                                   for filename in filenames])
         self.headers['lib'].add('../include/ordo/definitions.h')
+        self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
 
     def search_src_lib(self, pR, prefix):
         out = {}
@@ -212,12 +263,12 @@ class SourceTree:
                     pP = path.join(pR, plat) if plat != 'generic' else pR
                     pA = path.join(pP, arch) if arch != 'generic' else pP
                     pF = path.join(pA, feat) if feat != 'generic' else pA
-
+                    
                     if not path.isdir(pF):
                         out[(plat, arch, feat)] = []
                         continue
 
-                    out[(plat, arch, feat)] = [path.join(prefix, pF, f)
+                    out[(plat, arch, feat)] = [path.join(pF, f)
                     for f in os.listdir(pF) if path.isfile(path.join(pF, f))]
 
         return out
@@ -478,11 +529,9 @@ def gen_makefile(ctx):
         defines += ['-DORDO_LITTLE_ENDIAN' if ctx.endian == 'little' else
                     '-DORDO_BIG_ENDIAN']
 
-    # TODO: implement selection logic here?
-
     to_build = tree.select(ctx.platform, ctx.arch, [])
 
-    print("to_build = {0}".format(to_build))
+    #print("to_build = {0}".format(to_build))
 
     defines += ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
                 '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
@@ -490,7 +539,7 @@ def gen_makefile(ctx):
                 '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
                 '-DWITH_OFB=1']
 
-    with open(path.join(build_dir, 'Makefile'), 'w') as f:
+    with open('Makefile', 'w') as f:
         f.write('HEADERS = {0}\n'.format(' '.join(tree.headers['lib'])))
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
@@ -527,23 +576,20 @@ def gen_makefile(ctx):
         f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
 
     # Change directory to root folder (not build), so remove ..
-    with chdir('build'):
-        resolve('../include/ordo/definitions.h', to_build)
+    resolve('../include/ordo/definitions.h', to_build)
 
 
 def bld_makefile(ctx, targets):
-    with chdir(build_dir):
-        run_cmd('make', targets, stdout_func=stream)
+    run_cmd('make', targets, stdout_func=stream)
 
 
 def ins_makefile(ctx):
-    with chdir(build_dir):
-        run_cmd('make', ['install'], stdout_func=stream)  # Must handle dependencies!
+    run_cmd('make', ['install'], stdout_func=stream)  # Must handle dependencies!
 
 
 def tst_makefile(ctx):
     bld_makefile(ctx, ['test'])
-    run_cmd(path.join(build_dir, 'test'), [], stdout_func=stream)  # Must build tests before!
+    run_cmd('./test', [], stdout_func=stream)  # Must build tests before!
 
 
 # VS/etc.
@@ -576,8 +622,24 @@ class BuildContext:
         self.platform = args.platform[0]
         self.arch = args.arch[0]
 
-        self.assembler = 'nasm'
-        self.obj_format = 'elf64'
+        if self.arch == 'generic':  # We won't need an assembler here
+            if args.assembler is not None:
+                log('info', "Assembler not required for generic arch.")
+        else:
+            if args.assembler is not None:
+                if is_program(args.assembler[0], 'nasm'):
+                    self.assembler = args.assembler[0]
+                else:
+                    log('warn', "Assembler {0} does not appear to be NASM.",
+                        args.assembler[0])
+            else:
+                self.assembler = find_nasm()
+                
+                if self.assembler is None:
+                    raise BuildError("Failed to find assembler")
+
+            if self.assembler is not None:
+                self.obj_format = get_obj_format(self.platform, self.arch)
 
 
 def configure(args):
@@ -604,6 +666,9 @@ def configure(args):
         print(".. C compiler is: {0}".format(ctx.compiler_info))
 
     print("Your platform is ", ctx.platform)
+    
+    if ctx.arch != 'generic':
+        print("Assembler is: {0}.".format(get_version(ctx.assembler)))
 
     ctx.out = 'makefile'
 
@@ -639,8 +704,15 @@ def main():
     cln = parsers.add_parser('clean',     help="remove all build files")
     doc = parsers.add_parser('doc',       help="generate documentation")
 
+    cfg.add_argument('--prefix', nargs=1, type=str, metavar='',
+                     help="path into which to install files",
+                     default=get_default_prefix())
+
     cfg.add_argument('-c', '--compiler', nargs=1, type=str, metavar='',
                      help="path to C compiler to use for building")
+
+    cfg.add_argument('-q', '--assembler', nargs=1, type=str, metavar='',
+                     help="path to assembler to use for building")
 
     cfg.add_argument('-p', '--platform', nargs=1, type=str, metavar='',
                      help="operating system/platform to configure for",
@@ -667,8 +739,7 @@ def main():
                      default=False)
 
     bld.add_argument('targets', nargs=argparse.REMAINDER,
-                     help="set of targets to build",
-                     choices=['static', 'shared', 'test', 'samples'])
+                     help="set of targets to build")
 
     master.add_argument('-v', '--verbose', action='store_true',
                         help="display additional information")
@@ -680,11 +751,14 @@ def main():
 
     # TODO: handle CPU features and fill in versioning information like
     #       ORDO_FEATURE_ARRAY and so on, and tidy up code/improve the
-    #       makefile generation and other misc. things
+    #       makefile generation and other misc. things (reorganize)
+    #
+    #       Consider partitioning the script into 3 parts?
+    #       (utilities, per-output-type code, high-level build system)
     #
     #       Then, add all of the special parameters, implement the
     #       sample targets, and verify the script works everywhere on
-    #       linux/bsd/mac with gcc. E.g. ctx.obj_format on 32-bit/mac.
+    #       linux/bsd/mac with gcc. E.g. ctx.obj_format on mac.
     #
     #       Then, implement the flags for clang and icc, and delete the
     #       CMakeLists and check if it passes on CI, and improve the
@@ -701,21 +775,28 @@ def main():
                 clean_build()
 
             ctx = configure(args)
-            generate[ctx.out](ctx)
+            with chdir(build_dir):
+                generate[ctx.out](ctx)
         elif cmd in ['build', 'install', 'test']:
             if not path.exists(path.join(build_dir, build_ctx)):
                 raise BuildError("Please configure before '{0}'.".format(cmd))
             else:
                 with open(path.join(build_dir, build_ctx), 'rb') as f:
-                    log('info', "Parsing build info in '{0}'.", f.name)
                     ctx = pickle.load(f)
 
             if cmd == 'build':
-                run_build[ctx.out](ctx, args.targets)
+                for target in args.targets:
+                    if not target in ['static', 'shared', 'test', 'samples']:
+                        raise BuildError("Bad target '{0}'.".format(target))
+            
+                with chdir(build_dir):
+                    run_build[ctx.out](ctx, args.targets)
             elif cmd == 'install':
-                run_install[ctx.out](ctx)
+                with chdir(build_dir):
+                    run_install[ctx.out](ctx)
             elif cmd == 'test':
-                run_tests[ctx.out](ctx)
+                with chdir(build_dir):
+                    run_tests[ctx.out](ctx)
         elif cmd in ['doc']:
             make_doc(args)
         elif cmd in ['clean']:
