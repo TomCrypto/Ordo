@@ -480,7 +480,7 @@ def gen_makefile(ctx):
 
     # TODO: implement selection logic here?
 
-    to_build = tree.select(ctx.platform, ctx.arch, ['aes_ni'])
+    to_build = tree.select(ctx.platform, ctx.arch, [])
 
     print("to_build = {0}".format(to_build))
 
