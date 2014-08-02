@@ -28,7 +28,7 @@ def regenerate_build_folder():
 
 def safe_path(s):
     """Converts a filesystem path to a safe (first-level) file name."""
-    return s.replace('/', '_')
+    return s.replace('.', '_').replace('/', '_')
 
 
 def multiline_pad(header, msg, width):
@@ -82,6 +82,8 @@ import shutil
 platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 
 arch_list = ['generic', 'amd64']
+
+feature_list = ['generic', 'aes-ni']
 
 
 def get_platform():
@@ -181,81 +183,67 @@ def run_cmd(cmd, args=[], stdout_func=None):
 
 
 class SourceTree:
-    def __init__(self):
-        self.srcdir = 'src'
-
+    def __init__(self, prefix):
+        """Collect all source and header files into a searchable tree."""
         self.src = {}
-
+        self.headers = {}
+        self.prefix = prefix
+        self.srcdir = 'src'
         self.src['all'] = set()
 
-        for platform in platform_list:
-            if platform == 'generic':
-                pth = self.srcdir
-            else:
-                pth = path.join(self.srcdir, platform)
+        self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
+        print(self.src['lib'])
 
-            self.src[(platform, 'generic')] = [path.join(pth, f) for f in os.listdir(pth) if path.isfile(path.join(pth, f))]
+        # Collect the library headers, including definition header
+        # (note the headers are given as full paths from the root)
 
-            for f in [f for f in os.listdir(pth) if path.isfile(path.join(pth, f))]:
-                self.src['all'].add(f)
+        self.headers['lib'] = set([path.join('..', root, filename)
+                                   for root, dirnames, filenames
+                                   in os.walk('include')
+                                       for filename in filenames])
+        self.headers['lib'].add('../include/ordo/definitions.h')
 
+    def search_src_lib(self, pR, prefix):
+        out = {}
+        
+        for plat in platform_list:
             for arch in arch_list:
-                apth = path.join(pth, arch)
-                if not path.isdir(apth):
-                    continue
+                for feat in feature_list:
+                    pP = path.join(pR, plat) if plat != 'generic' else pR
+                    pA = path.join(pP, arch) if arch != 'generic' else pP
+                    pF = path.join(pA, feat) if feat != 'generic' else pA
 
-                self.src[(platform, arch)] = [path.join(apth, f) for f in os.listdir(apth) if path.isfile(path.join(apth, f))]
+                    if not path.isdir(pF):
+                        out[(plat, arch, feat)] = []
+                        continue
 
-                for f in [path.join(apth, f) for f in os.listdir(apth) if path.isfile(path.join(apth, f))]:
-                    self.src['all'].add(f)
+                    out[(plat, arch, feat)] = [path.join(prefix, pF, f)
+                    for f in os.listdir(pF) if path.isfile(path.join(pF, f))]
 
-                print("Files for {0}/{1} = {2}\n".format(platform, arch, self.src[(platform, arch)]))
+        return out
 
-        # All source files, in order of dependency
+    def same_module(self, file1, file2):
+        """Return if two files are (the same part of) the same module."""
+        return path.basename(file1) == path.basename(file2)
 
-headers = [
-    '../include/ordo.h',
-    '../include/ordo/auth/hmac.h',
-    '../include/ordo/common/error.h',
-    '../include/ordo/common/identification.h',
-    '../include/ordo/common/interface.h',
-    '../include/ordo/common/limits.h',
-    '../include/ordo/common/version.h',
-    '../include/ordo/digest/digest.h',
-    '../include/ordo/enc/enc_block.h',
-    '../include/ordo/enc/enc_stream.h',
-    '../include/ordo/internal/alg.h',
-    '../include/ordo/internal/implementation.h',
-    '../include/ordo/internal/sys.h',
-    '../include/ordo/kdf/pbkdf2.h',
-    '../include/ordo/kdf/hkdf.h',
-    '../include/ordo/misc/curve25519.h',
-    '../include/ordo/misc/endianness.h',
-    '../include/ordo/misc/os_random.h',
-    '../include/ordo/misc/utils.h',
-    '../include/ordo/primitives/block_ciphers.h',
-    '../include/ordo/primitives/block_ciphers/aes.h',
-    '../include/ordo/primitives/block_ciphers/block_params.h',
-    '../include/ordo/primitives/block_ciphers/nullcipher.h',
-    '../include/ordo/primitives/block_ciphers/threefish256.h',
-    '../include/ordo/primitives/block_modes.h',
-    '../include/ordo/primitives/block_modes/cbc.h',
-    '../include/ordo/primitives/block_modes/cfb.h',
-    '../include/ordo/primitives/block_modes/ctr.h',
-    '../include/ordo/primitives/block_modes/ecb.h',
-    '../include/ordo/primitives/block_modes/mode_params.h',
-    '../include/ordo/primitives/block_modes/ofb.h',
-    '../include/ordo/primitives/hash_functions.h',
-    '../include/ordo/primitives/hash_functions/hash_params.h',
-    '../include/ordo/primitives/hash_functions/md5.h',
-    '../include/ordo/primitives/hash_functions/sha256.h',
-    '../include/ordo/primitives/hash_functions/skein256.h',
-    '../include/ordo/primitives/hash_functions/sha1.h',
-    '../include/ordo/primitives/stream_ciphers.h',
-    '../include/ordo/primitives/stream_ciphers/rc4.h',
-    '../include/ordo/primitives/stream_ciphers/stream_params.h',
-    '../include/ordo/definitions.h'
-]
+    def process(self, source_files, category):
+        for f in self.src['lib'][category]:
+            if not any(self.same_module(f, f2) for f2 in source_files):
+                source_files.append(f)
+        return source_files
+
+    def select(self, plat, arch, features):
+        """Selects the source files to build from platform/arch/features."""
+        source_files = []
+
+        for f in set(features).union({'generic'}):
+            source_files = self.process(source_files, (plat, arch, f))
+        for a in {arch}.union({'generic'}):
+            source_files = self.process(source_files, (plat, a, 'generic'))
+        for p in {plat}.union({'generic'}):
+            source_files = self.process(source_files, (p, 'generic', 'generic'))
+
+        return source_files
 
 test_srcdir = '../extra/test/src/'
 
@@ -463,7 +451,7 @@ def resolve(definitions_path, built_files):
 
 
 def gen_makefile(ctx):
-    tree = SourceTree()
+    tree = SourceTree('..')
 
     if ctx.compiler in ['gcc', 'clang']:
         cflags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
@@ -492,28 +480,7 @@ def gen_makefile(ctx):
 
     # TODO: implement selection logic here?
 
-    print("All files = {0}".format(tree.src['all']))
-
-    to_build = set()
-
-    for srcfile in tree.src['all']:
-        found = False
-        if ctx.arch != 'generic':
-            for afile in tree.src[(ctx.platform, ctx.arch)]:
-                if path.basename(srcfile) == path.basename(afile):
-                    to_build.add(afile)
-                    found = True
-        if found:
-            continue
-        for afile in tree.src[(ctx.platform, 'generic')]:
-            if path.basename(srcfile) == path.basename(afile):
-                to_build.add(afile)
-                found = True
-        if found:
-            continue
-        for afile in tree.src[('generic', 'generic')]:
-            if path.basename(srcfile) == path.basename(afile):
-                to_build.add(afile)
+    to_build = tree.select(ctx.platform, ctx.arch, [])
 
     print("to_build = {0}".format(to_build))
 
@@ -524,7 +491,7 @@ def gen_makefile(ctx):
                 '-DWITH_OFB=1']
 
     with open(path.join(build_dir, 'Makefile'), 'w') as f:
-        f.write('HEADERS = {0}\n'.format(' '.join(headers)))
+        f.write('HEADERS = {0}\n'.format(' '.join(tree.headers['lib'])))
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
         f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
@@ -538,12 +505,12 @@ def gen_makefile(ctx):
             if '.c' in srcfile:
                 objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
                 objfiles.append(objfile)
-                f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, path.join('../', srcfile)))
+                f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, srcfile))
                 f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
             elif '.asm' in srcfile:
                 objfile = 'obj/' + safe_path(srcfile.replace('.asm', '.asm.o'))
                 objfiles.append(objfile)
-                f.write('{0}: {1} | obj\n'.format(objfile, path.join('../', srcfile)))
+                f.write('{0}: {1} | obj\n'.format(objfile, srcfile))
                 f.write('\t{0} -f {1} $< -o $@\n\n'.format(ctx.assembler, ctx.obj_format))
 
         f.write('libordo_s.a: {0}\n'.format(' '.join(objfiles)))
@@ -559,7 +526,9 @@ def gen_makefile(ctx):
         f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
         f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
 
-    resolve('include/ordo/definitions.h', to_build)
+    # Change directory to root folder (not build), so remove ..
+    with chdir('build'):
+        resolve('../include/ordo/definitions.h', to_build)
 
 
 def bld_makefile(ctx, targets):
