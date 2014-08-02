@@ -1,4 +1,4 @@
-;/===-- aes.asm --------------------------*- win32/amd64/aes-ni -*- ASM -*-===//
+;/===-- aes.asm --------------------------*- win32/amd64/aes_ni -*- ASM -*-===//
 
 ; AES-NI implementation (Windows ABI)
 

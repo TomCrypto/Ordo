@@ -1,4 +1,4 @@
-/*===-- aes.c ------------------------------*- win32/amd64/aes-ni -*- C -*-===*/
+/*===-- aes.c ------------------------------*- win32/amd64/aes_ni -*- C -*-===*/
 
 /** @cond **/
 #include "ordo/internal/implementation.h"

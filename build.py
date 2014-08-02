@@ -83,7 +83,7 @@ platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'n
 
 arch_list = ['generic', 'amd64']
 
-feature_list = ['generic', 'aes-ni']
+feature_list = ['generic', 'aes_ni']
 
 
 def get_platform():
@@ -480,7 +480,7 @@ def gen_makefile(ctx):
 
     # TODO: implement selection logic here?
 
-    to_build = tree.select(ctx.platform, ctx.arch, [])
+    to_build = tree.select(ctx.platform, ctx.arch, ['aes_ni'])
 
     print("to_build = {0}".format(to_build))
 
