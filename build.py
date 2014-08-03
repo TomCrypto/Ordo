@@ -234,6 +234,10 @@ def run_cmd(cmd, args=[], stdout_func=None):
 # ============================ LIBRARY RESOURCES ==============================
 # =============================================================================
 
+def prefix_search(dirpath):
+    return [path.join(root, filename)
+            for root, dirnames, filenames in os.walk(dirpath)
+            for filename in filenames]
 
 class SourceTree:
     def __init__(self, prefix):
@@ -243,16 +247,19 @@ class SourceTree:
         self.prefix = prefix
         self.srcdir = path.join(prefix, 'src')
         self.headerdir = path.join(prefix, 'include')
+        self.testsrcdir = path.join(prefix, 'extra/test/src')
+        self.testheaderdir = path.join(prefix, 'extra/test/include')
 
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
 
-        self.headers['lib'] = set([path.join(root, filename)
-                                   for root, dirnames, filenames
-                                   in os.walk(self.headerdir)
-                                   for filename in filenames])
+        self.headers['lib'] = set(prefix_search(self.headerdir))
         self.headers['lib'].add('../include/ordo/definitions.h')
+        
         self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
+        
+        self.src['test'] = prefix_search(self.testsrcdir)
+        self.headers['test'] = prefix_search(self.testheaderdir)
 
     def search_src_lib(self, pR, prefix):
         out = {}
@@ -295,37 +302,6 @@ class SourceTree:
             source_files = self.process(source_files, (p, 'generic', 'generic'))
 
         return source_files
-
-test_srcdir = '../extra/test/src/'
-
-test_source = [
-    'main.c',
-    'test_vectors/md5.c',
-    'test_vectors/sha1.c',
-    'test_vectors/sha256.c',
-    'test_vectors/skein256.c',
-    'test_vectors/hmac.c',
-    'test_vectors/hkdf.c',
-    'test_vectors/pbkdf2.c',
-    'test_vectors/rc4.c',
-    'test_vectors/aes.c',
-    'test_vectors/threefish256.c',
-    'test_vectors/ecb.c',
-    'test_vectors/cbc.c',
-    'test_vectors/ctr.c',
-    'test_vectors/cfb.c',
-    'test_vectors/ofb.c',
-    'test_vectors/curve25519.c',
-    'unit_tests/pbkdf2.c',
-    'unit_tests/hkdf.c',
-    'unit_tests/misc.c',
-    'unit_tests/internal.c',
-    'unit_tests/os_random.c'
-]
-
-test_headers = [
-    '../extra/test/include/testenv.h'
-]
 
 
 # =============================================================================
@@ -547,7 +523,7 @@ def gen_makefile(ctx):
 
     with open('Makefile', 'w') as f:
         f.write('HEADERS = {0}\n'.format(' '.join(tree.headers['lib'])))
-        f.write('TEST_HEADERS = {0}\n'.format(' '.join(test_headers)))
+        f.write('TEST_HEADERS = {0}\n'.format(' '.join(tree.headers['test'])))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
         f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
         f.write('\n')
@@ -572,10 +548,10 @@ def gen_makefile(ctx):
         f.write('\tar rcs libordo_s.a {0}\n'.format(' '.join(objfiles)))
 
         test_objfiles = []
-        for srcfile in test_source:
+        for srcfile in tree.src['test']:
             objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
             test_objfiles.append(objfile)
-            f.write('{0}: {1} $(HEADERS) $(TEST_HEADERS) | obj\n'.format(objfile, path.join(test_srcdir, srcfile)))
+            f.write('{0}: {1} $(HEADERS) $(TEST_HEADERS) | obj\n'.format(objfile, srcfile))
             f.write('\t{0} $(TEST_CFLAGS) -I../include -I../extra/test/include -c $< -o $@\n\n'.format(ctx.compiler))
 
         f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
