@@ -44,7 +44,7 @@ This table doesn't include every single feature but gives a high level overview 
 How To Build
 ------------
 
-Ordo uses a custom Python-based build system, accessible through the `build.py` script. This build system is implemented in the `cantrell` folder (get it?) as an independent module. The build script requires Python 2.3, however you may need to install one or two Python modules for versions prior to 2.7 - the script will display the required dependencies.
+Ordo uses a custom Python-based build system, accessible through the `build.py` script, and implemented in the `cantrell` folder (get it?) as an independent module. The build script requires Python 2.3, however you may need to install one or two Python modules for versions prior to 2.7 - the script will display the required dependencies.
 
 To build the library, first configure it, by typing:
 

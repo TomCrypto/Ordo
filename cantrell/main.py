@@ -702,7 +702,8 @@ def make_doc(args):
     if not program_exists('doxygen'):
         raise BuildError("Doxygen is required to build the documentation")
     else:
-        run_cmd('doxygen', stdout_func=stream)
+        with chdir('doc'):
+            run_cmd('doxygen', stdout_func=stream)
 
 
 def clean_build():
