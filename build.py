@@ -250,6 +250,8 @@ class SourceTree:
         self.testsrcdir = path.join(prefix, 'extra/test/src')
         self.testheaderdir = path.join(prefix, 'extra/test/include')
 
+        self.samplessrcdir = path.join(prefix, 'extra/samples/src')
+
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
 
@@ -260,6 +262,19 @@ class SourceTree:
         
         self.src['test'] = prefix_search(self.testsrcdir)
         self.headers['test'] = prefix_search(self.testheaderdir)
+        
+        self.src['hashsum'] = [path.join(self.samplessrcdir, 'hashsum.c')]
+        self.src['version'] = [path.join(self.samplessrcdir, 'version.c')]
+        self.src['info'] = [path.join(self.samplessrcdir, 'info.c')]
+        self.src['benchmark'] = [
+            path.join(self.samplessrcdir, 'benchmark.c'),
+            path.join(self.samplessrcdir, 'utils/timer.c')
+        ]
+        
+        self.headers['hashsum'] = []
+        self.headers['version'] = []
+        self.headers['info'] = []
+        self.headers['benchmark'] = [path.join(self.samplessrcdir, 'utils/timer.h')]
 
     def search_src_lib(self, pR, prefix):
         out = {}
@@ -526,6 +541,7 @@ def gen_makefile(ctx):
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(tree.headers['test'])))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
         f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
+        f.write('SAMPLE_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
         f.write('\n')
         f.write('all: static test\n\n')
         f.write('static: libordo_s.a\n\n')
@@ -556,6 +572,22 @@ def gen_makefile(ctx):
 
         f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
         f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
+
+        f.write('samples: hashsum version info benchmark\n\n')
+
+        for sample in ['hashsum', 'version', 'info', 'benchmark']:
+            sample_objfiles = []
+            for srcfile in tree.src[sample]:
+                objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
+                sample_objfiles.append(objfile)
+                f.write('{0}: {1} $(HEADERS) {2} | obj\n'.format(objfile, srcfile, ' '.join(tree.headers[sample])))
+                f.write('\t{0} $(SAMPLE_CFLAGS) -I../include -I../extra/samples/src -c $< -o $@\n\n'.format(ctx.compiler))
+
+            f.write('{0}: libordo_s.a {1}\n'.format(sample, ' '.join(sample_objfiles)))
+            f.write('\t{0} {1} -o $@ libordo_s.a -lrt\n'.format(ctx.compiler, ' '.join(sample_objfiles)))
+            # TODO: need realtime library for benchmark on some systems!
+            
+            f.write('\n')
 
     # Change directory to root folder (not build), so remove ..
     resolve('../include/ordo/definitions.h', to_build)
