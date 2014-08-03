@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include "ordo.h"
 
-#include "utils/timer.h"
+#include "timer.h"
 
 /*===----------------------------------------------------------------------===*/
 

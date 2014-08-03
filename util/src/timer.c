@@ -1,14 +1,14 @@
-/*===-- timer.c ----------------------------------------*- SAMPLE -*- C -*-===*/
+/*===-- timer.c -------------------------------------*- UTILITIES -*- C -*-===*/
 /**
 *** @file
-*** @brief Sample Utility
+*** @brief Utility
 ***
 *** This is the implementation of the portable accurate timer routines, in the
 *** timer.h header. It may change wildly depending on the underlying system.
 **/
 /*===----------------------------------------------------------------------===*/
 
-#include "utils/timer.h"
+#include "timer.h"
 
 #if defined(_WIN32) /* On Windows, use system functions. */
 

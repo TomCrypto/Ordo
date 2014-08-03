@@ -249,10 +249,12 @@ class SourceTree:
         self.prefix = prefix
         self.srcdir = path.join(prefix, 'src')
         self.headerdir = path.join(prefix, 'include')
-        self.testsrcdir = path.join(prefix, 'extra/test/src')
-        self.testheaderdir = path.join(prefix, 'extra/test/include')
+        self.testsrcdir = path.join(prefix, 'test/src')
+        self.testheaderdir = path.join(prefix, 'test/include')
+        self.utilsrcdir = path.join(prefix, 'util/src')
+        self.utilheaderdir = path.join(prefix, 'util/include')
 
-        self.samplessrcdir = path.join(prefix, 'extra/samples/src')
+        self.samplessrcdir = path.join(prefix, 'samples/src')
 
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
@@ -263,20 +265,19 @@ class SourceTree:
         self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
         
         self.src['test'] = prefix_search(self.testsrcdir)
+        self.src['util'] = prefix_search(self.utilsrcdir)
         self.headers['test'] = prefix_search(self.testheaderdir)
+        self.headers['util'] = prefix_search(self.utilheaderdir)
         
         self.src['hashsum'] = [path.join(self.samplessrcdir, 'hashsum.c')]
         self.src['version'] = [path.join(self.samplessrcdir, 'version.c')]
         self.src['info'] = [path.join(self.samplessrcdir, 'info.c')]
-        self.src['benchmark'] = [
-            path.join(self.samplessrcdir, 'benchmark.c'),
-            path.join(self.samplessrcdir, 'utils/timer.c')
-        ]
+        self.src['benchmark'] = [path.join(self.samplessrcdir, 'benchmark.c')]
         
         self.headers['hashsum'] = []
         self.headers['version'] = []
         self.headers['info'] = []
-        self.headers['benchmark'] = [path.join(self.samplessrcdir, 'utils/timer.h')]
+        self.headers['benchmark'] = []
 
     def search_src_lib(self, pR, prefix):
         out = {}
@@ -541,8 +542,10 @@ def gen_makefile(ctx):
     with open('Makefile', 'w') as f:
         f.write('HEADERS = {0}\n'.format(' '.join(tree.headers['lib'])))
         f.write('TEST_HEADERS = {0}\n'.format(' '.join(tree.headers['test'])))
+        f.write('UTIL_HEADERS = {0}\n'.format(' '.join(tree.headers['util'])))
         f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
         f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
+        f.write('UTIL_CFLAGS = {0}\n'.format(' '.join(cflags)))
         f.write('SAMPLE_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
         f.write('\n')
         f.write('all: static test\n\n')
@@ -570,10 +573,20 @@ def gen_makefile(ctx):
             objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
             test_objfiles.append(objfile)
             f.write('{0}: {1} $(HEADERS) $(TEST_HEADERS) | obj\n'.format(objfile, srcfile))
-            f.write('\t{0} $(TEST_CFLAGS) -I../include -I../extra/test/include -c $< -o $@\n\n'.format(ctx.compiler))
+            f.write('\t{0} $(TEST_CFLAGS) -I../include -I../test/include -c $< -o $@\n\n'.format(ctx.compiler))
 
         f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
         f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
+
+        objfiles = []
+        for srcfile in tree.src['util']:
+            objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
+            objfiles.append(objfile)
+            f.write('{0}: {1} $(UTIL_HEADERS) | obj\n'.format(objfile, srcfile))
+            f.write('\t{0} $(UTIL_CFLAGS) -I../util/include -c $< -o $@\n\n'.format(ctx.compiler))
+
+        f.write('libutil.a: {0}\n'.format(' '.join(objfiles)))
+        f.write('\tar rcs libutil.a {0}\n\n'.format(' '.join(objfiles)))
 
         f.write('samples: hashsum version info benchmark\n\n')
 
@@ -582,11 +595,11 @@ def gen_makefile(ctx):
             for srcfile in tree.src[sample]:
                 objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
                 sample_objfiles.append(objfile)
-                f.write('{0}: {1} $(HEADERS) {2} | obj\n'.format(objfile, srcfile, ' '.join(tree.headers[sample])))
-                f.write('\t{0} $(SAMPLE_CFLAGS) -I../include -I../extra/samples/src -c $< -o $@\n\n'.format(ctx.compiler))
+                f.write('{0}: {1} $(HEADERS) $(UTIL_HEADERS) libutil.a {2} | obj\n'.format(objfile, srcfile, ' '.join(tree.headers[sample])))
+                f.write('\t{0} $(SAMPLE_CFLAGS) -I../include -I../util/include -c $< -o $@\n\n'.format(ctx.compiler))
 
-            f.write('{0}: libordo_s.a {1}\n'.format(sample, ' '.join(sample_objfiles)))
-            f.write('\t{0} {1} -o $@ libordo_s.a -lrt\n'.format(ctx.compiler, ' '.join(sample_objfiles)))
+            f.write('{0}: libordo_s.a libutil.a {1}\n'.format(sample, ' '.join(sample_objfiles)))
+            f.write('\t{0} {1} -o $@ libordo_s.a libutil.a -lrt\n'.format(ctx.compiler, ' '.join(sample_objfiles)))
             # TODO: need realtime library for benchmark on some systems!
             
             f.write('\n')

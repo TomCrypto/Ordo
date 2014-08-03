@@ -1,7 +1,7 @@
-/*===-- timer.h ----------------------------------------*- SAMPLE -*- H -*-===*/
+/*===-- timer.h -------------------------------------*- UTILITIES -*- H -*-===*/
 /**
 *** @file
-*** @brief Sample Utility
+*** @brief Utility
 ***
 *** Provides an interface to a timer implementation (e.g. for benchmarking).
 ***
@@ -9,8 +9,8 @@
 **/
 /*===----------------------------------------------------------------------===*/
 
-#ifndef SAMPLE_UTILS_TIMER_H
-#define SAMPLE_UTILS_TIMER_H
+#ifndef UTIL_TIMER_H
+#define UTIL_TIMER_H
 
 /** Initializes the timer to be signaled after some period of time.
 ***
