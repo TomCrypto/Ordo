@@ -800,41 +800,35 @@ def run():
     #
     #       Implement VS solution generation on Windows.
 
-    try:
-        if cmd in ['configure']:
-            if path.exists(path.join(build_dir, build_ctx)):
-                log('info', 'Already configured, cleaning')
-                clean_build()
-
-            ctx = configure(args)
-            with chdir(build_dir):
-                generate[ctx.out](ctx)
-        elif cmd in ['build', 'install', 'test']:
-            if not path.exists(path.join(build_dir, build_ctx)):
-                raise BuildError("Please configure before '{0}'.".format(cmd))
-            else:
-                with open(path.join(build_dir, build_ctx), 'rb') as f:
-                    ctx = pickle.load(f)
-
-            if cmd == 'build':
-                for target in args.targets:
-                    if not target in ['static', 'shared', 'test', 'samples']:
-                        raise BuildError("Bad target '{0}'.".format(target))
-            
-                with chdir(build_dir):
-                    run_build[ctx.out](ctx, args.targets)
-            elif cmd == 'install':
-                with chdir(build_dir):
-                    run_install[ctx.out](ctx)
-            elif cmd == 'test':
-                with chdir(build_dir):
-                    run_tests[ctx.out](ctx)
-        elif cmd in ['doc']:
-            make_doc(args)
-        elif cmd in ['clean']:
+    if cmd in ['configure']:
+        if path.exists(path.join(build_dir, build_ctx)):
+            log('info', 'Already configured, cleaning')
             clean_build()
-    except BuildError:
-        print(sys.exc_info()[1])
-        return False
 
-    return True
+        ctx = configure(args)
+        with chdir(build_dir):
+            generate[ctx.out](ctx)
+    elif cmd in ['build', 'install', 'test']:
+        if not path.exists(path.join(build_dir, build_ctx)):
+            raise BuildError("Please configure before '{0}'.".format(cmd))
+        else:
+            with open(path.join(build_dir, build_ctx), 'rb') as f:
+                ctx = pickle.load(f)
+
+        if cmd == 'build':
+            for target in args.targets:
+                if not target in ['static', 'shared', 'test', 'samples']:
+                    raise BuildError("Bad target '{0}'.".format(target))
+        
+            with chdir(build_dir):
+                run_build[ctx.out](ctx, args.targets)
+        elif cmd == 'install':
+            with chdir(build_dir):
+                run_install[ctx.out](ctx)
+        elif cmd == 'test':
+            with chdir(build_dir):
+                run_tests[ctx.out](ctx)
+    elif cmd in ['doc']:
+        make_doc(args)
+    elif cmd in ['clean']:
+        clean_build()
