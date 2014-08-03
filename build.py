@@ -186,12 +186,12 @@ def get_compiler_id(compiler):
     out2 = run_cmd(compiler, ['-v'])[1]
     header = out.split('\n')[0]
 
-    if ('gcc' in out.lower()) or ('gcc' in out2.lower()):
-        return ('gcc', header)
-    if ('clang' in out.lower()) or ('clang' in out2.lower()):
-        return ('clang', header)
     if ('intel' in out.lower()) or ('intel' in out2.lower()):
         return ('intel', header)
+    if ('clang' in out.lower()) or ('clang' in out2.lower()):
+        return ('clang', header)
+    if ('gcc' in out.lower()) or ('gcc' in out2.lower()):
+        return ('gcc', header)
     if ('msvc' in out.lower()) or ('msvc' in out2.lower()):
         return ('msvc', header)
 
@@ -494,7 +494,7 @@ def resolve(definitions_path, built_files):
 
 def gen_makefile(ctx):
     tree = SourceTree('..')
-
+    
     if ctx.compiler in ['gcc', 'clang']:
         cflags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
                   '-fvisibility=hidden', '-Wno-unused-parameter',
