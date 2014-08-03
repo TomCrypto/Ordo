@@ -20,10 +20,7 @@
 
 static const char *const features[] =
 {
-    #if defined(ORDO_HAS_FEATURES)
     ORDO_FEATURE_ARRAY
-    #endif
-    0
 };
 
 static const struct ORDO_VERSION version =
@@ -31,22 +28,10 @@ static const struct ORDO_VERSION version =
     VERSION_ID,
     VERSION,
     ORDO_PLATFORM,
-    #if defined(ORDO_ARCH)
     ORDO_ARCH,
-    #else
-    "generic",
-    #endif
-    "ordo-"VERSION"-"ORDO_PLATFORM
-    #if defined(ORDO_ARCH)
-    "-"ORDO_ARCH
-    #endif
-    ,
+    "ordo-"VERSION"-"ORDO_PLATFORM"-"ORDO_ARCH,
     features,
-    #if defined(ORDO_HAS_FEATURES)
     ORDO_FEATURE_LIST
-    #else
-    ""
-    #endif
 };
 
 const struct ORDO_VERSION *ordo_version(void)

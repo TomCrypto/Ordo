@@ -523,13 +523,19 @@ def gen_makefile(ctx):
 
     defines = ['-DORDO_STATIC_LIB', '-DBUILDING_ORDO',
                '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
-               '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch)]
+               '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
+               '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features))]
+
+    if ctx.features == []:
+        defines.append('-DORDO_FEATURE_ARRAY=0')
+    else:
+        defines.append('-DORDO_FEATURE_ARRAY=\\\"{0}\\\",0'.format('\\\",'.join(ctx.features)))
 
     if ctx.platform == 'generic':
         defines += ['-DORDO_LITTLE_ENDIAN' if ctx.endian == 'little' else
                     '-DORDO_BIG_ENDIAN']
 
-    to_build = tree.select(ctx.platform, ctx.arch, [])
+    to_build = tree.select(ctx.platform, ctx.arch, ctx.features)
 
     #print("to_build = {0}".format(to_build))
 
@@ -641,6 +647,9 @@ class BuildContext:
             if self.assembler is not None:
                 self.obj_format = get_obj_format(self.platform, self.arch)
 
+        self.features = []
+        if args.aes_ni:
+            self.features.append('aes_ni')
 
 def configure(args):
     """Generates and returns a build context from the arguments."""
@@ -749,9 +758,8 @@ def main():
     verbose = args.verbose
     cmd = args.command
 
-    # TODO: handle CPU features and fill in versioning information like
-    #       ORDO_FEATURE_ARRAY and so on, and tidy up code/improve the
-    #       makefile generation and other misc. things (reorganize)
+    # TODO: tidy up code/improve the makefile generation and other
+    #       misc. things (reorganize)
     #
     #       Consider partitioning the script into 3 parts?
     #       (utilities, per-output-type code, high-level build system)
