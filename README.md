@@ -41,34 +41,28 @@ This table doesn't include every single feature but gives a high level overview 
  -             | -              | Skein-256      | CFB   | -              | -              | -
  -             | -              | -              | CTR   | -              | -              | -
 
-Documentation
--------------
-
-Ordo is documented for Doxygen, and you can automatically generate all documentation by using the `doc` build target, if deemed available on your system (you will need `doxygen`, and `pdflatex` with a working TeX environment for the LaTeX output). The HTML documentation will be generated in `doc/html`, and the LaTeX documentation will be generated in `doc/latex`, which you can then typeset using the generated makefile.
-
-You can also access a recent version of the documentation online through the [project page](http://tomcrypto.github.io/Ordo/).
-
 How To Build
 ------------
 
-We support recent versions of MSVC, GCC, ICC (Linux only), MinGW, and Clang. Other compilers are not officially supported. The build system used is CMake, which has a few configuration options to tweak the library according to your needs. A `build` folder is provided for you to point CMake to. Python (2.7 or 3.3 or similar) is also required.
+Ordo uses a custom Python-based build system, accessible through the `build.py` script. This build system is implemented in the `cantrell` folder (get it?) as an independent module. The build script requires Python 2.3, however you may need to install one or two Python modules for versions prior to 2.7 - the script will display the required dependencies.
 
-- `LTO`: use link-time optimization, this should be enabled for optimal performance.
-- `ARCH`: the architecture to use, pick the one most appropriate for your hardware.
-- `NATIVE`: tune the build for the current hardware (e.g. `-march` for GCC).
-- `COMPAT`: remove some advanced compiler settings for older compiler versions (for GCC only, if this is enabled `LTO` and `NATIVE` have no effect)
+To build the library, first configure it, by typing:
 
-Note the system is autodetected and automatically included in the build. Additional options, such as the use of special hardware instructions, may become available once an architecture is selected, if they are supported. Link-time optimization may not be available on older compilers (it will let you know). For the Intel compiler (ICC) with native optimization, architecture autodetection is not available - pass the appropriate architecture in ICC_TARGET (e.g. `-DICC_TARGET=SSE4.2`).
+    ./build.py configure [options ...]
 
-If you are not using the `cmake-gui` utility, the command-line options to configure the library are:
+See the available configuration options with `--help`, which include compiler/platform/architecture/installation prefix options and various other useful tweaks. If no options are passed, the library will be built with the most generic configuration available (except it will build towards your operating system if it can detect it) and will by default produce a makefile in the `build` folder for most systems, and a Visual Studio solution for Windows. You may then directly use these, or instead type:
 
-    cd build && cmake .. [-DARCH=arch] [[-DFEATURE=on] ...] [-DLTO=off] [-DNATIVE=off] [-DCOMPAT=on]
+    ./build.py build [targets ...]
 
-For instance, a typical configuration for x86_64 machines with the AES-NI instructions could be:
+which will build the relevant targets, or all targets, if none are provided. Available targets are:
 
-    cd build && cmake .. -DARCH=amd64 -DAES_NI=on
+    static, shared, test, samples
 
-The test driver and sample programs are located in the `extra` folder.
+You can install the library binaries and headers to your system (see `configure --prefix`) with:
+
+    ./build.py install
+
+The Doxygen documentation can be generated with the `doc` command (you will need `doxygen`, and `pdflatex` with a working TeX environment for the LaTeX output). The HTML documentation will be generated in `doc/html`, and the LaTeX documentation will be generated in `doc/latex`, which you can then typeset using the generated makefile. You can also access a recent version of the documentation online through the [project page](http://tomcrypto.github.io/Ordo/).
 
 ### Assembly Support
 
