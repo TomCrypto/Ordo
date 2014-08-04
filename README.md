@@ -48,7 +48,7 @@ Ordo uses a custom Python-based build system, accessible through the `build.py` 
 
 To build the library, first configure it, by typing:
 
-    ./build.py configure [options ...]
+    ./build.py configure [options ...]    (or 'python build.py', whatever your shell uses)
 
 See the available configuration options with `--help`, which include compiler/platform/architecture/installation prefix options and various other useful tweaks. If no options are passed, the library will be built with the most generic configuration available (except it will build towards your operating system if it can detect it) and will by default produce a makefile in the `build` folder for most systems, and a Visual Studio solution for Windows. You may then directly use these, or instead type:
 
