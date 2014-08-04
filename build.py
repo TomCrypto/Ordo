@@ -9,10 +9,11 @@ if __name__ == '__main__':
         print("Sorry, this build script requires Python 2.3 or later.")
     else:
         try:
-            from cantrell.main import BuildError, run
+            from cantrell.builder import run_builder
+            from cantrell.utility import BuildError
 
             try:
-                run()
+                run_parser()
             except BuildError:
                 print(sys.exc_info()[1])
                 exit(1)  # Build failed!
