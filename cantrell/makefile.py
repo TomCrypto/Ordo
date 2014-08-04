@@ -60,7 +60,7 @@ def gen_makefile(ctx):
         f.write('UTIL_CFLAGS = {0}\n'.format(' '.join(cflags)))
         f.write('SAMPLE_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
         f.write('\n')
-        f.write('all: static test\n\n')
+        f.write('all: static test samples\n\n')
         f.write('static: libordo_s.a\n\n')
         f.write('obj:\n\tmkdir obj\n\n')
 
