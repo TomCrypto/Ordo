@@ -1,11 +1,11 @@
 from __future__ import print_function, division
 from argparse import ArgumentParser
-import argparse, pickle, detection
+import argparse, pickle
 
-from utilities import *
-from detection import *
+from cantrell.utilities import *
+from cantrell.detection import *
 
-import makefile
+import cantrell.makefile as makefile
 
 generate    = {'makefile': makefile.gen_makefile}
 run_build   = {'makefile': makefile.bld_makefile}

@@ -1,9 +1,9 @@
 from __future__ import print_function, division
 
-from scanning import SourceTree
-from resolve import resolve
-from detection import *
-from utilities import *
+from cantrell.scanning import SourceTree
+from cantrell.resolve import resolve
+from cantrell.detection import *
+from cantrell.utilities import *
 
 from os import path
 

@@ -1,7 +1,7 @@
 from __future__ import print_function, division
 
-from utilities import *
-from detection import *
+from cantrell.utilities import *
+from cantrell.detection import *
 
 from os import path
 import os

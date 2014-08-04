@@ -1,7 +1,8 @@
 from __future__ import print_function, division
 
+from cantrell.utilities import *
+
 import subprocess
-import utilities
 import platform
 import os, sys
 import shutil
