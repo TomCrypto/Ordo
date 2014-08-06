@@ -29,21 +29,23 @@ class SourceTree:
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
 
+        self.definition_header = path.join(prefix, 'include/ordo/definitions.h')
+
         self.headers['lib'] = set(prefix_search(self.headerdir))
-        self.headers['lib'].add('../include/ordo/definitions.h')
-        
+        self.headers['lib'].add(self.definition_header)
+
         self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
-        
+
         self.src['test'] = prefix_search(self.testsrcdir)
         self.src['util'] = prefix_search(self.utilsrcdir)
         self.headers['test'] = prefix_search(self.testheaderdir)
         self.headers['util'] = prefix_search(self.utilheaderdir)
-        
+
         self.src['hashsum'] = [path.join(self.samplessrcdir, 'hashsum.c')]
         self.src['version'] = [path.join(self.samplessrcdir, 'version.c')]
         self.src['info'] = [path.join(self.samplessrcdir, 'info.c')]
         self.src['benchmark'] = [path.join(self.samplessrcdir, 'benchmark.c')]
-        
+
         self.headers['hashsum'] = []
         self.headers['version'] = []
         self.headers['info'] = []
@@ -51,14 +53,14 @@ class SourceTree:
 
     def search_src_lib(self, pR, prefix):
         out = {}
-        
+
         for plat in platform_list:
             for arch in arch_list:
                 for feat in feature_list:
                     pP = path.join(pR, plat) if plat != 'generic' else pR
                     pA = path.join(pP, arch) if arch != 'generic' else pP
                     pF = path.join(pA, feat) if feat != 'generic' else pA
-                    
+
                     if not path.isdir(pF):
                         out[(plat, arch, feat)] = []
                         continue

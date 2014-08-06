@@ -1,11 +1,11 @@
 from __future__ import print_function, division
-from argparse import ArgumentParser
-import argparse, pickle
 
 from cantrell.utilities import *
 from cantrell.detection import *
+import argparse, pickle
 
 import cantrell.makefile as makefile
+from argparse import ArgumentParser
 
 generate    = {'makefile': makefile.gen_makefile}
 run_build   = {'makefile': makefile.bld_makefile}
@@ -17,6 +17,8 @@ class BuildContext:
         """This function simply copies the arguments into a build context."""
         self.lto = args.lto
         self.compat = args.compat
+        self.shared = args.shared
+        self.prefix = args.prefix[0]
 
         cc = get_c_compiler() if args.compiler is None else args.compiler[0]
         self.compiler, self.compiler_info = get_compiler_id(cc)
@@ -26,22 +28,21 @@ class BuildContext:
 
         if self.arch == 'generic':  # We won't need an assembler here
             if args.assembler is not None:
-                log('info', "Assembler not required for generic arch.")
+                info("Assembler not required for generic arch.")
+            self.assembler = None
         else:
             if args.assembler is not None:
                 if is_program(args.assembler[0], 'nasm'):
                     self.assembler = args.assembler[0]
                 else:
-                    log('warn', "Assembler {0} does not appear to be NASM.",
-                        args.assembler[0])
+                    info("Assembler {0} does not appear to be NASM.",
+                         args.assembler[0])
             else:
                 self.assembler = find_nasm()
-                
-                if self.assembler is None:
-                    raise BuildError("Failed to find assembler!")
 
             if self.assembler is not None:
                 self.obj_format = get_obj_format(self.platform, self.arch)
+                self.assembler_info = get_version(self.assembler)
 
         self.features = []
         if args.aes_ni:
@@ -55,25 +56,31 @@ def configure(args):
         raise BuildError("Link-time optimization and compatibility mode are mutually exclusive")
 
     if ctx.platform == 'generic':
-        print("Note: compiling for generic platform")
-        print("      (external utilities will not be available)")
+        info("Compiling for generic platform, os_random/etc. are unavailable")
+        info("(platform autodetection may have failed, maybe try --platform)")
 
         if args.endian is None:
-            raise BuildError("Error: please specify target endianness for generic platform")
+            fail("Please specify target endianness for generic platform")
 
         ctx.endian = args.endian[0]
 
-    if ctx.compiler is None:
-        print(".. FAILED to detect C compiler.")
-        print(".. please configure with --compiler")
-        raise BuildError("An error occurred during configuration")
-    else:
-        print(".. C compiler is: {0}".format(ctx.compiler_info))
+    report_info("Platform", "{0}", ctx.platform)
+    report_info("Architecture", "{0}", ctx.arch)
 
-    print("Your platform is ", ctx.platform)
-    
-    if ctx.arch != 'generic':
-        print("Assembler is: {0}.".format(get_version(ctx.assembler)))
+    if len(ctx.features) > 0:
+        report_info("Features", "{0}", ', '.join(ctx.features))
+    else:
+        report_info("Features", "(none)")
+
+    if ctx.compiler is None:
+        report_fail("C Compiler", "NOT FOUND (please configure with --compiler)")
+    else:
+        report_info("C Compiler", "{0} ({1})", ctx.compiler, ctx.compiler_info)
+
+    if (ctx.arch is not 'generic') and (ctx.assembler is not None):
+        report_info("Assembler", "{0} ({1})", ctx.assembler, ctx.assembler_info)
+    elif (ctx.arch is not 'generic') and (ctx.assembler is None):
+        info("Assembler not found, build may fail (try with --assembler)")
 
     ctx.out = 'makefile'
 
@@ -140,6 +147,10 @@ def run_builder():
                      help="use link-time optimization",
                      default=False)
 
+    cfg.add_argument('--shared', action='store_true',
+                     help="build a shared library",
+                     default=False)
+
     cfg.add_argument('--aes-ni', action='store_true',
                      help="use the AES-NI hardware instructions",
                      default=False)
@@ -152,7 +163,7 @@ def run_builder():
 
     args = master.parse_args()
     regenerate_build_folder()
-    verbose = args.verbose
+    set_verbose(args.verbose)
     cmd = args.command
 
     # TODO: Add all of the special parameters, and verify the script
@@ -167,7 +178,7 @@ def run_builder():
 
     if cmd in ['configure']:
         if path.exists(path.join(build_dir, build_ctx)):
-            log('info', 'Already configured, cleaning')
+            debug('Already configured, cleaning')
             clean_build()
 
         ctx = configure(args)
@@ -184,7 +195,7 @@ def run_builder():
             for target in args.targets:
                 if not target in ['static', 'shared', 'test', 'samples']:
                     raise BuildError("Bad target '{0}'.".format(target))
-        
+
             with chdir(build_dir):
                 run_build[ctx.out](ctx, args.targets)
         elif cmd == 'install':

@@ -5,8 +5,8 @@ from __future__ import print_function
 if __name__ == '__main__':
     import sys
 
-    if sys.hexversion < 0x02030000:
-        print("Sorry, this build script requires Python 2.3 or later.")
+    if sys.hexversion < 0x02070000:  # TODO: test it on at least 2.5
+        print("Sorry, this build script requires Python 2.7 or later.")
     else:
         try:
             from cantrell.utilities import BuildError

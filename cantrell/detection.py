@@ -35,7 +35,7 @@ def get_platform():
 
 def get_default_prefix():
     if get_platform() in ['linux', 'darwin', 'freebsd', 'openbsd', 'netbsd']:
-        return '/usr/local/bin'
+        return '/usr/local'
     elif get_platform() in ['win32']:
         return 'C:\\Program Files (x86)\\Ordo'
     elif get_platform() in ['generic']:
@@ -66,12 +66,12 @@ def find_program(paths, name):
 def find_nasm():
     """Attempt to find the NASM assembler, return None on failure."""
     paths = ['nasm']
-    
+
     if get_platform() == 'win32':
         paths.append('nasm.exe')
         paths.append('C:\\Program Files\\nasm\\nasm.exe')
         paths.append('C:\\Program Files (x86)\\nasm\\nasm.exe')
-    
+
     return find_program(paths, 'nasm')
 
 def get_obj_format(platform, arch):
@@ -88,7 +88,7 @@ def get_obj_format(platform, arch):
 
 def program_exists(name):
     try:
-        run_cmd(name, [])
+        run_cmd(name)
         return True
     except (IOError, OSError):
         return False
@@ -102,13 +102,16 @@ def get_c_compiler():
     if program_exists('cc'):
         return 'cc'
 
+    if program_exists('gcc'):
+        return 'gcc'
+
     # On Windows, maybe check for MSVC in one of the popular paths here
 
     return None
 
 
 def get_compiler_id(compiler):
-    if not program_exists(compiler):
+    if (compiler is None) or not program_exists(compiler):
         return (None, None)
 
     out = run_cmd(compiler, ['--version'])[1]
@@ -126,34 +129,3 @@ def get_compiler_id(compiler):
 
     return (None, None)
 
-
-def stream(line):
-    """Utility function for run_cmd which streams its input to stdout."""
-    print(line, end='')
-
-
-def run_cmd(cmd, args=[], stdout_func=None):
-    """Executes a shell command and returns its output (and errors)."""
-    process = subprocess.Popen([cmd] + args,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT)
-
-    stdout = ''
-
-    for buf in iter(process.stdout.readline, ''):
-        line = buf.decode('utf-8')
-
-        if (not line) or ((stdout_func is not None) and stdout_func(line)):
-            break
-
-        stdout += line
-
-    stdout_buf = process.communicate()[0]
-    final_line = stdout_buf.decode('utf-8')
-    if final_line:
-        if (stdout_func is not None):
-            stdout_func(final_line)
-
-        stdout += final_line
-
-    return (process.returncode, stdout)

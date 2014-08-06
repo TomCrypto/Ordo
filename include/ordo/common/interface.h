@@ -22,8 +22,8 @@
 
 /*===----------------------------------------------------------------------===*/
 
-#if defined(BUILDING_ORDO) || defined(BUILDING_ordo)
-    #if defined(ORDO_EXPORTS) || defined(ordo_EXPORTS)
+#if defined(BUILDING_ORDO)
+    #if defined(ORDO_EXPORTS)
         #define BUILD_SHARED
     #endif
 #else

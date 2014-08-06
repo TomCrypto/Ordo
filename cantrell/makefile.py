@@ -2,122 +2,250 @@ from __future__ import print_function, division
 
 from cantrell.scanning import SourceTree
 from cantrell.resolve import resolve
-from cantrell.detection import *
 from cantrell.utilities import *
 
 from os import path
 
-def gen_makefile(ctx):
-    tree = SourceTree('..')
-    
-    if ctx.compiler in ['gcc', 'clang']:
-        cflags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
-                  '-fvisibility=hidden', '-Wno-unused-parameter',
-                  '-Wno-long-long', '-Wno-missing-braces',
-                  '-Wno-missing-field-initializers']
-        if ctx.lto:
-            if ctx.compiler in ['gcc']:
-                cflags += ['-flto -ffat-lto-objects']
-            else:
-                cflags += ['-flto']
-        if not ctx.compat:
-            cflags += ['-march=native']
-    elif (ctx.compiler == 'icc'):
-        pass  # TODO (icc)
-    elif (ctx.compiler == 'msvc'):
-        pass  # TODO (windows)
+def sanitize(s):
+    return s.replace('.', '_').replace('/', '_').upper()
 
-    defines = ['-DORDO_STATIC_LIB', '-DBUILDING_ORDO',
-               '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
-               '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
-               '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features))]
+def src2obj(folder, prefix, srcfile):
+    new = path.join(folder, safe_path(path.join(prefix, srcfile)))
+    return new.replace('.c', '.o')
 
-    if ctx.features == []:
-        defines.append('-DORDO_FEATURE_ARRAY=0')
-    else:
-        defines.append('-DORDO_FEATURE_ARRAY=\\\"{0}\\\",0'.format('\\\",'.join(ctx.features)))
+def subst(s, prefix, target, deps=[]):
+    s = s.replace('$<', deps[0] if len(deps) != 0 else '')
+    s = s.replace('$(', '$({0}_'.format(sanitize(prefix)))
+    s = s.replace('$^', ' '.join(deps))
+    s = s.replace('$@', target)
+    return s
 
-    if ctx.platform == 'generic':
-        defines += ['-DORDO_LITTLE_ENDIAN' if ctx.endian == 'little' else
-                    '-DORDO_BIG_ENDIAN']
+def folder_dep(folder):
+    return path.join(folder, '.lock')
 
-    to_build = tree.select(ctx.platform, ctx.arch, ctx.features)
+def folder_rule(f, folder):
+    path = folder_dep(folder)
+    f.write('{0}:\n'.format(path))
+    f.write('\tmkdir {0}\n'.format(folder))
+    f.write('\ttouch {0}\n'.format(path))
 
-    #print("to_build = {0}".format(to_build))
+def process_alias(f, alias, deps):
+    f.write('{0}: {1}\n\n'.format(alias, ' '.join(deps)))
 
-    defines += ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
-                '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
-                '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
-                '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
-                '-DWITH_OFB=1']
-
-    with open('Makefile', 'w') as f:
-        f.write('HEADERS = {0}\n'.format(' '.join(tree.headers['lib'])))
-        f.write('TEST_HEADERS = {0}\n'.format(' '.join(tree.headers['test'])))
-        f.write('UTIL_HEADERS = {0}\n'.format(' '.join(tree.headers['util'])))
-        f.write('CFLAGS = {0}\n'.format(' '.join(cflags + defines)))
-        f.write('TEST_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
-        f.write('UTIL_CFLAGS = {0}\n'.format(' '.join(cflags)))
-        f.write('SAMPLE_CFLAGS = {0} -DORDO_STATIC_LIB\n'.format(' '.join(cflags)))
-        f.write('\n')
-        f.write('all: static test samples\n\n')
-        f.write('static: libordo_s.a\n\n')
-        f.write('obj:\n\tmkdir obj\n\n')
-
-        objfiles = []
-        for srcfile in to_build:
-            if '.c' in srcfile:
-                objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
-                objfiles.append(objfile)
-                f.write('{0}: {1} $(HEADERS) | obj\n'.format(objfile, srcfile))
-                f.write('\t{0} $(CFLAGS) -I../include -c $< -o $@\n\n'.format(ctx.compiler))
-            elif '.asm' in srcfile:
-                objfile = 'obj/' + safe_path(srcfile.replace('.asm', '.asm.o'))
-                objfiles.append(objfile)
-                f.write('{0}: {1} | obj\n'.format(objfile, srcfile))
-                f.write('\t{0} -f {1} $< -o $@\n\n'.format(ctx.assembler, ctx.obj_format))
-
-        f.write('libordo_s.a: {0}\n'.format(' '.join(objfiles)))
-        f.write('\tar rcs libordo_s.a {0}\n'.format(' '.join(objfiles)))
-
-        test_objfiles = []
-        for srcfile in tree.src['test']:
-            objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
-            test_objfiles.append(objfile)
-            f.write('{0}: {1} $(HEADERS) $(TEST_HEADERS) | obj\n'.format(objfile, srcfile))
-            f.write('\t{0} $(TEST_CFLAGS) -I../include -I../test/include -c $< -o $@\n\n'.format(ctx.compiler))
-
-        f.write('test: libordo_s.a {0}\n'.format(' '.join(test_objfiles)))
-        f.write('\t{0} {1} -o $@ libordo_s.a\n'.format(ctx.compiler, ' '.join(test_objfiles)))
-
-        objfiles = []
-        for srcfile in tree.src['util']:
-            objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
-            objfiles.append(objfile)
-            f.write('{0}: {1} $(UTIL_HEADERS) | obj\n'.format(objfile, srcfile))
-            f.write('\t{0} $(UTIL_CFLAGS) -I../samples/util/include -c $< -o $@\n\n'.format(ctx.compiler))
-
-        f.write('libutil.a: {0}\n'.format(' '.join(objfiles)))
-        f.write('\tar rcs libutil.a {0}\n\n'.format(' '.join(objfiles)))
-
-        f.write('samples: hashsum version info benchmark\n\n')
-
-        for sample in ['hashsum', 'version', 'info', 'benchmark']:
-            sample_objfiles = []
-            for srcfile in tree.src[sample]:
-                objfile = 'obj/' + safe_path(srcfile.replace('.c', '.o'))
-                sample_objfiles.append(objfile)
-                f.write('{0}: {1} $(HEADERS) $(UTIL_HEADERS) libutil.a {2} | obj\n'.format(objfile, srcfile, ' '.join(tree.headers[sample])))
-                f.write('\t{0} $(SAMPLE_CFLAGS) -I../include -I../samples/util/include -c $< -o $@\n\n'.format(ctx.compiler))
-
-            f.write('{0}: libordo_s.a libutil.a {1}\n'.format(sample, ' '.join(sample_objfiles)))
-            f.write('\t{0} {1} -o $@ libordo_s.a libutil.a -lrt\n'.format(ctx.compiler, ' '.join(sample_objfiles)))
-            # TODO: need realtime library for benchmark on some systems!
-            
+def process_target(f, target, target_name):
+    for variable in target:
+        if '*' not in variable:
+            name = '_'.join([sanitize(target_name), variable])
+            value = ' '.join(target[variable])
+            f.write('='.join([name, value]))
             f.write('\n')
 
-    # Change directory to root folder (not build), so remove ..
-    resolve('../include/ordo/definitions.h', to_build)
+    for srcfile in target['SOURCES']:
+        deps = [srcfile, '$(HEADERS)', folder_dep('obj')]
+        objfile = src2obj('obj', target_name, srcfile)
+        ext = path.splitext(srcfile)[1]
+
+        f.write(subst('{0}: {1}\n\t{2}\n\n'.format(objfile, ' '.join(deps),
+                      target['*' + ext]), target_name, objfile, deps))
+
+    deps = [src2obj('obj', target_name, srcfile)
+            for srcfile in target['SOURCES']] + target['DEPS']
+    f.write(subst('{0}: {1}\n\t{2}\n\n'.format(target_name, ' '.join(deps),
+                  target['*link']), target_name, target_name, deps))
+
+def process_command(f, name, commands):
+    f.write('{0}:\n\t{1}\n\n'.format(name, '\n\t'.join(commands)))
+
+class Makefile:
+    """A makefile generator which helps to write compilation rules."""
+    def __init__(self):
+        self.commands = {}
+        self.targets = {}
+        self.aliases = {}
+
+    def __getitem__(self, name):
+        return self.targets[name]
+
+    def __setitem__(self, name, value):
+        self.targets[name] = value
+
+    def add_alias(self, alias, deps):
+        self.aliases[alias] = deps
+
+    def add_command(self, name, commands):
+        self.commands[name] = commands
+
+    def generate(self, path):
+        with open(path, 'w') as f:
+            if hasattr(self, 'default'):
+                process_alias(f, 'default', self.default)
+
+            for alias in self.aliases:
+                process_alias(f, alias, self.aliases[alias])
+
+            for target in self.targets:
+                process_target(f, self.targets[target], target)
+
+            for command in self.commands:
+                process_command(f, command, self.commands[command])
+
+            folder_rule(f, 'obj')
+
+
+def gen_makefile(ctx):
+    tree = SourceTree('..')
+    make = Makefile()
+
+    base_flags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
+                  '-Wno-unused-parameter', '-Wno-long-long',
+                  '-Wno-missing-braces']
+
+    if not ctx.compat:
+        base_flags += ['-Wno-missing-field-initializers']
+
+    env_defines = ['-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
+                    '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
+                    '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features)),
+                    '-DORDO_FEATURE_ARRAY=' + ('0' if ctx.features == [] else '\\\"{0}\\\",0'.format('\\\",'.join(ctx.features))),
+                    '-DORDO_LITTLE_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'little') else '',
+                    '-DORDO_BIG_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'big') else '']
+
+    prim_defines = ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
+                    '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
+                    '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
+                    '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
+                    '-DWITH_OFB=1']
+
+    lib_sources = tree.select(ctx.platform, ctx.arch, ctx.features)
+
+    make['libordo_s.a'] = {
+        'CFLAGS': base_flags + (['-fvisibility=hidden'] if not ctx.compat else []),
+        'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] +
+                   env_defines + prim_defines,
+        'HEADERS': tree.headers['lib'],
+        'INCLUDE': ['-I../include'],
+        'DEPS': [],
+        'SOURCES': lib_sources,
+        '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
+        '*.asm': '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format) if ctx.assembler is not None else '',
+        '*link': 'ar rcs $@ $^'
+    }
+
+    if ctx.shared:
+        make['libordo.so'] = {
+            'CFLAGS': base_flags + ['-fPIC'] + (['-fvisibility=hidden'] if not ctx.compat else []),
+            'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] +
+                        env_defines + prim_defines,
+            'HEADERS': tree.headers['lib'],
+            'INCLUDE': ['-I../include'],
+            'DEPS': [],
+            'SOURCES': lib_sources,
+            '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
+            '*.asm': '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format) if ctx.assembler is not None else '',
+            '*link': 'gcc -shared $^ -o $@'
+        }
+
+    make['test'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': ['-DORDO_STATIC_LIB'],
+        'HEADERS': list(tree.headers['lib']) + list(tree.headers['test']),
+        'INCLUDE': ['-I../include', '-I../test/include'],
+        'DEPS': ['libordo_s.a'],
+        'SOURCES': tree.src['test'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'gcc $^ -o $@ libordo_s.a'
+    }
+
+    make['hashsum'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': ['-DORDO_STATIC_LIB'],
+        'HEADERS': tree.headers['lib'],
+        'INCLUDE': ['-I../include'],
+        'DEPS': ['libordo_s.a'],
+        'SOURCES': tree.src['hashsum'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'gcc $^ -o $@ libordo_s.a'
+    }
+
+    make['version'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': ['-DORDO_STATIC_LIB'],
+        'HEADERS': tree.headers['lib'],
+        'INCLUDE': ['-I../include'],
+        'DEPS': ['libordo_s.a'],
+        'SOURCES': tree.src['version'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'gcc $^ -o $@ libordo_s.a'
+    }
+
+    make['info'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': ['-DORDO_STATIC_LIB'],
+        'HEADERS': tree.headers['lib'],
+        'INCLUDE': ['-I../include'],
+        'DEPS': ['libordo_s.a'],
+        'SOURCES': tree.src['info'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'gcc $^ -o $@ libordo_s.a'
+    }
+
+    make['benchmark'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': ['-DORDO_STATIC_LIB'],
+        'HEADERS': list(tree.headers['lib']) + tree.headers['util'],
+        'INCLUDE': ['-I../include -I../samples/util/include'],
+        'DEPS': ['libordo_s.a', 'libutil.a'],
+        'SOURCES': tree.src['benchmark'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'gcc $^ -o $@ libordo_s.a libutil.a -lrt'
+    }
+
+    make['libutil.a'] = {
+        'CFLAGS': base_flags,
+        'DEFINES': [],
+        'HEADERS': tree.headers['util'],
+        'INCLUDE': ['-I../samples/util/include'],
+        'DEPS': [],
+        'SOURCES': tree.src['util'],
+        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*link': 'ar rcs $@ $^'
+    }
+
+    make.default = ['all']
+
+    make.add_alias('all', ['static', 'shared', 'test', 'samples'])
+
+    make.add_alias('static', ['libordo_s.a'])
+
+    if ctx.shared:
+        make.add_alias('shared', ['libordo.so'])
+    else:
+        make.add_command('shared', ['@echo "Shared library will not be built"',
+                                    '@echo "Please configure with --shared"',
+                                    ])
+
+    make.add_alias('samples', ['hashsum', 'benchmark', 'version', 'info'])
+
+    make.add_command('doc', ['cd ../doc && doxygen'])
+    make.add_command('install', [
+        'mkdir -p {0}/include'.format(ctx.prefix),
+        'mkdir -p {0}/lib'.format(ctx.prefix),
+        'cp -r ../include/ordo.h {0}/include'.format(ctx.prefix),
+        'cp -r ../include/ordo {0}/include'.format(ctx.prefix),
+        'cp -r libordo_s.a {0}/lib'.format(ctx.prefix),
+        'cp -r libordo.so {0}/lib'.format(ctx.prefix) if ctx.shared else ''
+    ])
+
+    make.add_command('clean', [
+        'rm libordo_s.a',
+        'rm libordo.so' if ctx.shared else '',
+        'rm hashsum version info benchmark test',
+        'rm libutil.a',
+        'rm -rf obj'
+    ])
+
+    make.generate('Makefile')  # Output the file
+    resolve(tree.definition_header, lib_sources)
 
 
 def bld_makefile(ctx, targets):
@@ -125,9 +253,9 @@ def bld_makefile(ctx, targets):
 
 
 def ins_makefile(ctx):
-    run_cmd('make', ['install'], stdout_func=stream)  # Must handle dependencies!
+    run_cmd('make', ['install'], stdout_func=stream)
 
 
 def tst_makefile(ctx):
     bld_makefile(ctx, ['test'])
-    run_cmd('./test', [], stdout_func=stream)  # Must build tests before!
+    run_cmd('./test', [], stdout_func=stream)
