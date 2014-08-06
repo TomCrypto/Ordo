@@ -52,9 +52,11 @@ def is_program(path, name):
         return True
     return False
 
+
 def get_version(path):
     """Returns the version/identifier string of a given program."""
     return run_cmd(path, ['-v'])[1].lower().split('\n')[0]
+
 
 def find_program(paths, name):
     """Generalized function to find programs from potential paths."""
@@ -62,6 +64,7 @@ def find_program(paths, name):
         if program_exists(path) and is_program(path, name):
             return path
     return None
+
 
 def find_nasm():
     """Attempt to find the NASM assembler, return None on failure."""
@@ -74,6 +77,7 @@ def find_nasm():
 
     return find_program(paths, 'nasm')
 
+
 def get_obj_format(platform, arch):
     """Retrieves the correct object file format for the assembler."""
     if arch == 'amd64':
@@ -85,6 +89,7 @@ def get_obj_format(platform, arch):
             return 'win64'
     else:  # No other architecture yet (add e.g. i386..)
         raise BuildError('No assembler format for {0}'.format(arch))
+
 
 def program_exists(name):
     try:
@@ -128,4 +133,3 @@ def get_compiler_id(compiler):
         return ('msvc', header)
 
     return (None, None)
-

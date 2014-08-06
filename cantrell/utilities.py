@@ -18,6 +18,7 @@ def set_verbose(value):
     global verbose
     verbose = value
 
+
 def regenerate_build_folder():
     if not path.isdir(build_dir):
         os.mkdir(build_dir)
@@ -38,8 +39,10 @@ def debug(fmt, *args, **kwargs):
     if verbose:
         print("> {0}".format(fmt.format(*args, **kwargs)))
 
+
 def info(fmt, *args, **kwargs):
     print("> {0}".format(fmt.format(*args, **kwargs)))
+
 
 def fail(fmt, *args, **kwargs):
     info(fmt, *args, **kwargs)
@@ -50,12 +53,15 @@ def report_debug(prompt, fmt, *args, **kwargs):
     if verbose:
         print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
 
+
 def report_info(prompt, fmt, *args, **kwargs):
     print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
+
 
 def report_fail(prompt, fmt, *args, **kwargs):
     report_info(prompt, fmt, *args, **kwargs)
     raise BuildError("Build failed.")
+
 
 class chdir:
     """Context manager for changing the current working directory"""
@@ -68,6 +74,7 @@ class chdir:
 
     def __exit__(self, etype, value, traceback):
         os.chdir(self.savedPath)
+
 
 def stream(line):
     """Utility function for run_cmd which streams its input to stdout."""

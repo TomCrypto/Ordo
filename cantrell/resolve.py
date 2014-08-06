@@ -2,6 +2,7 @@ from __future__ import print_function, division
 
 from os import path
 
+
 class Primitive:
     """ Holds a library primitive with limit information. """
     def __init__(self, name, prim_type, block_len=0, digest_len=0):
@@ -9,6 +10,7 @@ class Primitive:
         self.prim_type = prim_type
         self.block_len = block_len
         self.digest_len = digest_len
+
 
 primitives = [
     Primitive('rc4',               'STREAM'),

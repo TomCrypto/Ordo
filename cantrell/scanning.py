@@ -6,10 +6,12 @@ from cantrell.detection import *
 from os import path
 import os
 
+
 def prefix_search(dirpath):
     return [path.join(root, filename)
             for root, dirnames, filenames in os.walk(dirpath)
             for filename in filenames]
+
 
 class SourceTree:
     def __init__(self, prefix):
@@ -65,8 +67,8 @@ class SourceTree:
                         out[(plat, arch, feat)] = []
                         continue
 
-                    out[(plat, arch, feat)] = [path.join(pF, f)
-                    for f in os.listdir(pF) if path.isfile(path.join(pF, f))]
+                    out[(plat, arch, feat)] = [
+                        path.join(pF, f) for f in os.listdir(pF) if path.isfile(path.join(pF, f))]
 
         return out
 

@@ -12,6 +12,7 @@ run_build   = {'makefile': makefile.bld_makefile}
 run_install = {'makefile': makefile.ins_makefile}
 run_tests   = {'makefile': makefile.tst_makefile}
 
+
 class BuildContext:
     def __init__(self, args):
         """This function simply copies the arguments into a build context."""
@@ -47,6 +48,7 @@ class BuildContext:
         self.features = []
         if args.aes_ni:
             self.features.append('aes_ni')
+
 
 def configure(args):
     """Generates and returns a build context from the arguments."""
@@ -103,6 +105,7 @@ def clean_build():
     """Deletes the build folder and recreates an empty one."""
     shutil.rmtree(build_dir)
     regenerate_build_folder()
+
 
 def run_builder():
     global verbose
@@ -193,7 +196,7 @@ def run_builder():
 
         if cmd == 'build':
             for target in args.targets:
-                if not target in ['static', 'shared', 'test', 'samples']:
+                if target not in ['static', 'shared', 'test', 'samples']:
                     raise BuildError("Bad target '{0}'.".format(target))
 
             with chdir(build_dir):

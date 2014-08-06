@@ -6,12 +6,15 @@ from cantrell.utilities import *
 
 from os import path
 
+
 def sanitize(s):
     return s.replace('.', '_').replace('/', '_').upper()
+
 
 def src2obj(folder, prefix, srcfile):
     new = path.join(folder, safe_path(path.join(prefix, srcfile)))
     return new.replace('.c', '.o')
+
 
 def subst(s, prefix, target, deps=[]):
     s = s.replace('$<', deps[0] if len(deps) != 0 else '')
@@ -20,8 +23,10 @@ def subst(s, prefix, target, deps=[]):
     s = s.replace('$@', target)
     return s
 
+
 def folder_dep(folder):
     return path.join(folder, '.lock')
+
 
 def folder_rule(f, folder):
     path = folder_dep(folder)
@@ -29,8 +34,10 @@ def folder_rule(f, folder):
     f.write('\tmkdir {0}\n'.format(folder))
     f.write('\ttouch {0}\n'.format(path))
 
+
 def process_alias(f, alias, deps):
     f.write('{0}: {1}\n\n'.format(alias, ' '.join(deps)))
+
 
 def process_target(f, target, target_name):
     for variable in target:
@@ -53,8 +60,10 @@ def process_target(f, target, target_name):
     f.write(subst('{0}: {1}\n\t{2}\n\n'.format(target_name, ' '.join(deps),
                   target['*link']), target_name, target_name, deps))
 
+
 def process_command(f, name, commands):
     f.write('{0}:\n\t{1}\n\n'.format(name, '\n\t'.join(commands)))
+
 
 class Makefile:
     """A makefile generator which helps to write compilation rules."""
@@ -103,12 +112,17 @@ def gen_makefile(ctx):
     if not ctx.compat:
         base_flags += ['-Wno-missing-field-initializers']
 
+    if ctx.lto:
+        base_flags += ['-flto']
+        if ctx.compiler == 'gcc':
+            base_flags += ['-ffat-lto-objects']
+
     env_defines = ['-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
-                    '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
-                    '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features)),
-                    '-DORDO_FEATURE_ARRAY=' + ('0' if ctx.features == [] else '\\\"{0}\\\",0'.format('\\\",'.join(ctx.features))),
-                    '-DORDO_LITTLE_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'little') else '',
-                    '-DORDO_BIG_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'big') else '']
+                   '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
+                   '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features)),
+                   '-DORDO_FEATURE_ARRAY=' + ('0' if ctx.features == [] else '\\\"{0}\\\",0'.format('\\\",'.join(ctx.features))),
+                   '-DORDO_LITTLE_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'little') else '',
+                   '-DORDO_BIG_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'big') else '']
 
     prim_defines = ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
                     '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
@@ -120,8 +134,7 @@ def gen_makefile(ctx):
 
     make['libordo_s.a'] = {
         'CFLAGS': base_flags + (['-fvisibility=hidden'] if not ctx.compat else []),
-        'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] +
-                   env_defines + prim_defines,
+        'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] + env_defines + prim_defines,
         'HEADERS': tree.headers['lib'],
         'INCLUDE': ['-I../include'],
         'DEPS': [],
@@ -134,8 +147,7 @@ def gen_makefile(ctx):
     if ctx.shared:
         make['libordo.so'] = {
             'CFLAGS': base_flags + ['-fPIC'] + (['-fvisibility=hidden'] if not ctx.compat else []),
-            'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] +
-                        env_defines + prim_defines,
+            'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] + env_defines + prim_defines,
             'HEADERS': tree.headers['lib'],
             'INCLUDE': ['-I../include'],
             'DEPS': [],
