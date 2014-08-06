@@ -10,5 +10,5 @@ install:
   - sudo apt-get install nasm
 
 script:
-  - ./build.py configure && ./build.py build && ./build.py test && ./build.py clean
-  - ./build.py configure --arch amd64 && ./build.py build && ./build.py test && ./build.py clean
+  - ./build.py configure --shared && ./build.py build && ./build.py test && ./build.py clean
+  - ./build.py configure --shared --arch amd64 && ./build.py build && ./build.py test && ./build.py clean
