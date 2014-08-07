@@ -25,7 +25,7 @@ def subst(s, prefix, target, deps=[]):
 
 
 def folder_dep(folder):
-    return path.join(folder, '.lock')
+    return '.objdir'
 
 
 def folder_rule(f, folder):
@@ -86,8 +86,8 @@ class Makefile:
 
     def generate(self, path):
         with open(path, 'w') as f:
-            if hasattr(self, 'default'):
-                process_alias(f, 'default', self.default)
+            if hasattr(self, 'all'):
+                process_alias(f, 'all', self.all)
 
             for alias in self.aliases:
                 process_alias(f, alias, self.aliases[alias])
@@ -223,37 +223,38 @@ def gen_makefile(ctx):
         '*link': 'ar rcs $@ $^'
     }
 
-    make.default = ['all']
-
-    make.add_alias('all', ['static', 'shared', 'test', 'samples'])
+    make.all = ['static', 'shared', 'test', 'samples']
 
     make.add_alias('static', ['libordo_s.a'])
 
     if ctx.shared:
         make.add_alias('shared', ['libordo.so'])
     else:
-        make.add_command('shared', ['@echo "Shared library will not be built"',
-                                    '@echo "Please configure with --shared"',
+        make.add_command('shared', ['echo "Shared library will not be built" > shared',
+                                    'echo "Please configure with --shared" >> shared'
                                     ])
 
     make.add_alias('samples', ['hashsum', 'benchmark', 'version', 'info'])
 
     make.add_command('doc', ['cd ../doc && doxygen'])
-    make.add_command('install', [
-        'mkdir -p {0}/include'.format(ctx.prefix),
-        'mkdir -p {0}/lib'.format(ctx.prefix),
-        'cp -r ../include/ordo.h {0}/include'.format(ctx.prefix),
-        'cp -r ../include/ordo {0}/include'.format(ctx.prefix),
-        'cp -r libordo_s.a {0}/lib'.format(ctx.prefix),
-        'cp -r libordo.so {0}/lib'.format(ctx.prefix) if ctx.shared else ''
-    ])
+    
+    if ctx.platform != 'generic':
+        make.add_command('install', [
+            'mkdir -p {0}/include'.format(ctx.prefix),
+            'mkdir -p {0}/lib'.format(ctx.prefix),
+            'cp -r ../include/ordo.h {0}/include'.format(ctx.prefix),
+            'cp -r ../include/ordo {0}/include'.format(ctx.prefix),
+            'cp -r libordo_s.a {0}/lib'.format(ctx.prefix),
+            'cp -r libordo.so {0}/lib'.format(ctx.prefix) if ctx.shared else ''
+        ])
 
     make.add_command('clean', [
-        'rm libordo_s.a',
-        'rm libordo.so' if ctx.shared else '',
-        'rm hashsum version info benchmark test',
-        'rm libutil.a',
-        'rm -rf obj'
+        'rm -rf libordo_s.a',
+        'rm -rf libordo.so' if ctx.shared else 'rm -rf shared',
+        'rm -rf hashsum version info benchmark test',
+        'rm -rf libutil.a',
+        'rm -rf obj',
+        'rm -rf {0}'.format(folder_dep('obj'))
     ])
 
     make.generate('Makefile')  # Output the file

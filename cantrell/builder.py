@@ -19,7 +19,7 @@ class BuildContext:
         self.lto = args.lto
         self.compat = args.compat
         self.shared = args.shared
-        self.prefix = args.prefix[0]
+        self.prefix = args.prefix
 
         cc = get_c_compiler() if args.compiler is None else args.compiler[0]
         self.compiler, self.compiler_info = get_compiler_id(cc)
