@@ -4,9 +4,9 @@ from cantrell.utilities import *
 
 import subprocess
 import platform
+import tempfile
 import os, sys
 import shutil
-
 
 platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 
@@ -133,3 +133,18 @@ def get_compiler_id(compiler):
         return ('msvc', header)
 
     return (None, None)
+
+
+def library_exists(compiler, library):
+    fd, name = tempfile.mkstemp(suffix='.c')
+    out_name = tempfile.mktemp(suffix='.out')
+
+    with os.fdopen(fd, 'w') as f:
+        f.write('int main(void){return 0;}\n')
+
+    success = run_cmd(compiler, [name, '-o', out_name, library])[0] == 0
+    if success:
+        os.remove(out_name)
+    os.remove(name)
+
+    return success

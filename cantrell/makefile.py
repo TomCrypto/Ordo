@@ -1,7 +1,11 @@
+"""The module is responsible for generating makefiles for GCC, Clang, and the
+   Intel compilers. The MSVC compiler does not support makefiles.            """
+
 from __future__ import print_function, division
 
 from cantrell.scanning import SourceTree
 from cantrell.resolve import resolve
+from cantrell.detection import *
 from cantrell.utilities import *
 
 from os import path
@@ -101,64 +105,121 @@ class Makefile:
             folder_rule(f, 'obj')
 
 
+def get_gcc_clang_flags(ctx, target):
+    base_flags = [
+        '-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic', '-Wno-long-long',
+        '-Wno-unused-parameter', '-Wno-missing-braces'
+    ]
+
+    if not ctx.compat:
+        base_flags += ['-Wno-missing-field-initializers', '-march=native',
+                       '-Wno-maybe-initialized']
+
+    if ctx.lto and ctx.compiler in ['gcc']:
+        base_flags += ['-flto', '-ffat-lto-objects']
+    elif ctx.lto and ctx.compiler in ['clang']:
+        base_flags += ['-flto']
+
+    if target in ['static', 'shared']:
+        out = base_flags + (['-fvisibility=hidden'] if ctx.compat else [])
+        if target in ['shared']:
+            return out + ['-fPIC']
+        else:
+            return out
+    elif target in ['shared']:
+        return base_flags + ['-fPIC', cond(ctx.compat, '-fvisibility=hidden')]
+    elif target in ['test', 'sample', 'util']:
+        return base_flags
+
+
+def get_icc_flags(ctx, target):
+    base_flags = [
+        '-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic', '-restrict',
+        '-ansi-alias'
+    ]
+
+    if ctx.lto:
+        base_flags += ['-ipo']
+
+    if target in ['static', 'shared']:
+        out = base_flags + (['-fvisibility=hidden'] if ctx.compat else [])
+        if target in ['shared']:
+            return out + ['-fPIC']
+        else:
+            return out
+    elif target in ['shared']:
+        return base_flags + ['-fPIC', cond(ctx.compat, '-fvisibility=hidden')]
+    elif target in ['test', 'sample', 'util']:
+        return base_flags
+
+
+def get_flags(ctx, target):
+    """Gets appropriate compiler flags depending on the target."""
+    if ctx.compiler in ['gcc', 'clang']:
+        return get_gcc_clang_flags(ctx, target)
+    elif ctx.compiler in ['icc']:
+        return get_icc_flags(ctx, target)
+
+
 def gen_makefile(ctx):
     tree = SourceTree('..')
     make = Makefile()
 
-    base_flags = ['-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic',
-                  '-Wno-unused-parameter', '-Wno-long-long',
-                  '-Wno-missing-braces']
+    defines = [
+        '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
+        '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
+        '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features))
+    ]
 
-    if not ctx.compat:
-        base_flags += ['-Wno-missing-field-initializers']
+    if len(ctx.features) > 0:
+        defines += ['-DORDO_FEATURE_ARRAY=\\\"{0}\\\",0'
+                    .format('\\\",'.join(ctx.features))]
+    else:
+        defines += ['-DORDO_FEATURE_ARRAY=0']
 
-    if ctx.lto:
-        base_flags += ['-flto']
-        if ctx.compiler == 'gcc':
-            base_flags += ['-ffat-lto-objects']
+    if ctx.platform in ['generic']:
+        if ctx.endian in ['little']:
+            defines += ['-DORDO_LITTLE_ENDIAN']
+        else:
+            defines += ['-DORDO_BIG_ENDIAN']
 
-    env_defines = ['-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
-                   '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
-                   '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features)),
-                   '-DORDO_FEATURE_ARRAY=' + ('0' if ctx.features == [] else '\\\"{0}\\\",0'.format('\\\",'.join(ctx.features))),
-                   '-DORDO_LITTLE_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'little') else '',
-                   '-DORDO_BIG_ENDIAN' if (ctx.platform == 'generic') and (ctx.endian == 'big') else '']
-
-    prim_defines = ['-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
-                    '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
-                    '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
-                    '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
-                    '-DWITH_OFB=1']
+    defines += [
+        '-DWITH_AES=1', '-DWITH_THREEFISH256=1', '-DWITH_NULLCIPHER=1',
+        '-DWITH_RC4=1', '-DWITH_MD5=1', '-DWITH_SHA1=1',
+        '-DWITH_SHA256=1', '-DWITH_SKEIN256=1', '-DWITH_ECB=1',
+        '-DWITH_CBC=1', '-DWITH_CTR=1', '-DWITH_CFB=1',
+        '-DWITH_OFB=1'
+    ]
 
     lib_sources = tree.select(ctx.platform, ctx.arch, ctx.features)
 
     make['libordo_s.a'] = {
-        'CFLAGS': base_flags + (['-fvisibility=hidden'] if not ctx.compat else []),
-        'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] + env_defines + prim_defines,
+        'CFLAGS': get_flags(ctx, 'static'),
+        'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] + defines,
         'HEADERS': tree.headers['lib'],
         'INCLUDE': ['-I../include'],
         'DEPS': [],
         'SOURCES': lib_sources,
         '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
-        '*.asm': '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format) if ctx.assembler is not None else '',
+        '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
         '*link': 'ar rcs $@ $^'
     }
 
     if ctx.shared:
         make['libordo.so'] = {
-            'CFLAGS': base_flags + ['-fPIC'] + (['-fvisibility=hidden'] if not ctx.compat else []),
-            'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] + env_defines + prim_defines,
+            'CFLAGS': get_flags(ctx, 'shared'),
+            'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] + defines,
             'HEADERS': tree.headers['lib'],
             'INCLUDE': ['-I../include'],
             'DEPS': [],
             'SOURCES': lib_sources,
             '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
-            '*.asm': '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format) if ctx.assembler is not None else '',
+            '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
             '*link': 'gcc -shared $^ -o $@'
         }
 
     make['test'] = {
-        'CFLAGS': base_flags,
+        'CFLAGS': get_flags(ctx, 'test'),
         'DEFINES': ['-DORDO_STATIC_LIB'],
         'HEADERS': list(tree.headers['lib']) + list(tree.headers['test']),
         'INCLUDE': ['-I../include', '-I../test/include'],
@@ -168,52 +229,8 @@ def gen_makefile(ctx):
         '*link': 'gcc $^ -o $@ libordo_s.a'
     }
 
-    make['hashsum'] = {
-        'CFLAGS': base_flags,
-        'DEFINES': ['-DORDO_STATIC_LIB'],
-        'HEADERS': tree.headers['lib'],
-        'INCLUDE': ['-I../include'],
-        'DEPS': ['libordo_s.a'],
-        'SOURCES': tree.src['hashsum'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-        '*link': 'gcc $^ -o $@ libordo_s.a'
-    }
-
-    make['version'] = {
-        'CFLAGS': base_flags,
-        'DEFINES': ['-DORDO_STATIC_LIB'],
-        'HEADERS': tree.headers['lib'],
-        'INCLUDE': ['-I../include'],
-        'DEPS': ['libordo_s.a'],
-        'SOURCES': tree.src['version'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-        '*link': 'gcc $^ -o $@ libordo_s.a'
-    }
-
-    make['info'] = {
-        'CFLAGS': base_flags,
-        'DEFINES': ['-DORDO_STATIC_LIB'],
-        'HEADERS': tree.headers['lib'],
-        'INCLUDE': ['-I../include'],
-        'DEPS': ['libordo_s.a'],
-        'SOURCES': tree.src['info'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-        '*link': 'gcc $^ -o $@ libordo_s.a'
-    }
-
-    make['benchmark'] = {
-        'CFLAGS': base_flags,
-        'DEFINES': ['-DORDO_STATIC_LIB'],
-        'HEADERS': list(tree.headers['lib']) + tree.headers['util'],
-        'INCLUDE': ['-I../include -I../samples/util/include'],
-        'DEPS': ['libordo_s.a', 'libutil.a'],
-        'SOURCES': tree.src['benchmark'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-        '*link': 'gcc $^ -o $@ libordo_s.a libutil.a -lrt'
-    }
-
     make['libutil.a'] = {
-        'CFLAGS': base_flags,
+        'CFLAGS': get_flags(ctx, 'util'),
         'DEFINES': [],
         'HEADERS': tree.headers['util'],
         'INCLUDE': ['-I../samples/util/include'],
@@ -223,6 +240,19 @@ def gen_makefile(ctx):
         '*link': 'ar rcs $@ $^'
     }
 
+    for sample in ['hashsum', 'version', 'info', 'benchmark']:
+        make[sample] = {
+            'CFLAGS': get_flags(ctx, 'sample'),
+            'DEFINES': ['-DORDO_STATIC_LIB'],
+            'HEADERS': list(tree.headers['lib']) + tree.headers['util'],
+            'INCLUDE': ['-I../include -I../samples/util/include'],
+            'DEPS': ['libordo_s.a', 'libutil.a'],
+            'SOURCES': tree.src[sample],
+            'LDFLAGS': [cond(library_exists(ctx.compiler, '-lrt'), '-lrt')],
+            '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+            '*link': 'gcc $^ -o $@ libordo_s.a libutil.a $(LDFLAGS)'
+        }
+
     make.all = ['static', 'shared', 'test', 'samples']
 
     make.add_alias('static', ['libordo_s.a'])
@@ -230,14 +260,15 @@ def gen_makefile(ctx):
     if ctx.shared:
         make.add_alias('shared', ['libordo.so'])
     else:
-        make.add_command('shared', ['echo "Shared library will not be built" > shared',
-                                    'echo "Please configure with --shared" >> shared'
-                                    ])
+        make.add_command('shared', [
+            'echo "Shared library will not be built." > shared',
+            'echo "Please configure (with --shared)." >> shared'
+        ])
 
     make.add_alias('samples', ['hashsum', 'benchmark', 'version', 'info'])
 
     make.add_command('doc', ['cd ../doc && doxygen'])
-    
+
     if ctx.platform != 'generic':
         make.add_command('install', [
             'mkdir -p {0}/include'.format(ctx.prefix),
@@ -245,12 +276,12 @@ def gen_makefile(ctx):
             'cp -r ../include/ordo.h {0}/include'.format(ctx.prefix),
             'cp -r ../include/ordo {0}/include'.format(ctx.prefix),
             'cp -r libordo_s.a {0}/lib'.format(ctx.prefix),
-            'cp -r libordo.so {0}/lib'.format(ctx.prefix) if ctx.shared else ''
+            cond(ctx.shared, 'cp -r libordo.so {0}/lib'.format(ctx.prefix))
         ])
 
     make.add_command('clean', [
         'rm -rf libordo_s.a',
-        'rm -rf libordo.so' if ctx.shared else 'rm -rf shared',
+        cond(ctx.shared, 'rm -rf libordo.so', 'rm -rf shared'),
         'rm -rf hashsum version info benchmark test',
         'rm -rf libutil.a',
         'rm -rf obj',

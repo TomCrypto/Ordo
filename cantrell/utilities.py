@@ -35,6 +35,10 @@ def safe_path(s):
         return '_'.join([sha256(s).hexdigest()[:8], basename(s)])
 
 
+def cond(cnd, s, other=''):
+    return s if cnd else other
+
+
 def debug(fmt, *args, **kwargs):
     if verbose:
         print("> {0}".format(fmt.format(*args, **kwargs)))

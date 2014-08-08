@@ -31,6 +31,7 @@ class BuildContext:
             if args.assembler is not None:
                 info("Assembler not required for generic arch.")
             self.assembler = None
+            self.obj_format = None
         else:
             if args.assembler is not None:
                 if is_program(args.assembler[0], 'nasm'):
