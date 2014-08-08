@@ -1,6 +1,3 @@
-"""The module is responsible for generating makefiles for GCC, Clang, and the
-   Intel compilers. The MSVC compiler does not support makefiles.            """
-
 from __future__ import print_function, division
 
 from cantrell.scanning import SourceTree

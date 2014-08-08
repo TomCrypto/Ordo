@@ -1,11 +1,12 @@
 from __future__ import print_function, division
 
+import cantrell.makefile as makefile
 from cantrell.utilities import *
 from cantrell.detection import *
-import argparse, pickle
+import argparse, pickle, shutil
 
-import cantrell.makefile as makefile
-from argparse import ArgumentParser
+# Global configuration below, do not edit!
+build_dir, build_ctx = 'build', '.context'
 
 generate    = {'makefile': makefile.gen_makefile}
 run_build   = {'makefile': makefile.bld_makefile}
@@ -64,8 +65,8 @@ def configure(args):
 
         if args.endian is None:
             fail("Please specify target endianness for generic platform")
-
-        ctx.endian = args.endian[0]
+        else:
+            ctx.endian = args.endian[0]
 
     report_info("Platform", "{0}", ctx.platform)
     report_info("Architecture", "{0}", ctx.arch)
@@ -104,15 +105,12 @@ def make_doc(args):
 
 def clean_build():
     """Deletes the build folder and recreates an empty one."""
-    shutil.rmtree(build_dir)
-    regenerate_build_folder()
+    shutil.rmtree(build_dir), regenerate_build_folder(build_dir)
 
 
 def run_builder():
-    global verbose
-
-    master = ArgumentParser(description="Build script for the Ordo library.")
-    parsers = master.add_subparsers(dest='command')  # One for each command
+    master = argparse.ArgumentParser(description="Ordo build script.")
+    parsers = master.add_subparsers(dest='command')  # One per command
 
     cfg = parsers.add_parser('configure', help="configure the library")
     bld = parsers.add_parser('build',     help="build one or more targets")
@@ -165,8 +163,8 @@ def run_builder():
     master.add_argument('-v', '--verbose', action='store_true',
                         help="display additional information")
 
+    regenerate_build_folder(build_dir)
     args = master.parse_args()
-    regenerate_build_folder()
     set_verbose(args.verbose)
     cmd = args.command
 

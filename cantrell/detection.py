@@ -2,11 +2,9 @@ from __future__ import print_function, division
 
 from cantrell.utilities import *
 
-import subprocess
 import platform
 import tempfile
 import os, sys
-import shutil
 
 platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 

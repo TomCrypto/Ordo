@@ -1,16 +1,13 @@
 from __future__ import print_function, division
 
-from os.path import basename
 from os import path, mkdir
 import os, sys, subprocess
 
-verbose = False
-build_dir = 'build'
-build_ctx = '.context'
-
-
 class BuildError(Exception):
     pass
+
+
+verbose = False
 
 
 def set_verbose(value):
@@ -50,7 +47,7 @@ def report_fail(prompt, fmt, *args, **kwargs):
     raise BuildError("Build failed.")
 
 
-def regenerate_build_folder():
+def regenerate_build_folder(build_dir):
     if not path.isdir(build_dir):
         os.mkdir(build_dir)
 
