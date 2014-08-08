@@ -7,23 +7,52 @@ import argparse, pickle, shutil
 
 # Global configuration below, do not edit!
 build_dir, build_ctx = 'build', '.context'
+doc_dir = 'doc'
 
 generate    = {'makefile': makefile.gen_makefile}
 run_build   = {'makefile': makefile.bld_makefile}
 run_install = {'makefile': makefile.ins_makefile}
 run_tests   = {'makefile': makefile.tst_makefile}
 
+output_list = [
+    'makefile'
+]
+
 
 class BuildContext:
     def __init__(self, args):
-        """This function simply copies the arguments into a build context."""
-        self.lto = args.lto
-        self.compat = args.compat
-        self.shared = args.shared
+        """Parse the provided arguments into a new build context."""
+        self.output = args.output[0]
         self.prefix = args.prefix
+        self.shared = args.shared
+        self.compat = args.compat
+        self.lto    = args.lto
 
-        self.cc = get_c_compiler() if args.compiler is None else args.compiler[0]
-        self.compiler, self.compiler_info = get_compiler_id(self.cc)
+        # Special argument handling
+
+        if self.lto and self.compat:
+            raise BuildError("Link-time optimization and compatibility mode "
+                             "are mutually exclusive, please pick one only!")
+
+        report_info("Build output", self.output)
+
+        # Locate and identify the compiler
+
+        if args.compiler is None:
+            info("Looking for a C compiler...")
+            self.cc = get_c_compiler()
+            if not self.cc:
+                fail("Failed to find a C compiler, try with --compiler.")
+        else:
+            self.cc = args.compiler[0]
+
+
+        found, self.compiler, self.compiler_info = identify_compiler(self.cc)
+
+        if not found:
+            fail("Could not identify compiler, is it supported?")
+        else:
+            report_info("C compiler", "{0} ({1})", self.compiler, self.compiler_info)
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]
@@ -34,6 +63,8 @@ class BuildContext:
             self.assembler = None
             self.obj_format = None
         else:
+            # Locate and identify the assembler
+
             if args.assembler is not None:
                 if is_program(args.assembler[0], 'nasm'):
                     self.assembler = args.assembler[0]
@@ -47,46 +78,40 @@ class BuildContext:
                 self.obj_format = get_obj_format(self.platform, self.arch)
                 self.assembler_info = get_version(self.assembler)
 
+        # Platform configuration
+
+        report_info("Platform", "{0}", self.platform)
+        report_info("Architecture", "{0}", self.arch)
+
         self.features = []
         if args.aes_ni:
             self.features.append('aes_ni')
 
+        if len(self.features) > 0:
+            report_info("Features", "{0}", ', '.join(self.features))
+        else:
+            report_info("Features", "(none)")
+
+        # Assembler stuff (move this elsewhere)
+
+        if (self.arch is not 'generic') and (self.assembler is not None):
+            report_info("Assembler", "{0} ({1})", self.assembler, self.assembler_info)
+        elif (self.arch is not 'generic') and (self.assembler is None):
+            info("Assembler not found, build may fail (try with --assembler)")
+
+        if self.platform in ['generic']:
+            info("Compiling for generic platform, os_random/etc. unavailable")
+            info("(platform autodetection might have failed, try --platform)")
+
+            if args.endian is None:
+                fail("Please specify target endianness for generic platform")
+            else:
+                ctx.endian = args.endian[0]
+
 
 def configure(args):
-    """Generates and returns a build context from the arguments."""
+    """Generate and return a build context from the arguments."""
     ctx = BuildContext(args)
-
-    if ctx.lto and ctx.compat:
-        raise BuildError("Link-time optimization and compatibility mode are mutually exclusive")
-
-    if ctx.platform == 'generic':
-        info("Compiling for generic platform, os_random/etc. are unavailable")
-        info("(platform autodetection may have failed, maybe try --platform)")
-
-        if args.endian is None:
-            fail("Please specify target endianness for generic platform")
-        else:
-            ctx.endian = args.endian[0]
-
-    report_info("Platform", "{0}", ctx.platform)
-    report_info("Architecture", "{0}", ctx.arch)
-
-    if len(ctx.features) > 0:
-        report_info("Features", "{0}", ', '.join(ctx.features))
-    else:
-        report_info("Features", "(none)")
-
-    if ctx.compiler is None:
-        report_fail("C Compiler", "NOT FOUND (please configure with --compiler)")
-    else:
-        report_info("C Compiler", "{0} ({1})", ctx.compiler, ctx.compiler_info)
-
-    if (ctx.arch is not 'generic') and (ctx.assembler is not None):
-        report_info("Assembler", "{0} ({1})", ctx.assembler, ctx.assembler_info)
-    elif (ctx.arch is not 'generic') and (ctx.assembler is None):
-        info("Assembler not found, build may fail (try with --assembler)")
-
-    ctx.out = 'makefile'
 
     with open(path.join(build_dir, build_ctx), mode='wb') as f:
         pickle.dump(ctx, f)
@@ -95,16 +120,16 @@ def configure(args):
 
 
 def make_doc(args):
-    """Attempts to generate documentation by calling doxygen."""
-    if not program_exists('doxygen'):
-        raise BuildError("Doxygen is required to build the documentation")
-    else:
-        with chdir('doc'):
+    """Attempt to generate documentation by calling doxygen."""
+    with chdir(doc_dir):
+        if not program_exists('doxygen'):
+            raise BuildError("Doxygen is required to build the documentation")
+        else:
             run_cmd('doxygen', stdout_func=stream)
 
 
 def clean_build():
-    """Deletes the build folder and recreates an empty one."""
+    """Delete the build folder and then recreate an empty one."""
     shutil.rmtree(build_dir), regenerate_build_folder(build_dir)
 
 
@@ -119,31 +144,35 @@ def run_builder():
     cln = parsers.add_parser('clean',     help="remove all build files")
     doc = parsers.add_parser('doc',       help="generate documentation")
 
-    cfg.add_argument('--prefix', nargs=1, type=str, metavar='',
+    cfg.add_argument('--prefix', nargs=1, metavar='',
                      help="path into which to install files",
                      default=get_default_prefix())
 
-    cfg.add_argument('-c', '--compiler', nargs=1, type=str, metavar='',
+    cfg.add_argument('-c', '--compiler', nargs=1, metavar='',
                      help="path to C compiler to use for building")
 
-    cfg.add_argument('-q', '--assembler', nargs=1, type=str, metavar='',
+    cfg.add_argument('-q', '--assembler', nargs=1, metavar='',
                      help="path to assembler to use for building")
 
-    cfg.add_argument('-p', '--platform', nargs=1, type=str, metavar='',
+    cfg.add_argument('-p', '--platform', nargs=1, metavar='',
                      help="operating system/platform to configure for",
                      default=[get_platform()], choices=platform_list)
 
-    cfg.add_argument('-e', '--endian', nargs=1, type=str, metavar='',
-                     help="target endianness (for generic platform)",
-                     default=None, choices=['little', 'big'])
-
-    cfg.add_argument('-a', '--arch', nargs=1, type=str, metavar='',
+    cfg.add_argument('-a', '--arch', nargs=1, metavar='',
                      help="architecture to configure for",
                      default=['generic'], choices=arch_list)
+
+    cfg.add_argument('-e', '--endian', nargs=1, metavar='',
+                     help="target endianness (for generic platform)",
+                     default=None, choices=['little', 'big'])
 
     cfg.add_argument('-u', '--compat', action='store_true',
                      help="for (very) old compilers",
                      default=False)
+
+    cfg.add_argument('-o', '--output', metavar='',
+                     help="for (very) old compilers",
+                     default=['makefile'], choices=output_list)
 
     cfg.add_argument('-l', '--lto', action='store_true',
                      help="use link-time optimization",
@@ -185,7 +214,7 @@ def run_builder():
 
         ctx = configure(args)
         with chdir(build_dir):
-            generate[ctx.out](ctx)
+            generate[ctx.output](ctx)
     elif cmd in ['build', 'install', 'test']:
         if not path.exists(path.join(build_dir, build_ctx)):
             raise BuildError("Please configure before '{0}'.".format(cmd))
@@ -199,13 +228,13 @@ def run_builder():
                     raise BuildError("Bad target '{0}'.".format(target))
 
             with chdir(build_dir):
-                run_build[ctx.out](ctx, args.targets)
+                run_build[ctx.output](ctx, args.targets)
         elif cmd == 'install':
             with chdir(build_dir):
-                run_install[ctx.out](ctx)
+                run_install[ctx.output](ctx)
         elif cmd == 'test':
             with chdir(build_dir):
-                run_tests[ctx.out](ctx)
+                run_tests[ctx.output](ctx)
     elif cmd in ['doc']:
         make_doc(args)
     elif cmd in ['clean']:

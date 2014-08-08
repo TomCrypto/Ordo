@@ -34,10 +34,10 @@ class SourceTree:
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
 
-        self.definition_header = path.join(prefix, 'include/ordo/definitions.h')
+        self.def_header = path.join(prefix, 'include/ordo/definitions.h')
 
         self.headers['lib'] = list(set(
-            prefix_search(self.inc_dir['lib']) + [self.definition_header]
+            prefix_search(self.inc_dir['lib']) + [self.def_header]
         ))
 
         self.src['lib'] = self.search_src_lib(self.src_dir['lib'], self.prefix)

@@ -12,6 +12,8 @@ arch_list = ['generic', 'amd64']
 
 feature_list = ['generic', 'aes_ni']
 
+compiler_list = ['intel', 'clang', 'msvc', 'gcc']
+
 
 def get_platform():
     """Returns the current OS as a library platform string, or "generic"."""
@@ -113,24 +115,19 @@ def get_c_compiler():
     return None
 
 
-def get_compiler_id(compiler):
-    if (compiler is None) or not program_exists(compiler):
-        return (None, None)
+def identify_compiler(path):
+    """Identify a compiler and return an (found, id, version) tuple."""
+    if (path is None) or not program_exists(path):
+        return (False, None, None)
 
-    out = run_cmd(compiler, ['--version'])[1]
-    out2 = run_cmd(compiler, ['-v'])[1]
-    header = out.split('\n')[0]
+    for version_arg in ['-v', '--version', '-V']:
+        version_str =run_cmd(path, [version_arg])[1].split('\n')[0]
 
-    if ('intel' in out.lower()) or ('intel' in out2.lower()):
-        return ('intel', header)
-    if ('clang' in out.lower()) or ('clang' in out2.lower()):
-        return ('clang', header)
-    if ('gcc' in out.lower()) or ('gcc' in out2.lower()):
-        return ('gcc', header)
-    if ('msvc' in out.lower()) or ('msvc' in out2.lower()):
-        return ('msvc', header)
+        for compiler in compiler_list:
+            if compiler.lower() in version_str.lower():
+                return (True, compiler, version_str)
 
-    return (None, None)
+    return (False, None, None)
 
 
 def library_exists(compiler, library):

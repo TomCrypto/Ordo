@@ -119,13 +119,10 @@ def get_gcc_clang_flags(ctx, target):
         base_flags += ['-flto']
 
     if target in ['static', 'shared']:
-        out = base_flags + (['-fvisibility=hidden'] if ctx.compat else [])
-        if target in ['shared']:
-            return out + ['-fPIC']
-        else:
-            return out
-    elif target in ['shared']:
-        return base_flags + ['-fPIC', cond(ctx.compat, '-fvisibility=hidden')]
+        return base_flags + [
+            cond(not ctx.compat, '-fvisibility=hidden'),
+            cond(target in ['shared'], '-fPIC')
+        ]
     elif target in ['test', 'sample', 'util']:
         return base_flags
 
@@ -140,13 +137,10 @@ def get_intel_flags(ctx, target):
         base_flags += ['-ipo']
 
     if target in ['static', 'shared']:
-        out = base_flags + (['-fvisibility=hidden'] if ctx.compat else [])
-        if target in ['shared']:
-            return out + ['-fPIC']
-        else:
-            return out
-    elif target in ['shared']:
-        return base_flags + ['-fPIC', cond(ctx.compat, '-fvisibility=hidden')]
+        return base_flags + [
+            cond(not ctx.compat, '-fvisibility=hidden'),
+            cond(target in ['shared'], '-fPIC')
+        ]
     elif target in ['test', 'sample', 'util']:
         return base_flags
 
@@ -288,8 +282,8 @@ def gen_makefile(ctx):
         'rm -rf {0}'.format(folder_dep('obj'))
     ])
 
-    make.generate('Makefile')  # Output the file
-    resolve(tree.definition_header, lib_sources)
+    make.generate('Makefile')  # All done
+    resolve(tree.def_header, lib_sources)
 
 
 def bld_makefile(ctx, targets):
