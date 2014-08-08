@@ -9,8 +9,7 @@ if __name__ == '__main__':
         print("Sorry, this build script requires Python 2.7 or later.")
     else:
         try:
-            from cantrell.utilities import BuildError
-            from cantrell.builder import run_builder
+            from cantrell.builder import run_builder, BuildError
 
             try:
                 run_builder()

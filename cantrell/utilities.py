@@ -3,10 +3,6 @@ from __future__ import print_function, division
 from os import path, mkdir
 import os, sys, subprocess
 
-class BuildError(Exception):
-    pass
-
-
 verbose = False
 
 
@@ -28,11 +24,6 @@ def info(fmt, *args, **kwargs):
     print("> {0}".format(fmt.format(*args, **kwargs)))
 
 
-def fail(fmt, *args, **kwargs):
-    info(fmt, *args, **kwargs)
-    raise BuildError("Build failed.")
-
-
 def report_debug(prompt, fmt, *args, **kwargs):
     if verbose:
         print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
@@ -40,11 +31,6 @@ def report_debug(prompt, fmt, *args, **kwargs):
 
 def report_info(prompt, fmt, *args, **kwargs):
     print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
-
-
-def report_fail(prompt, fmt, *args, **kwargs):
-    report_info(prompt, fmt, *args, **kwargs)
-    raise BuildError("Build failed.")
 
 
 def regenerate_build_folder(build_dir):

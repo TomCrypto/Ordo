@@ -19,6 +19,10 @@ output_list = [
 ]
 
 
+class BuildError(Exception):
+    pass
+
+
 class BuildContext:
     def __init__(self, args):
         """Parse the provided arguments into a new build context."""
@@ -42,7 +46,8 @@ class BuildContext:
             info("Looking for a C compiler...")
             self.cc = get_c_compiler()
             if not self.cc:
-                fail("Failed to find a C compiler, try with --compiler.")
+                info("Failed to find a C compiler, try with --compiler.")
+                raise BuildError("Configuration error.")
         else:
             self.cc = args.compiler[0]
 
@@ -50,7 +55,8 @@ class BuildContext:
         found, self.compiler, self.compiler_info = identify_compiler(self.cc)
 
         if not found:
-            fail("Could not identify compiler, is it supported?")
+            info("Could not identify compiler, is it supported?")
+            raise BuildError("Configuration error.")
         else:
             report_info("C compiler", "{0} ({1})", self.compiler, self.compiler_info)
 
@@ -104,7 +110,8 @@ class BuildContext:
             info("(platform autodetection might have failed, try --platform)")
 
             if args.endian is None:
-                fail("Please specify target endianness for generic platform")
+                info("Please specify target endianness for generic platform")
+                raise BuildError("Configuration error.")
             else:
                 ctx.endian = args.endian[0]
 

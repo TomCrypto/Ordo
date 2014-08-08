@@ -88,7 +88,7 @@ def get_obj_format(platform, arch):
         elif platform in ['win32']:
             return 'win64'
     else:  # No other architecture yet (add e.g. i386..)
-        raise BuildError('No assembler format for {0}'.format(arch))
+        raise RuntimeError('No assembler format for {0}'.format(arch))
 
 
 def program_exists(name):
