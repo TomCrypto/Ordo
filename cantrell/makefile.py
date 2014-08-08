@@ -9,6 +9,7 @@ from cantrell.detection import *
 from cantrell.utilities import *
 
 from os import path
+from hashlib import sha256
 
 
 def sanitize(s):
@@ -16,8 +17,8 @@ def sanitize(s):
 
 
 def src2obj(folder, prefix, srcfile):
-    new = path.join(folder, safe_path(path.join(prefix, srcfile)))
-    return new.replace('.c', '.o')
+    join = '_'.join([sanitize(prefix), sanitize(srcfile).lower()])
+    return path.join(folder, join) + '.o'  # Guarantees uniqueness
 
 
 def subst(s, prefix, target, deps=[]):
@@ -46,7 +47,7 @@ def process_alias(f, alias, deps):
 def process_target(f, target, target_name):
     for variable in target:
         if '*' not in variable:
-            name = '_'.join([sanitize(target_name), variable])
+            name = '_'.join([sanitize(target_name).upper(), variable])
             value = ' '.join(target[variable])
             f.write('='.join([name, value]))
             f.write('\n')

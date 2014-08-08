@@ -20,6 +20,5 @@ if __name__ == '__main__':
         except ImportError:
             print("Please ensure the following modules are installed:")
             print("\n    argparse    (< 2.7)", end='')
-            print("\n    hashlib     (< 2.5)", end='')
             print("\n", end='')
             exit(1)

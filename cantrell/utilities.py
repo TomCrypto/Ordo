@@ -2,7 +2,6 @@ from __future__ import print_function, division
 
 from os.path import basename
 from os import path, mkdir
-from hashlib import sha256
 import os, sys, subprocess
 
 verbose = False
@@ -17,20 +16,6 @@ class BuildError(Exception):
 def set_verbose(value):
     global verbose
     verbose = value
-
-
-def regenerate_build_folder():
-    if not path.isdir(build_dir):
-        os.mkdir(build_dir)
-
-    with open(path.join(build_dir, '.gitignore'), 'w') as f:
-        f.write('*\n!.gitignore\n')  # Recreate a .gitignore
-
-
-def safe_path(s):
-    """Converts a filesystem path to a safe top-level file name."""
-    buf = s.encode('utf-8') if sys.hexversion >= 0x03000000 else s
-    return '_'.join([sha256(buf).hexdigest()[:8], basename(s)])
 
 
 def cond(cnd, s, other=''):
@@ -63,6 +48,14 @@ def report_info(prompt, fmt, *args, **kwargs):
 def report_fail(prompt, fmt, *args, **kwargs):
     report_info(prompt, fmt, *args, **kwargs)
     raise BuildError("Build failed.")
+
+
+def regenerate_build_folder():
+    if not path.isdir(build_dir):
+        os.mkdir(build_dir)
+
+    with open(path.join(build_dir, '.gitignore'), 'w') as f:
+        f.write('*\n!.gitignore\n')  # Recreate a .gitignore
 
 
 class chdir:
