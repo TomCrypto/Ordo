@@ -3,50 +3,54 @@ from __future__ import print_function, division
 from cantrell.utilities import *
 from cantrell.detection import *
 
-from os import path
-import os
+from os import path, walk, listdir
 
 
 def prefix_search(dirpath):
+    """Search for all files in a folder recursively."""
     return [path.join(root, filename)
-            for root, dirnames, filenames in os.walk(dirpath)
-            for filename in filenames]
+            for root, dirnames, filenames in walk(dirpath)
+            for filename in filenames
+    ]
 
 
 class SourceTree:
     def __init__(self, prefix):
         """Collect all source and header files into a searchable tree."""
         self.src = {}
+        self.src_dir = {}
+        self.inc_dir = {}
         self.headers = {}
         self.prefix = prefix
-        self.srcdir = path.join(prefix, 'src')
-        self.headerdir = path.join(prefix, 'include')
-        self.testsrcdir = path.join(prefix, 'test/src')
-        self.testheaderdir = path.join(prefix, 'test/include')
-        self.utilsrcdir = path.join(prefix, 'samples/util/src')
-        self.utilheaderdir = path.join(prefix, 'samples/util/include')
 
-        self.samplessrcdir = path.join(prefix, 'samples/src')
+        self.src_dir['lib'] = path.join(prefix, 'src')
+        self.inc_dir['lib'] = path.join(prefix, 'include')
+        self.src_dir['test'] = path.join(prefix, 'test/src')
+        self.inc_dir['test'] = path.join(prefix, 'test/include')
+        self.src_dir['util'] = path.join(prefix, 'samples/util/src')
+        self.inc_dir['util'] = path.join(prefix, 'samples/util/include')
+        self.src_dir['sample'] = path.join(prefix, 'samples/src')
 
         # Collect all the library files, including definition header
         # (note the files are all given as full paths from the root)
 
         self.definition_header = path.join(prefix, 'include/ordo/definitions.h')
 
-        self.headers['lib'] = set(prefix_search(self.headerdir))
-        self.headers['lib'].add(self.definition_header)
+        self.headers['lib'] = list(set(
+            prefix_search(self.inc_dir['lib']) + [self.definition_header]
+        ))
 
-        self.src['lib'] = self.search_src_lib(self.srcdir, self.prefix)
+        self.src['lib'] = self.search_src_lib(self.src_dir['lib'], self.prefix)
 
-        self.src['test'] = prefix_search(self.testsrcdir)
-        self.src['util'] = prefix_search(self.utilsrcdir)
-        self.headers['test'] = prefix_search(self.testheaderdir)
-        self.headers['util'] = prefix_search(self.utilheaderdir)
+        self.src['test'] = prefix_search(self.src_dir['test'])
+        self.src['util'] = prefix_search(self.src_dir['util'])
+        self.headers['test'] = prefix_search(self.inc_dir['test'])
+        self.headers['util'] = prefix_search(self.inc_dir['util'])
 
-        self.src['hashsum'] = [path.join(self.samplessrcdir, 'hashsum.c')]
-        self.src['version'] = [path.join(self.samplessrcdir, 'version.c')]
-        self.src['info'] = [path.join(self.samplessrcdir, 'info.c')]
-        self.src['benchmark'] = [path.join(self.samplessrcdir, 'benchmark.c')]
+        self.src['hashsum'] = [path.join(self.src_dir['sample'], 'hashsum.c')]
+        self.src['version'] = [path.join(self.src_dir['sample'], 'version.c')]
+        self.src['info'] = [path.join(self.src_dir['sample'], 'info.c')]
+        self.src['benchmark'] = [path.join(self.src_dir['sample'], 'benchmark.c')]
 
         self.headers['hashsum'] = []
         self.headers['version'] = []
@@ -68,7 +72,9 @@ class SourceTree:
                         continue
 
                     out[(plat, arch, feat)] = [
-                        path.join(pF, f) for f in os.listdir(pF) if path.isfile(path.join(pF, f))]
+                        path.join(pF, f) for f in listdir(pF)
+                        if path.isfile(path.join(pF, f))
+                    ]
 
         return out
 
@@ -83,14 +89,17 @@ class SourceTree:
         return source_files
 
     def select(self, plat, arch, features):
-        """Selects the source files to build from platform/arch/features."""
+        """Select the source files to build from platform/arch/features."""
         source_files = []
 
-        for f in set(features).union({'generic'}):
-            source_files = self.process(source_files, (plat, arch, f))
-        for a in {arch}.union({'generic'}):
-            source_files = self.process(source_files, (plat, a, 'generic'))
-        for p in {plat}.union({'generic'}):
-            source_files = self.process(source_files, (p, 'generic', 'generic'))
+        for f in set(features + ['generic']):
+            tup = (plat, arch, f)
+            source_files = self.process(source_files, tup)
+        for a in set([arch] + ['generic']):
+            tup = (plat, a, 'generic')
+            source_files = self.process(source_files, tup)
+        for p in set([plat] + ['generic']):
+            tup = (p, 'generic', 'generic')
+            source_files = self.process(source_files, tup)
 
         return source_files
