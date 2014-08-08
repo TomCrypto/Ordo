@@ -34,7 +34,7 @@ class BuildContext:
             raise BuildError("Link-time optimization and compatibility mode "
                              "are mutually exclusive, please pick one only!")
 
-        report_info("Build output", self.output)
+        report_info("Build output format", self.output)
 
         # Locate and identify the compiler
 
@@ -121,11 +121,10 @@ def configure(args):
 
 def make_doc(args):
     """Attempt to generate documentation by calling doxygen."""
-    with chdir(doc_dir):
-        if not program_exists('doxygen'):
-            raise BuildError("Doxygen is required to build the documentation")
-        else:
-            run_cmd('doxygen', stdout_func=stream)
+    if not program_exists('doxygen'):
+        raise BuildError("Doxygen is required to build the documentation")
+    else:
+        run_cmd('doxygen', stdout_func=stream)
 
 
 def clean_build():
@@ -148,37 +147,37 @@ def run_builder():
                      help="path into which to install files",
                      default=get_default_prefix())
 
-    cfg.add_argument('-c', '--compiler', nargs=1, metavar='',
+    cfg.add_argument('--compiler', nargs=1, metavar='',
                      help="path to C compiler to use for building")
 
-    cfg.add_argument('-q', '--assembler', nargs=1, metavar='',
+    cfg.add_argument('--assembler', nargs=1, metavar='',
                      help="path to assembler to use for building")
 
-    cfg.add_argument('-p', '--platform', nargs=1, metavar='',
+    cfg.add_argument('--platform', nargs=1, metavar='',
                      help="operating system/platform to configure for",
                      default=[get_platform()], choices=platform_list)
 
-    cfg.add_argument('-a', '--arch', nargs=1, metavar='',
+    cfg.add_argument('--arch', nargs=1, metavar='',
                      help="architecture to configure for",
                      default=['generic'], choices=arch_list)
 
-    cfg.add_argument('-e', '--endian', nargs=1, metavar='',
+    cfg.add_argument('--endian', nargs=1, metavar='',
                      help="target endianness (for generic platform)",
                      default=None, choices=['little', 'big'])
 
-    cfg.add_argument('-u', '--compat', action='store_true',
+    cfg.add_argument('-c', '--compat', action='store_true',
                      help="for (very) old compilers",
                      default=False)
 
     cfg.add_argument('-o', '--output', metavar='',
-                     help="for (very) old compilers",
+                     help="build output format to generate",
                      default=['makefile'], choices=output_list)
 
     cfg.add_argument('-l', '--lto', action='store_true',
                      help="use link-time optimization",
                      default=False)
 
-    cfg.add_argument('--shared', action='store_true',
+    cfg.add_argument('-s', '--shared', action='store_true',
                      help="build a shared library",
                      default=False)
 
@@ -236,6 +235,7 @@ def run_builder():
             with chdir(build_dir):
                 run_tests[ctx.output](ctx)
     elif cmd in ['doc']:
-        make_doc(args)
+        with chdir(doc_dir):
+            make_doc(args)
     elif cmd in ['clean']:
         clean_build()
