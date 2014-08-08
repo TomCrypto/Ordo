@@ -1,4 +1,4 @@
-from __future__ import print_function, division
+from __future__ import with_statement, division
 
 from cantrell.scanning import SourceTree
 from cantrell.resolve import resolve
@@ -20,7 +20,7 @@ def src2obj(folder, prefix, srcfile):
 
 def subst(s, prefix, target, deps=[]):
     s = s.replace('$<', deps[0] if len(deps) != 0 else '')
-    s = s.replace('$(', '$({0}_'.format(sanitize(prefix)))
+    s = s.replace('$(', '$(%s_' % sanitize(prefix))
     s = s.replace('$^', ' '.join(deps))
     s = s.replace('$@', target)
     return s
@@ -32,13 +32,13 @@ def folder_dep(folder):
 
 def folder_rule(f, folder):
     path = folder_dep(folder)
-    f.write('{0}:\n'.format(path))
-    f.write('\tmkdir {0}\n'.format(folder))
-    f.write('\ttouch {0}\n'.format(path))
+    f.write('%s:\n' % path)
+    f.write('\tmkdir %s\n' % folder)
+    f.write('\ttouch %s\n' % path)
 
 
 def process_alias(f, alias, deps):
-    f.write('{0}: {1}\n\n'.format(alias, ' '.join(deps)))
+    f.write('%s: %s\n\n' % (alias, ' '.join(deps)))
 
 
 def process_target(f, target, target_name):
@@ -54,17 +54,17 @@ def process_target(f, target, target_name):
         objfile = src2obj('obj', target_name, srcfile)
         ext = path.splitext(srcfile)[1]
 
-        f.write(subst('{0}: {1}\n\t{2}\n\n'.format(objfile, ' '.join(deps),
+        f.write(subst('%s: %s\n\t%s\n\n' % (objfile, ' '.join(deps),
                       target['*' + ext]), target_name, objfile, deps))
 
     deps = [src2obj('obj', target_name, srcfile)
             for srcfile in target['SOURCES']] + target['DEPS']
-    f.write(subst('{0}: {1}\n\t{2}\n\n'.format(target_name, ' '.join(deps),
+    f.write(subst('%s: %s\n\t%s\n\n' % (target_name, ' '.join(deps),
                   target['*link']), target_name, target_name, deps))
 
 
 def process_command(f, name, commands):
-    f.write('{0}:\n\t{1}\n\n'.format(name, '\n\t'.join(commands)))
+    f.write('%s:\n\t%s\n\n' % (name, '\n\t'.join(commands)))
 
 
 class Makefile:
@@ -158,14 +158,13 @@ def gen_makefile(ctx):
     make = Makefile()
 
     defines = [
-        '-DORDO_ARCH=\\\"{0}\\\"'.format(ctx.arch),
-        '-DORDO_PLATFORM=\\\"{0}\\\"'.format(ctx.platform),
-        '-DORDO_FEATURE_LIST=\\\"{0}\\\"'.format(' '.join(ctx.features))
+        '-DORDO_ARCH=\\\"%s\\\"' % (ctx.arch),
+        '-DORDO_PLATFORM=\\\"%s\\\"' % (ctx.platform),
+        '-DORDO_FEATURE_LIST=\\\"%s\\\"'% (' '.join(ctx.features))
     ]
 
     if len(ctx.features) > 0:
-        defines += ['-DORDO_FEATURE_ARRAY=\\\"{0}\\\",0'
-                    .format('\\\",'.join(ctx.features))]
+        defines += ['-DORDO_FEATURE_ARRAY=\\\"%s\\\",0' % ('\\\",'.join(ctx.features))]
     else:
         defines += ['-DORDO_FEATURE_ARRAY=0']
 
@@ -189,11 +188,11 @@ def gen_makefile(ctx):
         'CFLAGS': get_flags(ctx, 'static'),
         'DEFINES': ['-DBUILDING_ORDO', '-DORDO_STATIC_LIB'] + defines,
         'HEADERS': tree.headers['lib'],
-        'INCLUDE': ['-I{0}'.format(tree.inc_dir['lib'])],
+        'INCLUDE': ['-I%s' % (tree.inc_dir['lib'])],
         'DEPS': [],
         'SOURCES': lib_sources,
-        '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.cc),
-        '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
+        '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % (ctx.cc),
+        '*.asm': cond(ctx.assembler, '%s -f %s $< -o $@' % (ctx.assembler, ctx.obj_format)),
         '*link': 'ar rcs $@ $^'
     }
 
@@ -202,11 +201,11 @@ def gen_makefile(ctx):
             'CFLAGS': get_flags(ctx, 'shared'),
             'DEFINES': ['-DBUILDING_ORDO', '-DORDO_EXPORTS'] + defines,
             'HEADERS': tree.headers['lib'],
-            'INCLUDE': ['-I{0}'.format(tree.inc_dir['lib'])],
+            'INCLUDE': ['-I%s' % (tree.inc_dir['lib'])],
             'DEPS': [],
             'SOURCES': lib_sources,
-            '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.cc),
-            '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
+            '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % (ctx.cc),
+            '*.asm': cond(ctx.assembler, '%s -f %s $< -o $@' % (ctx.assembler, ctx.obj_format)),
             '*link': 'gcc -shared $^ -o $@'
         }
 
@@ -214,8 +213,8 @@ def gen_makefile(ctx):
         'CFLAGS': get_flags(ctx, 'test'),
         'DEFINES': ['-DORDO_STATIC_LIB'],
         'HEADERS': tree.headers['lib'] + list(tree.headers['test']),
-        'INCLUDE': ['-I{0}'.format(tree.inc_dir['lib']),
-                    '-I{0}'.format(tree.inc_dir['test'])],
+        'INCLUDE': ['-I%s' % (tree.inc_dir['lib']),
+                    '-I%s' % (tree.inc_dir['test'])],
         'DEPS': ['libordo_s.a'],
         'SOURCES': tree.src['test'],
         '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
@@ -226,7 +225,7 @@ def gen_makefile(ctx):
         'CFLAGS': get_flags(ctx, 'util'),
         'DEFINES': [],
         'HEADERS': tree.headers['util'],
-        'INCLUDE': ['-I{0}'.format(tree.inc_dir['util'])],
+        'INCLUDE': ['-I%s' % (tree.inc_dir['util'])],
         'DEPS': [],
         'SOURCES': tree.src['util'],
         '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
@@ -238,8 +237,8 @@ def gen_makefile(ctx):
             'CFLAGS': get_flags(ctx, 'sample'),
             'DEFINES': ['-DORDO_STATIC_LIB'],
             'HEADERS': tree.headers['lib'] + tree.headers['util'],
-            'INCLUDE': ['-I{0}'.format(tree.inc_dir['lib']),
-                        '-I{0}'.format(tree.inc_dir['util'])],
+            'INCLUDE': ['-I%s' % (tree.inc_dir['lib']),
+                        '-I%s' % (tree.inc_dir['util'])],
             'DEPS': ['libordo_s.a', 'libutil.a'],
             'SOURCES': tree.src[sample],
             'LDFLAGS': [cond(library_exists(ctx.compiler, '-lrt'), '-lrt')],
@@ -265,12 +264,12 @@ def gen_makefile(ctx):
 
     if ctx.platform != 'generic':
         make.add_command('install', [
-            'mkdir -p {0}/include'.format(ctx.prefix),
-            'mkdir -p {0}/lib'.format(ctx.prefix),
-            'cp -r ../include/ordo.h {0}/include'.format(ctx.prefix),
-            'cp -r ../include/ordo {0}/include'.format(ctx.prefix),
-            'cp -r libordo_s.a {0}/lib'.format(ctx.prefix),
-            cond(ctx.shared, 'cp -r libordo.so {0}/lib'.format(ctx.prefix))
+            'mkdir -p %s/include' % (ctx.prefix),
+            'mkdir -p %s/lib' % (ctx.prefix),
+            'cp -r ../include/ordo.h %s/include' % (ctx.prefix),
+            'cp -r ../include/ordo %s/include' % (ctx.prefix),
+            'cp -r libordo_s.a %s/lib' % (ctx.prefix),
+            cond(ctx.shared, 'cp -r libordo.so %s/lib' % (ctx.prefix))
         ])
 
     make.add_command('clean', [
@@ -279,7 +278,7 @@ def gen_makefile(ctx):
         'rm -rf hashsum version info benchmark test',
         'rm -rf libutil.a',
         'rm -rf obj',
-        'rm -rf {0}'.format(folder_dep('obj'))
+        'rm -rf %s' % (folder_dep('obj'))
     ])
 
     make.generate('Makefile')  # All done

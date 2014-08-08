@@ -1,4 +1,4 @@
-from __future__ import print_function, division
+from __future__ import with_statement, division
 
 from cantrell.utilities import *
 
@@ -88,7 +88,7 @@ def get_obj_format(platform, arch):
         elif platform in ['win32']:
             return 'win64'
     else:  # No other architecture yet (add e.g. i386..)
-        raise RuntimeError('No assembler format for {0}'.format(arch))
+        raise RuntimeError('No assembler format for %s' % arch)
 
 
 def program_exists(name):
@@ -104,11 +104,11 @@ def get_c_compiler():
     if ("CC" in os.environ) and program_exists(os.environ['CC']):
         return os.environ['CC']
 
-    if program_exists('cc'):
-        return 'cc'
-
     if program_exists('gcc'):
         return 'gcc'
+
+    if program_exists('cc'):
+        return 'cc'
 
     # On Windows, maybe check for MSVC in one of the popular paths here
 

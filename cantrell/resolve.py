@@ -1,4 +1,4 @@
-from __future__ import print_function, division
+from __future__ import with_statement, division
 
 from os import path
 
@@ -51,7 +51,7 @@ def gen_polymorphic_struct(built_prims, prim_type):
     """ Generates the polymorphic structure (union) for a primitive type. """
     prim_count = sum(1 for p in built_prims if p[1].prim_type == prim_type)
 
-    src = 'struct {0}_STATE\n'.format(prim_type)
+    src = 'struct %s_STATE\n' % prim_type
     src += '{\n'
     src += '    prim_t primitive;\n'
 
@@ -62,7 +62,7 @@ def gen_polymorphic_struct(built_prims, prim_type):
 
         for (_, prim) in built_prims:
             if prim.prim_type == prim_type:
-                src += '        struct {0}_STATE {1};\n'.format(prim.name.upper(), prim.name)
+                src += '        struct %s_STATE %s;\n' % (prim.name.upper(), prim.name)
 
         src += '    } jmp;\n'
 
@@ -141,9 +141,9 @@ def resolve(definitions_path, built_files):
     definitions += '#include "ordo/common/limits.h"\n'
 
     definitions += '\n'
-    definitions += '#define HASH_BLOCK_LEN  {0}\n'.format(get_block_len(built_prims,  'HASH'))
-    definitions += '#define HASH_DIGEST_LEN {0}\n'.format(get_digest_len(built_prims, 'HASH'))
-    definitions += '#define BLOCK_BLOCK_LEN {0}\n'.format(get_block_len(built_prims,  'BLOCK'))
+    definitions += '#define HASH_BLOCK_LEN  %d\n' % get_block_len(built_prims,  'HASH')
+    definitions += '#define HASH_DIGEST_LEN %d\n' %get_digest_len(built_prims, 'HASH')
+    definitions += '#define BLOCK_BLOCK_LEN %d\n' %get_block_len(built_prims,  'BLOCK')
 
     for (path, prim) in built_prims:
         with open(path, 'r') as fd:

@@ -1,4 +1,4 @@
-from __future__ import print_function, division
+from __future__ import with_statement, division
 
 import cantrell.makefile as makefile
 from cantrell.utilities import *
@@ -58,7 +58,7 @@ class BuildContext:
             info("Could not identify compiler, is it supported?")
             raise BuildError("Configuration error.")
         else:
-            report_info("C compiler", "{0} ({1})", self.compiler, self.compiler_info)
+            report_info("C compiler", "%s (%s)" % (self.compiler, self.compiler_info))
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]
@@ -75,8 +75,7 @@ class BuildContext:
                 if is_program(args.assembler[0], 'nasm'):
                     self.assembler = args.assembler[0]
                 else:
-                    info("Assembler {0} does not appear to be NASM.",
-                         args.assembler[0])
+                    info("Assembler %s does not appear to be NASM." % args.assembler[0])
             else:
                 self.assembler = find_nasm()
 
@@ -86,8 +85,8 @@ class BuildContext:
 
         # Platform configuration
 
-        report_info("Platform", "{0}", self.platform)
-        report_info("Architecture", "{0}", self.arch)
+        report_info("Platform", "%s" % self.platform)
+        report_info("Architecture", "%s" % self.arch)
 
         self.features = []
         if args.aes_ni:
@@ -101,7 +100,7 @@ class BuildContext:
         # Assembler stuff (move this elsewhere)
 
         if (self.arch is not 'generic') and (self.assembler is not None):
-            report_info("Assembler", "{0} ({1})", self.assembler, self.assembler_info)
+            report_info("Assembler", "%s (%s)" % (self.assembler, self.assembler_info))
         elif (self.arch is not 'generic') and (self.assembler is None):
             info("Assembler not found, build may fail (try with --assembler)")
 
@@ -223,7 +222,7 @@ def run_builder():
             generate[ctx.output](ctx)
     elif cmd in ['build', 'install', 'test']:
         if not path.exists(path.join(build_dir, build_ctx)):
-            raise BuildError("Please configure before '{0}'.".format(cmd))
+            raise BuildError("Please configure before '%s'." % cmd)
         else:
             with open(path.join(build_dir, build_ctx), 'rb') as f:
                 ctx = pickle.load(f)
@@ -231,7 +230,7 @@ def run_builder():
         if cmd == 'build':
             for target in args.targets:
                 if target not in ['static', 'shared', 'test', 'samples']:
-                    raise BuildError("Bad target '{0}'.".format(target))
+                    raise BuildError("Bad target '%s'." % target)
 
             with chdir(build_dir):
                 run_build[ctx.output](ctx, args.targets)

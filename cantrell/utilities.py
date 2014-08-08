@@ -1,4 +1,4 @@
-from __future__ import print_function, division
+from __future__ import with_statement, division
 
 from os import path, mkdir
 import os, sys, subprocess
@@ -15,22 +15,22 @@ def cond(cnd, s, other=''):
     return s if cnd else other
 
 
-def debug(fmt, *args, **kwargs):
+def debug(msg):
     if verbose:
-        print("> {0}".format(fmt.format(*args, **kwargs)))
+        sys.stdout.write("> %s\n" % (msg))
 
 
-def info(fmt, *args, **kwargs):
-    print("> {0}".format(fmt.format(*args, **kwargs)))
+def info(msg):
+    sys.stdout.write("> %s\n" % (msg))
 
 
-def report_debug(prompt, fmt, *args, **kwargs):
+def report_debug(prompt, msg):
     if verbose:
-        print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
+        sys.stdout.write("> %s: %s\n" % (prompt, msg))
 
 
-def report_info(prompt, fmt, *args, **kwargs):
-    print("> {0}: {1}".format(prompt, fmt.format(*args, **kwargs)))
+def report_info(prompt, msg):
+    sys.stdout.write("> %s: %s\n" % (prompt, msg))
 
 
 def regenerate_build_folder(build_dir):
@@ -56,7 +56,7 @@ class chdir:
 
 def stream(line):
     """Utility function for run_cmd which streams its input to stdout."""
-    print(line, end='')
+    sys.stdout.write(line)
 
 
 def run_cmd(cmd, args=[], stdout_func=None):
@@ -86,7 +86,7 @@ def run_cmd(cmd, args=[], stdout_func=None):
 
             stdout += final_line
     except KeyboardInterrupt:
-        print("Interrupt")
+        sys.stdout.write("Interrupt")
         return (-1, stdout)
 
     return (process.returncode, stdout)

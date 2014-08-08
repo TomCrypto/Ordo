@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
-
 if __name__ == '__main__':
     import sys
 
-    if sys.hexversion < 0x02070000:  # TODO: test it on at least 2.5
-        print("Sorry, this build script requires Python 2.7 or later.")
+    if sys.hexversion < 0x02050000:
+        print("Sorry, this build script requires Python 2.5 or later.")
     else:
         try:
             from cantrell.builder import run_builder, BuildError
@@ -18,6 +16,6 @@ if __name__ == '__main__':
                 exit(1)  # Build failed!
         except ImportError:
             print("Please ensure the following modules are installed:")
-            print("\n    argparse    (< 2.7)", end='')
-            print("\n", end='')
+            print("\n    argparse    (< 2.7)")
+            print("")
             exit(1)
