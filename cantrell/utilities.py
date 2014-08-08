@@ -29,10 +29,8 @@ def regenerate_build_folder():
 
 def safe_path(s):
     """Converts a filesystem path to a safe top-level file name."""
-    if sys.hexversion >= 0x03000000:
-        return '_'.join([sha256(s.encode('utf-8')).hexdigest()[:8], basename(s)])
-    else:
-        return '_'.join([sha256(s).hexdigest()[:8], basename(s)])
+    buf = s.encode('utf-8') if sys.hexversion >= 0x03000000 else s
+    return '_'.join([sha256(buf).hexdigest()[:8], basename(s)])
 
 
 def cond(cnd, s, other=''):
