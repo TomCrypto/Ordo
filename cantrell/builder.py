@@ -113,7 +113,7 @@ class BuildContext:
                 info("Please specify target endianness for generic platform")
                 raise BuildError("Configuration error.")
             else:
-                ctx.endian = args.endian[0]
+                self.endian = args.endian[0]
 
 
 def configure(args):
