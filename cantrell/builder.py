@@ -21,8 +21,8 @@ class BuildContext:
         self.shared = args.shared
         self.prefix = args.prefix
 
-        cc = get_c_compiler() if args.compiler is None else args.compiler[0]
-        self.compiler, self.compiler_info = get_compiler_id(cc)
+        self.cc = get_c_compiler() if args.compiler is None else args.compiler[0]
+        self.compiler, self.compiler_info = get_compiler_id(self.cc)
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]

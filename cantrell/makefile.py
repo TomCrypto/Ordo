@@ -132,7 +132,7 @@ def get_gcc_clang_flags(ctx, target):
         return base_flags
 
 
-def get_icc_flags(ctx, target):
+def get_intel_flags(ctx, target):
     base_flags = [
         '-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic', '-restrict',
         '-ansi-alias'
@@ -157,7 +157,7 @@ def get_flags(ctx, target):
     """Gets appropriate compiler flags depending on the target."""
     if ctx.compiler in ['gcc', 'clang']:
         return get_gcc_clang_flags(ctx, target)
-    elif ctx.compiler in ['icc']:
+    elif ctx.compiler in ['intel']:
         return get_icc_flags(ctx, target)
 
 
@@ -200,7 +200,7 @@ def gen_makefile(ctx):
         'INCLUDE': ['-I../include'],
         'DEPS': [],
         'SOURCES': lib_sources,
-        '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
+        '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.cc),
         '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
         '*link': 'ar rcs $@ $^'
     }
@@ -213,7 +213,7 @@ def gen_makefile(ctx):
             'INCLUDE': ['-I../include'],
             'DEPS': [],
             'SOURCES': lib_sources,
-            '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.compiler),
+            '*.c': '{0} $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@'.format(ctx.cc),
             '*.asm': cond(ctx.assembler, '{0} -f {1} $< -o $@'.format(ctx.assembler, ctx.obj_format)),
             '*link': 'gcc -shared $^ -o $@'
         }
