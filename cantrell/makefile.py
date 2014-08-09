@@ -206,7 +206,7 @@ def gen_makefile(ctx, build_prefix):
             'SOURCES': lib_sources,
             '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % (ctx.cc),
             '*.asm': cond(ctx.assembler, '%s -f %s $< -o $@' % (ctx.assembler, ctx.obj_format)),
-            '*link': 'gcc -shared $^ -o $@'
+            '*link': '%s -shared $^ -o $@' % ctx.cc
         }
 
     make['test'] = {
@@ -217,8 +217,8 @@ def gen_makefile(ctx, build_prefix):
                     '-I%s' % (tree.inc_dir['test'])],
         'DEPS': ['libordo_s.a'],
         'SOURCES': tree.src['test'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-        '*link': 'gcc $^ -o $@ libordo_s.a'
+        '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % ctx.cc,
+        '*link': '%s $^ -o $@ libordo_s.a' % ctx.cc
     }
 
     make['libutil.a'] = {
@@ -228,7 +228,7 @@ def gen_makefile(ctx, build_prefix):
         'INCLUDE': ['-I%s' % (tree.inc_dir['util'])],
         'DEPS': [],
         'SOURCES': tree.src['util'],
-        '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
+        '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % ctx.cc,
         '*link': 'ar rcs $@ $^'
     }
 
@@ -242,8 +242,8 @@ def gen_makefile(ctx, build_prefix):
             'DEPS': ['libordo_s.a', 'libutil.a'],
             'SOURCES': tree.src[sample],
             'LDFLAGS': [cond(library_exists(ctx.compiler, '-lrt'), '-lrt')],
-            '*.c': 'gcc $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@',
-            '*link': 'gcc $^ -o $@ libordo_s.a libutil.a $(LDFLAGS)'
+            '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % ctx.cc,
+            '*link': '%s $^ -o $@ libordo_s.a libutil.a $(LDFLAGS)' % ctx.cc
         }
 
     make.all = ['static', 'shared', 'test', 'samples']
