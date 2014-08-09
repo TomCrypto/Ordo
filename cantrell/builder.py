@@ -113,7 +113,7 @@ class BuildContext:
             self.features.append('aes_ni')
 
         if len(self.features) > 0:
-            report_info("Features", "{0}", ', '.join(self.features))
+            report_info("Features", "%s" % ', '.join(self.features))
         else:
             report_info("Features", "(none)")
 

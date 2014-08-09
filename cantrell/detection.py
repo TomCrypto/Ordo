@@ -107,6 +107,9 @@ def get_c_compiler():
     if ("CC" in os.environ) and program_exists(os.environ['CC']):
         return os.environ['CC']
 
+    if program_exists('clang'):
+        return 'clang'
+
     if program_exists('gcc'):
         return 'gcc'
 
