@@ -110,8 +110,8 @@ def get_gcc_clang_flags(ctx, target):
 
     if not ctx.compat:
         base_flags += ['-Wno-missing-field-initializers', '-march=native']
-        base_flags += [cond(ctx.gcc, '-Wno-maybe-initialized',
-                                     '-Wno-uninitialized')]
+        base_flags += [cond(ctx.compiler == 'gcc', '-Wno-maybe-initialized',
+                                                   '-Wno-uninitialized')]
 
     if ctx.lto and ctx.compiler in ['gcc']:
         base_flags += ['-flto', '-ffat-lto-objects']
