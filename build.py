@@ -16,6 +16,7 @@ if __name__ == '__main__':
                 exit(1)  # Build failed!
         except ImportError:
             print("Please ensure the following modules are installed:")
-            print("\n    argparse    (< 2.7)")
+            print("")
+            print("    argparse")
             print("")
             exit(1)

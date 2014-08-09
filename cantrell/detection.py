@@ -2,13 +2,32 @@ from __future__ import with_statement
 import os, sys, subprocess, platform
 import tempfile
 
-platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
+platform_list = [
+    'generic',
+    'linux',
+    'win32',
+    'darwin',
+    'freebsd',
+    'openbsd',
+    'netbsd'
+]
 
-arch_list = ['generic', 'amd64']
+arch_list = [
+    'generic',
+    'amd64'
+]
 
-feature_list = ['generic', 'aes_ni']
+feature_list = [
+    'generic',
+    'aes_ni'
+]
 
-compiler_list = ['icc', 'clang', 'msvc', 'gcc']
+compiler_list = [
+    'icc',
+    'clang',
+    'msvc',
+    'gcc'
+]
 
 
 def cond(cnd, s, other=''):
@@ -87,7 +106,8 @@ def get_obj_format(platform, arch):
             return 'macho64'
         elif platform in ['win32']:
             return 'win64'
-
+    else:
+        return None
 
 def program_exists(name):
     try:
@@ -147,12 +167,12 @@ def library_exists(compiler, library):
 
 
 def stream(line):
-    """Utility function for run_cmd which streams its input to stdout."""
+    """Utility function for run_cmd to stream all input to stdout."""
     sys.stdout.write(line)
 
 
 def run_cmd(cmd, args=[], stdout_func=None):
-    """Executes a shell command and returns its output (and errors)."""
+    """Execute a shell command and returns its output (and errors)."""
     stdout = ''
 
     try:

@@ -230,7 +230,7 @@ def run_builder():
     recreate_build_folder()
     cmd = args.command
 
-    # TODO: Then, improve the function to find programs on the filesystem.
+    # TODO: Improve the functions to find programs on the filesystem.
     #
     #       Debug the script (using makefiles/mingw) on Windows.
     #
