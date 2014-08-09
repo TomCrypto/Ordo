@@ -1,9 +1,6 @@
-from __future__ import with_statement, division
-
-import subprocess
-import platform
+from __future__ import with_statement
+import os, sys, subprocess, platform
 import tempfile
-import os, sys
 
 platform_list = ['generic', 'linux', 'win32', 'darwin', 'freebsd', 'openbsd', 'netbsd']
 
@@ -90,8 +87,6 @@ def get_obj_format(platform, arch):
             return 'macho64'
         elif platform in ['win32']:
             return 'win64'
-    else:  # No other architecture yet (add e.g. i386..)
-        raise RuntimeError('No assembler format for %s' % arch)
 
 
 def program_exists(name):

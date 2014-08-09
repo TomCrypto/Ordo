@@ -1,8 +1,6 @@
-from __future__ import with_statement, division
-
-from cantrell.detection import *
-
+from __future__ import with_statement
 from os import path, walk, listdir
+from cantrell.detection import *
 
 
 def prefix_search(dirpath):

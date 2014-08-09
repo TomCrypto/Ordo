@@ -1,7 +1,6 @@
-from __future__ import with_statement, division
-
+from __future__ import with_statement
 import cantrell.makefile as makefile
-import argparse, pickle, shutil, os
+import os, argparse, pickle, shutil
 from cantrell.detection import *
 
 # Global configuration below, do not edit!
@@ -231,11 +230,7 @@ def run_builder():
     recreate_build_folder()
     cmd = args.command
 
-    # TODO: Add all of the special parameters, and verify the script
-    #       works everywhere on linux/bsd/mac with gcc. E.g.
-    #       ctx.obj_format on mac.
-    #
-    #       Then, improve the function to find programs on the filesystem.
+    # TODO: Then, improve the function to find programs on the filesystem.
     #
     #       Debug the script (using makefiles/mingw) on Windows.
     #

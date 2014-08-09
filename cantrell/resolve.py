@@ -1,5 +1,4 @@
-from __future__ import with_statement, division
-
+from __future__ import with_statement
 from os import path
 
 
@@ -142,8 +141,8 @@ def resolve(definitions_path, built_files):
 
     definitions += '\n'
     definitions += '#define HASH_BLOCK_LEN  %d\n' % get_block_len(built_prims,  'HASH')
-    definitions += '#define HASH_DIGEST_LEN %d\n' %get_digest_len(built_prims, 'HASH')
-    definitions += '#define BLOCK_BLOCK_LEN %d\n' %get_block_len(built_prims,  'BLOCK')
+    definitions += '#define HASH_DIGEST_LEN %d\n' % get_digest_len(built_prims, 'HASH')
+    definitions += '#define BLOCK_BLOCK_LEN %d\n' % get_block_len(built_prims,  'BLOCK')
 
     for (path, prim) in built_prims:
         with open(path, 'r') as fd:

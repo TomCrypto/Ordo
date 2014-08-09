@@ -1,11 +1,8 @@
-from __future__ import with_statement, division
-
-from cantrell.scanning import SourceTree
-from cantrell.resolve import resolve
+from __future__ import with_statement
 from cantrell.detection import *
-
+from cantrell.scanning import *
+from cantrell.resolve import *
 from os import path
-from hashlib import sha256
 
 
 def sanitize(s):
