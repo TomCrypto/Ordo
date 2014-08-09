@@ -1,6 +1,5 @@
 from __future__ import with_statement, division
 
-from cantrell.utilities import *
 from cantrell.detection import *
 
 from os import path, walk, listdir

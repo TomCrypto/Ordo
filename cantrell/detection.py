@@ -1,7 +1,6 @@
 from __future__ import with_statement, division
 
-from cantrell.utilities import *
-
+import subprocess
 import platform
 import tempfile
 import os, sys
@@ -13,6 +12,10 @@ arch_list = ['generic', 'amd64']
 feature_list = ['generic', 'aes_ni']
 
 compiler_list = ['intel', 'clang', 'msvc', 'gcc']
+
+
+def cond(cnd, s, other=''):
+    return s if cnd else other
 
 
 def get_platform():
@@ -143,3 +146,41 @@ def library_exists(compiler, library):
     os.remove(name)
 
     return success
+
+
+def stream(line):
+    """Utility function for run_cmd which streams its input to stdout."""
+    sys.stdout.write(line)
+
+
+def run_cmd(cmd, args=[], stdout_func=None):
+    """Executes a shell command and returns its output (and errors)."""
+    stdout = ''
+
+    try:
+        process = subprocess.Popen([cmd] + args,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT)
+
+        for buf in iter(process.stdout.readline, ''):
+            line = buf.decode('utf-8')
+
+            if (not line):
+                break
+            if (stdout_func is not None) and stdout_func(line):
+                break
+
+            stdout += line
+
+        stdout_buf = process.communicate()[0]
+        final_line = stdout_buf.decode('utf-8')
+        if final_line:
+            if (stdout_func is not None):
+                stdout_func(final_line)
+
+            stdout += final_line
+    except KeyboardInterrupt:
+        sys.stdout.write("Interrupt")
+        return (-1, stdout)
+
+    return (process.returncode, stdout)

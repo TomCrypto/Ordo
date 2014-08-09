@@ -3,7 +3,6 @@ from __future__ import with_statement, division
 from cantrell.scanning import SourceTree
 from cantrell.resolve import resolve
 from cantrell.detection import *
-from cantrell.utilities import *
 
 from os import path
 from hashlib import sha256
@@ -153,8 +152,8 @@ def get_flags(ctx, target):
         return get_icc_flags(ctx, target)
 
 
-def gen_makefile(ctx):
-    tree = SourceTree('..')
+def gen_makefile(ctx, build_prefix):
+    tree = SourceTree(build_prefix)
     make = Makefile()
 
     defines = [

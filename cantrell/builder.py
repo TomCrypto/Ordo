@@ -1,12 +1,12 @@
 from __future__ import with_statement, division
 
 import cantrell.makefile as makefile
-from cantrell.utilities import *
+import argparse, pickle, shutil, os
 from cantrell.detection import *
-import argparse, pickle, shutil
 
 # Global configuration below, do not edit!
 build_dir, build_ctx = 'build', '.context'
+build_inv, gitignore = '..', '.gitignore'
 doc_dir = 'doc'
 
 generate    = {'makefile': makefile.gen_makefile}
@@ -18,9 +18,29 @@ output_list = [
     'makefile'
 ]
 
-
 class BuildError(Exception):
     pass
+
+
+class chdir:
+    """Context manager for changing the current working directory"""
+    def __init__(self, new_path):
+        self.new_path = new_path
+
+    def __enter__(self):
+        self.saved_path = os.getcwd()
+        os.chdir(self.new_path)
+
+    def __exit__(self, etype, value, traceback):
+        os.chdir(self.saved_path)
+
+
+def info(msg):
+    sys.stdout.write("> %s\n" % (msg))
+
+
+def report_info(prompt, msg):
+    sys.stdout.write("> %s: %s\n" % (prompt, msg))
 
 
 class BuildContext:
@@ -119,7 +139,7 @@ def configure(args):
     """Generate and return a build context from the arguments."""
     ctx = BuildContext(args)
 
-    with open(path.join(build_dir, build_ctx), mode='wb') as f:
+    with open(os.path.join(build_dir, build_ctx), mode='wb') as f:
         pickle.dump(ctx, f)
 
     return ctx
@@ -133,9 +153,19 @@ def make_doc(args):
         run_cmd('doxygen', stdout_func=stream)
 
 
+def recreate_build_folder():
+    """Create an empty build folder with a gitignore file."""
+    if not os.path.isdir(build_dir):
+        os.mkdir(build_dir)
+
+    with open(os.path.join(build_dir, gitignore), 'w') as f:
+        f.write('*\n!%s\n' % gitignore)  # Write .gitignore.
+
+
 def clean_build():
     """Delete the build folder and then recreate an empty one."""
-    shutil.rmtree(build_dir), regenerate_build_folder(build_dir)
+    shutil.rmtree(build_dir)
+    recreate_build_folder()
 
 
 def run_builder():
@@ -197,9 +227,8 @@ def run_builder():
     master.add_argument('-v', '--verbose', action='store_true',
                         help="display additional information")
 
-    regenerate_build_folder(build_dir)
     args = master.parse_args()
-    set_verbose(args.verbose)
+    recreate_build_folder()
     cmd = args.command
 
     # TODO: Add all of the special parameters, and verify the script
@@ -213,18 +242,17 @@ def run_builder():
     #       Implement VS solution generation on Windows.
 
     if cmd in ['configure']:
-        if path.exists(path.join(build_dir, build_ctx)):
-            debug('Already configured, cleaning')
+        if os.path.exists(os.path.join(build_dir, build_ctx)):
             clean_build()
 
         ctx = configure(args)
         with chdir(build_dir):
-            generate[ctx.output](ctx)
+            generate[ctx.output](ctx, build_inv)
     elif cmd in ['build', 'install', 'test']:
-        if not path.exists(path.join(build_dir, build_ctx)):
+        if not os.path.exists(os.path.join(build_dir, build_ctx)):
             raise BuildError("Please configure before '%s'." % cmd)
         else:
-            with open(path.join(build_dir, build_ctx), 'rb') as f:
+            with open(os.path.join(build_dir, build_ctx), 'rb') as f:
                 ctx = pickle.load(f)
 
         if cmd == 'build':
