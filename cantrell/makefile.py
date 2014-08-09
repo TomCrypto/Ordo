@@ -127,7 +127,7 @@ def get_gcc_clang_flags(ctx, target):
         return base_flags
 
 
-def get_intel_flags(ctx, target):
+def get_icc_flags(ctx, target):
     base_flags = [
         '-O3', '-Wall', '-Wextra', '-std=c89', '-pedantic', '-restrict',
         '-ansi-alias'
@@ -149,7 +149,7 @@ def get_flags(ctx, target):
     """Gets appropriate compiler flags depending on the target."""
     if ctx.compiler in ['gcc', 'clang']:
         return get_gcc_clang_flags(ctx, target)
-    elif ctx.compiler in ['intel']:
+    elif ctx.compiler in ['icc']:
         return get_icc_flags(ctx, target)
 
 

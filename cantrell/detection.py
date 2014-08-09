@@ -11,7 +11,7 @@ arch_list = ['generic', 'amd64']
 
 feature_list = ['generic', 'aes_ni']
 
-compiler_list = ['intel', 'clang', 'msvc', 'gcc']
+compiler_list = ['icc', 'clang', 'msvc', 'gcc']
 
 
 def cond(cnd, s, other=''):
