@@ -54,7 +54,6 @@ class BuildContext:
         self.output = args.output
         self.prefix = args.prefix
         self.shared = args.shared
-        self.system = args.system
         self.compat = args.compat
         self.lto    = args.lto
 
@@ -88,6 +87,7 @@ class BuildContext:
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]
+        self.system = args.system[0]
 
         if self.arch == 'generic':  # We won't need an assembler here
             if args.assembler is not None:
@@ -241,6 +241,7 @@ def run_builder():
     # TODO: Improve the functions to find programs on the filesystem.
     #
     #       Debug the script (using makefiles/mingw) on Windows.
+    #       (too many different things on windows, duplicate code)
     #
     #       Implement VS solution generation on Windows.
 

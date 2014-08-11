@@ -5,7 +5,7 @@ from os import path
 
 
 def sanitize(s):
-    return s.replace('.', '_').replace('/', '_').upper()
+    return s.replace('.', '_').replace('/', '_').replace('\\', '_').upper()
 
 
 def src2obj(folder, prefix, srcfile):
@@ -29,7 +29,6 @@ def folder_rule(f, folder, system):
     path = folder_dep(folder)
     f.write('%s:\n' % path)
     f.write('\tmkdir %s\n' % folder)
-    
     if system in ['win32']:
         f.write('\ttype NUL > %s\n' % path)
     else:
@@ -241,7 +240,7 @@ def gen_makefile(ctx, build_prefix):
                         '-I%s' % (tree.inc_dir['util'])],
             'DEPS': ['libordo_s.a', 'libutil.a'],
             'SOURCES': tree.src[sample],
-            'LDFLAGS': [cond(library_exists(ctx.compiler, '-lrt'), '-lrt')],
+            'LDFLAGS': [cond(library_exists(ctx, ctx.cc, '-lrt'), '-lrt')],
             '*.c': '%s $(CFLAGS) $(DEFINES) $(INCLUDE) -c $< -o $@' % ctx.cc,
             '*link': '%s $^ -o $@ libordo_s.a libutil.a $(LDFLAGS)' % ctx.cc
         }
@@ -272,14 +271,24 @@ def gen_makefile(ctx, build_prefix):
             cond(ctx.shared, 'cp -r libordo.so %s/lib' % (ctx.prefix))
         ])
 
-    make.add_command('clean', [
-        'rm -rf libordo_s.a',
-        cond(ctx.shared, 'rm -rf libordo.so', 'rm -rf shared'),
-        'rm -rf hashsum version info benchmark test',
-        'rm -rf libutil.a',
-        'rm -rf obj',
-        'rm -rf %s' % (folder_dep('obj'))
-    ])
+    if ctx.system in ['win32']:
+        make.add_command('clean', [
+            'del libordo_s.a',
+            cond(ctx.shared, 'del libordo.so', 'del shared'),
+            'del hashsum.exe version.exe info.exe benchmark.exe test.exe',
+            'del libutil.a',
+            'rd /s /q obj',
+            'del /ah %s' % (folder_dep('obj'))
+        ])
+    else:
+        make.add_command('clean', [
+            'rm -rf libordo_s.a',
+            cond(ctx.shared, 'rm -rf libordo.so', 'rm -rf shared'),
+            'rm -rf hashsum version info benchmark test',
+            'rm -rf libutil.a',
+            'rm -rf obj',
+            'rm -rf %s' % (folder_dep('obj'))
+        ])
 
     make.generate('Makefile', ctx)
     resolve(tree.def_header, lib_sources)

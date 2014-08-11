@@ -151,7 +151,7 @@ def identify_compiler(path):
     return (False, None, None)
 
 
-def library_exists(compiler, library):
+def library_exists(ctx, compiler, library):
     fd, name = tempfile.mkstemp(suffix='.c')
     out_name = tempfile.mktemp(suffix='.out')
 
