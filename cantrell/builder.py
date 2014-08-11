@@ -1,5 +1,6 @@
 from __future__ import with_statement
 import cantrell.makefile as makefile
+import cantrell.solution as solution
 import os, argparse, pickle, shutil
 from cantrell.detection import *
 
@@ -8,13 +9,18 @@ build_dir, build_ctx = 'build', '.context'
 build_inv, gitignore = '..', '.gitignore'
 doc_dir = 'doc'
 
-generate    = {'makefile': makefile.gen_makefile}
-run_build   = {'makefile': makefile.bld_makefile}
-run_install = {'makefile': makefile.ins_makefile}
-run_tests   = {'makefile': makefile.tst_makefile}
+generate    = {'makefile': makefile.gen_makefile,
+               'solution': solution.gen_solution}
+run_build   = {'makefile': makefile.bld_makefile,
+               'solution': solution.bld_solution}
+run_install = {'makefile': makefile.ins_makefile,
+               'solution': solution.ins_solution}
+run_tests   = {'makefile': makefile.tst_makefile,
+               'solution': solution.tst_solution}
 
 output_list = [
-    'makefile'
+    'makefile',
+    'solution'
 ]
 
 class BuildError(Exception):
@@ -45,9 +51,10 @@ def report_info(prompt, msg):
 class BuildContext:
     def __init__(self, args):
         """Parse the provided arguments into a new build context."""
-        self.output = args.output[0]
+        self.output = args.output
         self.prefix = args.prefix
         self.shared = args.shared
+        self.system = args.system
         self.compat = args.compat
         self.lto    = args.lto
 
@@ -192,6 +199,10 @@ def run_builder():
                      help="operating system/platform to configure for",
                      default=[get_platform()], choices=platform_list)
 
+    cfg.add_argument('--system', nargs=1, metavar='',
+                     help="operating system/platform to build on",
+                     default=[get_platform()], choices=platform_list)
+
     cfg.add_argument('--arch', nargs=1, metavar='',
                      help="architecture to configure for",
                      default=['generic'], choices=arch_list)
@@ -206,7 +217,7 @@ def run_builder():
 
     cfg.add_argument('-o', '--output', metavar='',
                      help="build output format to generate",
-                     default=['makefile'], choices=output_list)
+                     default='makefile', choices=output_list)
 
     cfg.add_argument('-l', '--lto', action='store_true',
                      help="use link-time optimization",
@@ -222,9 +233,6 @@ def run_builder():
 
     bld.add_argument('targets', nargs=argparse.REMAINDER,
                      help="set of targets to build")
-
-    master.add_argument('-v', '--verbose', action='store_true',
-                        help="display additional information")
 
     args = master.parse_args()
     recreate_build_folder()

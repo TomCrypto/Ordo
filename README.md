@@ -50,7 +50,7 @@ To build the library, first configure it, by typing:
 
     ./build.py configure [options ...]    (or 'python build.py', whatever your shell uses)
 
-See the available configuration options with `--help`, which include compiler/platform/architecture/installation prefix options and various other useful tweaks. If no options are passed, the library will be built with the most generic configuration available (except it will build towards your operating system if it can detect it) and will by default produce a makefile in the `build` folder for most systems, and a Visual Studio solution for Windows. You may then directly use these, or instead type:
+See the available configuration options with `--help`, which include compiler/platform/architecture/installation prefix options and various other useful tweaks. If no options are passed, the library will be built with the most generic configuration available (except it will be built towards your operating system) and will by default produce a makefile in the `build` folder for most systems, and a Visual Studio solution for Windows if Visual Studio is detected . You may then directly use these, or instead type:
 
     ./build.py build [targets ...]
 
@@ -61,6 +61,8 @@ which will build the relevant targets, or all targets, if none are provided. Ava
 You can install the library binaries and headers to your system (see `configure --prefix`) with:
 
     ./build.py install
+
+Note that the `--platform` option specifies the platform the library will be built *for*, while the `--system` option specifies the platform the library will be built *on*, e.g. where the makefile will be executed. In most cases, the `--system` option should be set to your operating system (the default).
 
 The Doxygen documentation can be generated with the `doc` command (you will need `doxygen`, and `pdflatex` with a working TeX environment for the LaTeX output). The HTML documentation will be generated in `doc/html`, and the LaTeX documentation will be generated in `doc/latex`, which you can then typeset using the generated makefile. You can also access a recent version of the documentation online through the [project page](http://tomcrypto.github.io/Ordo/).
 

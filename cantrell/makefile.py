@@ -25,11 +25,15 @@ def folder_dep(folder):
     return '.objdir'
 
 
-def folder_rule(f, folder):
+def folder_rule(f, folder, system):
     path = folder_dep(folder)
     f.write('%s:\n' % path)
     f.write('\tmkdir %s\n' % folder)
-    f.write('\ttouch %s\n' % path)
+    
+    if system in ['win32']:
+        f.write('\ttype NUL > %s\n' % path)
+    else:
+        f.write('\ttouch %s\n' % path)
 
 
 def process_alias(f, alias, deps):
@@ -81,7 +85,7 @@ class Makefile:
     def add_command(self, name, commands):
         self.commands[name] = commands
 
-    def generate(self, path):
+    def generate(self, path, ctx):
         with open(path, 'w') as f:
             if hasattr(self, 'all'):
                 process_alias(f, 'all', self.all)
@@ -95,7 +99,7 @@ class Makefile:
             for command in self.commands:
                 process_command(f, command, self.commands[command])
 
-            folder_rule(f, 'obj')
+            folder_rule(f, 'obj', ctx.system)
 
 
 def get_gcc_clang_flags(ctx, target):
@@ -256,14 +260,14 @@ def gen_makefile(ctx, build_prefix):
 
     make.add_alias('samples', ['hashsum', 'benchmark', 'version', 'info'])
 
-    make.add_command('doc', ['cd ../doc && doxygen'])
+    make.add_command('doc', ['cd %s/doc && doxygen' % build_prefix])
 
     if ctx.platform != 'generic':
         make.add_command('install', [
             'mkdir -p %s/include' % (ctx.prefix),
             'mkdir -p %s/lib' % (ctx.prefix),
-            'cp -r ../include/ordo.h %s/include' % (ctx.prefix),
-            'cp -r ../include/ordo %s/include' % (ctx.prefix),
+            'cp -r %s/include/ordo.h %s/include' % (build_prefix, ctx.prefix),
+            'cp -r %s/include/ordo %s/include' % (build_prefix, ctx.prefix),
             'cp -r libordo_s.a %s/lib' % (ctx.prefix),
             cond(ctx.shared, 'cp -r libordo.so %s/lib' % (ctx.prefix))
         ])
@@ -277,7 +281,7 @@ def gen_makefile(ctx, build_prefix):
         'rm -rf %s' % (folder_dep('obj'))
     ])
 
-    make.generate('Makefile')  # All done
+    make.generate('Makefile', ctx)
     resolve(tree.def_header, lib_sources)
 
 
