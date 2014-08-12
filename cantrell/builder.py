@@ -229,6 +229,8 @@ def run_builder():
         return clean_build()
     elif cmd in ['doc']:
         return make_doc(args)
+    else:
+        os.chdir(build_dir)
 
     try:
         if cmd in ['configure']:
