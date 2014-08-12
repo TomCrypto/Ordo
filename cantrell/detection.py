@@ -118,22 +118,32 @@ def program_exists(name):
 
 
 def get_c_compiler():
-    """Returns the name of the default C compiler on the system."""
+    """Returns all info on the default C compiler on the system."""
+    candidates = []
+
     if ("CC" in os.environ) and program_exists(os.environ['CC']):
-        return os.environ['CC']
-
-    if program_exists('clang'):
-        return 'clang'
-
-    if program_exists('gcc'):
-        return 'gcc'
+        candidates.append(os.environ['CC'])
 
     if program_exists('cc'):
-        return 'cc'
+        candidates.append('cc')
+
+    if program_exists('gcc'):
+        candidates.append('gcc')
+
+    if program_exists('clang'):
+        candidates.append('clang')
+
+    if program_exists('icc'):
+        candidates.append('icc')
 
     # On Windows, maybe check for MSVC in one of the popular paths here
 
-    return None
+    for candidate in candidates:
+        found, compiler_id, version = identify_compiler(candidate)
+        if found:
+            return (candidate, compiler_id, version)
+
+    return (None, None, None)
 
 
 def identify_compiler(path):
@@ -141,14 +151,57 @@ def identify_compiler(path):
     if (path is None) or not program_exists(path):
         return (False, None, None)
 
-    for version_arg in ['-v', '--version', '-V']:
-        version_str =run_cmd(path, [version_arg])[1].split('\n')[0]
+    # Instead of messing with version strings, use the preprocessor."""
 
-        for compiler in compiler_list:
-            if compiler.lower() in version_str.lower():
-                return (True, compiler, version_str)
+    source_code = """
+    #include <stdio.h>
+    int main(){
+        #if defined(__clang__)
+        printf("clang");
+        #elif defined(__INTEL_COMPILER)
+        printf("icc");
+        #elif defined(__GNUC__) || defined(__MINGW32__)
+        printf("gcc");
+        #elif defined(_MSC_VER)
+        printf("msvc");
+        #else
+        printf("error");
+        #endif
+        return 0;
+    }
+    """
 
-    return (False, None, None)
+    fd, name = tempfile.mkstemp(suffix='.c')
+    out_name = tempfile.mktemp(suffix='.out')
+
+    with os.fdopen(fd, 'w') as f:
+        f.write(source_code)
+
+    retval = run_cmd(path, [name, '-o', out_name])[0]
+
+
+    # If it failed, reject it outright
+
+    if retval != 0:
+        return (False, None, None)
+
+    # Otherwise, check the macros worked
+
+    stdout = run_cmd(out_name)[1]
+
+    if stdout == 'error':
+        return (False, None, None)
+
+    # Finally, grab the shortest version string
+
+    version_strings = []
+
+    for arg in ['-v', '--version', '-V']:
+        retval, ver_string = run_cmd(path, [arg])
+        if retval == 0:
+            version_strings.append(ver_string)
+
+    return (True, stdout, min(version_strings, key=len).split('\n')[0])
 
 
 def library_exists(ctx, compiler, library):

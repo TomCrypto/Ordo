@@ -69,21 +69,19 @@ class BuildContext:
 
         if args.compiler is None:
             info("Looking for a C compiler...")
-            self.cc = get_c_compiler()
+            self.cc, self.compiler, self.compiler_info = get_c_compiler()
             if not self.cc:
                 info("Failed to find a C compiler, try with --compiler.")
                 raise BuildError("Configuration error.")
         else:
             self.cc = args.compiler[0]
+            found, self.compiler, self.compiler_info = identify_compiler(self.cc)
+            if not found:
+                info("Could not identify compiler, is it supported?")
+                raise BuildError("Configuration error.")
 
 
-        found, self.compiler, self.compiler_info = identify_compiler(self.cc)
-
-        if not found:
-            info("Could not identify compiler, is it supported?")
-            raise BuildError("Configuration error.")
-        else:
-            report_info("C compiler", "%s (%s)" % (self.compiler, self.compiler_info))
+        report_info("C compiler", "%s (%s)" % (self.compiler, self.compiler_info))
 
         self.platform = args.platform[0]
         self.arch = args.arch[0]
