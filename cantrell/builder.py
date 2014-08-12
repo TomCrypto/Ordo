@@ -23,21 +23,9 @@ output_list = [
     'solution'
 ]
 
+
 class BuildError(Exception):
     pass
-
-
-class chdir:
-    """Context manager for changing the current working directory"""
-    def __init__(self, new_path):
-        self.new_path = new_path
-
-    def __enter__(self):
-        self.saved_path = os.getcwd()
-        os.chdir(self.new_path)
-
-    def __exit__(self, etype, value, traceback):
-        os.chdir(self.saved_path)
 
 
 def info(msg):
@@ -79,7 +67,6 @@ class BuildContext:
             if not found:
                 info("Could not identify compiler, is it supported?")
                 raise BuildError("Configuration error.")
-
 
         report_info("C compiler", "%s (%s)" % (self.compiler, self.compiler_info))
 
@@ -137,16 +124,6 @@ class BuildContext:
                 raise BuildError("Configuration error.")
             else:
                 self.endian = args.endian[0]
-
-
-def configure(args):
-    """Generate and return a build context from the arguments."""
-    ctx = BuildContext(args)
-
-    with open(os.path.join(build_dir, build_ctx), mode='wb') as f:
-        pickle.dump(ctx, f)
-
-    return ctx
 
 
 def make_doc(args):
@@ -243,35 +220,36 @@ def run_builder():
     #
     #       Implement VS solution generation on Windows.
 
-    if cmd in ['configure']:
-        if os.path.exists(os.path.join(build_dir, build_ctx)):
-            clean_build()
+    if cmd in ['clean']:
+        return clean_build()
+    else:
+        os.chdir(build_dir)
 
-        ctx = configure(args)
-        with chdir(build_dir):
+    try:
+        if cmd in ['configure']:
+            ctx = BuildContext(args)
+
+            with open(build_ctx, 'wb') as f:
+                pickle.dump(ctx, f)
+
             generate[ctx.output](ctx, build_inv)
-    elif cmd in ['build', 'install', 'test']:
-        if not os.path.exists(os.path.join(build_dir, build_ctx)):
-            raise BuildError("Please configure before '%s'." % cmd)
-        else:
-            with open(os.path.join(build_dir, build_ctx), 'rb') as f:
-                ctx = pickle.load(f)
+        elif cmd in ['build', 'install', 'test']:
+            if not os.path.exists(build_ctx):
+                raise BuildError("Please configure before '%s'." % cmd)
+            else:
+                with open(build_ctx, 'rb') as f:
+                    ctx = pickle.load(f)
 
-        if cmd == 'build':
-            for target in args.targets:
-                if target not in ['static', 'shared', 'test', 'samples']:
-                    raise BuildError("Bad target '%s'." % target)
-
-            with chdir(build_dir):
+            if cmd in ['build']:
+                for target in args.targets:
+                    if target not in ['static', 'shared', 'test', 'samples']:
+                        raise BuildError("Unrecognized target '%s'." % target)
                 run_build[ctx.output](ctx, args.targets)
-        elif cmd == 'install':
-            with chdir(build_dir):
+            elif cmd in ['install']:
                 run_install[ctx.output](ctx)
-        elif cmd == 'test':
-            with chdir(build_dir):
+            elif cmd in ['test']:
                 run_tests[ctx.output](ctx)
-    elif cmd in ['doc']:
-        with chdir(doc_dir):
+        elif cmd in ['doc']:
             make_doc(args)
-    elif cmd in ['clean']:
-        clean_build()
+    finally:
+        os.chdir(build_inv)
