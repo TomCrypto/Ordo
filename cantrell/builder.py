@@ -7,7 +7,7 @@ from cantrell.detection import *
 # Global configuration below, do not edit!
 build_dir, build_ctx = 'build', '.context'
 build_inv, gitignore = '..', '.gitignore'
-doc_dir = 'doc'
+doc_dir, doc_inv = 'doc', '..'
 
 generate    = {'makefile': makefile.gen_makefile,
                'solution': solution.gen_solution}
@@ -131,7 +131,12 @@ def make_doc(args):
     if not program_exists('doxygen'):
         raise BuildError("Doxygen is required to build the documentation")
     else:
-        run_cmd('doxygen', stdout_func=stream)
+        os.chdir(doc_dir)
+
+        try:
+            run_cmd('doxygen', stdout_func=stream)
+        finally:
+            os.chdir(doc_inv)
 
 
 def recreate_build_folder():
@@ -222,8 +227,8 @@ def run_builder():
 
     if cmd in ['clean']:
         return clean_build()
-    else:
-        os.chdir(build_dir)
+    elif cmd in ['doc']:
+        return make_doc(args)
 
     try:
         if cmd in ['configure']:
@@ -249,7 +254,5 @@ def run_builder():
                 run_install[ctx.output](ctx)
             elif cmd in ['test']:
                 run_tests[ctx.output](ctx)
-        elif cmd in ['doc']:
-            make_doc(args)
     finally:
         os.chdir(build_inv)
