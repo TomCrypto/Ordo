@@ -86,7 +86,7 @@ void ctr_update(struct CTR_STATE *state,
             inc_counter(cipher_state, state);
 
         process = (inlen < state->remaining) ? inlen : state->remaining;
-        offset = offset(state->block, state->block_size - state->remaining);
+        offset = offset(state->keystream, state->block_size - state->remaining);
 
         if (out != in) memcpy(out, in, process);
         xor_buffer(out, offset, process);
